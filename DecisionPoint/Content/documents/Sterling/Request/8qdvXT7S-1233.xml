@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BackgroundCheck account="DecisionPoint" password="DecisionPointtp456" userId="DecisionPointtp" dpuserId="1233" xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <BackgroundSearchPackage type="Driver License">
+    <ProcessingInformation>
+      <AccessCredential type="UserName">DPINT</AccessCredential>
+      <AccessCredential type="Password">password456@</AccessCredential>
+      <AccessCredential type="Account">DP</AccessCredential>
+    </ProcessingInformation>
+    <ReferenceId>
+      <IdValue>bSlU0LP7-1233</IdValue>
+    </ReferenceId>
+    <PersonalData>
+      <PersonName>
+        <GivenName>QA</GivenName>
+        <MiddleName>
+        </MiddleName>
+        <FamilyName primary="true">Labs</FamilyName>
+      </PersonName>
+      <PostalAddress>
+        <PostalCode>
+        </PostalCode>
+        <Region>
+        </Region>
+        <Municipality>
+        </Municipality>
+        <DeliveryAddress>
+          <AddressLine>
+          </AddressLine>
+        </DeliveryAddress>
+      </PostalAddress>
+      <ContactMethod>
+        <Telephone>
+          <FormattedNumber>0000000000</FormattedNumber>
+        </Telephone>
+        <InternetEmailAddress>adityas@chetu.com</InternetEmailAddress>
+      </ContactMethod>
+    </PersonalData>
+    <Screenings>
+      <PackageId idOwner="Sterling">
+        <IdValue name="NumValue">Update Driver License</IdValue>
+      </PackageId>
+    </Screenings>
+  </BackgroundSearchPackage>
+</BackgroundCheck>

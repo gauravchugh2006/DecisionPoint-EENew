@@ -1,0 +1,507 @@
+﻿@using DecisionPointCAL.Common;
+@{
+    ViewBag.Title = "ICApproval";
+}
+
+@model DecisionPoint.Models.CompanyDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "ManageIC";
+    //Grid for Dispaly Messages details
+    //WebGrid grdicBGReview = new WebGrid(ajaxUpdateContainerId: "ICBGDetails1", rowsPerPage: Model.rowperpage);
+    //if (Model.ICBGReviewDetail != null)
+    //{
+    //    grdicBGReview.Bind(Model.ICBGReviewDetail, autoSortAndPage: true, rowCount: Model.pagesize);
+
+    //}
+    int rowperpage = Model.rowperpage;
+    string BgCheckStatus = string.Empty;
+    
+}
+<style>
+    .errorclass {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div id='users'>
+    <div>
+        <div class='heading'>
+            <div class='row'>
+                <h3>IC's Approval List</h3>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    @*funtion used for sorting in webgrid*@
+    @functions {
+        public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+
+
+    <div class="filter-bar">
+        <strong>Filter List By:</strong>
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                <b id="recordtypedd">IC Type</b>
+                <b class="caret"></b>
+            </a>
+            @if (!object.Equals(Model.VendorTypeDetails, null))
+            {
+                if (Model.VendorTypeDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu">
+                    <li onclick="filterrecord('All',0)">
+                        <a>
+                            <label style="font-weight: normal" class="checkbox">
+                                All
+                            </label>
+                        </a>
+                    </li>
+                    @foreach (var item in Model.VendorTypeDetails)
+                    {
+                        <li onclick="filterrecord('@item.categoryName',0)">
+                            <a>
+                                <label style="font-weight: normal" class="checkbox">
+                                    @item.categoryName
+                                </label>
+                            </a>
+                        </li>   
+                    }
+                </ul>
+                }
+                else
+                {
+                <ul role="menu" class="dropdown-menu">
+                    <li style="padding: 5px;">No IC Type</li>
+                </ul>
+                }
+            }
+            else
+            {
+                <ul role="menu" class="dropdown-menu">
+                    <li style="padding: 5px;">No IC Type</li>
+                </ul>
+            }
+        </div>
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="statusdd" class="dropdown-toggle btn btn-info">
+                <b id="statustypedd">Status</b>
+                <b class="caret"></b>
+            </a>
+            <ul role="menu" class="dropdown-menu">
+                <li onclick="filterrecord('All',1)">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox">
+                            All
+                        </label>
+                    </a>
+                </li>
+                <li onclick="filterrecord('Pending',1)">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox">
+                            Pending
+                        </label>
+                    </a>
+                </li>
+                <li onclick="filterrecord('Review',1)">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox">
+                            Review
+                        </label>
+                    </a>
+                </li>
+                <li onclick="filterrecord('Pass',1)">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox">
+                            Accepted
+                        </label>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div style="float: right; margin-bottom: 20px;">
+
+        <div class='input-append' style="margin-right: -2px;">
+
+            <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+            <button class='btn btn-primary' type='button' id="btngo" onclick="SearchICs(0)" style="height: 28px;">Go</button>
+
+        </div>
+        <div style="float: right; margin-top: -25px;">
+            <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="SearchICs(0)" style="display: none; height: 28px; margin-top: -9px;">View All</button>
+        </div>
+
+    </div>
+    <div id='icBGReview' style="padding-top: 20px; display: block;">
+        @*Internal Staff*@
+        <table class="table table-hover" id="ICApproval">
+            <thead>
+                <th></th>
+                <th>Name</th>
+                <th>Business Name</th>
+                <th>IC Type</th>
+                <th>Email Id</th>
+                <th></th>
+            </thead>
+            @if (Model.ICBGReviewDetail != null)
+            {
+                <tbody>
+                    @if (Model.ICBGReviewDetail != null)
+                    {
+                        foreach (var item in Model.ICBGReviewDetail.Select(x => new { x.fname, x.lname, x.businessName, x.emailId, x.mname, x.VTId, x.VType, x.ICUserId, x.ICCompanyId, x.LastInviteMailDate, x.IsRegistred }).Distinct().ToList())
+                        {
+                            
+                        <tr>
+                            <td>
+
+                                @if (Model.ICBGReviewDetail.Where(x => x.ICUserId == item.ICUserId && x.BGStatus == "Pending").Count() > 0)
+                                {
+                                    if (!item.IsRegistred)
+                                    {
+                                    <span style="color: #006DCC;">Pending</span>
+                                    <br />
+                                        if (!object.Equals(item.LastInviteMailDate, null))
+                                        {
+                                    @item.LastInviteMailDate.Value.ToShortDateString()
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                    <span style="color: #006DCC;">In Progress</span>
+                                    }
+                                    BgCheckStatus = "Pending";
+                                }
+                                else if (Model.ICBGReviewDetail.Where(x => x.ICUserId == item.ICUserId && x.BGStatus == "In Progress").Count() > 0)
+                                {
+                                    <span style="color: #006DCC;">In Progress
+                                    </span>
+                                    BgCheckStatus = "In Progress";
+                                }
+                                else if (Model.ICBGReviewDetail.Where(x => x.ICUserId == item.ICUserId && x.BGStatus == "Review").Count() > 0)
+                                {
+                                    <span style="color: red;">Review</span>
+                                    BgCheckStatus = "Review";
+                                }
+                                else
+                                {
+                                    <span style="color: green;">Accepted</span>
+                                    BgCheckStatus = "Accepted";
+                                }
+                            </td>
+                            <td>@item.fname @item.mname @item.mname</td>
+                            <td>@item.businessName</td>
+                            <td>@item.VType</td>
+                            <td>@item.emailId</td>
+                            <td>
+                                @{int count = 0;}
+                                @foreach (var status in Model.ICBGReviewDetail.Where(x => x.ICUserId == item.ICUserId).Select(y => new { y.BGStatus, y.Source, y.SterlingOrderId }).Distinct())
+                                {
+                                    if (status.BGStatus == Shared.Pass || status.BGStatus == Shared.Review)
+                                    {
+                                        if (status.Source != "Other" && status.SterlingOrderId != "")
+                                        {
+                                    <a title="Review Background Result" style="cursor: pointer;" id="@status.SterlingOrderId" onclick="ReviewSterlingResult('@status.SterlingOrderId',event)">Review Result</a><br />
+                                        }
+                                    }
+                                    else if (status.BGStatus == "Pending")
+                                    {
+                                        if (count == 0)
+                                        {
+                                            if (!item.IsRegistred)
+                                            {
+                                    <a title="Resend invite for Background" class="btn btn-mini btn-info" onclick="resendMail('@item.ICUserId')" style="cursor: pointer;">Resend                
+                                    </a>}
+                                        }
+
+                                    }
+                                    count = count + 1;
+                                }
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            }
+        </table>
+        <div id="Pagination" class="pagination">
+
+            @{ if (Model.ICBGReviewDetail != null)
+               {
+                   if (Model.ICBGReviewDetail.Select(x => new { x.fname, x.lname, x.businessName, x.emailId, x.mname, x.VTId, x.VType, x.ICUserId, x.ICCompanyId, x.LastInviteMailDate, x.IsRegistred }).Distinct().ToList().Count() > 10)
+                   {
+                       int countlist = Model.ICBGReviewDetail.Select(x => new { x.fname, x.lname, x.businessName, x.emailId, x.mname, x.VTId, x.VType, x.ICUserId, x.ICCompanyId, x.LastInviteMailDate, x.IsRegistred }).Distinct().ToList().Count();
+                       int divisionlist = countlist / 10;
+                       int remainder = countlist % 10;
+                       if (remainder == 0)
+                       {
+                           remainder = 0;
+                       }
+                       else
+                       {
+                           remainder = 1;
+                       }
+
+                       int total = divisionlist + remainder;
+                            
+                <table>
+                    <tr>
+                        @for (int i = 1; i <= total; i++)
+                        {
+                            <td><a style="cursor: pointer;">@i</a></td>
+                        }
+                    </tr>
+                </table>
+                            
+                        
+                   }
+
+               }
+            }
+
+        </div>
+
+
+        @* var gridColumns = new List<webgridcolumn>();
+            gridColumns.Add(grdicBGReview.Column(header: "", format: @<text>
+
+            <span style="color: red;">@item.BGStatus</span>
+
+            </text>, canSort: false, style: "width-ic"));
+            gridColumns.Add(grdicBGReview.Column(columnName: "fname", header: Sorter("fname", "Name",
+            grdicBGReview)));
+            gridColumns.Add(grdicBGReview.Column(columnName: "businessName", header: Sorter("businessName", "Business Name", grdicBGReview)));
+            gridColumns.Add(grdicBGReview.Column(columnName: "VType", header: Sorter("VType", "IC Type", grdicBGReview)));
+
+            gridColumns.Add(grdicBGReview.Column(columnName: "emailId", header: Sorter("emailId", "Email", grdicBGReview)));
+
+
+            gridColumns.Add(grdicBGReview.Column(header: "", format: @<text>
+
+            @if (item.BGStatus == Shared.Pass || item.BGStatus == Shared.Review)
+            {
+<a title="Review Background Result" style="cursor:pointer;">Review Result</a>
+            }
+            else if (item.BGStatus == "Pending")
+            {
+<a title="Resend invite for Background" class="btn btn-mini btn-info" style="cursor:pointer;">Resend                
+            </a>
+            }
+
+            </text>, canSort: false));
+           
+                     
+            @grdicBGReview.GetHtml(htmlAttributes: new { id = "ICBGDetails" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: grdicBGReview.Columns(gridColumns.ToArray())) 
+        }*@
+    </div>
+
+
+    <input type="hidden" id="reactivestaffid" />
+    <input type="hidden" id="removestaffid" />
+    <input type="hidden" id="editstaffid" />
+    <input type="hidden" id="userType" />
+    <input type="hidden" id="companyId" />
+    <input type="hidden" id="hidICAppFilter" value="0" />
+
+</div>
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+    </div>
+
+</div>
+<input type="hidden" id="Hid_ICStatus" value="0" />
+
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        HideRows("ICApproval");
+    });
+
+    function HideRows(tblId) {
+        var Rows = $("#" + tblId + " tbody tr");
+        var rowCount = $("#" + tblId + " tbody tr").length;
+        Rows.slice('@rowperpage', rowCount).hide();
+    }
+    //staff
+    $("body").on("click", "#Pagination table tr td a", function (event) {
+        $('#hidICAppFilter').val("1");
+        var value = $(this).text();
+        var rowCount = $('#ICApproval tbody tr').length;
+        var division = parseInt(rowCount / 10);
+        var moduleDiv = rowCount % 10;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 10 + 1;
+        }
+        else {
+            i = (value - 1) * 10 + 1;
+        }
+        var rows = $("#ICApproval tbody tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 10).show();
+            rows.slice((i - 1) + 10, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 10).show();
+            rows.slice(0, i - 1).hide();
+        }
+        else {
+            var b1 = (i - 1);
+            var b2 = ((i - 1) + 10);
+            rows.slice(b1, b2).show();
+            rows.slice(b2, rowCount).hide();
+            rows.slice(0, b1).hide();
+        }
+        //highlight the ancre tag
+        $('#Pagination table tr td a').each(function (index) {
+            if ($(this).html() == value) {
+                $(this).css("color", "#808080");
+            }
+            else {
+                $(this).css("color", "#0088CC");
+
+            }
+
+        })
+    });
+    //Filteration in webgrid using in drop down
+    function filterrecord(filtervalue, filterType) {
+        if (filtervalue == "All") {
+            if (filterType == 0) {
+                $('#recordtypedd').html("IC Type");
+            } else if (filterType == 1) {
+                $('#statustypedd').html("Status");
+            }
+        }
+        else {
+            if (filterType == 0) {
+                $('#recordtypedd').html(filtervalue);
+            } else if (filterType == 1) {
+                $('#statustypedd').html(filtervalue);
+            }
+
+        }
+        filtervalue = $('#recordtypedd').html().trim() + ":" + $('#statustypedd').html();
+        GetICRecord(filtervalue);
+    }
+    function GetICRecord(filtervalue) {
+        var inviteType = 0;
+        var pageid = getpageid("ICBGDetails");
+        $.ajax({
+            url: "@Url.Content("~/Invitation/ICApproval/?page=")" + pageid,
+            data: { 'type': filtervalue },
+            cache: false,
+            datatype: 'json',
+            type: "GET",
+            success: function (result) {
+                $('#icBGReview').html($(result).find('#icBGReview').html().trim());
+                HideRows("ICApproval");
+            }
+        });
+    }
+    function SearchICs(type) {
+        if ($('#txtserach').val().trim() != '') {
+            //0 call when user click on go button
+            if (type == 0) {
+                GetICRecord($('#txtserach').val());
+                $('#btnviewallCompany').show();
+            }
+                //1 call when user click on view all button
+            else if (type == 1) {
+                filterrecord("All", "");
+                $('#btnviewallCompany').hide();
+                $('#txtserach').val('');
+            }
+        }
+        else {
+            $('#btnviewallCompany').hide();
+        }
+    }
+
+    $("#txtserach").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/Invitation/SerachInICApproval")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item, value: item };
+                    }))
+                }
+            })
+        }
+
+    });
+        function ReviewSterlingResult(SterlingOrderId, e) {
+            $('#' + SterlingOrderId).attr("href", "@Url.Content("~/Sterling/SterlingResultView?type=")" + SterlingOrderId);
+            $('#' + SterlingOrderId).attr("target", "_blank");
+            var url = "@Url.Content("~/Sterling/SterlingResultView?type=")" + SterlingOrderId;
+            window.open(url, '_blank');
+        }
+        function resendMail(Id) {
+            $('#dvSaveMsg').text('Please Wait..');
+            $('#divManualInviteOuter').show();
+            $('#divManualInviteInner').show();
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/ResendMailToUser/")',
+                data: { 'userId': parseInt(Id), 'type': 'ic' },
+                cache: false,
+                type: "POST",
+                success: function (result) {
+                    if (result > 0) {
+                        $('#dvSaveMsg').text('Invitation Resend Success..!!');
+                        $('#divManualInviteOuter').show();
+                        $('#divManualInviteInner').show();
+                        setTimeout(function () {
+                            $('#divManualInviteOuter').fadeOut('slow');
+                            $('#divManualInviteInner').fadeOut('slow');
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+
+                        $('#dvSaveMsg').text('Something ent Wrong, Please try again.');
+                        $('#divManualInviteOuter').show();
+                        $('#divManualInviteInner').show();
+                        setTimeout(function () {
+                            $('#divManualInviteOuter').fadeOut('slow');
+                            $('#divManualInviteInner').fadeOut('slow');
+                        }, 1000);
+                    }
+
+                }
+            });
+        }
+</script>
+

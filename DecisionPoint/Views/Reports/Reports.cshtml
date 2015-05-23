@@ -1,0 +1,171 @@
+﻿@model DecisionPoint.Models.Reports
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "UsersViewReport";
+    WebGrid grdreportdetails = new WebGrid(ajaxUpdateContainerId: "reportgrid", rowsPerPage: Model.rowperpage);
+    if (Model.Reportdetails != null)
+    {
+        grdreportdetails.Bind(Model.Reportdetails, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+    
+}
+ @functions {
+     public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+     {
+         return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+             grid.SortDirection == SortDirection.Ascending ? "↑" :
+             "↓" : string.Empty);
+     }
+    }
+<style>
+    .ui-datepicker {
+        z-index:10 !important;
+    }
+</style>
+<h2>Report</h2>
+@using (Html.BeginForm("ReportViwer", "Reports", FormMethod.Post, new { target = "_blank" }))
+{
+<div>
+<div>
+    <h5>Invited Staff Details</h5>
+    <span>Date From</span>
+
+    <div class='datetimepicker input-append' style="margin-top:8px;margin-left:4px;">
+        @Html.TextBoxFor(model => model.DateFrom, new { @class = "input-xlarge", @style = "width:165px;", @id = "datefrom", @placeholder = "Effective Date", @maxlength = "11" })
+    </div>
+    <span>Date To</span>
+     <div class='datetimepicker input-append' style="margin-top:8px;margin-left:4px;">
+          @Html.TextBoxFor(model => model.DateTo, new { @class = "input-xlarge", @style = "width:165px;", @id = "dateto", @placeholder = "Effective Date", @maxlength = "11" })
+      </div>
+    <span>Status</span>
+     <div class='datetimepicker input-append' style="margin-top:8px;margin-left:4px;">
+         @Html.DropDownListFor(model => model.Status, new SelectList(new[]
+                                          {
+                                              new {ID="1",Value="Active"},
+                                              new{ID="0",Value="Pending"},
+                                              
+                                          },
+                            "ID", "Value", 0), "--Select--")
+         
+      </div>
+</div>
+<div style="margin-top:10px;">
+    
+    <button id="lnkviewreport" class="btn btn-primary" type="submit">Genrate Report</button>
+   
+</div>
+
+</div>
+}
+
+<div id='reportdetails' style="padding-top: 20px; display: block;">
+        @if (Model.Reportdetails != null)
+        {
+            if (Model.Reportdetails.Count > 0)
+            {
+                               
+            @grdreportdetails.GetHtml(htmlAttributes: new { id = "reportgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+        
+
+grdreportdetails.Column(columnName:"DateFrom",header: Sorter("DateFrom", "Date From", grdreportdetails),
+format:  @<text>
+@if (item.DateFrom != null)
+{
+       <span>  @string.Format("{0:MM/dd/yyyy}",
+             item.DateFrom)</span> 
+}
+else
+{<span style="margin-left:27px;">-</span>}
+ </text>),
+
+grdreportdetails.Column(columnName:"DateTo",header:Sorter("DateTo", "Date To", grdreportdetails),format:  @<text>
+@if (item.DateTo != null)
+{
+       <span>  @string.Format("{0:MM/dd/yyyy}",
+             item.DateTo)</span> 
+}
+else
+{<span style="margin-left:27px;">-</span>}
+ </text>),
+
+grdreportdetails.Column(columnName:"Status",header:Sorter("Status", "Status", grdreportdetails)),
+grdreportdetails.Column(header: "",format: @<text>
+            <a title="View Report" class="viewrpt"  onclick="GernrateReport('@item.DateFrom','@item.DateTo','@item.Status')" style="cursor: pointer;font-style:italic;">View Report
+            </a>
+            </text>, canSort: false),
+    })
+            }
+        }
+    </div>
+
+
+<script>
+    $(document).ready(function () {
+        jQuery(function ($) {
+            var myDate = new Date();
+            var prettyDate = (myDate.getMonth() + 1) + '/' + myDate.getDate() + '/' +
+                    myDate.getFullYear();
+            $('#datefrom').datepicker();
+            $('#dateto').datepicker();
+        })
+       
+            $('#datefrom').val($('#datefrom').val().substr(0, 10));
+            $('#dateto').val($('#dateto').val().substr(0, 10));
+    })
+    function formattedDate(date) {
+        var d = new Date(date || Date.now()),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [month, day, year].join('/');
+    }
+
+    function GernrateReport(datefrom,dateto,status)
+    {
+    
+        if (status == "Active") {
+            status = 1;
+        }
+        else {
+            status = 0;
+        }
+
+        $('.viewrpt').attr("href", "@Url.Content("~/Reports/GenrateUsersViewReport?dateFrom=")" + datefrom + "&dateTo=" + dateto + "&status=" + status);
+        $('.viewrpt').attr("target", "_blank");
+
+       @*$('.viewrpt').attr("href", "@Url.Content("~/Reports/ReportViwer?DateFrom=")" + datefrom + "&DateTo=" + dateto + "&Status=" + status);
+        $('.viewrpt').attr("target", "_blank");
+        $.ajax({
+            url: "@Url.Content("~/Reports/ReportViwer/")",
+            data: JSON.stringify({
+                DateFrom: datefrom,
+                DateTo: dateto,
+                Status: status
+            }),
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            type: "POST",
+            datatype: 'json',
+            success: function (result) {
+                var win = window.open();
+               win.document.write(result);
+              //  win.history.pushState({ "html": result, "pageTitle": "abc" }, "", "http://localhost:32750/Reports/ReportViwer");
+                
+               
+               
+            }
+        });*@
+
+    }
+</script>

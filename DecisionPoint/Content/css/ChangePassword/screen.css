@@ -1,0 +1,381 @@
+/* line 2 */
+.user .btn {
+  width: 210px;
+  margin-bottom: 10px;
+  text-align: left !important;
+}
+/* line 6 */
+.user .label {
+  float: right;
+  font-size: 0.8em;
+  margin-top: 2px;
+}
+
+/* line 11 */
+.heading {
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0px;
+  margin-bottom: 25px;
+}
+/* line 15 */
+.heading .span4 {
+  line-height: 60px;
+  text-align: right;
+}
+/* line 18 */
+.heading .divider {
+  font-size: 0.8em;
+  color: #999999;
+  font-weight: 400;
+}
+/* line 22 */
+.heading .company {
+  color: #555555;
+  font-weight: 400;
+}
+
+/* line 26 */
+.navbar .brand {
+  padding: 20px 20px;
+  font-size: 24px;
+  font-weight: 400;
+  color: #222222;
+}
+
+/* line 31 */
+#header .navbar .nav > li > a {
+  padding: 30px 15px;
+  color: #666;
+  font-size: 17px;
+  font-weight: normal;
+  
+}
+
+/* line 37 */
+#content {
+  margin-top: 40px;
+  /*min-height: 500px;*/
+  background-repeat: no-repeat;
+  background-position: 2% 1%;
+}
+
+/* line 42 */
+#footer {
+  /*padding: 50px 0 100px;*/
+  font-size: 12px;
+
+}
+
+/* line 46 */
+.navbar .brand {
+  margin: 0;
+  padding: 8px 0 !important;
+}
+/* line 50 */
+.navbar .brand img {
+  height: 40px;
+}
+
+/* line 52 */
+.navbar a.brand {
+  padding-top: 20px;
+}
+
+/* line 54 */
+.alert-center-box {
+  width: 500px;
+  margin: 0 auto;
+  margin-bottom: 15px;
+}
+
+/* line 58 */
+.center-box {
+  border: 1px solid #cccccc;
+  width: 650px;
+  padding: 10px 25px;
+  margin: 0 auto;
+  box-shadow: 2px 2px 3px #cccccc;
+}
+
+/* line 66 */
+.announcement h4 {
+  margin-top: 0;
+}
+/* line 68 */
+.announcement p {
+  margin: 15px 0;
+  padding-left: 25px;
+  background: url(/images/comment.png) no-repeat 0 2px;
+  color: #666666;
+}
+
+/* line 74 */
+.pagination ul > li > a, .pagination ul > li > span {
+  padding: 3px 10px;
+  line-height: 18px;
+  font-size: 12px;
+}
+
+/* line 79 */
+select.filter {
+  margin: 0;
+  font-size: 13px;
+  line-height: 22px;
+  height: 22px;
+  border: 1px solid #444444;
+}
+
+/* line 85 */
+select.filter-small {
+  width: 120px;
+}
+
+/* line 87 */
+select.filter-tiny {
+  width: 80px;
+}
+
+/* line 91 */
+.tabbable .nav-tabs li {
+  font-size: 16px;
+}
+/* line 93 */
+.tabbable .nav-tabs li.active {
+  font-weight: bold;
+  color: #111111;
+}
+/* line 96 */
+.tabbable .nav-tabs .nav-tabs > li > a {
+  padding: 12px 18px;
+  line-height: 22px;
+}
+
+/* line 99 */
+.tab-content {
+  padding: 25px 20px;
+  border-left: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+}
+
+/* line 106 */
+.table-no-border th, .table-no-border td {
+  border: 0;
+  padding-left: 0 !important;
+}
+
+/* line 109 */
+.table th {
+  background-color: #ececec;
+}
+
+/* line 111 */
+.table th, .table td {
+  padding: 10px 8px;
+}
+
+/* line 113 */
+form label {
+  font-weight: 700;
+}
+
+/* line 115 */
+i {
+  margin-right: 0.15em;
+}
+
+/* line 117 */
+.text-center {
+  text-align: center !important;
+}
+
+/* line 120 */
+.lighter {
+  font-weight: normal;
+}
+
+/* line 123 */
+.muted {
+  font-weight: normal;
+}
+
+/* line 126 */
+.user-btn {
+  float: left;
+  text-align: left !important;
+  width: 180px;
+  margin: 3px;
+}
+
+/* line 133 */
+#special-teams .btn-info {
+  width: 200px;
+  text-align: left !important;
+}
+/* line 136 */
+#special-teams .special-team {
+  margin: 10px 0 25px;
+  background-color: snow;
+  padding: 0 15px;
+}
+
+/* line 143 */
+#training-show .table-condensed h5 {
+  margin: 0 0 5px;
+}
+/* line 145 */
+#training-show .table-condensed strong {
+  padding-right: 15px;
+}
+/* line 147 */
+#training-show .table-condensed td {
+  padding-bottom: 20px;
+}
+
+/* line 149 */
+.hide {
+  display: none;
+}
+
+/* line 153 */
+#org-report-structure .btn {
+  width: 120px;
+}
+/* line 155 */
+#org-report-structure .btn-user {
+  text-align: left;
+  width: 150px;
+}
+/* line 159 */
+#org-report-structure table td {
+  width: 160px;
+}
+
+/* line 164 */
+#library-standards .filters .btn {
+  margin: 0 3px;
+}
+
+/* line 167 */
+.skills {
+  width: 960px;
+}
+/* line 169 */
+.skills .skill {
+  width: 300px;
+  height: 180px;
+  float: left;
+  margin-right: 20px;
+}
+/* line 174 */
+.skills .skill ul {
+  margin: 0;
+  list-style: none;
+}
+/* line 177 */
+.skills .skill li {
+  float: left;
+  width: 140px;
+  margin-right: 10px;
+  padding: 3px 0;
+}
+
+/* line 183 */
+.search-result {
+  margin: 35px 0;
+}
+/* line 185 */
+.search-result .title {
+  font-size: 1.35em;
+}
+/* line 187 */
+.search-result .description {
+  font-size: 0.9em;
+  margin: 5px 0;
+  color: #666666;
+}
+/* line 191 */
+.search-result .meta {
+  display: inline;
+  margin-right: 15px;
+}
+/* line 194 */
+.search-result .meta strong {
+  color: #555555;
+}
+
+/* line 198 */
+#training-event-setup .step {
+  font-size: 22px;
+  color: #999999;
+  width: 100px;
+  padding-top: 15px;
+}
+/* line 203 */
+#training-event-setup label {
+  font-size: 16px;
+}
+
+/* line 207 */
+form#training-event-setup-wide select {
+  width: 140px;
+}
+
+/* line 210 */
+.box {
+  border: 1px solid #cccccc;
+  padding: 10px;
+  width: 350px;
+  margin-right: 10px;
+  margin-top: 10px;
+  display: inline;
+  float: left;
+}
+
+/* line 219 */
+.text-small {
+  font-size: 0.9em;
+}
+
+/* line 223 */
+#training-setup-2 .span3 {
+  width: 246px;
+}
+/* line 225 */
+#training-setup-2 .span7 {
+  width: 550px;
+}
+/* line 227 */
+#training-setup-2 .section {
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px dotted #f2f2f2;
+}
+/* line 231 */
+#training-setup-2 .section-heading {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+/* line 235 */
+#training-setup-2 .section-heading .btn {
+  width: 220px;
+  text-align: left;
+}
+/* line 238 */
+#training-setup-2 .section-heading .btn i {
+  float: right;
+  margin-top: 3px;
+}
+/* line 241 */
+#training-setup-2 select {
+  width: 246px;
+}
+/* line 243 */
+#training-setup-2 textarea {
+  width: 280px;
+}
+/* line 245 */
+#training-setup-2 .btn.disabled, #training-setup-2 .btn[disabled] {
+  color: #999999;
+}

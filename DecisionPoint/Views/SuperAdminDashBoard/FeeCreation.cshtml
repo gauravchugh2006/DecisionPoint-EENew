@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "FeeCreation";
+}
+
+
+@using (Html.BeginForm("InitialRegistration", "company", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div id='content'>
+      <div class='container'>
+        <div class='content-box'>
+             <h3 style="margin-left:8px;">Create Fee Structure</h3>
+           <form class="form-horizontal">
+               <div style="margin-left:-68px;">
+                    <div class="control-group">
+                        <label class="control-label">Special Code</label>
+                        <div class="controls">
+                            <input type="text" />
+                           @* @Html.TextBoxFor(model => model.CompanyName, new { maxlength = 100,@class = "input-xlarge", @placeholder = "Company Name" })*@
+
+                        </div>
+                        <div class="controls">
+                            @*<span class="validation">@Html.ValidationMessageFor(model => model.CompanyName)</span>*@
+                        </div>
+                    </div>
+
+                   
+                    <div class="control-group">
+                        <label class="control-label">Company Fee </label>
+                        <div class="controls">
+                            @*@Html.TextBoxFor(model => model.MiddleName, new { maxlength = 1, @class = "input-xlarge", @placeholder = "Middle Initial", @onkeypress="return onlyAlphabets(event,this);" })*@
+                            <input type="text" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Per Staff Fee</label>
+                        <div class="controls">
+                            @*@Html.TextBoxFor(model => model.LastName, new { maxlength = 20, @class = "input-xlarge", @placeholder = "Last Name", @onkeypress="return onlyAlphabets(event,this);" })*@
+                            <input type="text" />
+                        </div>
+                        <div class="controls">
+                            @*<span class="validation">@Html.ValidationMessageFor(model => model.LastName)</span>*@
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Per Field Staff Fee</label>
+                        <div class="controls">
+                            @*@Html.TextBoxFor(model => model.Email, new { @class = "input-xlarge", @placeholder = "Email" })*@
+                            <input type="text" />
+                        </div>
+                        <div class="controls">
+                            @*<span class="validation">@Html.ValidationMessageFor(model => model.Email)</span>*@
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Invoice</label>
+                        <div class="controls">
+                           <input type="checkbox" />
+                        </div>
+                        <div class="controls">
+                            @*<span class="validation">@Html.ValidationMessageFor(model => model.FirstName)</span>*@
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label"></label>
+                        <div class="controls">
+                            <button id="btnfeesave" class='btn btn-primary' type='submit'>Save</button>
+                            <span class="validation">@ViewBag.ErrorMessage</span>
+                        </div>
+                    </div>
+                   </div> 
+                </form>
+          
+        </div>
+      </div>
+    </div>
+    
+
+
+}

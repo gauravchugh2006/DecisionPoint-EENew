@@ -1,0 +1,409 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=8, IE=9, IE=10,IE=11" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @* <meta http-equiv="refresh" content="30">*@
+    <link href="~/Content/css/Register/screen.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css/Dashboardcss")
+    @Scripts.Render("~/bundles/register")
+    <link href="~/Content/css/Register/chosen.css" rel="stylesheet" />
+    <link href="~/Content/css/Register/fullcalendar.css" rel="stylesheet" />
+    <link href="~/Content/css/Register/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/Login/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <style>
+       
+            .active-new a {
+                color: black;
+            }
+
+                .active-new a:hover {
+                    color: #666666;
+                    background: none !important;
+                }
+
+            .active-new .number-div {
+                font-size: 22px;
+                padding: 4px 5px 0 0;
+            }
+
+            .active-new .text-div {
+                font-size: 21px;
+                font-weight: normal;
+                height: 31px;
+                padding-top: 4px;
+                position: relative;
+                color:#fff;
+            }
+
+            .active-new .dot_div {
+                position: absolute;
+                background: url(../Content/images/dot-img.png) no-repeat right center;
+                right: -32px;
+                top: 12px;
+                width: 13px;
+                height: 3px;
+            }
+
+        .d-active-new {
+            color: #FFFFFF;
+            margin-top: 10px;
+            padding-bottom: 5px;
+        }
+
+            .d-active-new a {
+                color: #7d7978;
+            }
+
+        li.d-active-new a:hover {
+            background-color: #f7f7f7 !important;
+            color: #000;
+        }
+
+        .number-div {
+            float: left;
+            height: 20px;
+            padding: 0 6px 0 0;
+        }
+
+        .text-div {
+            width: auto;
+            float: left;
+            height: 20px;
+            font-weight: normal;
+            position: relative;
+            color:#000;
+           
+        }
+
+        #company-setup .nav li {
+            margin-right: 22px !important;
+        }
+
+        .gray_back {
+            background: url("../Content/images/layoutimg-bg.jpg") no-repeat scroll left top / cover  #f7f7f7;
+            padding: 10px 0 10px 30px;
+            margin-bottom: 20px;
+        }
+
+            .gray_back .nav {
+                margin-bottom: 0;
+            }
+
+        .dot_div {
+            position: absolute;
+            background: url(../Content/images/dot-img.png) no-repeat right center;
+            right: -32px;
+            top: 8px;
+            width: 13px;
+            height: 3px;
+        }
+
+        #ConfirmSuperAdmindiv {
+            width: 150px;
+            height: 150px;
+            padding: 0;
+            background-color: #063;
+            position: relative;
+            margin: 0;
+        }
+
+        .ui-resizable-se {
+            height: 10px;
+            width: 10px;
+            background-color: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            bottom: 2px;
+            right: 1px;
+        }
+
+        div#ConfirmSuperAdmindiv textarea {
+            max-height: 100%;
+            min-height: 150px;
+        }
+
+        li.d-active-new.active a {
+            background: none !important;
+            color: #7D7978 !important;
+        }
+    </style>
+    <script src="~/Scripts/jquery-ui.1.10.4.js"></script>
+
+
+    <link href="~/Content/css/Dashboard/jquery-ui.css" rel="stylesheet" />
+
+    
+</head>
+<div id="ConfirmdivAdmin" class="popup" style="background-clip: padding-box; min-height: 390px; min-width: 520px; background-color: #FFFFFF; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none; left: 45%; display: none; position: absolute; margin: 0px 0 0 0px !important; float: right;">
+    <div style="float: right; width: 15px; height: 15px; top: 5px;">
+        <a style="cursor: pointer;">
+            <img id="btnGudielose" src="~/Content/images/Close-Icon-mail.png" width="15" height="15" alt="" border="0" /></a>
+    </div>
+    <h4>System User Guide</h4>
+
+
+    <div id="lblGuideInst" style="margin-left: 5px; margin-top: 40px; overflow: auto; width: 95%; height: 80%; left: 1%; top: 1%; right: 1%; position: absolute; resize: both; border: 1px solid rgba(0, 0, 0, 0.3); min-height: 340px; min-width: 485px;">
+    </div>
+
+    <div style="float: left; height: 30px;">
+    </div>
+
+</div>
+
+<body>
+    <div id='header'>
+        <div class='navbar navbar-static-top'>
+            <div class='navbar-inner'>
+                <div class='container'>
+                    <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                    </a>
+                    <div class='brand'>
+                        <a class='brand'> <img src="~/Content/images/logo-ee.png" /></a>
+                    </div>
+
+                    <div class='container nav-collapse'>
+                        <ul class='nav pull-right'>
+                           
+
+                            <li>
+
+                                @Html.ActionLink("Sign Out", "LogOut", "Login")
+
+                            </li>
+                            @if (Convert.ToString(Session["IsSuperAdmin"]) != string.Empty)
+                            {
+                                if (Session["IsSuperAdmin"].ToString().Trim() == "Yes".Trim())
+                                {
+                                <li id="SuperAdminInstruction"><a id="GuideInstruction" style="cursor: pointer; margin-left: 20px;">Guide</a> </li>
+                                }
+                                else
+                                { 
+                                <li id="AdminInstruction"><a id="GetInstruction" style="cursor: pointer; margin-left: 20px;">Guide</a> </li>
+                                }
+                            }
+                            else
+                            { 
+                                <li id="AdminInstruction"><a id="GetInstruction" style="cursor: pointer; margin-left: 20px;">Guide</a> </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content-wrapper main-content clear-fix" id="sectionid">
+        <div id='content'>
+            <div class='container'>
+                <div class='row'>
+                    <div class='span7'>
+
+                        @if (!string.IsNullOrEmpty(Convert.ToString(Session["logopath"], System.Globalization.CultureInfo.InvariantCulture)))
+                        {                              
+                            <img id="companylogo" src="@Session["logopath"]" />                               
+                        }
+
+                    </div>
+                    <div style="float: right; font-size: 15px; margin-top: -20px;display:none;">
+                        @if (Request["Type"] != null)
+                        {
+                            if (Request["Type"] == "IC")
+                            {
+                            <div>IC ID: @Session["CompanyId"]</div> 
+                            }
+                            else
+                            {
+                            <div>Company ID: @Session["CompanyId"]</div>
+                            }
+                        }
+                        else
+                        {
+                            <div>Company ID: @Session["CompanyId"]</div>
+                        }
+
+                    </div>
+                </div>
+                <div id="company-setup">
+                    @if (Request["Type"] != null)
+                    {
+                        if (Request["Type"] == "IC")
+                        {
+                        <h3>IC Account Set Up</h3>
+                        }
+                        else
+                        {
+                        <h3>Company Account Set Up</h3>
+                        }
+                    }
+                    else
+                    {
+                        <h3>Company Account Set Up</h3>
+                    }
+
+                    <div class="gray_back">
+                        @if (Request["Type"] != null)
+                        {
+                            if (Request["Type"] == "IC" && Request["Res"] == "1")
+                            {
+                            <ul id="ulLink" class="nav nav-pills">
+                                <li id="li1" class="active-new"><a href="#">
+                                    @*  <div class="number-div">1</div>*@
+                                    <div class="text-div">
+                                        Company Profile                                   
+                                    </div>
+                                </a></li>
+                            </ul>
+                            }
+                            else if (Request["Type"] == "IC" && Request["Res"] == "2")
+                            {
+                            <ul id="ulLink" class="nav nav-pills">
+                                <li id="li1" class="active-new"><a href="#">
+                                    @* <div class="number-div">1</div>*@
+                                    <div class="text-div">
+                                        Company Profile
+                                    <div class="dot_div"></div>
+                                    </div>
+                                </a></li>
+                                <li id="li5" class="d-active-new"><a href="#">
+                                    @* <div class="number-div">2</div>*@
+                                    <div class="text-div">
+                                        Lisence<div class="dot_div"></div>
+                                    </div>
+                                </a></li>
+                                <li id="li4" class="d-active-new"><a href="#">
+                                    @*<div class="number-div">3</div>*@
+                                    <div class="text-div">
+                                        Payment
+                                    </div>
+                                </a></li>
+
+
+                            </ul>
+                            }
+                        }
+                        else
+                        {
+                            <ul id="ulLink" class="nav nav-pills">
+                                <li id="li1" class="d-active-new"><a href="#">
+                                    @* <div class="number-div">1</div>*@
+                                    <div class="text-div">
+                                        Company Profile
+                                    <div class="dot_div"></div>
+                                    </div>
+                                </a></li>
+                                <li id="li3" class="d-active-new"><a href="#">
+                                    @* <div class="number-div">2</div>*@
+                                    <div class="text-div">
+                                        Admin Account<div class="dot_div"></div>
+                                    </div>
+                                </a></li>
+                                <li id="li5" class="d-active-new"><a href="#">
+                                    @*<div class="number-div">3</div>*@
+                                    <div class="text-div">
+                                        License<div class="dot_div"></div>
+                                    </div>
+                                </a></li>
+                                <li id="li4" class="d-active-new"><a href="#">
+                                    @* <div class="number-div">4</div>*@
+                                    <div class="text-div">
+                                        Payment
+                                    </div>
+                                </a></li>
+
+
+                            </ul>
+                        }
+                    </div>
+
+                    <div id="f1"></div>
+                    <div id="f2"></div>
+
+                    <div id="f4"></div>
+                </div>
+                <div class='content-box'>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div id='footer'>
+        <div class='container'>
+            <div class='row-fluid'>
+
+                <div class='span12'>
+                    <div class='text-right'>
+                        Copyright @System.DateTime.Now.Year &sdot; All rights reserved
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    $("#AdminInstruction").click(function (event) {
+
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetGuideInstruction/")',
+                type: 'GET',
+                cache: false,
+                data: { IsActive: false },
+                success: function (result) {
+
+                    $('#lblGuideInst').append(result);
+                    var top = $('#AdminInstruction').position();
+
+                    $('#ConfirmdivAdmin').animate({ 'top': top.top + 60 }).css("display", "block");
+                    $("#licompanyDashboard").removeClass("active");
+                    $("#SuperAdminInstruction").addClass("active");
+
+                },
+                error: function (result) {
+
+
+                }
+            })
+
+        })
+
+        $(function () { $("#ConfirmdivAdmin").draggable({ containment: "window" }); });
+
+
+        $("#ConfirmdivAdmin").resizable({
+
+            minWidth: 150,
+            minHeight: 150,
+            resize: function (event, ui) {
+                var ed = tinymce.activeEditor;
+                var width = parseFloat($(this).width()) - 10;
+                var height = parseFloat($(this).height()) - 170;
+                ed.theme.resizeTo(width, height);
+            },
+            stop: function (event, ui) {
+
+
+            }
+
+        });
+
+        $('#btnGudielose').click(function () {
+
+            $('#ConfirmdivAdmin').css("display", "none");
+            $("#licompanyDashboard").addClass("active");
+            $("#SuperAdminInstruction").removeClass("active");
+            $('#lblGuideInst').text("");
+        })
+</script>
+</html>

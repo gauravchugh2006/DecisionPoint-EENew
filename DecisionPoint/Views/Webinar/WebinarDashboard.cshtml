@@ -1,0 +1,379 @@
+﻿@model DecisionPoint.Models.WebinarDashboardModel
+@{
+    ViewBag.Title = "Webinar Dashboard";
+
+    WebGrid grdvendor = new WebGrid(ajaxUpdateContainerId: "messagegrid", rowsPerPage: Model.rowperpage);
+    if (Model.WebinarUsersList != null)
+    {
+        grdvendor.Bind(Model.WebinarUsersList, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+@Styles.Render("~/Content/css/Logincss")
+@Styles.Render("~/Content/css/bootcss")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jqueryval")
+<link href="~/Content/css/Dashboard/style.css" rel="stylesheet" />
+<style type="text/css">
+    .input-validation-error
+    {
+        border: solid 1px red !important;
+    }
+
+    p
+    {
+        margin: 0;
+        padding: 0;
+        display: inline;
+    }
+
+
+
+    table tr th
+    {
+        color: #0088CC;
+        text-decoration: none;
+    }
+    .table th, .table td {
+        padding: 8px 4px !important;
+    }
+    table thead tr th {
+    background-color: #fff !important;
+}
+    .validation
+    {
+        color: red;
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // $('#div_getUpcomingWebinars').click(function () {
+        $.ajax({
+            url: '../Webinar/getUpcomingWebinar',
+            type: 'POST',
+            async: true,
+            success: function (data) {
+                var str = '';
+                result = $.parseJSON(data);
+                $.each(result, function (i, item) {
+                    var startdate = new Date(item.times[0].startTime);
+                    var enddate = new Date(item.times[0].endTime);
+                    str += '<tr><td>' + item.webinarKey + '</td><td>' + item.subject + '</td><td>' + item.organizerKey + '</td><td>' + startdate + '</td><td>' + enddate + '</td><td><a href="#" onclick="showInvitePopup(' + item.webinarKey + ')">Invite User</a></td></tr>';
+                });
+                $('#tbl_UpcomingWebinarDetails tbody').html(str);
+                $('#div_UpcomingWebinarDetails').show();
+            },
+            error: function (data) {
+
+
+            }
+        })
+        //})
+
+        $('#btnClosePopup').click(function () {
+            $('#EditCsv').hide();
+            $('#popupCSV').hide();
+        })
+
+        $('#btnAddWebinar').click(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Webinar/SetWebinarUserDetails/")',
+                data: JSON.stringify({
+                    UserName: $('#txtUserName').val(),
+                    Password: $('#txtpassword').val(),
+                    OrganiserId: $('#txtOrganizerId').val(),
+                    AppKey: $('#txtAppKey').val(),
+                    UserId: $('#hid_UserId').val(),
+                    Id: $('#hid_id').val(),
+                    IsActive: true,
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if (result > 0) {
+                        $('#divManualInviteOuter').show();
+                        $('#divManualInviteInner').show();
+                        $('#dvSaveMsg').text('Saved Successfully..!!');
+                        setTimeout(function () {
+                            $('#divManualInviteOuter').fadeOut('slow');
+                            $('#divManualInviteInner').fadeOut('slow');
+                            window.location.reload();
+                        }, 1000);
+                    }
+                    else {
+                        $('#divManualInviteOuter').show();
+                        $('#divManualInviteInner').show();
+                        $('#dvSaveMsg').text('Something Went Wrong..!!');
+                    }
+                }
+            })
+        });
+    })
+    function showInvitePopup(id, userId, userName, password, organizerId, appKey) {
+        $('#hid_id').val(id);
+        $('#hid_UserId').val(userId);
+        $('#txtUserName').val(userName);
+        $('#txtpassword').val(password);
+        $('#txtOrganizerId').val(organizerId);
+        $('#txtAppKey').val(appKey);
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+    }
+    function showremovepopup(id, userId) {
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/Webinar/SetWebinarUserDetails/")',
+            data: JSON.stringify({
+                UserId: userId,
+                Id: id,
+                IsActive: false,
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                if (result > 0) {
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvSaveMsg').text('Details Removed');
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvSaveMsg').text('Something Went Wrong..!!');
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+                }
+
+            }
+        });
+    }
+    function validateSave() {
+
+    }
+</script>
+@using (Html.BeginForm("WebinarDashboard", "Webinar", FormMethod.Post, new { id = "SubmitForm" }))
+{ 
+    <div id='header'>
+        <div class='navbar navbar-static-top'>
+            <div class='navbar-inner'>
+                <div class='container'>
+                    <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                    </a>
+                    <div class='brand'>
+                    </div>
+                    <div class='container nav-collapse'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id='content'>
+        <div class='container'>
+            <div id='login'>
+                <div style="width: 100%; min-height: 400px;">
+                    <h2>
+                        <i class='iconic-user'></i>
+                        GoToWebinar      
+                    </h2>
+                    <h3>Dashboard</h3>
+                    <hr />
+                    <ul class='nav nav-tabs' id='my_tabs'>
+                        <li id="step1content">
+                            @Html.ActionLink("STEP 1: Schedule Webinar", "WebinarDashboard", "Webinar")
+
+                        </li>
+                        <li id="step2recipient" class="prevent">
+                            @Html.ActionLink("STEP 2: Invite User", "Invite", "Webinar", new { id = 1 }, null)
+
+                        </li>
+                        @*<li id="step3staging">
+                        @Html.ActionLink("Staging ", "CommunicationStaging", "CompanyDashBoard", new { id = 1 }, null)
+
+                    </li>*@
+                    </ul>
+                    <div class='row'>
+                        <div id='vendor' style="padding-top: 20px;">
+                            @if (Model.WebinarUsersList != null)
+                            {
+       
+                                @grdvendor.GetHtml(htmlAttributes: new { id = "messagegrid" },
+
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+    columns: new[] {    
+         
+  grdvendor.Column(columnName:"CompanyId",header : Sorter("CompanyId", "Company ID", grdvendor),format:@<text>
+
+                                <a class="@item.UserId"  onmousedown="jumptoprofilepage('@item.UserId','@item.CompanyName',event)" style="cursor: pointer" >@(item.CompanyId)</a>
+                                </text>,style:"grid-width150"),  
+         grdvendor.Column("CompanyName" ,header: Sorter("CompanyName", "Business Name",grdvendor),format:@<text>
+                                <a class="@item.UserId"  onmousedown="jumptoprofilepage('@item.UserId','@item.CompanyName',event)" style="cursor: pointer" >@(item.CompanyName)</a>
+
+                                </text>,style:"grid-width150"),
+         grdvendor.Column(columnName:"ContactName",header: Sorter("ContactName", "Contact Name",grdvendor),style:"grid-width150"),
+         
+         grdvendor.Column( columnName:"OrganiserId" ,header:  Sorter("OrganiserId", "Organiser Id", grdvendor),format:  @<text>
+                                @if(item.IsActive)
+                            {
+<span>@item.OrganiserId</span>
+                               }else
+                               {
+<span>&nbsp;</span>
+                               }
+                                </text>,style:"grid-width150"),
+         grdvendor.Column(columnName:"AppKey",header: Sorter("AppKey", "AppKey",grdvendor),format:  @<text>
+                                @if(item.IsActive)
+                            {
+<span>@item.AppKey</span>
+                               }else
+                               {
+<span>&nbsp;</span>
+                               }
+                                </text>,style:"grid-width150"),
+         grdvendor.Column(columnName:"UserName",header: Sorter("UserName", "User Name",grdvendor),
+         format:  @<text>
+                                @if(item.IsActive)
+                            {
+<span>@item.UserName</span>
+                               }else
+                               {
+<span>&nbsp;</span>
+                               }
+                                </text>,
+         style:"grid-width150"),
+         grdvendor.Column(columnName:"Password",header: Sorter("Password", "Password",grdvendor),
+         format:  @<text>
+                                @if(item.IsActive)
+                            {
+<span>@item.Password</span>
+                               }else
+                               {
+<span>&nbsp;</span>
+                               }
+                                </text>,
+         style:"grid-width150"),     
+         grdvendor.Column(columnName:"", format:  @<text>
+
+
+                                <a href="#" onclick="showInvitePopup('@item.Id','@item.UserId','@item.UserName','@item.Password','@item.OrganiserId','@item.AppKey')" class="btn btn-mini btn-info" style="padding:0 10px 0 10px;margin-left:5px;">Add</a>
+                                @if(item.IsActive)
+                            {
+<a title="Remove Webinar Permission" onclick="showremovepopup('@item.Id','@item.UserID')" style="cursor:pointer; ">
+                                    <img src="@Url.Content("~/Content/images/delete.png")" /></a>
+                            }
+                                </text>, canSort: false,style:"grid-width285"),    
+        })
+        
+       
+                            }
+                        </div>
+                        @* <iframe src="http://gotowebinar.com" style="width: 100%; height: 100%; overflow: hidden;"></iframe>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id='footer'>
+        <div class='container'>
+            <div class='row'>
+                <div class='span6'>
+                </div>
+                <div class='span6'>
+                    <div class='text-right'>
+                        Copyright 2014 &sdot; All rights reserved
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@*Edit Popup*@
+<div class="profiletrans" id="EditCsv"></div>
+<div class="popup" id="popupCSV" style="width: 30%; height: auto; top: 200px; left: 33%; z-index: 10;">
+    <div class="profile-popup" style="display: block; width: auto; height: auto;">
+
+        <div class="tittle-MessageBox">
+            <span>Add Webinar Details</span>
+            <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" />
+        </div>
+        <div style="float: left; margin-left: 10px; margin-top: 3px;">
+            <div class="control-group">
+                <label class="control-label">User Name<sup style="color: red; font-size: 10px;"> *</sup></label>
+                <div class="controls">
+                    <input type="text" id="txtUserName" maxlength="50" class="input-xlarge" placeholder="User Name" />
+                </div>
+                <div class="controls">
+                    <span class="validation">User Name Required.</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Password<sup style="color: red; font-size: 10px;"> *</sup></label>
+                <div class="controls">
+                    <input type="password" id="txtpassword" maxlength="50" class="input-xlarge" placeholder="Password" />
+                </div>
+                <div class="controls">
+                    <span class="validation">Password Required.</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Organizer Id<sup style="color: red; font-size: 10px;"> *</sup></label>
+                <div class="controls">
+                    <input type="text" id="txtOrganizerId" maxlength="50" class="input-xlarge" placeholder="Organizer Id" />
+                </div>
+                <div class="controls">
+                    <span class="validation">Organizer Id Required.</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">App Key<sup style="color: red; font-size: 10px;"> *</sup></label>
+                <div class="controls">
+                    <input type="text" id="txtAppKey" class="input-xlarge" maxlength="50" placeholder="App Key" />
+                </div>
+                <div class="controls">
+                    <span class="validation">App Key Required.</span>
+                </div>
+            </div>
+        </div>
+        <div style="float: left; margin-left: 85%;">
+            <div class="btn btn-primary" id="btnAddWebinar">Save</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+    </div>
+
+</div>
+<input type="hidden" id="hid_id" />
+<input type="hidden" id="hid_UserId" />
+
+

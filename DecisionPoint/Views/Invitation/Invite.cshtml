@@ -1,0 +1,711 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "Invite";
+    WebGrid grdcurrenrinvite = new WebGrid(ajaxUpdateContainerId: "currentinvitegrid1", rowsPerPage: Model.rowperpage);
+    if (Model.currenrinviteDetails != null)
+    {
+        grdcurrenrinvite.Bind(Model.currenrinviteDetails, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+    //Removed
+    WebGrid grdremovedinvite = new WebGrid(ajaxUpdateContainerId: "removedinvitegrid1", rowsPerPage: Model.rowperpage);
+    if (Model.removedinviteDetails != null)
+    {
+        grdremovedinvite.Bind(Model.removedinviteDetails, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+    
+}
+
+
+<style>
+    .grid-width300 {
+        width: 120px;
+    }
+
+    .grid-width40 {
+        width: 40px;
+    }
+
+    .grid-width100 {
+        width: 65px;
+    }
+
+    .width60 {
+        width: 60px;
+    }
+
+    .setwidth {
+        background-color: #F2F2F2;
+    }
+
+    .webgridcol1 {
+        width: 200px !important;
+    }
+
+    .webgridcol4 {
+        width: 187px;
+    }
+
+    #ui-id-1 {
+        height: 300px;
+        overflow-y: auto;
+    }
+
+    .table th, .table td {
+        padding: 8px 9px;
+    }
+</style>
+
+<div class='heading'>
+    <div class='row'>
+        <h3>Invited List</h3>
+    </div>
+</div>
+<div id='users'>
+
+    <div style="float: right">
+        @if (TempData["isCurrent"].ToString() == "1")
+        {
+            <input type="radio" id="currentinviterdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" checked /><b>Current</b> 
+                   
+        }
+        else
+        {
+            <input type="radio" id="currentinviterdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" /><b>Current</b> 
+        }
+        @if (TempData["isCurrent"].ToString() == "0")
+        {
+            <input type="radio" id="pastinviterdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" checked /><b>Archived</b>    
+        }
+        else
+        {
+            <input type="radio" id="pastinviterdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" /><b>Archived</b>    
+        }
+
+    </div>
+
+    @*funtion used for sorting in webgrid*@
+    @functions {
+        public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+
+    <div class="filter-bar">
+        <strong>Filter List By:</strong>
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                <b id="recordtypedd">Status</b>
+                <b class="caret"></b>
+            </a>
+            <ul role="menu" class="dropdown-menu">
+                <li onclick="filterrecord('All')">
+                    <a>
+                        <label style="font-weight: normal" id="allmsg" class="checkbox">
+                            All
+                        </label>
+                    </a>
+                </li>
+                <li onclick="filterrecord('IReceived')">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox" id="IReceived">
+                            Received
+                        </label>
+                    </a>
+                </li>
+                <li onclick="filterrecord('OPending')">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox" id="OPending">
+                            Pending
+                        </label>
+                    </a>
+                </li>
+                <li onclick="filterrecord('IOAccepted')">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox" id="IOAccepted">
+                            Accepted
+                        </label>
+                    </a>
+                </li>
+                <li onclick="filterrecord('IDenied')">
+                    <a>
+                        <label style="font-weight: normal" class="checkbox" id="IDenied">
+                            Denied
+                        </label>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div style="float: right; margin-bottom: 20px;">
+
+        <div class='input-append' style="margin-right: -2px;">
+
+            <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+            <button class='btn btn-primary' type='button' id="btngo" onclick="SearchInvites(0)" style="height: 28px;">Go</button>
+
+        </div>
+        <div style="float: right; margin-left: 5px;">
+            <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="SearchInvites(1)" style="display: none; height: 28px;">View All</button>
+        </div>
+
+    </div>
+
+    @*Invite Details*@
+
+    <div id='currentinvite' style="padding-top: 20px; display: block;">
+
+
+
+        @if (Model.currenrinviteDetails != null)
+        {
+           
+   
+                               
+            @grdcurrenrinvite.GetHtml(htmlAttributes: new { id = "currentinvitegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+
+
+grdcurrenrinvite.Column(columnName:"Status",header: Sorter("Status", "Status", grdcurrenrinvite),
+format:@<text>
+            <input type="hidden"id="userid" value="@item.UserId" />
+            @if (item.UserId != 0)
+            {
+                if (item.Type == "pendingO")
+                {
+<span>Pending<br /></span>
+                if (item.Date != null )
+                {
+<span>  @string.Format("{0:MM/dd/yyyy}",
+             item.Date)</span>
+           
+        }
+           
+        }
+                else if (item.Type == "receivedI")
+                {
+<span>Received<br /></span>
+                
+           
+        }
+                else if (item.Type == "accecptedO" || item.Type == "accecptedI")
+        {
+<span>Accepted<br /></span>
+                
+           
+        }
+                else if (item.Type == "denyI" || item.Type == "denyO")
+        {
+<span>Deny<br /></span>
+                
+           
+        }
+        else if (item.Status == 3)
+        {
+<span>Removed<br /></span>
+        
+           
+        }
+            }
+
+            </text>
+),
+grdcurrenrinvite.Column(columnName:"Relationship",header: Sorter("Relationship", "Relation", grdcurrenrinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+<span>@item.RelationShip</span>
+
+            }
+            </text>
+),
+grdcurrenrinvite.Column(columnName:"CompanyName",header: Sorter("CompanyName", "Company", grdcurrenrinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+            
+                @item.CompanyName
+            }
+
+            </text>
+),
+grdcurrenrinvite.Column(columnName:"Contact",header: Sorter("Contact", "Contact", grdcurrenrinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+                @item.Contact
+            }
+
+            </text>
+),
+grdcurrenrinvite.Column(columnName:"EmailId",header: Sorter("EmailId", "Email", grdcurrenrinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+            
+                @item.EmailId
+            }
+
+            </text>
+),
+grdcurrenrinvite.Column(columnName:"Phone",header: Sorter("Phone", "Phone", grdcurrenrinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+                if (item.Phone != null && item.Phone.Trim() != string.Empty)
+                {
+                   
+<span>  (@item.Phone.Substring(0, 3)) @item.Phone.Substring(3, 3)-@item.Phone.Substring(6, 4)</span>
+                
+                }
+                
+            }
+
+            </text>
+),
+grdcurrenrinvite.Column(columnName:"DocFlow",header: Sorter("DocFlow", "Flow", grdcurrenrinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+            
+<span>@item.DocFlow</span>
+            }
+            </text>
+),
+
+            grdcurrenrinvite.Column("", format: @<text>
+            @if (item.UserId != 0)
+            {
+
+                if (item.Type=="denyO" || item.Type=="pendingO")
+                {
+<button class="btn btn-mini btnminired" onclick="CommOperation('@item.TableId','3','@item.RelationShip','@item.CompanyId','@item.CompanyName','@item.UserType','@item.UserId')" title="Move to archive">Archive</button> 
+<button class="btn btn-mini btn-info" onclick="CommOperation('@item.TableId','4','@item.RelationShip','@item.CompanyId','@item.CompanyName','@item.UserType','@item.UserId')" title="Resend Invite">Resend</button>
+             
+      }
+      else if(item.Type=="accecptedO")
+      {
+<button class="btn btn-mini btnminired" onclick="CommOperation('@item.TableId','5','@item.RelationShip','@item.CompanyId','@item.CompanyName','@item.UserType','@item.UserId')" title="Move to archive">Archive</button> 
+      }
+             else if (item.Type == "receivedI")
+             {
+<button class="btn btn-mini btnminired" onclick="CommOperation('@item.TableId','2','@item.RelationShip','@item.CompanyId','@item.CompanyName','@item.UserType','@item.UserId')" title="Deny Invite" style="width:48px;">Deny</button> 
+
+       }
+            }
+
+            @if (item.UserId != 0)
+            {
+
+                if (item.Type == "receivedI")
+                {
+<a class="btn btn-mini btn-info" id="@item.TableId"  onclick="CommOperation('@item.TableId','1','@item.RelationShip','@item.CompanyId','@item.CompanyName','@item.UserType','@item.UserId')" title="Accecp Invite" style="margin-left:6px;">Accept</a>
+       }
+            
+            }
+@*  @if (item.UserId != 0)
+            {
+
+                if ((item.Type == "denyO" ||  item.Type == "pendingO") && item.UserType != "IC")
+                {
+<a title="Edit Flow" style="cursor:pointer;text-decoration:underline;font-style:italic;margin-left:10px;" onclick="EditInvite('@item.CompanyName','@item.Contact','@item.Phone','@item.DocFlow','@item.FlowTableId')">
+               Edit
+            </a>
+       }
+            }*@
+
+
+            </text>, style:"webgridcol4", canSort: false),
+
+    })
+        }
+
+
+    </div>
+
+    <div id='Removedinvite' style="padding-top: 20px;">
+        @if (Model.removedinviteDetails != null)
+        {
+           
+   
+                               
+            @grdremovedinvite.GetHtml(htmlAttributes: new { id = "removedinvitegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+
+
+grdremovedinvite.Column(columnName:"Status",header: Sorter("Status", "Status", grdremovedinvite),
+format:@<text>
+            <input type="hidden"id="userid" value="@item.UserId" />
+            @if (item.UserId != 0)
+            {
+                if (item.Type == "pendingO")
+                {
+<span>Pending<br /></span>
+                if (item.Date != null )
+                {
+<span>  @string.Format("{0:MM/dd/yyyy}",
+             item.Date)</span>
+           
+        }
+           
+        }
+                else if (item.Type == "receivedI")
+                {
+<span>Received<br /></span>  
+        }
+                else if (item.Type == "accecptedO" || item.Type == "accecptedI")
+        {
+<span>Accepted<br /></span> 
+        }
+                else if (item.Type == "denyI" || item.Type == "denyO")
+        {
+<span>Deny<br /></span>  
+        }
+        else if (item.Status == 3)
+        {
+<span>Removed<br /></span>
+           
+        }
+            }
+
+            </text>
+),
+grdremovedinvite.Column(columnName:"Relationship",header: Sorter("Relationship", "Relationship", grdremovedinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+
+
+<span>@item.RelationShip</span>
+        
+
+            }
+            </text>
+),
+grdremovedinvite.Column(columnName:"CompanyName",header: Sorter("CompanyName", "Company", grdremovedinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+            
+                @item.CompanyName
+            }
+
+            </text>
+),
+grdremovedinvite.Column(columnName:"Contact",header: Sorter("Contact", "Contact", grdremovedinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+            
+                @item.Contact
+            }
+
+            </text>
+),
+grdremovedinvite.Column(columnName:"EmailId",header: Sorter("EmailId", "Email", grdremovedinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+            
+                @item.EmailId
+            }
+
+            </text>
+),
+grdremovedinvite.Column(columnName:"Phone",header: Sorter("Phone", "Phone", grdremovedinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+
+                if (item.Phone != null && item.Phone.Trim() != string.Empty)
+                {
+                   
+<span>  (@item.Phone.Substring(0, 3)) @item.Phone.Substring(3, 3)-@item.Phone.Substring(6, 4)</span>
+                
+                }
+            }
+
+            </text>
+),
+grdremovedinvite.Column(columnName:"DocFlow",header: Sorter("DocFlow", "Flow", grdremovedinvite),
+format:@<text>
+            @if (item.UserId != 0)
+            {
+            
+<span>@item.DocFlow</span>
+            }
+            </text>
+),
+
+
+
+    })
+           
+        }
+    </div>
+</div>
+@*Edit  Popup*@
+<div class="profiletrans" id="EditCsv"></div>
+<div class="popup" id="popupCSV" style="width: auto; height: auto; top: 200px; margin-left: 161px;">
+    <div class="profile-popup" style="display: block; width: auto; height: auto;">
+        <div class="tittle-MessageBox">
+            <span>Edit Flow</span><a>
+                <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box" style="width: auto; height: auto;">
+
+            <table class="MessageSection-Box" style="width: auto; height: auto;">
+                <tr>
+                    <td>Company Name</td>
+                    <td></td>
+                    <td>
+                        <input id="CompanyName" name="CompanyName" type="text" maxlength="20" disabled="disabled"></td>
+
+                </tr>
+                <tr>
+                    <td>Contact</td>
+                    <td></td>
+                    <td>
+                        <input id="Contact" name="Contact" type="text" maxlength="20" disabled="disabled"></td>
+
+                </tr>
+                <tr>
+                    <td>Phone </td>
+                    <td></td>
+                    <td>
+                        <input id="Phone" name="Phone" type="text" maxlength="14" title="" pattern="^(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}$" disabled="disabled"></td>
+
+                </tr>
+
+                <tr>
+                    <td>Flow</td>
+                    <td></td>
+                    <td>
+                        @Html.DropDownList("ddFlow", new SelectList(Model.flowDetails, "flowId", "flowName"))</td>
+
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+
+                        <input type="button" id="btnSubmit" value="Submit" class="btn btn-small btn-info butmargin" style="margin-left: 270px;" />
+                    </td>
+                </tr>
+
+            </table>
+
+
+
+
+
+        </div>
+
+    </div>
+
+</div>
+<input type="hidden" value="0" id="useridforedit" />
+<input type="hidden" value="0" id="typeforedit" />
+<input type="hidden" id="Hid_InviteStatus" value="0" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('invite');
+        SetTheSeparationInGridOnInvitePage("currentinvitegrid");
+        SetTheSeparationInGridOnInvitePage("removedinvitegrid");
+    })
+    $("#txtserach").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/Invitation/SerachInInvite")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term, type: $('#Hid_InviteStatus').val(), inviteType: 0 },
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return { label: item, value: item };
+                    }))
+
+                }
+            })
+        }
+
+    });
+
+
+
+    //Filteration in webgrid using in drop down
+    function filterrecord(filtervalue) {
+        SetFilterValue(filtervalue);
+        var inviteType = 1;
+        var pageid = getpageid("currentinvitegrid");
+        if ($('#pastinviterdo').is(':checked')) {
+            inviteType = 0;
+            pageid = getpageid("removedinvitegrid");
+        }
+        $.ajax({
+            url: '@Url.Content("~/Invitation/Invite/?page=")' + pageid,
+            cache: false,
+            data: { 'id': filtervalue, 'type': parseInt(inviteType) },
+            datatype: 'json',
+            type: "GET",
+            success: function (result) {
+                if (inviteType == 1) {
+                    $('#currentinvitegrid').html($(result).find('#currentinvitegrid').html().trim());
+                    $('#Removedinvite').hide();
+                    $('#currentinvite').show();
+                    SetTheSeparationInGridOnInvitePage("currentinvitegrid");
+
+                }
+                else if (inviteType == 0) {
+                    $('#Removedinvite').html($(result).find('#Removedinvite').html().trim());
+                    $('#Removedinvite').show();
+                    $('#currentinvite').hide();
+                    SetTheSeparationInGridOnInvitePage("removedinvitegrid");
+
+                }
+
+
+            }
+        });
+
+    }
+
+    function CommOperation(unqiueId, value, docflow, companyId, companyname, userType, userId) {
+        $.ajax({
+            url: '@Url.Content("~/Invitation/InvitaionOperation/")',
+            cache: false,
+            data: { 'id': parseInt(unqiueId), 'type': parseInt(value) },
+            datatype: 'json',
+            type: "GET",
+            success: function (result) {
+                if (value == 4) {
+                    $.ajax({
+                        url: '@Url.Content("~/CompanyDashBoard/ResendMailToUser/")',
+                        data: { 'userId': parseInt(userId), 'type': userType },
+                        cache: false,
+                        type: "POST",
+                        success: function (result) {
+                            // alert(docflow);
+                            if (value == "1" && (docflow == "Client" || docflow == "Both")) {
+                                $('#' + unqiueId).attr("target", "_blank");
+
+                                $('#' + unqiueId).attr("href", "@Url.Content("~/CompanyDashBoard/ServiceTranslation?CompanyId=")" + companyId + "&CompanyName=" + companyname + "");
+                            }
+                            else {
+                                filterrecord("All");
+                            }
+                        }
+                    });
+                } else {
+                    // alert(docflow);
+                    if (value == "1" && (docflow == "Client" || docflow == "Both")) {
+                        $('#' + unqiueId).attr("target", "_blank");
+
+                        $('#' + unqiueId).attr("href", "@Url.Content("~/CompanyDashBoard/ServiceTranslation?CompanyId=")" + companyId + "&CompanyName=" + companyname + "");
+                    }
+                    else {
+                        filterrecord("All");
+                    }
+                }
+
+            }
+        });
+    }
+
+    function EditInvite(companyname, contact, phone, flow, flowid) {
+        $('#CompanyName').val(companyname);
+        $('#Contact').val(contact);
+        $('#Phone').val(phone);
+
+        $('#typeforedit').val(flowid);
+
+        var flowvalue = flow;
+        $("#ddFlow option").each(function () {
+
+            if ($(this).text() == flowvalue) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#popupCSV').css("top", poistion);
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+    }
+
+    //Edit Flow
+    $('#btnSubmit').click(function () {
+
+        $.ajax({
+            url: '@Url.Content("~/Invitation/UpdateFlow/")',
+            cache: false,
+            data: { 'UniqueId': parseInt($('#typeforedit').val()), 'flowId': parseInt($('#ddFlow').val()) },
+            datatype: 'json',
+            type: "GET",
+            success: function (result) {
+                //window.location.reload();
+                filterrecord("All");
+                $('#EditCsv').hide();
+                $('#popupCSV').hide();
+            }
+        });
+
+
+    })
+
+        $('#btnClosePopup').click(function () {
+            $('#EditCsv').hide();
+            $('#popupCSV').hide();
+        })
+
+        $('#currentinviterdo').change(function () {
+            if ($('#currentinviterdo').is(':checked')) {
+                $('#Hid_InviteStatus').val(0);
+                filterrecord("All");
+            } else {
+                $('#Removedinvite').show();
+                $('#currentinvite').hide();
+            }
+        });
+
+        $('#pastinviterdo').change(function () {
+            if ($('#pastinviterdo').is(':checked')) {
+                $('#Hid_InviteStatus').val(1);
+                filterrecord("All");
+            } else {
+                $('#Removedinvite').hide();
+                $('#currentinvite').show();
+            }
+        });
+        function SearchInvites(type) {
+            //0 call when user click on go button
+            if (type == 0) {
+                filterrecord($('#txtserach').val());
+                $('#btnviewallCompany').show();
+            }
+                //1 call when user click on view all button
+            else if (type == 1) {
+                filterrecord("All");
+                $('#btnviewallCompany').hide();
+                $('#txtserach').val('');
+            }
+        }
+</script>

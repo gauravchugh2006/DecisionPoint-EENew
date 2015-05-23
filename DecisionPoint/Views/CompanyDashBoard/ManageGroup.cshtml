@@ -1,0 +1,305 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+   
+        Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    
+    ViewBag.Title = "ManageGroup";
+    WebGrid grdreference = new WebGrid(ajaxUpdateContainerId: "titlegrid", rowsPerPage: Model.rowperpage);
+    if (Model.lstBind != null)
+    {
+        grdreference.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+<style>
+    .errorClass
+    {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div class='heading'>
+    <div class=''>
+        <h3>Manage Group</h3>
+    </div>
+</div>
+ <div >
+
+    <br />
+       <div class="w100">
+                    <span class="w200" style="margin-top: 4px;width:118px;">Group Name</span><span>
+                        <input type="text" id="txtreference" placeholder="Group Name" maxlength="50" onkeypress="ValidateTextBox(this.id,event)">
+                        <input type="hidden" id="referenceid" value="0" />
+                        <input type="hidden" id="isactivestatus" value="disable" />
+                    </span>
+
+                    <span><a id="btnsavereference" class="btn btn-small btn-info butmargin" style="margin-top: -5px;" title="Save Group">Create</a></span>
+                    <span style="display: none"><a id="btnreset" class="btn btn-small btn-info butmargin-left1" title="Reset">
+                        <img src="~/Content/images/reset.png" style="height: 17px;" /></a></span>
+
+
+                    <span><a id="btndisable" href="#" class="btn btn-small btn-info butmargin-left1" style="visibility: hidden; margin-top: -9px;" title="Enable/Disable Group">Disable</a></span>
+                </div>
+                  <div class="w100">
+                   <div id="divrefmsg" style="font-size: 12px; padding-bottom: 10px; color:green;padding-left:137px;"></div>
+                </div>
+
+    
+    <div class="w100" style="margin-top: 15px;">
+        <div id="referencediv">
+            @if (Model.lstBind != null)
+            {
+  
+                               
+                @grdreference.GetHtml(htmlAttributes: new { id = "titlegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+        
+         grdreference.Column(columnName:"Col1",header: Sorter("Col1", "Group Name", grdreference), format:@<text>
+                @if(item.Col1Status)
+                        {
+<a id="title1B" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="title1G" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@(item.Col1) </a>
+                        }
+                </text>,
+                            style:"grid-width181"),
+    grdreference.Column(columnName:"Col2",header: Sorter("Col2", "", grdreference), format:@<text>
+
+                @if(item.Col2Status)
+                        {
+<a id="title2B" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="title2G" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col2) </a>
+                        }
+
+
+                </text>,style:"grid-width181"),
+              grdreference.Column(columnName:"Col3",header: Sorter("Col3", "", grdreference), format:@<text>
+
+                @if(item.Col3Status)
+                        {
+<a id="title3B" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+  
+                        }
+                        else
+                        {
+<a id="title3G" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col3) </a>
+                        }
+
+                </text>,style:"grid-width181"),
+ 
+  
+    })
+            }
+
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        $('#divmsg').html('');
+     
+       
+    });
+
+   
+   
+    //Add new title name
+    $('#btnsavereference').click(function () {
+        var chkstatus=false;
+        var reference = $('#txtreference').val().trim();
+      
+        if (reference != "") {
+            var status = $('#btnsavereference').html();
+                    if (status == "Save") {
+                        status = "Edit";
+                    }
+                    else if (status == "Create") {
+                        status = "Save";
+                    }
+                    var referenceId = $('#referenceid').val();
+
+                   $.ajax({
+                        url: '@Url.Content("~/CompanyDashBoard/AddGroup/")',
+                        cache: false,
+                        contentType: 'application/html; charset=utf-8',
+                        type: 'GET',
+                        dataType: 'html',
+                        data: { 'group': reference, 'status': status, 'groupId': parseInt(referenceId) },
+                    })
+                  .success(function (result) {
+                      if (result>= 0) {
+                          if (status == "Edit") {
+                              $('#divrefmsg').html("Group Update Sucessfully");
+                          }
+                          else if (status == "Save") {
+                              $('#divrefmsg').html("Group Saved Sucessfully");
+                          }
+                          setTimeout(function () {
+                             // window.location.reload();
+                              FetchDetail(1);
+                              Reset();
+
+
+                          }, 1000);
+
+
+                      }
+                      else if (result == -1) {
+                          $('#divrefmsg').html("Group Name alreay exist");
+                          setTimeout(function () {
+                             // window.location.reload();
+                              FetchDetail(getpageid("titlegrid"));
+                              Reset();
+
+
+                          }, 1000);
+
+                      }
+                  })
+                  .error(function (xhr, status) {
+                 
+                  })
+              
+            }
+            else {
+            $('#txtreference').addClass("errorClass");
+
+            }
+        
+        });
+
+ 
+
+    $('#txtreference').on("paste", function (e) {
+        e.preventDefault();
+    });
+
+      
+        
+        //disable any title
+        $('#btndisable').click(function () {
+            var reference = $('#txtreference').val().trim();
+            if (reference != "") {
+                $('#txtreference').removeClass("errorClass");
+                var referenceid = $('#referenceid').val();
+                var isActive = $('#isactivestatus').val();
+                $.ajax({
+                    url: '@Url.Content("~/CompanyDashBoard/DisaEnaGroup")',
+                    cache: false,
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    data: { 'groupId': parseInt(referenceid), 'isActive': isActive },
+                })
+          .success(function (result) {
+              $('#divrefmsg').html("Status change sucessfully");
+              setTimeout(function () {
+                 
+                  FetchDetail(getpageid("titlegrid"));
+                  Reset();
+
+              }, 1000);
+
+          })
+          .error(function (xhr, status) {
+              //  alert(status);
+          })
+              } else {
+                  $('#txtreference').addClass("errorClass");
+              }
+        });
+        //Edit title any title
+    function EditTitle(title, isActive, titleId) {
+      //  alert(Source);
+        if (isActive != '') {           
+                $('#btndisable').show();
+                $('#isactivestatus').val("disable");
+                $('#btndisable').html('Disable');
+
+
+            }
+            else {            
+                $('#btndisable').show();
+                $('#btndisable').html('Enable');
+                $('#isactivestatus').val("enable");
+            }
+
+            $('#referenceid').val(titleId);
+            $('#txtreference').val(title);
+            $('#btndisable').css("visibility", "visible")
+            $('#btnsavereference').html("Save");
+          
+        }
+        //reset function
+        function Reset(){
+            $('#txtreference').val('');
+            $('#btndisable').hide();
+
+            $('#divrefmsg').html('');
+
+            $('#btnsavereference').html('Create');
+            $('#referenceid').val('0');
+            $('#txtreference').removeClass("errorClass");
+            $('#isactivestatus').val('disable');
+         
+        }
+  
+        //disbale and enalble on check box click
+        function DisEnable(referenceId, isActive) {
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/DisaEnaGroup")',
+                cache:false,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'groupId': parseInt(referenceId), 'isActive': isActive },
+            })
+        .success(function (result) {
+            FetchDetail(getpageid("titlegrid"));
+            Reset();
+          
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+      }
+
+    function FetchDetail(pageid) {
+       
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/Viewgroup/?page=")'+pageid,
+                cache: false,
+                type: "GET",
+                success: function (result) {
+                  $('#referencediv').html($(result).find('#referencediv').html().trim());
+                }
+            });
+        }
+</script>

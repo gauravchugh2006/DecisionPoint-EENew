@@ -1,0 +1,70 @@
+﻿@model DecisionPoint.Models.RegisterStep1
+@{
+    ViewBag.Title = "AdminConfirmation";
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    string companyId = Model.CompanyId;
+}
+
+<div class="row-fluid">
+<div class="span12">
+    <table>
+        <tr>
+            <td colspan="2">Your Admin person has been notified.</td>
+        </tr>
+        <tr>
+            <td><span style="font-weight:bold;">Name:</span><span id="adminName"></span></td>
+        </tr>
+        <tr>
+            <td><span style="font-weight:bold;">Phone Number:</span><span id="adminNumber">
+
+            </span></td>
+        </tr>
+         <tr>
+            <td colspan="2">If you have any questions please contact  <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span> <span style="color:#8dc73f;font-weight:bold;">TRACKER</span>
+          <span style="font-weight:bold;">Help Desk:</span>  (847)-826-4463
+<br />
+        Go to Login <a href="@Url.Content("~/Login/Login")" style="font-style:italic;text-decoration:underline;">Click Here</a></td>
+        </tr>
+    </table>
+
+</div>
+</div>
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none;width: 255px;top:50%;left:50%;margin-left:-125px;margin-top:-30px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+       
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var Company = '@companyId';
+        $.ajax({
+            url: '@Url.Content("~/Company/SendEmail")',
+            cache: false,
+            type: "GET",
+            data: { 'companyId': Company },
+            async: true,
+            success: function (result) {
+                if (result != null) {
+                    var officePhone = "";
+                    $('#adminName').html(result.fName + " " + result.mName + " " + result.lName);
+                    if (result.officePhone != '') {
+                        officePhone= '(' + result.officePhone.substring(0, 3) + ') ' + result.officePhone.substring(3, 6) + '-' + result.officePhone.substring(6, 10);
+                    }
+                    $('#adminNumber').html(officePhone);
+                   $('.nav-collapse').hide();
+                   $('#copyRtightTxt').hide();
+                   $('#divManualInviteOuter').hide();
+                   $('#divManualInviteInner').hide();
+               }
+            },
+            beforeSend: function (jqXHR, obj) {
+                $('#divManualInviteOuter').show();
+                $('#divManualInviteInner').show();
+                $('#dvSaveMsg').text('Please wait...');
+
+            },
+        })
+    });
+</script>

@@ -1,0 +1,603 @@
+﻿@model DecisionPoint.Models.UserRegister
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";  
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/dashboard")
+<link rel="stylesheet" href="~/Content/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/Content/css/bootstrap-datetimepicker.min.css" />
+
+<div id="content">
+    <div class="container">
+        <br>
+        <div id="company-setup">
+            <h3>Company Account Set Up</h3>
+            <ul class="nav nav-pills">
+                <li id="li1" class="active" onclick="li1Click()">Step 1: Company Profile</li>
+                <li id="li2" onclick="li2Click()">Step 2: Services</li>
+                <li id="li3" onclick="li3Click()">Step 3: Admin User Account</li>
+            </ul>
+            <hr>
+            <form id="formStep1" class="form-horizontal">
+
+                <div class="control-group">
+                    <div class="controls">
+                        <h4>Company Profile</h4>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Business Name</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.BusinessName, new { @class = "input-xlarge", @placeholder = "Business Name" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Office Phone</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.OfficePhone, new { @class = "input-xlarge", @placeholder = "Office Phone" })
+                    </div>
+                </div>
+                <div id="business" style="display: block">
+
+                    @*<div class="control-group">
+                        <label class="control-label">Cell  Area Code </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.CellAreaCode, new { @class = "input-xlarge", @placeholder = "Cell  Area Code" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Number</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.CellNumber, new { @class = "input-xlarge", @placeholder = "Number" })
+                        </div>*@
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Address</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.BusinessAddress, new { @class = "input-xlarge", @placeholder = "Address" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Direction </label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.Direction, new { @class = "input-xlarge", @placeholder = "Direction" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Street Name</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.Direction, new { maxlength = 2, @class = "input-xlarge", @placeholder = "Direction", @style = "Width:60px" })
+                        @Html.TextBoxFor(model => model.StreetName, new { @class = "input-xlarge", @placeholder = "Street Name", @style = "Width:190px" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">City</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.StreetName, new { @class = "input-xlarge", @placeholder = "City" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">State</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.StateName, new { @class = "input-xlarge", @placeholder = "State" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Zip Code</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.ZipCode, new { @class = "input-xlarge", @placeholder = "Zip Code" })
+                    </div>
+                </div>
+                @*  <div class="control-group">
+                        <label class="control-label">Coverage Area</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.CoverageArea, new { @class = "input-xlarge", @placeholder = "Coverage Area" })
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Number of employees </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.NoOfEmployees, new { @class = "input-xlarge", @placeholder = "Number of employees" })
+                        </div>
+                    </div>
+                </div>*@
+
+
+                <div class="control-group">
+                    <label class="control-label">Fax</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.fax, new { @class = "input-xlarge", @placeholder = "Fax" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Email</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.Email, new { @class = "input-xlarge", @placeholder = "Email" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Security Question</label>
+                    <div class="controls">
+                        Your first pet’s name?
+                        <br />
+                        @Html.TextBoxFor(model => model.SecurityAnswer1, new { @class = "input-xlarge", @placeholder = "Pet’s name" })
+                    </div>
+                    <div class="controls">
+                        <br />
+
+                        Your favorite food? 
+                        <br />
+                        @Html.TextBoxFor(model => model.SecurityAnswer2, new { @class = "input-xlarge", @placeholder = "Favorite food" })
+                    </div>
+                    <div class="controls">
+                        <br />
+                        Your favorite place?
+                        <br />
+                        @Html.TextBoxFor(model => model.SecurityAnswer3, new { @class = "input-xlarge", @placeholder = "Favorite place" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Upload Company Logo</label>
+                    <div class="controls">
+                        <input class="input-xlarge" type="file">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button id="next1" class="btn btn-primary" onclick="li2Click()">Next</button>
+                    </div>
+                </div>
+            </form>
+
+            <form id="formStep3" class="form-horizontal" style="display: none">
+                <div class="control-group">
+                    <label class="control-label">First Name</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.FirstName, new { @class = "input-xlarge", @placeholder = "First Name" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Middle Initial</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.MiddleName, new { maxlength = 1, @class = "input-xlarge", @placeholder = "Middle Initial" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Last Name</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.LastName, new { @class = "input-xlarge", @placeholder = "Last Name" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Email</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.EmailId, new { @class = "input-xlarge", @placeholder = "Email" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Confirm Email</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.EmailId, new { @class = "input-xlarge", @placeholder = " Re-Enter Email" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Password</label>
+                    <div class="controls">
+                        @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge", @placeholder = "Password" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Confirm Password</label>
+                    <div class="controls">
+                        @Html.PasswordFor(model => model.Password, new { @class = "input-xlarge", @placeholder = "Confirm Password" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Phone Number</label>
+                    <div class="controls">
+                        @Html.PasswordFor(model => model.CellNumber, new { @class = "input-xlarge", @placeholder = "Phone Number" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Security Question</label>
+                    <div class="controls">
+                        Your first pet’s name?
+                        <br />
+                        @Html.TextBoxFor(model => model.SecurityAnswer1, new { @class = "input-xlarge", @placeholder = "Pet’s name" })
+                    </div>
+                    <div class="controls">
+                        <br />
+
+                        Your favorite food? 
+                        <br />
+                        @Html.TextBoxFor(model => model.SecurityAnswer2, new { @class = "input-xlarge", @placeholder = "Favorite food" })
+                    </div>
+                    <div class="controls">
+                        <br />
+                        Your favorite place?
+                        <br />
+                        @Html.TextBoxFor(model => model.SecurityAnswer3, new { @class = "input-xlarge", @placeholder = "Favorite place" })
+                    </div>
+
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button id="next3" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+
+            <form id="formStep2" class="form-horizontal" style="display: none">
+
+                <table>
+                    <tr>
+                        <td colspan="4">
+                            <label class="control-label" style="text-align: left; font-weight: bold">State Name</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="control-group">
+                                <input id="chk1" onchange="trClick1()" type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                    
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </table>
+                <table id="tr2" style="display: none">
+                    <tr>
+                        <td colspan="4">
+                            <label class="control-label" style="text-align: left; font-weight: bold">County Name</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="control-group">
+                                <input id="chk2" onchange="trClick2()" type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                    
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </table>
+                <table id="tr3" style="display: none">
+                    <tr>
+                        <td colspan="4">
+                            <label class="control-label" style="text-align: left; font-weight: bold">City Name</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="control-group">
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                                <br />
+                                <input type="checkbox" />
+                                Test Data
+                    
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                                <div class="controls">
+                                    <input type="checkbox" />
+                                    Test Data
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </table>
+                <table>
+                    <tr>
+                        <td colspan="4" align="left">
+                            <div class="control-group">
+                                @*<div class="controls">*@
+                                <button id="next2" class="btn btn-primary" onclick="li3Click()">Next</button>
+                                @* </div>*@
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <script type="text/javascript">
+            function show() {
+                document.getElementById("myModal").style.display = "block";
+            }
+            function hide() {
+                document.getElementById("myModal").style.display = "none";
+            }
+            window.onload = function () {
+                //var rad = document.getElementById("UserType1");
+                //rad.checked = true;
+            }
+            function checked() {
+                // alert("1");
+            }
+            function li3Click() {
+                document.getElementById("formStep1").style.display = 'none';
+                document.getElementById("formStep3").style.display = 'block';
+                document.getElementById("formStep2").style.display = 'none';
+                document.getElementById("li3").className = 'active';
+                document.getElementById("li1").className = '';
+                document.getElementById("li2").className = '';
+
+            }
+            function li2Click() {
+                document.getElementById("formStep3").style.display = 'none';
+                document.getElementById("formStep2").style.display = 'block';
+                document.getElementById("formStep1").style.display = 'none';
+                document.getElementById("li2").className = 'active';
+                document.getElementById("li3").className = '';
+                document.getElementById("li1").className = '';
+
+            }
+            function trClick1() {
+                document.getElementById("tr2").style.display = 'block';
+            }
+            function trClick2() {
+                document.getElementById("tr3").style.display = 'block';
+            }
+        </script>
+    </div>
+</div>

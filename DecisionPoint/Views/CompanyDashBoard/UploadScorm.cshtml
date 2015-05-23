@@ -1,0 +1,197 @@
+﻿@{
+    ViewBag.Title = "UploadScorm";
+    string aa = ViewData["ScormAction"].ToString();
+
+    Layout = null;
+}
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="~/Scripts/TrainingDocument.js"></script>
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+@Styles.Render("~/Content/css/Dashboardcss")
+@Scripts.Render("~/bundles/dashboard")
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="~/Scripts/new.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap.min.css" />
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+
+<form ID="importCourseForm" style="float:left;width:90%;height:50px;"  action="@ViewData["ScormAction"]"  method="post" enctype="multipart/form-data">
+    <div class='control-group' style="float: left; width: 100%;">
+        <div>
+            <div class='controls'>
+                <table id="tblscrom">
+                    <tr>
+                        <td>
+                            <div class="file_input_div" style="display: inline;">
+                                
+                                <input type="button" class="btn btn-primary" value="Upload" id="btnScormUpload" style="float: left" />
+                                <input type="file" name="filedata" id="scrom_0" style="opacity: 0; float: left; position: relative; left: -78px; width: 80px;" />
+                                
+                            </div>
+
+                            <div style="margin-left: -77px; float: left;" id="divpublish">
+                                <input type="submit" id="btnScormSend" value="Publish" class="btn btn-primary" style="float: right;"  />
+                            </div>
+                             <input type="hidden" id="hdcourse" value="@ViewData["courseId"]" />
+                            <div id="linkScorm" style="display: none">
+                               
+                                
+                               
+
+                                <div id="div_@ViewData["courseId"]" style="background-color: rgb(225, 225, 225); border-radius: 5px 5px 5px 5px; width: auto; height: auto; float: left;">                                 
+                                     <a id="lnksc" target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["SiteName"]/CompanyDashBoard/PreviewScorm?redirect=@System.Configuration.ConfigurationManager.AppSettings["SiteName"]/CompanyDashBoard/Communication?id=0&courseid=@ViewData["courseId"]">Preview</a>
+                                    <img src="../../Content/images/cross-button.png" id="@ViewData["courseId"]" alt="0" onclick="DeleteScorm(this.id,this.alt)" style="margin-left:6px;cursor:pointer;" title="Remove Scorm">
+                                <input type="hidden" id="scormcontentid_0" value="0" />
+                                </div>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            
+        </div>
+
+    </div>
+    @*View Embeded video Popup*@
+    <div class="trans" id="previewscormouter"></div>
+    @*View Embeded video  Popup*@
+    <div class="popup" id="previewscorminner" style="top: 30px !important; left: 10%;">
+        <div class="Reply-MessageBox" style="display: block; overflow-y: auto; height: auto !important; width: 1004px;">
+
+            <div class="tittle-MessageBox">
+                <span>Preview</span><a>
+                    <img id="btnscormvideo" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+            </div>
+
+            <div class="MessageSection-Box">
+
+                
+                <div id="loadscormdiv" style="padding-left: 223px;">
+
+                    <span style="float: left; width: auto; margin-left: 25%;">Please click on publish and wait for upload to complete..</span>
+                    <div class="Bottom-ButtonControl">
+                        <input type="submit" id="btnScorm" value="Publish" class="btn btn-primary" style="float: right" />
+                        
+                        <div class="clearfix">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</form>
+<script>
+
+
+    $('#btnScormSend').click(function () {
+        $('body', window.parent.document).find('#div_ScormHide').show();
+        var filename = $('#scrom_0').val();
+        
+        //  alert(filename);
+        //$('body', window.parent.document).find('#divScormError').css("display", "none");
+        if (filename.trim() != "") {
+            
+                $('body', window.parent.document).find('#lnkstaging').attr("disabled", "disabled");
+                $('body', window.parent.document).find('#btncancelpage').attr("disabled", "disabled");
+                $('body', window.parent.document).find('#lnkmovetolibrary').attr("disabled", "disabled");
+                
+                $('body', window.parent.document).find('#btnsave').attr("disabled", "disabled");
+                $('body', window.parent.document).find('#divScormWait').css("color", "green");
+                $('body', window.parent.document).find('#divScormWait').html("Please wait...");
+                $('body', window.parent.document).find('#divScormWait').show();
+                $('body', window.parent.document).find('#iframe11').css('width', '0px');
+                $('body', window.parent.document).find('#div_ScormHide').show();
+           
+
+        }
+        else {
+            $('body', window.parent.document).find('#divScormWait').html("Please select scorm file");
+            $('body', window.parent.document).find('#divScormWait').css("color", "red");
+            $('body', window.parent.document).find('#divScormWait').show();
+            $('body', window.parent.document).find('#div_ScormHide').hide();
+        }
+
+    })
+    
+    function setdocfilename(ext) {
+        var isright = false;
+        if (ext.toLowerCase() == "zip".toLowerCase() || ext.toLowerCase() == "pif".toLowerCase()) {
+            $('#btnScormSend').removeAttr("disabled");
+            isright = true;
+        }
+        else {        
+            $('#btnScormSend').attr("disabled", "disabled");
+        }
+       return isright;
+    }
+
+    $('#scrom_0').change(function () {
+        var filename = $('#scrom_0').val();
+        var ext = filename.substr(filename.lastIndexOf('.') + 1);
+        if (setdocfilename(ext)) {
+            $('body', window.parent.document).find('#divScormError').css("display", "none");
+            var hid = $('body', window.parent.document).find('#hdfile');
+            hid.val(filename);
+        }
+        else {
+            $('body', window.parent.document).find('#divScormError').css("display", "block");
+        }
+    });
+   
+    $(document).ready(function () {
+        var refral = document.referrer;          
+        if (refral.indexOf('cloud.scorm.com') != -1) {          
+            window.close();
+        } 
+     //   $('#btnScormSend').removeAttr("disabled");
+        var aa = $('body', window.parent.document).find('#scromfileName_0');
+        var bb = $('#linkScorm').html();      
+        var check2 = $('body', window.parent.document).find('#hdfile').val();
+        var check1 = "";
+        var check = $('#hdcourse').val();       
+       
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashboard/CheckUploadedScorm")',
+                type: 'POST',
+                cache:false,
+                data: { 'courseId': check },
+                async: false,
+                success: function (data) {
+                    check1 = data;
+                },
+                error: function (data) {
+                }
+            })
+       // alert(check + "---" + check1 + "---" + check2);
+            if (check != '' && check1 == "Sucess") {
+                var hidVal = $('body', window.parent.document).find('#hdfile').val();
+                aa.append(bb);
+                $('body', window.parent.document).find('#divScormError').css("display", "none");
+            }
+            if (check != '' && check1 == "Fail") {
+                $('body', window.parent.document).find('#divScormError').css("display", "block");
+            }
+            if (check1 == "Fails" && check2!='') {
+                $('body', window.parent.document).find('#divScormError').css("display", "block");
+            }
+            $('body', window.parent.document).find('#div_ScormHide').hide();
+            $('body', window.parent.document).find('#divScormWait').hide();
+            $('body', window.parent.document).find('#iframe11').css('width', '200px');
+            if ($('body', window.parent.document).find('#diveditrestiction').html().trim() == "") {
+                $('body', window.parent.document).find('#lnkstaging').removeAttr("disabled");
+                $('body', window.parent.document).find('#btncancelpage').removeAttr("disabled");
+                $('body', window.parent.document).find('#lnkmovetolibrary').removeAttr("disabled");
+                $('body', window.parent.document).find('#btnsave').removeAttr("disabled");
+            }
+    })
+</script>

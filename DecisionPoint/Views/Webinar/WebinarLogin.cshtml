@@ -1,0 +1,117 @@
+﻿@model DecisionPoint.Models.WebinarModel
+@{
+    ViewBag.Title = "Webinar Dashboard";
+}
+@Styles.Render("~/Content/css/Logincss")
+@Styles.Render("~/Content/css/bootcss")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jqueryval")
+<style type="text/css">
+    .input-validation-error
+    {
+        border: solid 1px red !important;
+    }
+
+    p
+    {
+        margin: 0;
+        padding: 0;
+        display: inline;
+    }
+</style>
+
+@using (Html.BeginForm("WebinarLogin", "Webinar", FormMethod.Post, new { id = "SubmitForm" }))
+{ 
+    <div id='header'>
+        <div class='navbar navbar-static-top'>
+            <div class='navbar-inner'>
+                <div class='container'>
+                    <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                    </a>
+                    <div class='brand'>
+                    </div>
+                    <div class='container nav-collapse'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id='content'>
+        <div class='container'>
+            <div id='login'>
+                <div class='center-box'>
+                    <h2>
+                        <i class='iconic-user'></i>
+                        GoToWebinar      
+                    </h2>
+                    <h3>Login</h3>
+                    <p>
+                        If you do not have a consumer key, register for free and create an app on the 
+            <a target="_blank" href="https://developer.citrixonline.com/">Citrix Online Developer Center.</a>
+                    </p>
+                    <hr />
+                    <div class='row'>
+                            <div class='control-group'>
+                                <label class='control-label'>Consumer Key</label>
+                                <div class='controls'>
+                                    @Html.TextBoxFor(model => model.apiKey, new { @placeholder = "Consumer Key", @class = "input-xlarge" })
+                                    <span style="color: red">@Html.ValidationMessageFor(model => model.apiKey)</span>
+
+
+                                </div>
+                            </div>
+                            <div class='control-group'>
+                                <label class='control-label'>User Id</label>
+                                <div class='controls'>
+                                    @Html.TextBoxFor(model => model.emailId, new { @placeholder = "User Id", @class = "input-xlarge" })
+                                    <span style="color: red">@Html.ValidationMessageFor(model => model.emailId)</span>
+
+
+                                </div>
+                            </div>
+                            <div class='control-group'>
+                                <label class='control-label'>Password</label>
+                                <div class='controls'>
+                                    @Html.PasswordFor(model => model.password, new { @placeholder = "Password", @class = "input-xlarge" })
+                                    <span style="color: red">@Html.ValidationMessageFor(model => model.password)</span>
+
+
+                                </div>
+                            </div>
+
+                            <p>
+                                <input type="submit" id="btnRegister" class="btn btn-primary" value="Login" />
+
+                            </p>
+                            <br />
+                            <p>If you do not have a GoToWebinar account you can obtain a free trial account at 
+            <a target="_blank" href="http://gotowebinar.com" >Go To Webinar</a>
+        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id='footer'>
+        <div class='container'>
+            <div class='row'>
+                <div class='span6'>
+                </div>
+                <div class='span6'>
+                    <div class='text-right'>
+                        Copyright 2014 &sdot; All rights reserved
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+

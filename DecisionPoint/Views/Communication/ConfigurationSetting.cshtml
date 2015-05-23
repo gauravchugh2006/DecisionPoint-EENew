@@ -1,0 +1,751 @@
+﻿@model DecisionPoint.Models.ConfigurationSettingDetail
+@{
+    ViewBag.Title = "ConfigurationSetting";
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+}
+
+
+<div class='heading'>
+    <div class='row'>
+        <h3>Configuration Setting's</h3>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h4>Company</h4>
+    </div>
+    <div class="span12">
+        <div class="span6">
+            <h5>Internal</h5>
+            <div class="PaddingB ">
+                @Html.CheckBoxFor(model => model.IsCoveragearea, new { id = "IsCA", @class = "MarginT", onchange = "hideValMsg(this.id);" })  Does coverage area apply?
+  
+            </div>
+            <div class="PaddingB ">
+                @Html.CheckBoxFor(model => model.IsServices, new { id = "IsService", @class = "MarginT", onchange = "hideValMsg(this.id);" })  Does services apply?
+  
+            </div>
+            <div class="PaddingB ">
+                @Html.CheckBoxFor(model => model.IsWebinarApply, new { id = "IsWebinar", @class = "MarginT" }) Does webinar apply? 
+ 
+            </div>
+            <div class="PaddingB ">
+                @Html.CheckBoxFor(model => model.IsScormApply, new { id = "IsScorm", @class = "MarginT" }) Does scorm apply? 
+
+            </div>
+        </div>
+        <div class="span6">
+            <h5>Staff</h5>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsBgCheckForStaff, new { id = "IsBgCheckForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Background
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsLicenseForStaff, new { id = "IsLicenseForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Professional License
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsInterCheckForStaff, new { id = "IsInterCheckForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Insurance
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsStaffInsApply, new { id = "IsStaffInsApply", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Communication
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsAddCreForStaff, new { id = "IsAddCreForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Additional Requirement
+            </div>
+            <div class="PaddingB ">
+                Does coverage area apply ?
+   <div>
+
+       @Html.RadioButton("SCA", "Yes", Model.IsCoverageAreaForStaff, new { id = "IsStaffCAyes", @class = "MarginT" })  <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("SCA", "No", (Model.IsCoverageAreaForStaff == false || Model.IsCoverageAreaForStaff == null) ? true : false, new { id = "IsStaffCAno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+            <div class="PaddingB ">
+                Does services apply ?
+   <div>
+
+       @Html.RadioButton("SServices", "Yes", Model.IsServicesForStaff, new { id = "IsSServicesyes", @class = "MarginT" })  <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("SServices", "No", (Model.IsServicesForStaff == false || Model.IsServicesForStaff == null) ? true : false, new { id = "IsSServicesno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+            <div class="PaddingB ">
+                Does client list apply on my profile ?
+   <div>
+
+       @Html.RadioButton("SClientOnMyProfile", "Yes", Model.IsStaffClientOnMyProfile, new { id = "IsSClientOnMyProfileyes", @class = "MarginT" })  <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("SClientOnMyProfile", "No", (Model.IsStaffClientOnMyProfile == false || Model.IsStaffClientOnMyProfile == null) ? true : false, new { id = "IsSClientOnMyProfileno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+        </div>
+    </div>
+    <div class="span12">
+        <h4>Partners</h4>
+    </div>
+    <div class="span12">
+        <div class="span4">
+            <h5>IC</h5>
+            <div class="PaddingB ">
+                @Html.CheckBoxFor(model => model.IsIc, new { id = "IsIC", @class = "MarginT", onchange = "callVType(this.id);" })  Does IC apply? 
+            <a id="viewVTforIC" style="text-decoration: underline; display: none;">View IC type</a>
+
+            </div>
+            <div class="PaddingB">
+
+
+                @Html.CheckBoxFor(model => model.IsICFreeBasicMembership, new { id = "IsICFreeBasicMembership", @class = "MarginT", onchange = "hideValMsg(this.id);" }) Free Basic Membership
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsICUsePackages, new { id = "IsICUsePackages", @class = "MarginT", onchange = "hideValMsg(this.id);" }) Do Not Show Packages
+            </div>
+              <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsBgCheckForIC, new { id = "IsBgCheckForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Background
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsICLicenseApply, new { id = "IsLicenseForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Professional License
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsICInsApply, new { id = "IsInterCheckForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Insurance
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsICCommApply, new { id = "IsStaffInsApply", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Communication
+            </div>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsAddCreForIC, new { id = "IsAddCreForStaff", @class = "MarginT", onchange = "hideValMsg(this.id);" })Show Additional Requirement
+            </div>
+        </div>
+        <div class="span4">
+            <h5>Vendor</h5>
+            <div class="PaddingB">
+
+                @Html.CheckBoxFor(model => model.IsVendor, new { id = "IsVendor", @class = "MarginT", onchange = "callVType(this.id);" })
+                Does vendor apply? <a id="viewVTforVendor" style="text-decoration: underline; display: none;">Vendor profession type</a>
+
+            </div>
+        </div>
+        <div class="span4">
+            <h5>Client</h5>
+            <div class="PaddingB">
+                @Html.CheckBoxFor(model => model.IsClient, new { id = "IsClient", @class = "MarginT", onchange = "hideValMsg(this.id);" }) Does client apply?
+   
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="float: left; width: 100%;">
+    <h5>Modules</h5>
+    <div style="float: left; width: 33%;">
+    </div>
+    <div style="float: left; width: 33%;">
+    </div>
+    <div style="float: left; width: 33%;">
+
+
+        @*<div class="PaddingB ">
+            @Html.CheckBoxFor(model => model.IsClientOnMyProfile, new { id = "IsCleintOnMyProfile", @class = "MarginT", onchange = "hideValMsg(this.id);" })   Does client list apply on my profile?
+ 
+        </div>*@
+    </div>
+</div>
+
+
+<div style="float: left; width: 100%;">
+    <h5>Profiles</h5>
+    @*<div style="float: left; width: 40%;">
+        <fieldset>
+            <legend>IC</legend>
+            <div class="PaddingB ">
+                Background check
+   <div>
+       @Html.RadioButton("ICBC", "Yes", Model.IsBgCheckForIC, new { id = "ICBCyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("ICBC", "No", (Model.IsBgCheckForIC == false || Model.IsBgCheckForIC == null) ? true : false, new { id = "ICBCno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+
+            <div class="PaddingB ">
+                Licenses and Insurance 
+   <div>
+       @Html.RadioButton("ICLI", "Yes", Model.IsLiceInsForIC, new { id = "ICLIyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("ICLI", "No", (Model.IsLiceInsForIC == false || Model.IsLiceInsForIC == null) ? true : false, new { id = "ICLIno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+
+            <div class="PaddingB">
+                Additional Credentials
+   <div>
+       @Html.RadioButton("ICADC", "Yes", Model.IsAddCreForIC, new { id = "ICADCyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("ICADC", "No", (Model.IsAddCreForIC == false || Model.IsAddCreForIC == null) ? true : false, new { id = "ICADCno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+
+            <div class="PaddingB ">
+                Internal
+   <div>
+       @Html.RadioButton("ICI", "Yes", Model.IsInterCheckForIC, new { id = "ICIyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("ICI", "No", (Model.IsInterCheckForIC == false || Model.IsInterCheckForIC == null) ? true : false, new { id = "ICIno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+
+
+            <div class="PaddingB ">
+                Does coverage area apply ?
+   <div>
+
+       @Html.RadioButton("ICCA", "Yes", Model.IsCoverageAreaForIC, new { id = "IsICCAyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("ICCA", "No", (Model.IsCoverageAreaForIC == false || Model.IsCoverageAreaForIC == null) ? true : false, new { id = "IsICCAno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+            <div class="PaddingB ">
+                Does Services apply ?
+   <div>
+
+       @Html.RadioButton("ICServices", "Yes", Model.IsServicesForIC, new { id = "IsICServicesyes", @class = "MarginT" })  <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("ICServices", "No", (Model.IsServicesForIC == false || Model.IsServicesForIC == null) ? true : false, new { id = "IsICServicesno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+            <div class="PaddingB ">
+                Does client list apply on my profile ?
+   <div>
+
+       @Html.RadioButton("ICClientOnMyProfile", "Yes", Model.IsICClientOnMyProfile, new { id = "IsICClientOnMyProfileyes", @class = "MarginT" })  <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("ICClientOnMyProfile", "No", (Model.IsICClientOnMyProfile == false || Model.IsICClientOnMyProfile == null) ? true : false, new { id = "IsICClientOnMyProfileno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+
+        </fieldset>
+    </div>
+    <div style="float: left; width: 12%;">&nbsp;</div>*@
+    <div>
+        <fieldset>
+            <legend>Staff</legend>
+            <div class="PaddingB " style="display: none;">
+                Background check
+   <div>
+       @Html.RadioButton("SBC", "Yes", Model.IsBgCheckForStaff, new { id = "SBCyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("SBC", "No", (Model.IsBgCheckForStaff == false || Model.IsBgCheckForStaff == null) ? true : false, new { id = "SBCno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+            <div class="PaddingB" style="display: none;">
+                License
+   <div>
+       @Html.RadioButton("SL", "Yes", Model.IsLicenseForStaff, new { id = "IsSLyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("SL", "No", (Model.IsLicenseForStaff == false || Model.IsLicenseForStaff == null) ? true : false, new { id = "IsSLno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+            <div class="PaddingB" style="display: none;">
+                Additional Credentials
+   <div>
+       @Html.RadioButton("SADC", "Yes", Model.IsAddCreForStaff, new { id = "IsSADCyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("SADC", "No", (Model.IsAddCreForStaff == false || Model.IsAddCreForStaff == null) ? true : false, new { id = "IsSADCno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+
+            <div class="PaddingB" style="display: none;">
+                Internal
+   <div>
+       @Html.RadioButton("SI", "Yes", Model.IsInterCheckForStaff, new { id = "SIyes", @class = "MarginT" })
+       <span class="MarginL">Yes</span> &nbsp;  @Html.RadioButton("SI", "No", (Model.IsInterCheckForStaff == false || Model.IsInterCheckForStaff == null) ? true : false, new { id = "SIno", @class = "MarginT" })
+       <span class="MarginL">No</span>
+   </div>
+            </div>
+
+        </fieldset>
+
+    </div>
+
+</div>
+
+
+<div style="float: left; width: 100%;">
+
+    <div class="paddingBL ">
+        <a id="btncomplete" style="cursor: pointer;" class="btn btn-primary">Complete</a>
+        <label style="color: red;" id="valmsg"></label>
+    </div>
+</div>
+
+
+
+
+<div class="trans" id="VTtrans"></div>
+
+<div class="popup" id="VTpopup" style="left: 22% !important; top: 45%!important;">
+    <div class="Reply-MessageBox" style="display: block; overflow-y: auto; height: 238px !important">
+
+        <div class="tittle-MessageBox" id="VTtitleimg">
+            <span>Profession Type</span><a>
+                <img id="btnVTclose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box" id="vendortypelist" style="padding: 10px 20px 0;">
+            @if (Model.VendorTypeDetails != null)
+            {
+                if (Model.VendorTypeDetails.Count() > 0)
+                {
+                <div style="width: 833px; overflow-x: auto; height: auto;">
+                    <table style="margin-left: 1px;" id="tblvt">
+                        <tr>
+
+                            @{int count = 0; }
+                            @{float ii = Model.VendorTypeDetails.Count(); }
+                            @{
+                              int k = 0;
+                              float totle1 = ii / 5f;
+                              if (ii == 1)
+                              {
+                                  totle1 = 1.0f;
+                              }
+                            }
+
+                            @while (count < totle1)
+                            {
+                                count++;
+                                <td style="vertical-align: top;">
+                                    @{var j = 0; int jj = 0; int index = 0;}
+                                    @foreach (var item in Model.VendorTypeDetails)
+                                    {
+                                        if (jj < k)
+                                        {
+                                            jj++;
+                                            continue;
+                                        }
+                                        else
+                                        {
+
+                                            if (j != 5)
+                                            {
+                                        <div style="width: 100%; display: table; padding: 5px 0;">
+                                            <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                <input type="checkbox" id="chk_@index" style="margin:0;" class="chk" autocomplete="off" value=" @item.id"   />
+                                            </div>
+                                            <div style="display: table-cell; text-align: left; font-size: 12px;">
+                                                <div class="dynamic-word-div">@item.categoryName<br />
+                                                </div>
+                                            </div>
+                                        </div>
+                                                j++;
+                                            }
+                                            else { k = k + 5; break; }
+                                        }
+                                        index++;
+                                    }
+
+                                </td> 
+                            }
+
+                        </tr>
+                    </table>
+                </div>
+                }
+                else
+                {
+                
+                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 530px; line-height: 21px;">
+                    <div style="margin-left: 195px;">No Profession Type</div>
+                </div>
+                }
+            }
+            else
+            {
+                
+                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 530px; line-height: 21px;">
+                    <div style="margin-left: 195px;">No Profession Type</div>
+                </div>
+            }
+            <div class="Bottom-ButtonControl" style="text-align: right;">
+
+                <button id="btnvtcomplete" class="btn btn-primary" title="Complete" style="margin-left: -9px">Save</button>&nbsp;
+                 <input type="hidden" id="TYPE" />
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+
+
+    </div>
+
+</div>
+<input type="hidden" id="userid" value="@Model.UserId" />
+<input type="hidden" id="companyId" value="@Model.CompanyId"/>
+<input type="hidden" id="isvtexist" value="0" />
+<input type="hidden" id="isictexist" value="0" />
+
+<script>
+    $(document).ready(function () {
+        $('#isvtexist').val(0);
+        $('#isictexist').val(0);
+        if ($('#tblvt').length) {
+
+            var count = $('#tblvt td').length;
+
+            if (count == 1) {
+                $('#tblvt').css("width", "auto");
+                $('#tblvt td').css("width", "10%");
+            }
+            else {
+                var width = parseInt(count) * 154;
+                $('#tblvt').css("width", width);
+
+            }
+        }
+
+        if ($('#IsVendor').prop("checked")) {
+            //$('#viewVTforVendor').show();
+            $('#isvtexist').val(1)
+        }
+        if ($('#IsIC').prop("checked")) {
+            $('#viewVTforIC').show();
+            $('#isictexist').val(1)
+        }
+    })
+    $('#btncomplete').click(function () {
+        SaveConfig();
+    })
+    function SaveConfig() {
+        if (validateconfig()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Content("~/Communication/SaveConfigSettings/")",
+                data: JSON.stringify({
+                    IsVendor: $('#IsVendor').prop("checked"),
+                    IsIc: $('#IsIC').prop("checked"),
+                    IsClient: true,
+                    IsCoveragearea: $('#IsCA').prop("checked"),
+                    IsWebinarApply: $('#IsWebinar').prop("checked"),
+                    IsScormApply: $('#IsScorm').prop("checked"),
+                    IsServices: $('#IsService').prop("checked"),
+                    IsClientOnMyProfile: true,
+                    IsBgCheckForIC: $('#ICBCyes').prop("checked"),
+                    IsInterCheckForIC: $('#ICIyes').prop("checked"),
+                    IsAddCreForIC: $('#ICADCyes').prop("checked"),
+                    IsLiceInsForIC: $('#ICLIyes').prop("checked"),
+                    IsCoverageAreaForIC: $("#IsICCAyes").prop("checked"),
+                    IsServicesForIC: $("#IsICServicesyes").prop("checked"),
+                    IsICClientOnMyProfile: $("#IsICClientOnMyProfileyes").prop("checked"),
+                    IsBgCheckForStaff: $('#SBCyes').prop("checked"),
+                    IsAddCreForStaff: $('#IsSADCyes').prop("checked"),
+                    IsInterCheckForStaff: $('#SIyes').prop("checked"),
+                    IsLicenseForStaff: $('#IsSLyes').prop("checked"),
+                    IsCoverageAreaForStaff: $('#IsStaffCAyes').prop("checked"),
+                    IsServicesForStaff: $('#IsSServicesyes').prop("checked"),
+                    IsStaffClientOnMyProfile: $('#IsSClientOnMyProfileyes').prop("checked"),
+                    UserId: $('#userid').val(),
+                    CompanyId: $('#companyId').val(),
+                    IsFreeBasicMembership: $('#IsFreeBasicMembership').prop("checked"),
+                    IsAdditionalReqView: $('#IsAdditionalReqView').prop("checked"),
+                    IsCommunicationView: $('#IsCommunicationView').prop("checked"),
+                    IsBackgroundView: $('#IsBackgroundView').prop("checked"),
+                    IsProfessionalLicenseView: $('#IsProfessionalLicenseView').prop("checked"),
+                    IsAdditionalReqView: $('#IsAdditionalReqView').prop("checked"),
+                    IsUsePackages: $('#IsUsePackages').prop("checked")
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    window.opener.document.location.reload(true);
+                    window.open("", "_top", "", "true ");
+                    window.close();
+                }
+            })
+        }
+
+    }
+
+    function ShowMsg(Msg) {
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = parseInt(scrollTop) + 100
+        $('#divManualInviteInner').css("top", poistion);
+        $('#dvSaveMsg').text(Msg);
+        setTimeout(function () {
+            $('#divManualInviteOuter').fadeOut('slow');
+            $('#divManualInviteInner').fadeOut('slow');
+        }, 2000);
+    }
+    function validateconfig() {
+        var ChkStatus = true;
+        var companyId = $('#companyId').val();
+        if ($('#IsVendor').prop("checked")) {
+            if ($('#isvtexist').val() == 0) {
+                ChkStatus = false;
+                $('#valmsg').html("Please select profession type for apply vendor or does not apply vendor.");
+            }
+        }
+
+        if ($('#IsIC').prop("checked")) {
+            if ($('#isictexist').val() == 0) {
+                ChkStatus = false;
+                $('#valmsg').html("Please select profession type for IC or does not apply IC.");
+            }
+        }
+
+        if ($('#ICBCyes').prop("checked") || $('#ICLIyes').prop("checked") || $('#ICADCyes').prop("checked")
+            || $('#ICIyes').prop("checked") || $('#IsICCAyes').prop("checked") ||
+            $('#IsICServicesyes').prop("checked") || $('#IsICClientOnMyProfileyes').prop("checked")) {
+            if (!$('#IsIC').prop("checked")) {
+                ChkStatus = false;
+                $('#valmsg').html("Please apply IC in modules before allow anything to IC.");
+                $("#IsIC").closest("div").css({ "color": "red", "border": "2px solid red" });
+            }
+
+        }
+        if ($('#IsICCAyes').prop("checked") ||
+            $('#IsStaffCAyes').prop("checked")) {
+
+            if (!$('#IsCA').prop("checked")) {
+                ChkStatus = false;
+                $('#valmsg').html("Please apply coverage area in modules section before allow coverage area for Staff.");
+                $("#IsCA").closest("div").css({ "color": "red", "border": "2px solid red" });
+            }
+
+        }
+        if ($('#IsICServicesyes').prop("checked") ||
+           $('#IsSServicesyes').prop("checked")) {
+            if (!$('#IsService').prop("checked")) {
+                ChkStatus = false;
+                $('#valmsg').html("Please apply services in modules section before allow services for Staff.");
+                $("#IsService").closest("div").css({ "color": "red", "border": "2px solid red" });
+            }
+
+        }
+        //if ($('#IsICClientOnMyProfileyes').prop("checked") ||
+        //   $('#IsSClientOnMyProfileyes').prop("checked")) {
+        //    if ($('#IsClient').prop("checked")) {
+
+        //        if (!$('#IsCleintOnMyProfile').prop("checked")) {
+
+        //            ChkStatus = false;
+
+        //            $('#valmsg').html("Please apply client on my profile in modules section before allow client on my profile for IC/Staff.");
+        //            $("#IsCleintOnMyProfile").closest("div").css({ "color": "red", "border": "2px solid red" });
+        //        }
+
+        //    }
+        //    else {
+        //        ChkStatus = false;
+        //        $("#IsClient").closest("div").css({ "color": "red", "border": "2px solid red" });
+        //       $('#valmsg').html("Please apply client in modules section before allow client for IC/Staff.");
+        //    }
+        //}
+        if (ChkStatus) {
+
+            return true;
+        }
+    }
+
+    function HighlightCheckBox(id) {
+        $('#' + id).css('outline-color', 'red');
+        $('#' + id).css('outline-style', 'solid');
+        $('#' + id).css('outline-width', 'thin');
+    }
+    function RemoveHighlightCheckBox(id) {
+        $('#' + id).css('outline-color', '');
+        $('#' + id).css('outline-style', '');
+        $('#' + id).css('outline-width', '');
+    }
+    function callVType(id) {
+        var chkstatus = false;
+        if ($('#' + id).prop("checked")) {
+            $('#tblvt input[type="checkbox"]').each(function () {
+                $(this).prop("checked", false);
+            })
+            if (id == "IsIC") {
+                FetchDetail($('#companyId').val(), "IC");
+                if ($('#tblvt tbody tr').length > 0) {
+                    $('#viewVTforIC').show();
+                    $('#TYPE').val("IC");
+                    chkstatus = true;
+                }
+
+            } else {
+                FetchDetail($('#companyId').val(), "Company");
+                if ($('#tblvt tbody tr').length > 0) {
+                    // $('#viewVTforVendor').show();
+                    $('#TYPE').val("Company");
+                    chkstatus = true;
+                }
+
+            }
+            if (chkstatus) {
+                $('#valmsg').html('');
+                $('#VTtrans').slideDown('fast');
+                $('#VTpopup').slideDown('fast');
+                var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                var poistion = scrollTop + 100;
+                $('#VTpopup').css("top", poistion);
+            }
+            else {
+                ShowMsg('There no any profession type first add the profession type.');
+                $('#' + id).prop("checked", false);
+            }
+        }
+        hideValMsg(id);
+    }
+    function hideValMsg(id) {
+        $('#valmsg').html('');
+        if (id == "IsIC") {
+            $("#IsIC").closest("div").css({ "color": "#000", "border": "0" });
+        }
+        //if (id == "IsClient") {
+        //    $("#IsClient").closest("div").css({ "color": "#000", "border": "0" });
+        //}
+        if (id == "IsCA") {
+            $("#IsCA").closest("div").css({ "color": "#000", "border": "0" });
+        }
+        if (id == "IsService") {
+            $("#IsService").closest("div").css({ "color": "#000", "border": "0" });
+        }
+        //if (id == "IsCleintOnMyProfile") {
+        //    $("#IsCleintOnMyProfile").closest("div").css({ "color": "#000", "border": "0" });
+        //}
+    }
+    function showVType(id) {
+        if ($('#' + id).prop("checked")) {
+
+            $('#valmsg').html('');
+            if (id == "ICno") {
+                $('#viewVTforIC').hide();
+                $('#TYPE').val("IC");
+                // addVT("");
+                $('#isictexist').val(0)
+            } else {
+                // $('#viewVTforVendor').hide();
+                $('#TYPE').val("V");
+                //addVT("");
+                $('#isvtexist').val(0)
+            }
+
+        }
+    }
+
+    $('#viewVTforVendor').click(function () {
+        $('#tblvt input[type="checkbox"]').each(function () {
+            $(this).prop("checked", false);
+        })
+        callVType("IsVendor");
+    })
+    $('#viewVTforIC').click(function () {
+        $('#tblvt input[type="checkbox"]').each(function () {
+            $(this).prop("checked", false);
+        })
+        callVType("IsIC");
+        //$('#ICyes').change();
+    })
+
+    function FetchDetail(companyId, type) {
+
+        $.ajax({
+            url: '@Url.Content("~/Communication/GetCompanyVendorType")',
+            data: { 'companyId': companyId, 'type': type },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (data) {
+                //alert(data);
+                if (data.length > 0) {
+                    //set status for VT exist or not for company
+                    if (type == "IC") {
+                        $('#isictexist').val(1);
+                    } else {
+                        $('#isvtexist').val(1);
+                    }
+                    $('#tblvt input[type="checkbox"]').each(function () {
+                        var VTId = $(this);
+                        $.each(data, function (i, item) {
+                            //alert(VTId.val());
+                            //alert(item.VendorTypeId);
+                            if (VTId.val() == item.VendorTypeId) {
+                                VTId.prop("checked", true);
+                                return false;
+                            }
+                        })
+                    })
+                    //set table width
+                    if ($('#tblvt').length) {
+
+                        var count = $('#tblvt td').length;
+
+                        if (count == 1) {
+                            $('#tblvt').css("width", "auto");
+                            $('#tblvt td').css("width", "10%");
+                        }
+                        else {
+                            var width = parseInt(count) * 154;
+                            $('#tblvt').css("width", width);
+
+
+                        }
+                    }
+                }
+
+                //else {
+                //    $('#tblvt input[type="checkbox"]').each(function () {
+                //        $(this).prop("checked", false);
+                //    })
+                //}
+
+
+            }
+        });
+
+    }
+
+
+
+
+
+    $('#btnvtcomplete').click(function () {
+        var obj = '';
+        //get vendortype ids
+        var vtId = '';
+        $(".chk:checked").each(function () {
+            vtId = $(this).val();
+            if (obj == '') {
+                obj = vtId;
+            }
+            else {
+                obj = obj + "," + vtId;
+            }
+
+        });
+        addVT(obj);
+    })
+    function addVT(obj) {
+
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/AddVendorTypeForCompany/")',
+            data: JSON.stringify({
+                CompanyId: $('#companyId').val(), UserId: parseInt($('#userid').val()), VendorTypeId: obj, Type: $('#TYPE').val()
+            }),
+            cache: false,
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                FetchDetail($('#companyId').val(), $('#TYPE').val());
+                $('#btnVTclose').click();
+            }
+        });
+    }
+    $('#btnVTclose').click(function () {
+        $('#VTtrans').slideUp('fast');
+        $('#VTpopup').slideUp('fast');
+    })
+</script>
+
+

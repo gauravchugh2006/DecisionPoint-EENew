@@ -1,0 +1,637 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1F02F745-6A13-4564-8561-189B413CA968}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DecisionPointDAL</RootNamespace>
+    <AssemblyName>DecisionPointDAL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\packages\Dot_Net_Generic_Recommended_Code_Analysis_Ruleset.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\Log4Net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IDecisionPointRepository.cs" />
+    <Compile Include="Implemention\DecisionPointRepository.cs" />
+    <Compile Include="Implemention\RepositoryClasses\CoverageAreaRep\CoverageAreaRep.cs" />
+    <Compile Include="Implemention\RepositoryClasses\JobComplianceRequirementRep\AdditionalRequirementRep.cs" />
+    <Compile Include="Implemention\RepositoryClasses\JobComplianceRequirementRep\ProfessionalLicenseRep.cs" />
+    <Compile Include="Implemention\RequestParam\AdminProfileRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\APIComplianceStatusRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\APILogRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\APIProductRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\BackGroundCheckMasterRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CategoryRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\ChangePasswordRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CityRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CommContentRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CommTestRulesRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CommunicationAssessmentResponseParam.cs" />
+    <Compile Include="Implemention\RequestParam\CommunicationBasicDetailsRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CompanyDashBoardRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CompanyProfileRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\ConfigurationSettingRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CountyRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\CourseDetailsRequestParams.cs" />
+    <Compile Include="Implemention\RequestParam\CreateContractRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\DocTimeSpentRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\DocumentDetailsRequestParams.cs" />
+    <Compile Include="Implemention\RequestParam\DSTInviteRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\FilterRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\ICClientPermissionRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\InitialRegisterRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\JobReqForNewHireRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\LicenseCheckRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\LicenseInsuranceRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\MailFooterRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\MyDashBoardRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\PermissionTableRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\publishCommRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\ReceiverReqDocRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\ServiceTranslationTableRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\StaffPerformaceRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\StateRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\SubmitReqDocRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\UserDashBoardRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\UserRegisterRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\UserSelectedAnswersRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\UserTrainingMaterialsRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\VendorTypeRequestParam.cs" />
+    <Compile Include="Implemention\RequestParam\ZipRequestParam.cs" />
+    <Compile Include="Implemention\ResponseParam\APIMasterResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\BackGroundCheckMasterResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\BusinessClassResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\CommDetailsResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\CompanyIdResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\CoverageArea.cs" />
+    <Compile Include="Implemention\ResponseParam\CreateContractResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\DocContentStatusParams.cs" />
+    <Compile Include="Implemention\ResponseParam\DSTInviteResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\InvitationMailSendResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\LicenseInsuranceResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\MailMatrixResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\GetCompanies.cs" />
+    <Compile Include="Implemention\ResponseParam\GetCompaniesParams.cs" />
+    <Compile Include="Implemention\ResponseParam\GuideInstructionParam.cs" />
+    <Compile Include="Implemention\ResponseParam\ICPaymentModeResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\ICResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\InternalstaffResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\InviteResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\MailReminder.cs" />
+    <Compile Include="Implemention\ResponseParam\MyDashBoardResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\NonMemberResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\PermissionTableResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\ReceiverReqDocResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\RecurringPaymentResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\SaveCommFilterResponseparam.cs" />
+    <Compile Include="Implemention\ResponseParam\ServiceResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\SterlingResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\SterlingWithDpResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\SuperAdminResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\UserAcknowledgmentParams.cs" />
+    <Compile Include="Implemention\ResponseParam\UserAssesmentAnswerResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\UserAssesmentParamcs.cs" />
+    <Compile Include="Implemention\ResponseParam\UserAsstSaveAnsParam.cs" />
+    <Compile Include="Implemention\ResponseParam\UserCorrectAsstAnswerParam.cs" />
+    <Compile Include="Implemention\ResponseParam\UserInstructionsParamcs.cs" />
+    <Compile Include="Implemention\ResponseParam\UserSelectedAnswersParam.cs" />
+    <Compile Include="Implemention\ResponseParam\ReportResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\UserTimeSpanParams.cs" />
+    <Compile Include="Implemention\ResponseParam\UserViewResponseParam.cs" />
+    <Compile Include="Implemention\RequestParam\VendorBulk.cs" />
+    <Compile Include="Implemention\ResponseParam\AdminProfileResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\AnnouncementResponseParam.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Implemention\ResponseParam\CityResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\CompanyDashBoardResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\CompanyProfileResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\CountyResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\InternalStaffResponseParams.cs" />
+    <Compile Include="Implemention\ResponseParam\LoginDetailsResponseparam.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Implemention\ResponseParam\PaymentAmountResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\RoleResponseParam.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Implemention\ResponseParam\SecurityQuestionResponseParam.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Implemention\ResponseParam\SMTPDetail.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Implemention\ResponseParam\StateResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\SuperAdminDashBoardResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\UserDashBoardResponseparam.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Implemention\ResponseParam\VendorClientList.cs" />
+    <Compile Include="Implemention\ResponseParam\VendorResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\VendorTypeResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\ViewDocumentResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\ViewMessageParamcs.cs" />
+    <Compile Include="Implemention\ResponseParam\WebinarUsersResponseParam.cs" />
+    <Compile Include="Implemention\ResponseParam\ZipResponseParam.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\DecisionPointModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DecisionPointModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DecisionPointModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DecisionPointModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DecisionPointModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_AdditionalReqAck.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_AdditionalReqMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_AdditionalReqMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_AdditionalReqUploadDocs.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Announcement.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_APILog.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_APIMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_APIMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_APIRoleTypeMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BackgroundDocUpload.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BackGroundMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BGCheckDetailMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BGCheckMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BGCheckMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BGCheckPackageDetailMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BGCheckPackageMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_BusinessClasses.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Category.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_City.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CityMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CitysTest.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ClientMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ClientMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ComapnyVendorMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommAnswers.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommAssesment.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommAsstAnswer.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\Dp_CommAsstAtempts.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommContents.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommContentViewTime.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommDocSpentTime.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommLinks.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommRecipientFilter.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommRquiredActions.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CommTestRules.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CompanyPayment.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CompanyStaffMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ConfigurationSetting.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ContractEvent.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ContractEventsMailLog.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ContractMailReminderLog.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ContractMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_County.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CountyMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CreateContractDocMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CreateContractMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_CreateContractServiceMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_DefaultPaymentMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_DescendentMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_DocFlow.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_DocFlowMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_DocumentDetails.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_DocumentMailLog.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_EmailAccount.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_EmailTemplate.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_EmailTokens.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_EmailTrakingDetails.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_FlowMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_FlowMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Group.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_GuideInstructions.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ICClientsPermissionMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ICNonClientsMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ICNonClientsPaymentLog.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ICPaymentMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_InsuranceAck.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_InsuranceMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_InsuranceMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_InsuranceUploadDocs.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Invitation.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_License.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_LicenseInsuranceAck.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_LicenseInsuranceDocUpload.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_LicenseInsuranceMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_LicenseInsuranceReceiver.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_LicenseInsuranceVendorType.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_MailFooter.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_PayementMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_PaymentFlowMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Performance.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_PermissionMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_PermissionMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_PermissionTableMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_PermissionTableMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\Dp_ProfessionalLicenseAck.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ProfessionalLicenseMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ProfessionalLicenseMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ProfessionalLicenseUploadDocs.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Profile.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Recipient.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_RecurringPayment.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_RecurringPaymentTransaction.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Reference.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReportLog.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocAck.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocAudit.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocAuditUpload.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocReceiver.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocSender.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocService.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocUpload.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ReqDocVendorType.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_RoleMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_RoleMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Security.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ServiceMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ServicesMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ServiceTranslationTable.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_SiteUrl.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_SkillSetMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_SkillSetMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_State.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_StateMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_SterlingReqResMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_SterlingScreeningMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_SuperAdminLogin.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_TabMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_TitleMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_TitleMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_User.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_UserDocContentStatus.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_VendorType.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_VendorTypeMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_VerfiedLicenseDetails.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_WebinarOrganiserMaster.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_Welcome.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ZipCode.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ZipMapping.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\DP_ZipTest.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\StateAndCity.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\USP_GetUserDetail_Result.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\USP_UserView_Result.cs">
+      <DependentUpon>DecisionPointModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RepositoryEnum\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="packages.config" />
+    <EntityDeploy Include="Repository\DecisionPointModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DecisionPointModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Repository\DecisionPointModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DecisionPointModel.edmx</DependentUpon>
+      <LastGenOutput>DecisionPointModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Repository\DecisionPointModel.edmx.diagram">
+      <DependentUpon>DecisionPointModel.edmx</DependentUpon>
+    </None>
+    <None Include="Repository\DecisionPointModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DecisionPointModel.edmx</DependentUpon>
+      <LastGenOutput>DecisionPointModel.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DecisionPointRAL\DecisionPointCAL.csproj">
+      <Project>{4a8d98b2-9f11-450f-83f6-64eb4bf2b968}</Project>
+      <Name>DecisionPointCAL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

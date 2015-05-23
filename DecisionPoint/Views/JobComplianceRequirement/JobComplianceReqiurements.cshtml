@@ -1,0 +1,480 @@
+﻿@model DecisionPoint.Models.JobComplianceRequirementModel
+@{
+    ViewBag.Title = "JobComplianceReqiurements";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+
+<style>
+    ul {
+        list-style: none;
+    }
+
+    input[type='radio'][name='complianceSec'] {
+        margin-right: 5px;
+    }
+
+    input[type='radio'][name='rad_JCRfor'] + strong {
+        margin-left: 5%;
+    }
+</style>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui-noscript.css" rel="stylesheet" />
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui.css" rel="stylesheet" />
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<script src="~/Scripts/Upload/jquery.iframe-transport.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload-ui.js"></script>
+
+<link href="~/Content/css/Dashboard/circle.css" rel="stylesheet" />
+<script src="~/Scripts/Upload/progress-circle.js"></script>
+
+<script src="~/Scripts/DashBoard/JobComplianceRequirement.js"></script>
+@functions {
+    /// <summary>
+    /// Used for make the list of states for fill in drop down list
+    /// </summary>
+    /// <returns>IEnumerable<SelectListItem></returns>
+    private IEnumerable<SelectListItem> FillStateList()
+    {
+        return new SelectList(Model.StateList, "StateId", "SateName");
+    }
+}
+<div class="heading">
+    <div class="row">
+        <h3>Job Compliance Requirements</h3>
+    </div>
+</div>
+
+
+<div class="row-fluid" style="margin: 1%">
+    <div class="span12">
+        <label class="radio pull-left"><input type="radio" class="" name="rad_JCRfor" value="IC">IC</label>
+        <label class="radio pull-left" style="margin-left:10px;"><input type="radio" name="rad_JCRfor" value="Staff">Staff</label>
+    </div>
+    <hr />
+    <div class="span12" style="margin-left:0;">
+        <div id="dvHeaderForIC_Staff" class="span4 pull-left"><b>IC Type</b></div>
+        <div class="span4 pull-left"><b>Requirements set by</b></div>
+        <div class="span4 pull-left"><b>Compliance Sections</b></div>
+    </div>
+    <div class="span12" style="margin-left: 0;">
+        <div id="dvICTypeDetails" class="span4 pull-left">
+            <div style="overflow: auto; max-height: 145px;">
+                @if (!object.Equals(Model.ICTypeDetails, null))
+                {
+                    if (Model.ICTypeDetails.Count() > 0)
+                    {
+                        <ul>
+                            <li id="allChkLi">
+                                <input type="checkbox" id="chkAllVType" class="MarginT" onchange="CheckAllVendorType(this.id)" />
+                                <span class="MarginL">All</span>
+                            </li>
+
+                            @foreach (var item in Model.ICTypeDetails)
+                            {
+                                <li>
+                                    <span class="lblVendorType">
+                                        <input id="@item.id" type="checkbox" class="chkVendorType MarginT" value="@item.id" onchange="SetAllCheckBox()" />
+                                        <span class="MarginL">@item.categoryName</span>
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+
+            </div>
+            <label id="valMsgForIcType" style="color: red;"></label>
+        </div>
+        <div id="dvStaffTitleList" style="margin-left: 0; " class="span4 pull-left">
+            <div style="overflow: auto; width: 29%; margin: 0% 1%; max-height: 145px;">
+                @if (!object.Equals(Model.TitleList, null))
+                {
+                    if (Model.TitleList.Count() > 0)
+                    {
+                        <ul>
+                            <li id="allChkLi">
+                                <input type="checkbox" id="chkAllVType" class="MarginT" name="chkAllTitleList" value="AllTitles" />
+                                <span class="MarginL">All</span>
+                            </li>
+
+                            @foreach (var item in Model.TitleList)
+                            {
+                                <li>
+                                    <span class="lblStaffTitle">
+                                        <input id="@item.id" type="checkbox" class="chkTitle MarginT" value="@item.id" />
+                                        <span class="MarginL">@item.titleName</span>
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+            </div>
+            <label id="valMsgForTitles" style="color: red;"></label>
+        </div>
+        <div class="span4 pull-left">
+            <ul>
+                <li>
+                    <input type="radio" id="internalrdo" class="MarginT" name="clientList" />
+                    <span id="intercompname">@Session["BusinessName"]</span>
+
+                </li>
+                <li>
+
+
+
+                    @if (Model.ClientsList.ToList().Count > 0)
+                    {
+                        <input type="radio" id="subclientrdo" class="MarginT" name="clientList" />
+                        <span>Sub Clients</span><input type="button" class="btn btn-primary" value="Add" id="btnAddVendorClient" title="Add New Vendor/Client"
+                                                       style="margin-left: 6px; height: 23px; padding: 0px; width: 50px;" />
+                        <div style="margin-left: 20px; overflow: auto; width: 65%; border: 1px solid rgb(225, 225, 225); padding-left: 11px; max-height: 160px;margin-top:10px;">
+                            <ul>
+                                @foreach (var item in Model.ClientsList.OrderBy(x => x.contact))
+                                {
+                                    <li>
+                                        <input type="checkbox" class="chkSubClients MarginT" value="@item.Id:@item.CompanyId" onclick="CheckInternal()" />
+                                        <span>@item.vendor</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-left: 20px; overflow: auto; height: 67px;">
+                            <ul>
+                                <li></li>
+                            </ul>
+                        </div>
+                    }
+                </li>
+            </ul>
+            <label id="valMsgForClients" style="color: red;"></label>
+        </div>
+        <div class="span4 pull-left">
+            <ul>
+                <li>
+
+                    <input type="radio" id="BgCheck" onclick="ShowCompliance(0)" class="MarginT" name="complianceSec" value="BG" />Background
+                </li>
+                <li>
+
+                    <input type="radio" onclick="ShowCompliance(1)" class="MarginT" name="complianceSec" value="PL" />Professional License
+                </li>
+                <li>
+
+                    <input type="radio" onclick="ShowCompliance(2)" class="MarginT" name="complianceSec" value="IN" />Insurance
+                </li>
+                <li style="display: none;">
+
+                    <input type="radio" onclick="ShowCompliance(3)" class="MarginT" name="complianceSec" value="FI" />Financial
+                </li>
+                <li>
+
+                    <input type="radio" onclick="ShowCompliance(4)" class="MarginT" name="complianceSec" value="AC" />Additional Credentials
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+<div id="backgroundDiv" class="row-fluid hide">
+    @{Html.RenderPartial("_BackgroundCheck", Model);}
+</div>
+<div class="row-fluid hide" id="profLicenseDiv">
+    @{Html.RenderPartial("_ProfessionalLicense", Model);}
+</div>
+<div class="row-fluid hide" id="insuranceDiv">
+    @{Html.RenderPartial("_Insurance", Model);}
+</div>
+<div class="row-fluid hide" id="financialDiv">
+</div>
+<div class="row-fluid hide" id="additionalReqDiv">
+    @{Html.RenderPartial("_AdditionalReqiurement", Model);}
+</div>
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 250px; top: 50%; left: 50%; margin-left: -125px; margin-top: -30px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvPopUpMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+
+    </div>
+
+</div>
+@* Saved Pop up End *@
+<div class="trans" id="nametrans"></div>
+<div class="popup" id="namepopup" style="left: 20%;">
+    <div class="Reply-MessageBox" style="display: block; overflow-y: auto;">
+
+        <div class="tittle-MessageBox">
+            <span>ADD SUB CLIENT</span><a>
+                <img id="btnnamelose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" />
+            </a>
+        </div>
+        <div class="MessageSection-Box">
+            <div class='control-group w100'>
+                <div class="halfwidth1">Relationship <sup style="color: red; font-size: 10px;">*</sup></div>
+                <div class='halfrest'>
+                    @* @Html.TextBoxFor(model => model.EmailId, new { @placeholder = "Email Id", @class = "input-xlarge-txt", @title = "", @maxlength = "100", onkeypress = "checkval(this.id)" })
+                        <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>*@
+                    <select style="width: 395px;" id="ddl_flow" onchange="checkval(this.id)">
+                        <option value="0">--Select--</option>
+                        <option value="1">Client</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group w100">
+                <div class="halfwidth1">Company Name <sup style="color: red; font-size: 10px;">*</sup></div>
+                <div class="halfrest">
+                    <input type="text" name="BusinessName" id="BusinessName" placeholder="Business Name" maxlength="100" class="input-xlarge-txt" />
+
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Address</div>
+                <div class='halfrest'>
+                    <input type="text" name="StreetNumber" id="StreetNumber" placeholder="Number" style="Width:133px" class="input-xlarge" />
+                    <input type="text" name="Direction" id="Direction" placeholder="Direction" style="Width:100px" class="input-xlarge" />
+                    <input type="text" name="StreetName" id="StreetName" placeholder="Street Name" style="Width:111px" class="input-xlarge" />
+
+                    <br />
+                    <input type="text" name="CityName" id="CityName" placeholder="City Name" style="Width:131px" class="input-xlarge" maxlength=50 />
+                    @Html.DropDownListFor(model => model.StateId, FillStateList(), "Select State", new { @class = "input-xlarge", @id = "StateAdd", @style = "width:117px" })
+                    <input type="text" id="ZipCode" name="ZipCode" placeholder="Zip Code" style="Width:110px" class="input-xlarge" maxlength=5 />
+
+
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Contact Person</div>
+                <div class='halfrest'>
+                    <input type="text" name="FName" id="FName" placeholder="First Name" style="Width:133px" class="input-xlarge" maxlength=50 />
+                    <input type="text" name="MName" id="MName" placeholder="MI" style="Width:100px" class="input-xlarge" maxlength=1 />
+                    <input type="text" name="LName" id="LName" placeholder="Last Name" style="Width:111px" class="input-xlarge" maxlength=50 />
+
+                    <label id="ContactPersonErrorMsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+
+            <div class='control-group w100'>
+                <div class="halfwidth1">Office Phone</div>
+                <div class='halfrest'>
+                    <input type="text" name="OfficePhone" id="OfficePhone" placeholder="Office phone" class="input-xlarge-txt" maxlength=14 />
+
+                    <label id="phoneerrormsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+
+            <div class='control-group w100'>
+                <div class="halfwidth1">Mobile Phone</div>
+                <div class='halfrest'>
+                    <input type="text" name="DirectPhone" id="DirectPhone" placeholder="Mobile phone" class="input-xlarge-txt" maxlength=14 />
+                    <label id="cellnoerrormsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Email</div>
+                <div class='halfrest'>
+                    <input type="text" name="EmailId" id="EmailId" placeholder="Email Id" class="input-xlarge-txt" maxlength=100 />
+                    <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="Bottom-ButtonControl" style="float: right; width: 100%; margin-right: 9px;">
+            <button type="submit" id="btnnamedone" class="btn btn-primary" title="Save">Save</button>
+            <div id="btnnamecancel" class="btnred" title="Cancel">Cancel</div>
+        </div>
+        <div style="float: left; width: 100%; display: none; color: red;" id="divPopMsg"></div>
+
+    </div>
+    @* @using (Html.BeginForm("Updatemyprofile", "CompanyDashBoard", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return checkvalidation();" }))
+        {
+
+        }*@
+</div>
+<input type="hidden" id="BgCheckPkgId" value="0" />
+<script>
+
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        jQuery(function ($) {
+
+            var myDate = new Date();
+            var prettyDate = (myDate.getMonth() + 1) + '/' + myDate.getDate() + '/' +
+                    myDate.getFullYear();
+            $('#insExpirationDate').datepicker();
+            $('#licExpirationDate').datepicker();
+            $('#txtAddReqExpirationDate').datepicker();
+        });
+
+    });
+    ///
+    $('input[name="chkAllTitleList"], input[name="complianceSec"][value="BG"]').click(function (e) {
+        
+        if ($('input[type=radio][name="rad_JCRfor"][value="Staff"]').prop('checked')) {
+            if (e.target.value == 'AllTitles') {
+                $('.chkTitle').prop("checked", $(this).prop("checked"));
+            }
+            SetBackgroundStaffTitles(e);
+            $('#liError').children().remove();
+        }
+        $('#liError').children().remove();
+    });
+    $('.chkTitle').click(function (e) {
+        ChkTitleClick(e);
+    });
+
+    $('#internalrdo').change(function () {
+        $('#valMsgForClients').html("");
+        if ($(this).prop("checked")) {
+            $('.chkSubClients').each(function () {
+                $(this).prop("checked", false);
+                $(this).prop("disabled", true);
+            });
+        }
+        SetICTypeAndClientsForBgCheck(1);
+        $('#valMsgForIcType').html("");
+    });
+    $('#subclientrdo').change(function () {
+        $('.chkSubClients').each(function () {
+            $(this).prop("disabled", false);
+        });
+        SetICTypeAndClientsForBgCheck(1);
+        $('#valMsgForIcType').html("");
+    });
+
+    function ActiveOrDeactivate(operationType, tblId, type) {
+        ActiveOrDeactivateJCR(operationType, ROOT, type, tblId);
+    }
+    $("#btnAddVendorClient").click(function () {
+        //var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-####" }];
+        //$('#OfficePhone').inputmask({
+        //    mask: phones,
+        //    greedy: false,
+        //    definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+        //});
+        //$('#DirectPhone').inputmask({
+        //    mask: phones,
+        //    greedy: false,
+        //    definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+        //});
+        $('#nametrans').slideDown('fast');
+        $('#namepopup').slideDown('fast');
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 200;
+        $('#namepopup').css("top", poistion);
+    });
+    $("#btnnamelose").click(function () {
+        $('#nametrans').slideUp('fast');
+        $('#namepopup').slideUp('fast');
+    });
+    $("#btnnamecancel").click(function () {
+        $('#nametrans').slideUp('fast');
+        $('#namepopup').slideUp('fast');
+    });
+    $('#btnnamedone').click(function () {
+        if (checkvalidation()) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Contract/SaveNonMembers/")',
+                data: JSON.stringify({
+                    EmailId: $('#EmailId').val(),
+                    FName: $('#FName').val(),
+                    MName: $('#MName').val(),
+                    LName: $('#LName').val(),
+                    CompanyName: $('#BusinessName').val(),
+                    StreetNumber: $('#StreetNumber').val(),
+                    Direction: $('#Direction').val(),
+                    StreetName: $('#StreetName').val(),
+                    CityName: $('#CityName').val(),
+                    StateId: $('#StateId').val(),
+                    ZipCode: $('#ZipCode').val(),
+                    OfficePhone: $('#OfficePhone').val(),
+                    DirectPhone: $('#DirectPhone').val(),
+                    FlowId: $('#ddl_flow').val(),
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    window.location.reload();
+                }
+            });
+        }
+    });
+    function checkvalidation() {
+
+
+        var businessval = true;
+        var emailidval = true;
+        var officephnval = true;
+        var directphnval = true;
+        var flowval = true;
+
+        if ($('#BusinessName').val().trim() == '') {
+            $('#BusinessName').addClass("errorClass");
+            businessval = false;
+        }
+
+
+        if ($('#EmailId').val().trim() != '') {
+            if (!validateEmail($('#EmailId').val())) {
+                $('#EmailId').addClass('errorClass');
+                $('#emailerrormsg').html("Enter correct email id");
+                emailidval = false;
+            }
+        }
+
+
+        if ($('#OfficePhone').val().trim() != '') {
+            // alert(validatePhone($('#OfficePhone').val()));
+            if (!validatePhone($('#OfficePhone').val())) {
+                $('#OfficePhone').addClass("errorClass");
+                $('#phoneerrormsg').html("Enter correct phone number");
+                officephnval = false;
+            }
+        }
+
+        if ($('#DirectPhone').val().trim() != '') {
+            if (!validatePhone($('#DirectPhone').val())) {
+                $('#DirectPhone').addClass("errorClass");
+                $('#cellnoerrormsg').html("Enter correct phone number");
+                directphnval = false;
+            }
+        }
+        if ($('#ddl_flow').val() == '0') {
+            $('#ddl_flow').addClass('errorClass');
+            flowval = false;
+        }
+
+
+        if (emailidval && officephnval && directphnval && flowval && businessval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+    function checkval(id) {
+        if ($('#' + id).val().trim() != '') {
+            //  alert('inside if');
+            $('#' + id).removeClass("errorClass");
+            $('#phoneerrormsg').html('');
+            $('#cellnoerrormsg').html('');
+            $('#emailerrormsg').html('');
+        }
+
+    }
+</script>

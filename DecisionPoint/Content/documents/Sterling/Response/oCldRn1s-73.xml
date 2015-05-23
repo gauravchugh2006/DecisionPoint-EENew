@@ -1,0 +1,104 @@
+<BackgroundReports xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" dpuserId="73" xsi:schemaLocation="http://ns.hr-xml.org/2006-02-28 http://ns.hr-xml.org/2_4/HR-XML-2_4/Screening/US/BackgroundReports.xsd" userId="DecisionPointtp" account="DecisionPoint" password="DecisionPointtp456">
+  <BackgroundReportPackage xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sish="http://schemas.st.com/data/v1/SterlingHeader" xmlns:oa="http://www.openapplications.org/oagis/9" type="Professional License">
+    <ProcessingInformation>
+      <AccessCredential type="UserName">DPINT</AccessCredential>
+      <AccessCredential type="Password">password456@</AccessCredential>
+      <AccessCredential type="Account">DP</AccessCredential>
+      <ScopeOfWork>
+        <Text>https://qasecure.sterlingdirect.com/sys/OneClick.aspx?METHOD=BGCHECK_PRTREPORT&amp;CUSTID=dtoHcTHFCWf2cbeU6ZsS4g%3d%3d&amp;BGORDERID=0vxFFc7yG9F7zmoyOr2w6Q%3d%3d</Text>
+      </ScopeOfWork>
+    </ProcessingInformation>
+    <ProviderReferenceId>
+      <IdValue>35003090</IdValue>
+    </ProviderReferenceId>
+    <ClientReferenceId>
+      <IdValue>oCldRn1s-73</IdValue>
+    </ClientReferenceId>
+    <ScreeningsSummary>
+      <Organization>
+        <OrganizationName />
+        <OrganizationId>
+          <IdValue />
+        </OrganizationId>
+      </Organization>
+      <PersonalData type="Current">
+        <PersonName>
+          <GivenName>ICTEST2742015</GivenName>
+          <MiddleName />
+          <FamilyName primary="true">ICTEST2742015</FamilyName>
+          <FamilyName primary="false" />
+        </PersonName>
+        <PostalAddress>
+          <CountryCode>USA</CountryCode>
+          <PostalCode>45345</PostalCode>
+          <Region>AK</Region>
+          <Municipality>ertetet</Municipality>
+          <DeliveryAddress>
+            <AddressLine>rterter</AddressLine>
+            <Unit />
+          </DeliveryAddress>
+        </PostalAddress>
+        <ContactMethod>
+          <Telephone>
+            <FormattedNumber>1212212212</FormattedNumber>
+          </Telephone>
+          <InternetEmailAddress>ICTEST2742015@yopmail.com</InternetEmailAddress>
+        </ContactMethod>
+        <DemographicDetail>
+          <GovernmentId issuingAuthority="SSN" countryCode="US">345353535</GovernmentId>
+          <GovernmentId issuingAuthority="DMV" countryCode="US" jurisdiction="">A145-444-555</GovernmentId>
+          <DateOfBirth>1952-05-04</DateOfBirth>
+        </DemographicDetail>
+      </PersonalData>
+    </ScreeningsSummary>
+    <ScreeningStatus>
+      <OrderStatus>Completed</OrderStatus>
+      <Score>Clear</Score>
+      <DateOrderReceived>2015-04-16T13:53:00</DateOrderReceived>
+      <AdditionalItems qualifier="DateOrderClosed">
+        <Text>2015-04-23T09:48:00</Text>
+      </AdditionalItems>
+      <AdditionalItems qualifier="x:stsDateOrderSubmitted">
+        <Text>2015-04-23T07:53:29</Text>
+      </AdditionalItems>
+    </ScreeningStatus>
+    <Screenings>
+      <Screening type="license" qualifier="professional">
+        <ClientReferenceId>
+          <IdValue>11903444</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>4/23/2015 7:54:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>4/23/2015 9:48:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results">
+          <Text>&lt;Results&gt;
+    &lt;Result&gt;
+        &lt;Field Name="CLNAME" Label="Contact Last Name:"&gt;Man&lt;/Field&gt;
+        &lt;Field Name="CFNAME" Label="Contact First Name:"&gt;Test&lt;/Field&gt;
+        &lt;Field Name="CONTACTTITLE" Label="Contact Title:"&gt;&lt;/Field&gt;
+        &lt;Field Name="CPHONE" Label="Contact Phone:"&gt;123456789&lt;/Field&gt;
+        &lt;Field Name="ISSUEAGENCY" Label="Issuing Agency:"&gt;TEST&lt;/Field&gt;
+        &lt;Field Name="STATUSTEXT" Label="Status:"&gt;AK&lt;/Field&gt;
+        &lt;Field Name="DATESTART" Label="Start Date:"&gt;4/23/2015&lt;/Field&gt;
+        &lt;Field Name="DATEEND" Label="End Date:"&gt;4/23/2016&lt;/Field&gt;
+        &lt;Field Name="COMMENTS" Label="Comments:"&gt;TEST Order&lt;/Field&gt;
+    &lt;/Result&gt;
+&lt;/Results&gt;</Text>
+        </ScreeningResults>
+      </Screening>
+    </Screenings>
+  </BackgroundReportPackage>
+</BackgroundReports>

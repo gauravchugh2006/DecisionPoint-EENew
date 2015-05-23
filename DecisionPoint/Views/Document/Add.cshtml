@@ -1,0 +1,1325 @@
+﻿@model DecisionPoint.Models.AddDocumentModel
+@{
+    ViewBag.Title = "Add";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <meta content='IE=Edge,chrome=1' http-equiv='X-UA-Compatible' />
+    <title>ComplianceTracker Demo</title>
+    <link href='' rel='canonical' />
+    <meta content='noindex' name='robots' />
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src='//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js' type='text/javascript'></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/Document/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/Document/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/Document/css/chosen.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/Document/css/fullcalendar.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/Document/css/screen.css">
+</head>
+<body>
+    <div id='header'>
+        <div class='navbar navbar-static-top'>
+            <div class='navbar-inner'>
+                <div class='container'>
+                    <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                    </a>
+                    <div class='brand'>
+                        <a class='brand' href='/'>ComplianceTracker</a>
+                    </div>
+                    <div class='container nav-collapse'>
+                        <ul class='nav pull-right'>
+                            <li class='active'><a href="/dashboard.html">Dashboard</a></li>
+                            <li>
+                                <a href='#'>
+                                    <i class='iconic-aperture'></i>
+                                    Settings
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("AddDetails", "Document", FormMethod.Post))
+    {
+        <div id='content'>
+            <div class='container'>
+                <div class='content-box'>
+                    @*<div class='row'>
+                        <div class='span7'>
+                            <img alt="Logo" src="images/logo.png" />
+                        </div>
+                        <div class='span5 text-right'>
+                            <h2>New Document</h2>
+                        </div>
+                    </div>*@
+                    <div id='new-document'>
+                       
+                        <h3>
+                            <img alt="Document plus" src="images/document-plus.png" />
+                            Adding a New Communucation
+                        </h3>
+                        <div class='tabbable'>
+                            <ul class='nav nav-tabs' id='my_tabs'>
+                                <li class='active'>
+                                    <a data-toggle='tab' href='#step-1'>STEP 1: Document Content</a>
+                                </li>
+                                <li>
+                                    <a data-toggle='tab' href='#step-2'>STEP 2: Select Recipients</a>
+                                </li>
+                            </ul>
+                            <div class='tab-content'>
+                                <div class='tab-pane fade in active' id='step-1'>
+                                    <h4>Step 1: Set Up Content</h4>
+                                    <div class='row tabbable my_pills'>
+                                        <div class='span3'>
+                                            <h5>Select Communication Type</h5>
+                                            <ul class='nav nav-pills nav-stacked' id='my_pills'>
+                                                <li class='active'>
+                                                    <a data-toggle='tab' href='#doc'>Document</a>
+                                                </li>
+                                                <li>
+                                                    <a data-toggle='tab' href='#message'>Message</a>
+                                                </li>
+                                                <li>
+                                                    <a data-toggle='tab' href='#scorm'>Course</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='span8'>
+                                            <div class='tab-content'>
+                                                <div class='tab-pane fade in active' id='doc'>
+                                                    <br />
+                                                    <form>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Title</label>
+                                                            <div class='controls'>
+                                                                @Html.TextBoxFor(model => model.DocTitle, new { @class = "input-xlarge" })
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Due Date</label>
+                                                            <div class='controls'>
+                                                                <div class='datetimepicker input-append'>
+                                                                    @Html.TextBoxFor(model => model.DocDueDate, new { @class = "input-xlarge" })
+                                                                    @*  <input data-format='MM/dd/yyyy' type='text' />*@
+                                                                    <span class='add-on'>
+                                                                        <i data-date-icon='icon-calendar' data-time-icon='icon-time'></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <label class='checkbox'>
+                                                                    @Html.CheckBoxFor(model => model.DocRequireFowward)
+                                                                    Require Fowward?
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <label class='checkbox'>
+                                                                    @Html.CheckBoxFor(model => model.DocRequireESign)
+                                                                    Require e-signature?
+                                                                </label>
+                                                                <br />
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Locate a PDF File for Upload</label>
+                                                            <div class='controls'>
+                                                                <input class='input-xlarge' type='file' value='' />
+                                                            </div>
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Locate a Powerpoint File for Upload</label>
+                                                            <div class='controls'>
+                                                                <input class='input-xlarge' type='file' value='' />
+                                                            </div>
+                                                            <br />
+                                                        </div>
+                                                        <div id="DocLinkLabelDiv" class='control-group'>
+                                                            <h5>Links</h5>
+                                                            <table id="tblDocLinks">
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <a id="DocLinkLabelAdd" style="cursor:pointer">add another link</a>
+
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Embed a Video</label>
+                                                            <div class='hint'>Copy and paste code from Youtube or Vimeo</div>
+                                                            <div class='controls'>
+                                                                @Html.TextAreaFor(model => model.DocVideo, new { @style = "width: 450px; height: 60px" })
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Required Actions & Response</label>
+                                                            <div class='control-group'>
+                                                                <div class='controls'>
+                                                                    <label class='checkbox' style='font-weight: normal'>
+                                                                        @Html.CheckBoxFor(model => model.DocRead)   I have read and understood this document
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class='control-group'>
+                                                                <div class='controls'>
+                                                                    <label class='checkbox' style='font-weight: normal'>
+                                                                        @Html.CheckBoxFor(model => model.DocAgreeTerms) I agree to the terms and conditions indicated in this document
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div class='small'><a  style="cursor:pointer">Add another required action</a></div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class='control-group'>
+                                                            <label class='checkbox'>
+                                                                @Html.CheckBoxFor(model => model.DocIncludeAssement, new { id = "checkBoxIncludeAssessment" }) Include Assessment?
+                                                            </label>
+                                                            <div id='Include-assessment-form' style="display: none">
+                                                                <br />
+                                                                <div class='controls'>
+                                                                    <table id="tblQuestions">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <span>Question 1:</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select style='width: 150px'>
+                                                                                    <option>Question Type</option>
+                                                                                    <option>True/False</option>
+                                                                                    <option>Multiple Choice</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input class='input-xlarge' placeholder='Text of the questions' type='text' value='' />
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <span>Question 2:</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select style='width: 150px'>
+                                                                                    <option>Question Type</option>
+                                                                                    <option>True/False</option>
+                                                                                    <option>Multiple Choice</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input class='input-xlarge' placeholder='Text of the questions' type='text' value='' />
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <div class='small'><a id="link-Add-another-question" href="#">Add another question</a></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <button class='btn btn-primary' type='submit'>NEXT</button>
+                                                            </div>
+                                                        </div>
+                                                   </form>
+                                                </div>
+                                                <div class='tab-pane fade' id='message'>
+                                                    <br />
+                                                    <form>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Message Title</label>
+                                                            <div class='controls'>
+                                                                @Html.TextBoxFor(model => model.MsgTitle, new { @class = "input-xlarge" })
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Requested Reply Date</label>
+                                                            <div class='controls'>
+                                                                <div class='datetimepicker input-append'>
+                                                                    @Html.TextBoxFor(model => model.MsgReplyDate)
+                                                                    @*<input data-format='MM/dd/yyyy' type='text' />*@
+                                                                    <span class='add-on'>
+                                                                        <i data-date-icon='icon-calendar' data-time-icon='icon-time'></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <label class='checkbox'>
+                                                                    @Html.CheckBoxFor(model => model.MsgRequireESign) Require e-signature?
+                                                                </label>
+                                                            </div>
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Locate a Powerpoint File for Upload</label>
+                                                            <div class='controls'>
+                                                                <input class='input-xlarge' type='file' value='' />
+                                                            </div>
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <h5>Links</h5>
+                                                            <table id="tblmessageLinks">
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <p><a id="messageLinkLabelAdd" href="#" onclick="">add another link</a></p>
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Embed a Video</label>
+                                                            <div class='hint'>Copy and paste code from Youtube or Vimeo</div>
+                                                            <div class='controls'>
+                                                                @Html.TextAreaFor(model => model.MsgVideo, new { @style = "width: 450px; height: 60px" })
+                                                                @* <textarea style='width: 450px; height: 60px'></textarea>*@
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Message Body</label>
+                                                            <div class='controls'>
+                                                                @Html.TextAreaFor(model => model.MsgBody, new { @style = "width: 450px; height: 120px" })
+
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <button class='btn btn-primary' type='submit'>NEXT</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class='tab-pane fade' id='scorm'>
+                                                    <br />
+                                                    <form>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Title</label>
+                                                            <div class='controls'>
+                                                                @Html.TextBoxFor(model => model.CourseTitle, new { @class = "input-xlarge" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Due Date</label>
+                                                            <div class='controls'>
+                                                                <div class='datetimepicker input-append'>
+                                                                    @Html.TextBoxFor(model => model.CourseDueDate)
+                                                                    @* <input data-format='MM/dd/yyyy' type='text' />*@
+                                                                    <span class='add-on'>
+                                                                        <i data-date-icon='icon-calendar' data-time-icon='icon-time'></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <label class='checkbox'>
+                                                                    @Html.CheckBoxFor(model => model.CourseRequireFowward)Require Fowward?
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <label class='checkbox'>
+                                                                    @Html.CheckBoxFor(model => model.CourseRequireESign)Require e-signature?                                                              
+                                                                </label>
+                                                                <br />
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Locate a PDF File for Upload</label>
+                                                            <div class='controls'>
+                                                                <input class='input-xlarge' type='file' value='' />
+                                                            </div>
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Locate a Powerpoint File for Upload</label>
+                                                            <div class='controls'>
+                                                                <input class='input-xlarge' type='file' value='' />
+                                                            </div>
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <h5>Links</h5>
+                                                            <table id="tblCourseLinks">
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class='input-medium' placeholder='Link Label' type='text' />
+                                                                        <input class='input-large' placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <a id="CourseLinkLabelAdd" href="#" onclick="">add another link</a>
+                                                            <br />
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Embed a Video</label>
+                                                            <div class='hint'>Copy and paste code from Youtube or Vimeo</div>
+                                                            <div class='controls'>
+                                                                @Html.TextAreaFor(model => model.CourseVideo, new { @style = "width: 450px; height: 60px" })
+
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class='control-group'>
+                                                            <label class='control-label'>Required Actions & Response</label>
+                                                            <div class='control-group'>
+                                                                <div class='controls'>
+                                                                    <label class='checkbox' style='font-weight: normal'>
+                                                                        @Html.CheckBoxFor(model => model.CourseRead)I have read and understood this document
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class='control-group'>
+                                                                <div class='controls'>
+                                                                    <label class='checkbox' style='font-weight: normal'>
+                                                                        @Html.CheckBoxFor(model => model.CourseAgreeTerms)I agree to the terms and conditions indicated in this document
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <p>
+                                                                <div class='small'><a href="#">Add another required action</a></div>
+                                                            </p>
+                                                        </div>
+                                                        <br />
+                                                        <div class='control-group'>
+                                                            <label class='checkbox'>
+                                                                @Html.CheckBoxFor(model => model.CourseIncludeAssement, new { id = "checkBoxCourseIncludeAssement" })Include Assessment?
+                                                            </label>
+                                                            <div id='Course-assessment-form' style="display: none">
+                                                                <br />
+                                                                <div class='controls'>
+                                                                    <table id="tblCourseQuestions">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <span>Question 1:</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select style='width: 150px'>
+                                                                                    <option>Question Type</option>
+                                                                                    <option>True/False</option>
+                                                                                    <option>Multiple Choice</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input class='input-xlarge' placeholder='Text of the questions' type='text' value='' />
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <span>Question 2:</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select style='width: 150px'>
+                                                                                    <option>Question Type</option>
+                                                                                    <option>True/False</option>
+                                                                                    <option>Multiple Choice</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input class='input-xlarge' placeholder='Text of the questions' type='text' value='' />
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <div class='small'><a id="link-Add-another-Course-question" href="#">Add another question</a></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class='control-group'>
+                                                            <div class='controls'>
+                                                                <button class='btn btn-primary' type='submit'>NEXT</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='tab-pane fade' id='step-2'>
+                                    <h4>Step 2A: Select Recipients - Internal Staff</h4>
+                                    <div class='filter-bar'>
+                                        <strong>Filter List By:</strong>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>Role
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Admin</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Project Manager</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Developer</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>Skill Sets
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Quality Control</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Interior Design</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Piping</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Plumbing</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Painting</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>State
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Illinois</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Michigan</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>City
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Sample City 1</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Sample City 2</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Sample City 3</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <table class='table table-hover'>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <th>Name</th>
+                                                <th>Role</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Joe Smith</a></td>
+                                                <td>Admin</td>
+                                                <td><a href="joesmithatcolabevanstoncom.html">joesmith@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Jack Johnson</a></td>
+                                                <td>Project Manager</td>
+                                                <td><a href="jackjohnsonatcolabevanstoncom.html">jackjohnson@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Peter Donaldson</a></td>
+                                                <td>Project Manager</td>
+                                                <td><a href="peterdonaldsonatcolabevanstoncom.html">peterdonaldson@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Mary Jensen</a></td>
+                                                <td>Admin</td>
+                                                <td><a href="maryjensenatcolabevanstoncom.html">maryjensen@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Jessican Van Alden</a></td>
+                                                <td>Project Manager</td>
+                                                <td><a href="jessicanvanaldenatcolabevanstoncom.html">jessicanvanalden@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Joseph Ostermann</a></td>
+                                                <td>Developer</td>
+                                                <td><a href="josephostermannatcolabevanstoncom.html">josephostermann@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Kenneth Kirkland</a></td>
+                                                <td>Admin</td>
+                                                <td><a href="kennethkirklandatcolabevanstoncom.html">kennethkirkland@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Lydia Peterson</a></td>
+                                                <td>Project Manager</td>
+                                                <td><a href="lydiapetersonatcolabevanstoncom.html">lydiapeterson@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Michael Marsden</a></td>
+                                                <td>Project Manager</td>
+                                                <td><a href="michaelmarsdenatcolabevanstoncom.html">michaelmarsden@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td><a href="/">Jane Dole</a></td>
+                                                <td>Admin</td>
+                                                <td><a href="janedoleatcolabevanstoncom.html">janedole@colabevanston.com</a></td>
+                                                <td>302.303.3343</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class='pagination'>
+                                        <ul>
+                                            <li class='disabled'><a href="#">&laquo;</a></li>
+                                            <li class='active'><a href="#">1</a></li>
+                                            <li><a href="#">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#">&raquo;</a></li>
+                                        </ul>
+                                    </div>
+                                    <hr />
+                                    <h4>Step 2B: Select Recipients - Vendors</h4>
+                                    <div class='filter-bar'>
+                                        <strong>Filter List By:</strong>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>Role
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Admin</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Project Manager</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Developer</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>Skill Sets
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Quality Control</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Interior Design</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Piping</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Plumbing</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Painting</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>State Covered
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Illinois</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Michigan</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>County Covered
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Cook</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Washtenaw</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class='dropdown'>
+                                            <a class='dropdown-toggle btn btn-info' data-toggle='dropdown' href='#'>City Covered
+              <b class='caret'></b>
+                                            </a>
+                                            <ul class='dropdown-menu' role='menu'>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>All</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Sample City 1</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                           @* <input type='checkbox'>Sample City 2</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a>
+                                                        <label class='checkbox' style='font-weight: normal'>
+                                                            @*<input type='checkbox'>Sample City 3</input>*@
+                                                        </label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <table class='table table-hover'>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <th width='400px'>Name</th>
+                                                <th># Staff</th>
+                                                <th># Vendors</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Company Name</a>
+                                                    <a data-toggle='modal' href='#contact-person' role='button'>
+                                                        <img alt="2 users" src="images/2-users.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        365
+                                                    </a>
+                                                    0%
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        255
+                                                    </a>
+                                                    13%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Company Name</a>
+                                                    <a data-toggle='modal' href='#contact-person' role='button'>
+                                                        <img alt="2 users" src="images/2-users.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        450
+                                                    </a>
+                                                    77%
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        388
+                                                    </a>
+                                                    81%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Company Name</a>
+                                                    <a data-toggle='modal' href='#contact-person' role='button'>
+                                                        <img alt="2 users" src="images/2-users.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        344
+                                                    </a>
+                                                    45%
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        29
+                                                    </a>
+                                                    8%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Company Name</a>
+                                                    <a data-toggle='modal' href='#contact-person' role='button'>
+                                                        <img alt="2 users" src="images/2-users.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        207
+                                                    </a>
+                                                    30%
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        119
+                                                    </a>
+                                                    19%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Company Name</a>
+                                                    <a data-toggle='modal' href='#contact-person' role='button'>
+                                                        <img alt="2 users" src="images/2-users.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        192
+                                                    </a>
+                                                    59%
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        304
+                                                    </a>
+                                                    47%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Company Name</a>
+                                                    <a data-toggle='modal' href='#contact-person' role='button'>
+                                                        <img alt="2 users" src="images/2-users.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        38
+                                                    </a>
+                                                    40%
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        328
+                                                    </a>
+                                                    7%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Company Name</a>
+                                                    <a data-toggle='modal' href='#contact-person' role='button'>
+                                                        <img alt="2 users" src="images/2-users.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        35
+                                                    </a>
+                                                    80%
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        352
+                                                    </a>
+                                                    73%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Contractor</a>
+                                                    <a data-toggle='modal' href='#contact-person2' role='button'>
+                                                        <img alt="User" src="images/user.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        266
+                                                    </a>
+                                                    90%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Contractor</a>
+                                                    <a data-toggle='modal' href='#contact-person2' role='button'>
+                                                        <img alt="User" src="images/user.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        344
+                                                    </a>
+                                                    1%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <input checked='checked' type='checkbox' />
+                                                </th>
+                                                <td>
+                                                    <a href="#">Example Contractor</a>
+                                                    <a data-toggle='modal' href='#contact-person2' role='button'>
+                                                        <img alt="User" src="images/user.png" style="width: 25px; margin-left: 8px" /></a>
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <a class='btn btn-mini' data-toggle='modal' href='#staff-list' role='button' style='margin-right: 5px'>
+                                                        <i class='icon-user'></i>
+                                                        412
+                                                    </a>
+                                                    7%
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class='modal hide fade' id='contact-person' role='dialog'>
+                                        <div class='modal-header'>
+                                            <button class='close' data-dismiss='modal' type='button'>×</button>
+                                            <h3>Contractor Name</h3>
+                                        </div>
+                                        <div class='modal-body'>
+                                            <h4>Michael Smith</h4>
+                                            <p>312-040-1034</p>
+                                            <p><a href="#">some.email@gmail.com</a></p>
+                                            <p>
+                                                <strong>Role:</strong>
+                                                <span class='label label-info'>Project Manager</span>
+                                                <span class='label label-info'>Main Contact Person</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class='modal hide fade' id='contact-person2' role='dialog'>
+                                        <div class='modal-header'>
+                                            <button class='close' data-dismiss='modal' type='button'>×</button>
+                                            <h3>Contractor Name</h3>
+                                        </div>
+                                        <div class='modal-body'>
+                                            <p>312-040-1034</p>
+                                            <p><a href="#">some.email@gmail.com</a></p>
+                                            <p>
+                                                <strong>Role & Skill Set:</strong>
+                                                <span class='label label-info'>Owner</span>
+                                                <span class='label label-info'>Project Manager</span>
+                                                <span class='label label-info'>Electrician</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class='pagination'>
+                                        <ul>
+                                            <li class='disabled'><a href="#">&laquo;</a></li>
+                                            <li class='active'><a href="#">1</a></li>
+                                            <li><a href="#">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#">&raquo;</a></li>
+                                        </ul>
+                                    </div>
+                                    <hr />
+                                    <div class='control-group'>
+                                        <div class='controls'>
+                                            <button class='btn btn' type='submit'>Preview</button>
+                                            <button class='btn btn-primary' type='submit'>Publish</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div id='footer'>
+        <div class='container'>
+            <div class='row'>
+                <div class='span6'>
+                    DocuTrak
+             -
+            <a href="/index.html">Demo Index</a>
+                </div>
+                <div class='span6'>
+                    <div class='text-right'>
+                        Copyright 2014 &sdot; All rights reserved
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+      Javascripts
+      ==================================================
+    -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.min.js" type='text/javascript'></script>
+    <script src="~/Scripts/bootstrap.min.js" type='text/javascript'></script>
+    <script src="~/Scripts/fullcalendar.min.js" type='text/javascript'></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js" type='text/javascript'></script>
+    <script src="~/Scripts/chosen.jquery.min.js" type='text/javascript'></script>
+    <script src="~/Scripts/application.js" type='text/javascript'></script>
+    <script src="~/Scripts/jquery.media.js" type='text/javascript'></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#checkBoxIncludeAssessment").change(function () {
+                var isChecked = $(this).is(':checked');
+                $('#Include-assessment-form').toggle(isChecked);
+            })
+            $("#checkBoxCourseIncludeAssement").change(function () {
+                var isChecked = $(this).is(':checked');
+                $('#Course-assessment-form').toggle(isChecked);
+            })
+            $("#DocLinkLabelAdd").click(function () {
+                $('#tblDocLinks tr:last').after('<tr><td><input class="input-medium" placeholder="Link Label" type="text" /> ' +
+                '<input class="input-large" placeholder="http://" type="text" /></td></tr>');
+            })
+            $("#messageLinkLabelAdd").click(function () {
+                $('#tblmessageLinks tr:last').after('<tr><td><input class="input-medium" placeholder="Link Label" type="text" /> ' +
+                '<input class="input-large" placeholder="http://" type="text" /></td></tr>');
+            })
+            $("#CourseLinkLabelAdd").click(function () {
+                $('#tblCourseLinks tr:last').after('<tr><td><input class="input-medium" placeholder="Link Label" type="text" /> ' +
+                '<input class="input-large" placeholder="http://" type="text" /></td></tr>');
+            })
+            $("#link-Add-another-question").click(function () {
+
+                $('#tblQuestions tr:last').after('<tr><td><span>Question 2:</span></td><td><select style="width: 150px">' +
+                '<option>Question Type</option><option>True/False</option><option>Multiple Choice</option></select>' +
+                '</td><td><input class="input-xlarge" placeholder="Text of the questions" type="text" value="" /></td></tr>');
+            })
+            $("#link-Add-another-Course-question").click(function () {
+
+                $('#tblCourseQuestions tr:last').after('<tr><td><span>Question 2:</span></td><td><select style="width: 150px">' +
+                '<option>Question Type</option><option>True/False</option><option>Multiple Choice</option></select>' +
+                '</td><td><input class="input-xlarge" placeholder="Text of the questions" type="text" value="" /></td></tr>');
+            })
+        });
+
+        $(document).ready(function () {
+            $('DocLinkLabelAdd').click(function () {
+                //    var newTextBoxDiv = $(document.createElement('div'))    
+                //newTextBoxDiv.after().html('<label>Textbox #'+ counter + ' : </label>' +
+                //      '<input type="text" name="textbox' + counter + 
+                //      '" id="textbox' + counter + '" value="" >');
+
+                //newTextBoxDiv.appendTo("#TextBoxesGroup");
+            })
+        })
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    string coverageareatype = string.Empty;
+    if (Request["Type"] == "IC")
+    {
+        Layout = "~/Views/Shared/_ICSetUpLayoutPage.cshtml";
+        coverageareatype = "IC";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+
+    }
+    ViewBag.Title = "Client List";
+    //Grid for Dispaly vendor details
+
+    WebGrid grdvendor = new WebGrid(ajaxUpdateContainerId: "messagegrid", rowsPerPage: Model.rowperpage);
+    if (Model.CurrentvendorsList != null)
+    {
+        if (TempData["isCurrent"].ToString() == "1")
+        {
+            grdvendor.Bind(Model.CurrentvendorsList, autoSortAndPage: true, rowCount: Model.pagesize);
+        }
+    }
+    }
+
+<div id='companies'>
+    <div class='heading'>
+        <div class=''>
+            <h3>Client List</h3>           
+        </div>
+    </div>
+</div>
+
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+
+
+@*Vendor*@
+
+<div id='vendor' style="padding-top: 20px;">
+    @if (TempData["isCurrent"].ToString() == "1")
+    {
+        if (Model.CurrentvendorsList != null)
+        {
+            
+        @grdvendor.GetHtml(htmlAttributes: new { id = "messagegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+    columns: new[] {
+        
+  grdvendor.Column(columnName:"vendor",header : Sorter("vendor", "Client", grdvendor)),
+  grdvendor.Column(columnName:"contact",header: Sorter("contact", "Contact", grdvendor)),
+  grdvendor.Column(columnName:"emailId",header:Sorter("emailId", "Email", grdvendor)),
+  grdvendor.Column(columnName:"phone",header:Sorter("phone", "Phone", grdvendor),
+  format:@<text>
+            
+                @if (item.phone != null && item.phone.Trim() != string.Empty)
+                {
+                   
+               <span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+                }
+                
+            
+
+            </text>
+  ),
+  grdvendor.Column(columnName: "View Service",header:"Service List", format: @<text>
+  
+        <a id="removecstaff" href="~/CompanyDashBoard/ServiceTranslation?CompanyId=@item.CompanyId&CompanyName=@item.vendor" target="_blank" title="View Service" style="cursor: pointer;margin-left: 19px;">
+            View</a>
+        </text>, canSort: false),
+
+    })
+           
+        }
+    }
+</div>
+
+
+<input type="hidden" id="reactivestaffid"/>
+<input type="hidden" id="removestaffid"/>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+    });
+    
+</script>
+

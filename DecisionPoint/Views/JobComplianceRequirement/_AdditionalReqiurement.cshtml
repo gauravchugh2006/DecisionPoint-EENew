@@ -1,0 +1,461 @@
+﻿@model DecisionPoint.Models.JobComplianceRequirementModel
+@{
+    string reqById = string.Empty;
+    string attribute = string.Empty;
+}
+<style>
+    input[type='text'][name='AddReqExpirationDate'] {
+        width: 100%;
+        margin: 12% -9%;
+    }
+</style>
+<div class="row-fluid" id="additionalReqDiv">
+    <div class="span12 mt20">
+        <h4>Additional Credentials</h4>
+
+    </div>
+    <div class="span12" style="margin-left: 0; border: 1px solid rgb(225, 225, 225); padding: 9px;">
+        <div class="span12" style="margin-left: 0;">
+            <div class="span4"><b>Upload</b><sup style="color: red; font-size: 10px;">*</sup></div>
+            <div class="span5"><b>Acknowledgements</b></div>
+            <div class="span3"><b>&nbsp;</b></div>
+        </div>
+        <div class="span12" style="margin-left: 0;">
+            <div class="span12" style="margin-left: 0;">
+                <div class="span4">
+                    <div class='control-group w100'>
+
+                        <div class="MarginBottom3">
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td valign="top"></td>
+                                        <td valign="top">
+                                            <input type="text" placeholder="Title" id="addiReqTitle" onkeypress="ValidateTextBox(this.id,event)" maxlength="30" style="width: 170px;" />
+                                        </td>
+                                        <td valign="top">
+                                            <input id="addReqUploadBtn" type="button" class="btn btn-primary guploadbtn_0" value="Upload" style="margin-top: 0px; display: none;" />
+                                            <input id="addReqUploadFileBtn" class="guploadfilebtn_0" type="file" style="opacity: 0; position: relative; left: 0px; margin-top: -46px; width: 68px;" onchange="readdocURL(this,this.id)" />
+                                        </td>
+                                    </tr>
+                                    <tr><td id="tdErrorAddReqTitle"></td> </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td valign="top" colspan="2">
+                                            <select style="width: 184px;" id="addiReqUploaded">
+                                                <option value="0">-- Select --</option>
+                                                <option value="IC">Uploaded by IC</option>
+                                                <option value="Company">Uploaded by Client</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr><td id="tdErrorAddReqUpload"></td> </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div id="uploadedaddreqdocfiles" style="overflow: auto; width: 169px; max-height: 100px;"></div>
+                                            <label id="docfileName_0" style="color: red;"></label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="span5">
+                    <div class='control-group w100'>
+                        <div class='MarginBottom3'>
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <table id="additionalReqTbl" class="w100"></table>
+                                    <a id="additionalReq" style="cursor: pointer; margin-left: 30px; font-size: 12px;" onclick="AddMoreAck(this.id)">Add</a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="span3">
+                    <div class="control-group">
+                        <div id="dvAddReqReview">
+                            Review
+                            <select style="width: 110px;" id="gretake">
+                                <option selected="selected" value="0">DNA</option>
+                                <option value="6">6 months</option>
+                                <option value="12">12 months</option>
+                                <option value="18">18 months</option>
+                                <option value="24">24 months</option>
+                            </select>
+
+                        </div>
+
+                        <div class="span4 pull-left">
+                            <label class="radio pull-left" style="width: 141%;">
+                                <input type="radio" onclick="$('#dvInsurExpirationDate').show();" value="ExpDate" checked="checked" name="addReqExpDate" id="rdbaddReqExpDate">Expiration Date
+                                <div id="dvInsurExpirationDate" class="controls">
+                                    <div class='datetimepicker input-append'>
+                                        <input type="text" id="txtAddReqExpirationDate" placeholder="Expiration Date" name="AddReqExpirationDate" />
+                                    </div>
+                                </div>
+                                
+                            </label>
+                            
+                        </div>
+                        <div class="span3">
+                            <label class="radio pull-left" style="margin-left: 100%;">
+                                <input type="radio" onclick="$('#dvInsurExpirationDate').hide();" name="addReqExpDate" id="rdbaddReqExpDateDNA" value="DNA">DNA
+                            </label>
+                        </div class="span3">
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="span12">
+                <input type="button" id="addReqCancel" class="btn btn-primary pull-right" value="Cancel" onclick="ResetRecord(3, 0)" style="display: none; margin-right: 71px;" />
+                <input type="button" id="additionalReqSave" class="btn btn-primary pull-right additionalReqSave" title="Save" style="margin-right: 73px;" value="Save" />
+            </div>
+        </div>
+    </div>
+    <div class="span12" style="margin-left: 0;" id="addReqDetailDiv">
+        <div class="span12" style="margin-top: 10px;">
+            <label class="radio pull-right" style="margin-left: 10px;"><input type="radio" onclick="ShowCurrentOrPastDetails(3, false)" name="currentpastaddReq" id="pastAddReq">Past</label>
+            <label class="radio pull-right"><input type="radio" onclick="ShowCurrentOrPastDetails(3, true)" name="currentpastaddReq" id="currentAddReq" checked="checked">Current</label>
+        </div>
+        <table class="table table-hover" id="currentAddReqDetails">
+            <thead>
+                <tr>
+                    <th>Reqiured By</th>
+                    <th>Attribute</th>
+                    <th>Review</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.AddReqMasterList.Where(x => x.IsActive))
+                {
+
+                    if (reqById == item.RequiredByCompanyId)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(attribute))
+                                {
+                                    if (!attribute.Equals(item.title))
+                                    {
+                                        @item.title
+                                    }
+                                }
+                            </td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                <a>
+                                    <img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.LicInsId',3)" />
+                                </a><a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetAddiReqForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.title','@item.LicInsId','@item.Review','@item.UploadedDoc','@Session["CompanyId"]')" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item.ReqCompanyName</td>
+                            <td>@item.title</td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                <a><img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.LicInsId',3)" /></a><a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetAddiReqForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.title','@item.LicInsId','@item.Review','@item.UploadedDoc','@Session["CompanyId"]')" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    reqById = item.RequiredByCompanyId;
+                    attribute = item.title;
+                }
+            </tbody>
+        </table>
+        @{reqById = string.Empty; attribute = string.Empty;}
+        <table class="table table-hover" id="pastAddReqDetails" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Reqiured By</th>
+                    <th>Attribute</th>
+                    <th>Review</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.AddReqMasterList.Where(x => !x.IsActive))
+                {
+
+                    if (reqById == item.RequiredByCompanyId)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(attribute))
+                                {
+                                    if (!attribute.Equals(item.title))
+                                    {
+                                        @item.title
+                                    }
+                                }
+                            </td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                @*<a><img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetAddiReqForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.title','@item.LicInsId','@item.Review','@item.UploadedDoc','@Session["CompanyId"]')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.LicInsId',3)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item.ReqCompanyName</td>
+                            <td>@item.title</td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                @*<a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetAddiReqForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.title','@item.LicInsId','@item.Review','@item.UploadedDoc','@Session["CompanyId"]')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.LicInsId',3)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    reqById = item.RequiredByCompanyId;
+                    attribute = item.title;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<input type="hidden" id="hidAddReqId" />
+<input type="hidden" value="4" id="gridtypeid" />
+<input type="hidden" id="docfile" />
+<script>
+    var ROOT = '@Url.Content("~/")';
+    var additReqUploaded = $('select[id="addiReqUploaded"]');
+    var reqTitle = $('#addiReqTitle');
+    $(document).ready(function () {
+        if ($('input[type=radio][name="rad_JCRfor"][value="Staff"]').prop('checked')) {
+            $('#addiReqUploaded option[value="Staff"]').remove();
+            $('#addiReqUploaded option[value="IC"]').remove();
+            $('#addiReqUploaded')
+                .append($("<option></option>")
+                .attr("value", "Staff")
+                .text("Uploaded by staff"));
+        } else if ($('input[type=radio][name="rad_JCRfor"][value="IC"]').prop('checked')) {
+            $('#addiReqUploaded option[value="Staff"]').remove();
+            $('#addiReqUploaded option[value="IC"]').remove();
+            $('#addiReqUploaded')
+                .append($("<option></option>")
+                .attr("value", "IC")
+                .text("Uploaded by IC"));
+
+        }
+        $('#additionalReqSave').click(function () {
+            // alert('cll');
+            if (IsValidAdditionalReqrmentProperties()) {
+                SaveAdditionalReqiurement(ROOT, '@Session["UserId"]', '@Session["CompanyId"]');
+            }
+        });
+
+        $('#addiReqUploaded').change(function () {
+            if ($(this).val() == "Company") {
+                $('#addReqUploadBtn').show();
+            }
+            else {
+                $('#addReqUploadBtn').hide();
+            }
+        });
+    });
+    //
+    $('input[name="addReqExpDate"]').click(function (e) {
+        if (e.target.value == 'DNA') {
+            $('#txtAddReqExpirationDate').html('');
+        }
+    });
+    $('#addiReqTitle').on('keypress', function (e) {
+        if ($('#addiReqTitle').val().trim().length != 0 || $('#addiReqTitle').val().trim() != "") {
+            $('#tdErrorAddReqTitle').children().remove();
+        }
+    });
+    additReqUploaded.change(function () {
+        if (additReqUploaded.val() != 0 || additReqUploaded.val() != "0") {
+            additReqUploaded.removeClass('errorClass');
+            additReqUploaded.removeAttr("title");
+        }
+    });
+    // funciton to validate Additional Requirement properties
+    function IsValidAdditionalReqrmentProperties() {
+        var res = false;
+
+
+        if (reqTitle.val().trim().length === 0 || reqTitle.val().trim() === "0") {
+            reqTitle.addClass('errorClass');
+            reqTitle.attr("title", "Please input upload title");
+            res = false;
+            //AddErrorMessage('Please input upload title');
+        } else {
+            reqTitle.removeClass('errorClass');
+            reqTitle.removeAttr("title");
+            res = true;
+        }
+
+        if (additReqUploaded.val() === 0 || additReqUploaded.val() === "0") {
+            additReqUploaded.addClass('errorClass');
+            additReqUploaded.attr("title", "Please select uploaded by");
+            res = false;
+            //AddErrorMessage('Please input upload title');
+        } else {
+            additReqUploaded.removeClass('errorClass');
+            additReqUploaded.removeAttr("title");
+            res = true;
+        }
+        return res;
+    }
+    // function to add error message to validate additional requirement properties
+    function AddErrorMessage(msg) {
+        msg = msg.replace("*", "");
+        var errLabel = '<label id="errMsgAddReqTitle" style="color: red;">' + msg + '</label>';
+        var colspan = $('#trValidateLicenseType').children('td').length;
+        var tdErrorAddReqTitle = $('#tdErrorAddReqTitle').attr('colspan', parseInt(colspan));
+        $('#tdErrorAddReqTitle').children().remove();
+        $(errLabel).appendTo('#tdErrorAddReqTitle');
+    }
+    //Start Uploade Document
+    function readdocURL(input, id) {
+        var inputclass = $(input).attr("class");
+        var titleval = $('#addiReqTitle').val();
+        var titleid = "addiReqTitle";
+
+        titleval = $('#gridtypeid').val() + titleval;
+        var setFileUrl = "@Url.Content("~/CompanyDashBoard/SettheEmpDocName/")";
+
+        ReadUploadedFIle(input, id, ROOT, titleval, titleid, setFileUrl, 2);
+    }
+    function createcookie(value) {
+
+        $.ajax({
+            url: '@Url.Content("~/JobComplianceRequirement/CreateEraseTitleNameCookie/")',
+            data: { 'name': value, 'type': 0 },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                setTimeout(function () {
+                    // alert('call');
+                    $('#btnpublishdoc').click();
+                }, 1000);
+
+            }
+        });
+
+    }
+    $('#btnpublish').click(function () {
+
+        var divId = "uploadedaddreqdocfiles";
+        var typeid = 4;
+        var count = $('#' + divId + ' div').length;
+        var imgId = count
+        PublishUploadedFile('', '', '', '', '@Model.HostURL@Model.AdditioalReqDoc/', ROOT, divId, typeid, imgId);
+    });
+    $(function () {
+        //$('#'+$('#fileuploadid').val()).fileupload({
+        $('#addReqUploadFileBtn').fileupload({
+            url: '@Url.Content("~/JobComplianceRequirement/UploadEmpReqDoc/")',
+            dataType: "json",
+            limitConcurrentUploads: 1,
+            sequentialUploads: true,
+            progressInterval: 100,
+            maxChunkSize: 10000,
+            add: function (e, data) {
+                $('#btnpublishdoc').click(function () {
+                    //alert('call1');
+                    data.submit();
+                });
+            },
+            done: function (e, data) {
+                $('#doccircle').progressCircle({
+                    nPercent: 100,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+
+                setTimeout(function () {
+                    //added document name
+                    var fileurl = '@Model.HostURL@Model.AdditioalReqDoc/' + $('#docfile').val().replace(/\s/g, '') + '';
+
+                    var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+                    $('#pdfdiv').attr('src', url1);
+                    $('#loaddiv').hide();
+                    $('#btnpublish').show();
+                    $('#pdfdiv').show();
+                    $('#doccircle').progressCircle({
+                        nPercent: 0,
+                        showPercentText: true,
+                        circleSize: 300,
+                        thickness: 3
+                    });
+                }, 1000);
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#doccircle').progressCircle({
+                    nPercent: progress,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+                $('#progressfile').css('width', progress + '%');
+            },
+            progress: function (e, data) {
+
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#doccircle').progressCircle({
+                    nPercent: progress,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+
+            },
+
+        });
+    });
+    function deletedoc(id) {
+        var divId = "uploadedprofLicfiles";
+        var typeid = $('#gridtypeid').val();
+        //if (!($('#gridtypeid').val().indexOf('$') === -1)) {
+        //    divId = "userdocfiles1_0";
+        //    typeid = 4
+        //}
+        //else
+        if (typeid == 3) {
+            divId = "uploadedinsdocfiles";
+        }
+        if (typeid == 4) {
+            divId = "uploadedaddreqdocfiles";
+        }
+        //var divId = "userdocfiles_0";
+        //var typeid = $('#gridtypeid').val();
+        //if (!($('#gridtypeid').val().indexOf('$') === -1)) {
+        //    typeid = $('#gridtypeid').val().split('$')[1];
+        //    divId = "userdocfiles1_0";
+        //}
+
+        DeleteDocumentFromDir(id, divId, typeid, 0, id, ROOT);
+
+        //if ($("#" + divId + " div").length == 0) {
+
+        //    $('#lbltitleaddcre').removeAttr("disabled");
+        //}
+    }
+</script>

@@ -1,0 +1,247 @@
+<BackgroundReports xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" dpuserId="12456" xsi:schemaLocation="http://ns.hr-xml.org/2006-02-28 http://ns.hr-xml.org/2_4/HR-XML-2_4/Screening/US/BackgroundReports.xsd" userId="DecisionPointtp" account="DecisionPoint" password="DecisionPointtp456">
+  <BackgroundReportPackage xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sish="http://schemas.st.com/data/v1/SterlingHeader" xmlns:oa="http://www.openapplications.org/oagis/9" type="Premium Package">
+    <ProcessingInformation>
+      <AccessCredential type="UserName">DPINT</AccessCredential>
+      <AccessCredential type="Password">password456@</AccessCredential>
+      <AccessCredential type="Account">DP</AccessCredential>
+      <ScopeOfWork>
+        <Text>https://qasecure.sterlingdirect.com/gateway/OneClick.aspx?METHOD=BGCHECK_PRTREPORT&amp;CUSTID=tntatUKZIcXul6AsfKNOwg%3d%3d&amp;BGORDERID=z5zyyRQKQ1yxDFxHdv%2f8IQ%3d%3d&amp;TOKEN=U02nq6JIlk0g7dyGF90kxfo24wmtp1m1WZGbYc0IozaZ5L7wQxfvynMPwV3fwrfM</Text>
+      </ScopeOfWork>
+    </ProcessingInformation>
+    <ProviderReferenceId>
+      <IdValue>2753896</IdValue>
+    </ProviderReferenceId>
+    <ClientReferenceId>
+      <IdValue>DA57bCdc</IdValue>
+    </ClientReferenceId>
+    <ScreeningsSummary>
+      <Organization>
+        <OrganizationName />
+        <OrganizationId>
+          <IdValue />
+        </OrganizationId>
+      </Organization>
+      <PersonalData type="Current">
+        <PersonName>
+          <GivenName>testjcricwepay</GivenName>
+          <MiddleName />
+          <FamilyName primary="true">testjcricwepay</FamilyName>
+          <FamilyName primary="false" />
+        </PersonName>
+        <PostalAddress>
+          <CountryCode>USA</CountryCode>
+          <PostalCode>10001</PostalCode>
+          <Region>AL</Region>
+          <Municipality>NY</Municipality>
+          <DeliveryAddress>
+            <AddressLine>454 45 gfhdf</AddressLine>
+            <Unit />
+          </DeliveryAddress>
+        </PostalAddress>
+        <ContactMethod>
+          <Telephone>
+            <FormattedNumber>4544545454</FormattedNumber>
+          </Telephone>
+          <InternetEmailAddress>testjcricwepay@yopmail.com</InternetEmailAddress>
+        </ContactMethod>
+        <DemographicDetail>
+          <GovernmentId issuingAuthority="SSN" countryCode="US">123456789</GovernmentId>
+          <GovernmentId issuingAuthority="DMV" countryCode="US" jurisdiction="" />
+          <DateOfBirth>1964-02-03</DateOfBirth>
+        </DemographicDetail>
+      </PersonalData>
+    </ScreeningsSummary>
+    <ScreeningStatus>
+      <OrderStatus>Completed</OrderStatus>
+      <Score>Clear</Score>
+      <DateOrderReceived>2015-02-27T08:47:00</DateOrderReceived>
+      <AdditionalItems qualifier="DateOrderClosed">
+        <Text>2015-03-04T15:51:00</Text>
+      </AdditionalItems>
+      <AdditionalItems qualifier="x:stsDateOrderSubmitted">
+        <Text>2015-03-04T11:10:34</Text>
+      </AdditionalItems>
+    </ScreeningStatus>
+    <Screenings>
+      <Screening type="ssn" qualifier="x:stsSSV1">
+        <ClientReferenceId>
+          <IdValue>11843382</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:25:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+      <Screening type="criminal" qualifier="county">
+        <ClientReferenceId>
+          <IdValue>11843383</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Complete</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:28:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results">
+          <Text>Public record information from this county is only available through a statewide search performed through the NY-Administrative Office of the Courts.
+</Text>
+        </ScreeningResults>
+      </Screening>
+      <Screening type="criminal" qualifier="x:stsMSMJ">
+        <ClientReferenceId>
+          <IdValue>11843384</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 3:46:00 PM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+      <Screening type="criminal" qualifier="statewide">
+        <ClientReferenceId>
+          <IdValue>11843385</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 3:47:00 PM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+      <Screening type="criminal" qualifier="federalCriminal">
+        <ClientReferenceId>
+          <IdValue>11843386</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 3:48:00 PM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+      <Screening type="license" qualifier="professional">
+        <ClientReferenceId>
+          <IdValue>11843387</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 3:48:00 PM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+      <Screening type="other" qualifier="OFAC">
+        <ClientReferenceId>
+          <IdValue>11843388</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 3:49:00 PM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+      <Screening type="other" qualifier="x:stsCRSEXDOJ">
+        <ClientReferenceId>
+          <IdValue>11843389</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Clear</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 11:11:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>3/4/2015 3:51:00 PM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+    </Screenings>
+  </BackgroundReportPackage>
+</BackgroundReports>

@@ -1,0 +1,365 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "Announcement";
+    WebGrid grdannounce = new WebGrid(ajaxUpdateContainerId: "announcegrid", rowsPerPage:Model.rowperpage,canPage:false);
+    if (Model.Announcement != null)
+    {
+        grdannounce.Bind(Model.Announcement, autoSortAndPage: false, rowCount: Model.pagesize);
+    }
+}
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+<div class='heading'>
+    <div class='row'>
+        <h3>Manage Announcement</h3>
+    </div>
+</div>
+<div id="annonucementdiv" style="line-height: 2px !important;">
+
+    <br />
+    <div class="w100">
+        
+        <span>
+
+            <textarea id="txtannounce" placeholder="Announcement Name..." style="width: 900px; height: 67px;">@Html.Raw(@Model.CloseAnnounce)</textarea><br />
+            <span><a id="btnsaveannouncebutdisable" class="btn btn-small btn-info butmargin" style="margin-top: 10px; margin-right: 0px; float: right;" title="Save">Save </a></span>
+            <span><a id="btnsaveannounce" class="btn btn-small btn-info butmargin" style="margin-top: 10px; margin-right: -4px; float: right;" title="Save Announcement">Publish</a></span>
+
+            
+            <input type="hidden" id="announceid" value="@Model.CloseAnnounceId" />
+            <input type="hidden" id="isactivestatus" value="disable" />
+        </span>
+
+
+        <span style="display: none"><a id="btnreset" class="btn btn-small btn-info butmargin-left1" title="Reset">
+            <img src="~/Content/images/reset.png" style="height: 17px;" /></a></span>
+
+
+        <span><a id="btndisable" href="#" class="btn btn-small btn-info butmargin-left1" style="visibility: hidden; margin-top: 10px; float: right; margin-right: -4px;" title="Enable/Disable Announcement">Disable</a></span>
+    </div>
+
+    <div class="w100">
+        <div id="divannounceemsg" style="font-size: 12px; padding-bottom: 10px; color: green; padding-top: 10px;"></div>
+        <div id="diverrorMsg" style="font-size: 12px; padding-bottom: 10px; color: red; padding-top: 10px;"></div>
+    </div>
+
+    <div class="w100">
+        <div id="divannounce">
+            @if (Model.Announcement != null)
+            {
+              
+   
+                               
+                @grdannounce.GetHtml(htmlAttributes: new { id = "announcegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+         grdannounce.Column(columnName:"ReleaseDate",header : "Released Date", format: 
+ @<text>
+                @if (item.ReleaseDate != null)
+        {
+<span>  @string.Format("{0:MM/dd/yyyy}",
+             item.ReleaseDate)</span>
+        }</text>
+ 
+ ,style:"webgridcol1"),
+grdannounce.Column(columnName:"Announcement",header : "Announcement",
+format:@<text>
+                @if (item.IsActive)
+                        {
+<a id="annonuce1B_@item.Id" onclick="EditAnnouncement(this.id,'@item.IsActive','@item.Id')" style="cursor:pointer;color:black;">@Html.Raw(item.Announcement) </a>
+                        }
+else
+                        {
+<a id="title1G_@item.Id" onclick="EditAnnouncement(this.id,'@item.IsActive','@item.Id')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@Html.Raw(item.Announcement)  </a>
+                        }
+                </text>
+),
+grdannounce.Column(header: "Remove",format: @<text>
+                <a title="Remove the Announcement" onclick="removeann('@item.Id')" style="cursor: pointer; margin-left: 19px;">
+                    <img src="../Content/images/delete.png" /></a>
+                </text>, canSort: false)
+
+
+    })
+               
+            }
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(window).load(function () {
+        window.onbeforeunload = null
+
+    })
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+    });
+
+
+    //Add new title name
+    $('#btnsaveannounce').click(function () {
+
+        var announcement = tinymce.get('txtannounce').getContent();
+
+        var bodyText = new RegExp(/<body[^>]*>([\S\s]*?)<\/body>/).exec(announcement)[1];
+
+        // alert(announcement);
+        if (bodyText.trim() != "") {
+            $('#diverrorMsg').html("");
+            var status = $('#btnsaveannounce').html().trim();
+
+            if (status == "Save") {
+                status = "Edit";
+            }
+            else if (status == "Publish") {
+                status = "Save";
+            }
+            var announcementId = $('#announceid').val();
+            //alert(status);
+            if ('@Model.CloseAnnounceId' != null && '@Model.CloseAnnounceId' != 0) {
+                status = "Edit";
+            }
+            $.ajax({
+                type: "POST",
+                url: "../CompanyDashBoard/AddAnnoucement",
+                data: JSON.stringify({
+                    announcement: announcement, status: status, announcementId: parseInt(announcementId)
+
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+
+                    tinymce.get('txtannounce').setContent('');
+                    if (result > 0) {
+                        if (status == "Edit") {
+                            // alert(1);
+                            $('#divannounceemsg').html("Annoucement update sucessfully");
+                        }
+                        else if (status == "Save") {
+                            //alert(2);
+                            $('#divannounceemsg').html("Annoucement save sucessfully");
+                            //$('#titlemsg').html("Title Saved Sucessfully");
+
+                        }
+                        setTimeout(function () {
+                            window.onbeforeunload = null;
+                            window.location.reload();
+                            //  $('#vendor').html($(result).find('#vendor').html().trim());
+                            $('#btnreset').click();
+                            // $('#btnsaveannouncebutdisable').css("display", "block");
+
+                        }, 1000);
+
+                        //$('.confirmationdivmain').show();
+                        //$('.confirmationdivinner').show();
+                        //$('#btncancel').hide();
+
+
+                    }
+                    else if (result == -1) {
+                        // $('#dvMsg').html("Title Name alreay exist");
+                        $('#divannounceemsg').html("Annoucement alreay exist");
+                        setTimeout(function () {
+                            window.onbeforeunload = null;
+                            window.location.reload();
+                            // $('#btnsaveannouncebutdisable').css("display", "block");
+                            // $.get(url, function (result) {
+                            //   $('#titlesdiv').html($(result).find('#titlesdiv').html().trim());
+
+                            //});
+                            $('#btnreset').click();
+
+                        }, 1000);
+                        //$('.confirmationdivmain').show();
+                        //$('.confirmationdivinner').show();
+                        //$('#btncancel').hide();
+                        //alert('Title Name alreay exist');
+                    }
+                },
+
+            });
+
+        }
+        else {
+            $('#diverrorMsg').html("Please enter announcement");
+
+        }
+
+    });
+
+    //disable any title
+    $('#btndisable').click(function () {
+        var announcement = tinymce.get('txtannounce').getContent();
+
+        var bodyText = new RegExp(/<body[^>]*>([\S\s]*?)<\/body>/).exec(announcement)[1];
+
+        if (bodyText.trim() != "") {
+            $('#diverrorMsg').html("");
+            var announcementid = $('#announceid').val();
+            var isActive = $('#isactivestatus').val();
+            $.ajax({
+                url: '../CompanyDashBoard/DisaEnaAnnoucement',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'announcementId': parseInt(announcementid), 'isActive': isActive },
+            })
+          .success(function (result) {
+              tinymce.get('txtannounce').setContent('');
+              $('#divannounceemsg').html("Status change sucessfully");
+              setTimeout(function () {
+                  window.onbeforeunload = null;
+                  window.location.reload();
+                  $('#btnreset').click();
+                  // $('#btnsaveannouncebutdisable').css("display", "block");
+              }, 1000);
+
+
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+        } else {
+            $('#diverrorMsg').html("Please enter announcement");
+        }
+    });
+    //Edit title any title
+    function EditAnnouncement(id, isActive, announcementId) {
+        //alert(id);
+        if (isActive != '') {
+            //$('#btndisable').html("Disable");
+            $('#btndisable').show();
+            $('#isactivestatus').val("disable");
+            $('#btndisable').html('Disable');
+            $('#btnsaveannouncebutdisable').css("display", "none");
+
+        }
+        else {
+            $('#btndisable').show();
+            $('#btndisable').html('Enable');
+            $('#isactivestatus').val("enable");
+            $('#btnsaveannouncebutdisable').css("display", "none");
+        }
+        var announcement = $('#' + id).html();
+        // alert(announcement);
+        $('#announceid').val(announcementId);
+        tinymce.get('txtannounce').setContent(announcement);
+        //$('#txtannounce').val(announcement);
+        $('#btndisable').css("visibility", "visible")
+        $('#btnsaveannounce').html("Save");
+
+    }
+    $('#btnsaveannouncebutdisable').click(function () {
+        var announcement = tinymce.get('txtannounce').getContent();
+        var bodyText = new RegExp(/<body[^>]*>([\S\s]*?)<\/body>/).exec(announcement)[1];
+        if (bodyText.trim() != "") {
+            $('#diverrorMsg').html("");
+            if ('@Model.CloseAnnounceId' != null && '@Model.CloseAnnounceId' != 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "../CompanyDashBoard/AddCloseAnnoucement",
+                    data: JSON.stringify({
+                        announcement: announcement, status: "Edit", announcementId: parseInt('@Model.CloseAnnounceId')
+
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+
+                        tinymce.get('txtannounce').setContent('');
+                        if (result > 0) {
+
+                            $('#divannounceemsg').html("Annoucement update sucessfully");
+
+                            setTimeout(function () {
+                              
+                                window.onbeforeunload = null;
+                                window.location.href = '@Url.Content("~/CompanyDashBoard/DocumentAction/All")';
+                                $('#btnreset').click();
+
+                            }, 1000);
+
+                        }
+
+                    },
+
+
+                });
+            }
+            else {
+
+
+                var announcementId = $('#announceid').val();
+                $.ajax({
+                    type: "POST",
+                    url: "../CompanyDashBoard/AddCloseAnnoucement",
+                    data: JSON.stringify({
+                        announcement: announcement, status: "Save", announcementId: parseInt(announcementId)
+
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                       window.onbeforeunload = null;
+                        window.location.href ='@Url.Content("~/CompanyDashBoard/DocumentAction/All")';
+                    }
+                })
+
+            }
+        } else {
+            $('#diverrorMsg').html("Please enter announcement");
+        }
+    });
+    //reset function
+
+    $('#btnreset').click(function () {
+        $('#txtannounce').val('');
+        $('#btndisable').hide();
+        //  $('#divtitlemsg').html($('#titlemsg').val());
+    })
+    //$('#btncancel').click(function () {
+    //    $('.confirmationdivmain').hide();
+    //    $('.confirmationdivinner').hide();
+    //})
+    //disbale and enalble on check box click
+    function DisEnable(announcementd, isActive) {
+        $.ajax({
+            url: '../CompanyDashBoard/DisaEnaAnnoucement',
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            data: { 'announcementd': parseInt(announcementd), 'isActive': isActive },
+
+        })
+        .success(function (result) {
+            $('#btnreset').click();
+            window.location.reload();
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+    }
+
+    function removeann(announcementid) {
+        var url = '@Url.Action("../CompanyDashBoard/RemoveAnnoucement")';
+            $.get(url, { 'announcementId': announcementid }, function (result) {
+                //alert(1);
+                if (result == 1) {
+                    //alert(12);
+                    window.onbeforeunload = null;
+                    window.location.reload();
+                    // $('#announcegrid').html($(result).find('#announcegrid').html().trim());
+                }
+
+            })
+        }
+</script>
+
+

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BackgroundCheck account="DecisionPointtp" password="DecisionPointtp456" userId="DPINT" dpuserId="220" xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <BackgroundSearchPackage type="Premium Package">
+    <ProcessingInformation>
+      <AccessCredential>DPINT</AccessCredential>
+      <AccessCredential>password456@</AccessCredential>
+      <AccessCredential type="Account">
+      </AccessCredential>
+    </ProcessingInformation>
+    <ClientReferenceId>
+      <IdValue>UuINVYVh-220</IdValue>
+    </ClientReferenceId>
+    <PersonalData>
+      <PersonName>
+        <GivenName>testjcricwepay</GivenName>
+        <MiddleName>
+        </MiddleName>
+        <FamilyName primary="true">testjcricwepay</FamilyName>
+      </PersonName>
+      <PostalAddress>
+        <PostalCode>60002</PostalCode>
+        <Region>
+        </Region>
+        <Municipality>dgdg</Municipality>
+        <DeliveryAddress>
+          <AddressLine>454 45 gfhdf</AddressLine>
+        </DeliveryAddress>
+      </PostalAddress>
+      <ContactMethod>
+        <Telephone>
+          <FormattedNumber>4544545454</FormattedNumber>
+        </Telephone>
+        <InternetEmailAddress>testjcricwepay@yopmail.com</InternetEmailAddress>
+      </ContactMethod>
+    </PersonalData>
+    <Screenings>
+      <PackageId idOwner="Sterling">
+        <IdValue name="NumValue">Premium Package</IdValue>
+      </PackageId>
+    </Screenings>
+  </BackgroundSearchPackage>
+</BackgroundCheck>

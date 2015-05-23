@@ -1,0 +1,2070 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@using DecisionPointCAL.Common;
+@using System.Globalization;
+@{
+    string requesttype = string.Empty;
+    if (Request["type"] == "IN")
+    {
+        requesttype = Request["type"];
+        Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    }
+    ViewBag.Title = "CommunicationRecipient";
+    string DocId = (string)ViewData["DocId"];
+    if (DocId == null)
+    {
+        DocId = "0";
+    }
+    int rowperpage = Model.rowperpage;
+}
+
+
+<link href="~/Content/css/Register/common.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+<script src="~/Scripts/jquery.simplePagination.js"></script>
+<link type="text/css" href="~/Content/css/UserDashboard/simplePagination.css" rel="stylesheet" />
+<script src="~/Scripts/DashBoard/Coveragrea.js"></script>
+
+<style>
+    .ui-autocomplete {
+        max-height: 150px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+        font-size: 11px;
+        margin-top: 175px;
+        margin-left: 245px;
+        z-index: 999;
+    }
+    /* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+    * html .ui-autocomplete {
+        height: 150px;
+    }
+
+    .w20 {
+        margin-right: -31px;
+        float: left;
+        margin-bottom: 10px;
+        line-height: 26px;
+    }
+
+    .pdr5 {
+        padding-right: 5px;
+        float: left;
+    }
+
+    .multiselectable {
+        width: 500px;
+        display: block;
+        overflow: hidden;
+        width: 100%;
+        padding-right: 20px;
+        margin-bottom: 8px;
+    }
+
+        .multiselectable select, .multiselectable div {
+            width: 205px;
+            float: left;
+        }
+
+            .multiselectable div * {
+                display: block;
+                margin: 0 auto;
+                font-size: 12px;
+                font-weight: normal;
+            }
+
+        .multiselectable div {
+            display: inline;
+            overflow: hidden;
+        }
+
+    .butmargin {
+        margin: -11px 0 0 3px;
+    }
+
+    .multiselectable .m-selectable-controls {
+        margin-top: 45px;
+        width: 43px;
+    }
+
+    .w1002 {
+        float: left;
+        margin-bottom: 30px;
+    }
+
+    .multiselectable .m-selectable-controls button {
+        margin-top: 0.2em;
+        margin-left: .5em;
+        width: 30px;
+    }
+
+    .multiselectable select, .multiselectable div {
+        float: left;
+        width: 207px;
+    }
+
+    .m-selectable-to > select {
+        height: 251px;
+    }
+
+    .m-selectable-from > select {
+        height: 251px;
+    }
+
+    .selectheading {
+        /* padding: 6px 0 7px;*/
+    }
+
+    .unselectable {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    table {
+        background-color: transparent;
+        border-spacing: 0;
+        max-width: none !important;
+    }
+</style>
+
+<div id='content'>
+    <div class='container'>
+        <div class='content-box'>
+            <br />
+            <div id='new-document'>
+
+                <div class='tabbable'>
+                    @if (Request["type"] != "IN")
+                    {
+                        <ul class='nav nav-tabs' id='my_tabs'>
+                            <li id="step1content">
+                                @Html.ActionLink("STEP 1: Document Content", "Communication", "CompanyDashBoard", new { id = DocId }, null)
+
+                            </li>
+                            <li id="step2recipient" class="active2">
+                                @Html.ActionLink("STEP 2: Assignment", "CommunicationRecipient", "CompanyDashBoard", new { id = DocId }, null)
+
+                            </li>
+                            <li id="step3staging">
+                                @Html.ActionLink("Staging ", "CommunicationStaging", "CompanyDashBoard", new { id = DocId }, null)
+
+                            </li>
+                        </ul>
+                    }
+                    <div class="tab-content" style="min-height: 400px !important;">
+
+                        <div id="step-2" class="tab-pane fade active in">
+
+                            <h4>Step 2 : Assignment</h4>
+                            <div class="filter-bar">
+                                <strong>Filter List By:</strong>
+
+                                <div class="dropdown">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-primary">Type
+                                   
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul role="menu" class="dropdown-menu" style="width: 200px;">
+                                        <li>
+                                            <div style="border-bottom: 1px solid black;">
+
+
+                                                <label style="font-weight: normal; margin-left: 5px;" class="checkbox">
+                                                    @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                    {
+                                                        if (Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("staff"))
+                                                        {
+                                                        <input type="checkbox" id="chkStaff" value="staff" name="StaffIc" checked="checked" onchange="filterrecord('')" />
+                                                        }
+                                                        else
+                                                        {
+                                                        <input type="checkbox" id="chkStaff" value="staff" name="StaffIc" onchange="filterrecord('')" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" id="chkStaff" value="staff" name="StaffIc" onchange="filterrecord('')" />
+                                                    }
+                                                    Our Staff</label>
+                                                @if (Model.IsICApply)
+                                                {
+                                                    <label style="font-weight: normal; margin-left: 5px;" class="checkbox">
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("ic"))
+                                                            {
+                                                            <input type="checkbox" id="chkIC" name="StaffIc" value="ic" checked="checked" onchange="filterrecord('ic')" />
+                                                            <input type="hidden" id="icExist" value="1" />
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="checkbox" id="chkIC" name="StaffIc" value="ic" onchange="filterrecord('ic')" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="chkIC" name="StaffIc" value="ic" onchange="filterrecord('ic')" />
+                                                        }
+                                                        Our IC Type</label>
+                                                }
+                                            </div>
+                                        </li>
+                                        @if (Model.IsVendorApply)
+                                        {
+                                            <li>
+
+                                                <div style="border-bottom: 1px solid black;">
+                                                    <label style="font-weight: normal; margin-left: 5px;" class="radio">
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (!(Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("vendor")) || !(Model.CommFilterValue.Where(x => x.FilterValue == "type").Select(x => x.FilterValue).Contains("ddvendor")))
+                                                            {
+                                                            <input type="radio" name="rdVendors" value="notvendor" id="rdNotIncludeVendors" checked="checked" onchange="filterrecord('')" />
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="radio" name="rdVendors" value="notvendor" id="rdNotIncludeVendors" onchange="filterrecord('')" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" name="rdVendors" value="notvendor" id="rdNotIncludeVendors" checked="checked" onchange="filterrecord('')" />
+                                                        }
+                                                        Do not include Vendors</label>
+                                                    <label style="font-weight: normal; margin-left: 5px;" class="radio">
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("vendor"))
+                                                            {
+                                                            <input type="radio" name="rdVendors" value="vendor" id="rdOurVendors" checked="checked" onchange="filterrecord('')" />
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="radio" name="rdVendors" value="vendor" id="rdOurVendors" onchange="filterrecord('')" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" name="rdVendors" value="vendor" id="rdOurVendors" onchange="filterrecord('')" />
+                                                        }
+                                                        Our Vendors</label>
+                                                    <label style="font-weight: normal; margin-left: 5px;" class="radio">
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("ddvendor"))
+                                                            {
+                                                            <input type="radio" name="rdVendors" value="ddvendor" id="rdVendorDecendants" checked="checked" onchange="filterrecord('')" />
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="radio" name="rdVendors" value="ddvendor" id="rdVendorDecendants" onchange="filterrecord('')" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" name="rdVendors" value="ddvendor" id="rdVendorDecendants" onchange="filterrecord('')" />
+                                                        }
+                                                        Our Vendors and beyond (distant descendants)</label>
+
+                                                </div>
+                                            </li>
+                                        }
+                                        @if (Model.IsClientApply)
+                                        {
+                                            <li>
+                                                <div style="border-bottom: 1px solid black;">
+                                                    <label style="font-weight: normal; margin-left: 5px;" class="radio">
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (!(Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("client")) || !(Model.CommFilterValue.Where(x => x.FilterValue == "type").Select(x => x.FilterValue).Contains("ddclient")))
+                                                            {
+                                                            <input type="radio" name="rdClients" value="notclient" id="rdNotIncludeClients" checked="checked" onchange="filterrecord('')" />
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="radio" name="rdClients" value="notclient" id="rdNotIncludeClients" onchange="filterrecord('')" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" name="rdClients" value="notclient" id="rdNotIncludeClients" checked="checked" onchange="filterrecord('')" />
+                                                        }
+                                                        Do not include Clients</label>
+                                                    <label style="font-weight: normal; margin-left: 5px;" class="radio">
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("client"))
+                                                            {
+                                                            <input type="radio" name="rdClients" value="client" id="rdOurClients" checked="checked" onchange="filterrecord('')" />
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="radio" name="rdClients" value="client" id="rdOurClients" onchange="filterrecord('')" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" name="rdClients" value="client" id="rdOurClients" onchange="filterrecord('')" />
+                                                        }
+                                                        Our Clients</label>
+                                                    <label style="font-weight: normal; margin-left: 5px;" class="radio">
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (Model.CommFilterValue.Where(x => x.FilterType == "type").Select(x => x.FilterValue).Contains("ddclient"))
+                                                            {
+                                                            <input type="radio" name="rdClients" value="ddclient" id="rdDecentantClients" onchange="filterrecord('')" />
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="radio" name="rdClients" value="ddclient" id="rdDecentantClients" onchange="filterrecord('')" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="radio" name="rdClients" value="ddclient" id="rdDecentantClients" onchange="filterrecord('')" />
+                                                        }
+                                                        Our Clients and beyond (distant descendants)</label>
+
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+
+
+                                </div>
+
+                                <div class="dropdown" id="professionalTypeId" style="display: none;">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-primary">IC Type
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul role="menu" class="dropdown-menu" style="width: 200px;">
+                                        <li>
+
+                                            <ul class="profession-type-ul">
+                                                @if (!object.Equals(Model.VendorTypeDetails, null))
+                                                {
+                                                    foreach (var item in Model.VendorTypeDetails)
+                                                    {
+                                                    <li>
+                                                        @if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                        {
+                                                            if (Model.CommFilterValue.Where(x => x.FilterType == "professionalType").Select(x => int.Parse(x.FilterValue)).Contains(item.id))
+                                                            {
+                                                            <input type="checkbox" value="@item.id" class="MarginTop4 professionalchk" checked="checked" onchange="filterrecord('')"/>
+                                                            }
+                                                            else
+                                                            {
+                                                            <input type="checkbox" value="@item.id" class="MarginTop4 professionalchk" onchange="filterrecord('')"/>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" value="@item.id" class="MarginTop4 professionalchk" checked="checked" onchange="filterrecord('')"/>
+                                                        }
+                                                        <span class="Marginleft5">@item.categoryName</span></li>     
+                                                    }
+                                                }
+                                            </ul>
+
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                @if (Model.IsServicesApply)
+                                {
+                                    <div class="dropdown">
+                                        <a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-primary">Services
+             
+                                        <b class="caret"></b>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu">
+
+                                            <li onclick="filterrecord('S:All')">
+                                                <a>
+                                                    <label style="font-weight: normal" class="checkbox">
+                                                        All
+                                                    </label>
+                                                </a>
+                                            </li>
+                                            <li id="partialservice">
+                                                <a>
+                                                    <label style="font-weight: normal" class="checkbox">
+                                                        Partial
+                                                    </label>
+                                                </a>
+                                            </li>
+                                        </ul>
+
+
+                                    </div>
+
+                                    <div class="trans" id="serviceouter"></div>
+@*Services Popup*@
+                                    <div class="popup" id="serviceinner" style="left: 19%!important;">
+                                        <div class="Reply-MessageBox" style="display: block; height: auto !important; width: 700px !important;">
+
+                                            <div class="tittle-MessageBox">
+                                                <span>Services</span><a>
+                                                    <img id="btnserviceclose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+                                            </div>
+                                            <div class="MessageSection-Box">
+                                                @if (Model.serviceDetails != null)
+                                                {
+                                                    if (Model.serviceDetails.Count() > 0)
+                                                    {
+                                                    <div style="width: 833px; overflow-x: auto; overflow-y: hidden; height: auto;">
+                                                        <table style="margin-left: 1px;" id="tblservice">
+                                                            <tr>
+                                                                @{int count = 0; }
+                                                                @{float ii = Model.serviceDetails.Count(); }
+                                                                @{
+                                                                  int k = 0;
+                                                                  float totle1 = ii / 5f;
+                                                                  if (ii == 1)
+                                                                  {
+                                                                      totle1 = 1.0f;
+                                                                  }
+                                                                }
+                                                                @while (count < totle1)
+                                                                {
+                                                                    count++;
+                                                                    <td style="vertical-align: top;">
+
+                                                                        @{var j = 0; int jj = 0;}
+                                                                        @foreach (var item in Model.serviceDetails)
+                                                                        {
+                                                                            if (jj < k)
+                                                                            {
+                                                                                jj++;
+                                                                                continue;
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                if (j != 5)
+                                                                                {
+                                                                                    if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                                                    {
+                                                                                        if (Model.CommFilterValue.Where(x => x.FilterType == "service").Select(x => x.FilterValue).Contains(Convert.ToString(item.id)))
+                                                                                        {
+                                                                            <div style="width: 100%; display: table;">
+                                                                                <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                                    <input type="checkbox" class="servicechk" style="margin-top: -1px;" value="@item.id" checked="checked"/>
+                                                                                </div>
+                                                                                <div style="display: table-cell; text-align: left;">
+                                                                                    <div class="dynamic-word-div">
+                                                                                        @item.serviceName
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                            <div style="width: 100%; display: table;">
+                                                                                <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                                    <input type="checkbox" class="servicechk" style="margin-top: -1px;" value="@item.id"/>
+                                                                                </div>
+                                                                                <div style="display: table-cell; text-align: left;">
+                                                                                    <div class="dynamic-word-div">
+                                                                                        @item.serviceName
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                            <div style="width: 100%; display: table;">
+                                                                                <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                                    <input type="checkbox" class="servicechk" style="margin-top: -1px;" value="@item.id"/>
+                                                                                </div>
+                                                                                <div style="display: table-cell; text-align: left;">
+                                                                                    <div class="dynamic-word-div">
+                                                                                        @item.serviceName
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                                    }
+
+                                                                                    j++;
+                                                                                }
+                                                                                else { k = k + 5; break; }
+                                                                            }
+
+                                                                        }
+
+                                                                    </td> 
+                                                                }
+
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                            
+                                                    }
+                                                    else
+                                                    {
+                                                    <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 530px;">
+                                                        <div style="margin-left: 195px;">No Service</div>
+                                                    </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 530px;">
+                                                        <div style="margin-left: 195px;">No Service</div>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <div class="Bottom-ButtonControl">
+                                                <button id="btnservicecancel" class="btnred" title="Cancel">Cancel</button>&nbsp; 
+                                            <button id="btnservicedone" class="btn btn-primary" title="Submit for filter" onclick="filterrecord('')">Submit</button>&nbsp;
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                                <div class="dropdown" id="ddlTitle">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-primary">Title
+             
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul role="menu" class="dropdown-menu">
+
+                                        <li onclick="filterrecord('T:All')">
+                                            <a>
+                                                <label style="font-weight: normal" class="checkbox">
+                                                    All
+                                                </label>
+                                            </a>
+                                        </li>
+                                        <li id="partialtitle">
+                                            <a>
+                                                <label style="font-weight: normal" class="checkbox">
+                                                    Partial
+                                                </label>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="trans" id="titleouter"></div>
+                                @*Title Popup*@
+                                <div class="popup" id="titleinner" style="left: 19%!important; top: 50% !important;">
+                                    <div class="Reply-MessageBox" style="display: block; height: auto !important; width: 700px !important;">
+
+                                        <div class="tittle-MessageBox">
+                                            <span>Title</span><a>
+                                                <img id="btntitleclose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+                                        </div>
+                                        <div class="MessageSection-Box">
+                                            @if (Model.titleDetails != null)
+                                            {
+                                                if (Model.titleDetails.Count() > 0)
+                                                {
+                                                <div style="width: 833px; overflow-x: auto; overflow-y: hidden; height: auto;">
+                                                    <table id="titletbale" style="margin-left: 1px;">
+                                                        <tr>
+                                                            @{int count = 0; }
+                                                            @{float ii = Model.titleDetails.Count(); }
+                                                            @{
+                                                              int k = 0;
+                                                              float totletitle = ii / 5f;
+                                                              if (ii == 1)
+                                                              {
+                                                                  totletitle = 1.0f;
+                                                              }
+                                                            }
+
+                                                            @while (count < totletitle)
+                                                            {
+                                                                count++;
+                                                                <td style="vertical-align: top;">
+
+                                                                    @{var j = 0; int jj = 0;}
+                                                                    @foreach (var item in Model.titleDetails)
+                                                                    {
+                                                                        if (jj < k)
+                                                                        {
+                                                                            jj++;
+                                                                            continue;
+                                                                        }
+                                                                        else
+                                                                        {
+
+                                                                            if (j != 5)
+                                                                            {
+                                                                                if (Model.CommFilterValue != null && Model.CommFilterValue.Count > 0)
+                                                                                {
+                                                                                    if (Model.CommFilterValue.Where(x => x.FilterType == "title").Select(x => x.FilterValue).Contains(item.titleName))
+                                                                                    {
+                                                                        <div style="width: 100%; display: table;">
+                                                                            <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                                <input type="checkbox" class="titlechk" style="margin-top: -1px;" value="@item.titleName"/>
+                                                                            </div>
+                                                                            <div style="display: table-cell; text-align: left;">
+                                                                                <div class="dynamic-word-div">
+                                                                                    @item.titleName
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                               
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                        <div style="width: 100%; display: table;">
+                                                                            <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                                <input type="checkbox" class="titlechk" style="margin-top: -1px;" value="@item.titleName"/>
+                                                                            </div>
+                                                                            <div style="display: table-cell; text-align: left;">
+                                                                                <div class="dynamic-word-div">
+                                                                                    @item.titleName
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                        <div style="width: 100%; display: table;">
+                                                                            <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                                <input type="checkbox" class="titlechk" style="margin-top: -1px;" value="@item.titleName"/>
+                                                                            </div>
+                                                                            <div style="display: table-cell; text-align: left;">
+                                                                                <div class="dynamic-word-div">
+                                                                                    @item.titleName
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                                }
+
+
+                                                                                j++;
+                                                                            }
+                                                                            else { k = k + 5; break; }
+                                                                        }
+
+                                                                    }
+
+                                                                </td> 
+                                                            }
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                          
+                                                }
+                                                else
+                                                {
+                                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 530px;">
+                                                    <div style="margin-left: 195px;">No Title</div>
+                                                </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 530px;">
+                                                    <div style="margin-left: 195px;">No Title</div>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <div class="Bottom-ButtonControl">
+                                            <button id="btntitlecancel" class="btnred" title="Cancel">Cancel</button>&nbsp; 
+                                            <button id="btntitledone" class="btn btn-primary" title="Submit for filter" onclick="filterrecord('')">Submit</button>&nbsp;
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @if (Model.IsCoverageareaApply)
+                                {
+                                    if (!Convert.ToString(Session["UserType"], CultureInfo.InvariantCulture).Equals(Shared.SuperAdmin))
+                                    {
+                                    <div class="dropdown" style="display:none;">
+                                        <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary">Geographical Area
+             
+                                        <b class="caret"></b>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu">
+
+                                            <li onclick="filterrecord('G:All')">
+                                                <a>
+                                                    <label style="font-weight: normal" class="checkbox">
+                                                        All
+                                                    </label>
+                                                </a>
+                                            </li>
+                                            <li onclick="showlocationfilter()">
+                                                <a>
+                                                    <label style="font-weight: normal" class="checkbox">
+                                                        Partial
+                                                    </label>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    }
+                                }
+                            </div>
+
+                            <input type="hidden" id="hidStaffFilter" value="0" />
+                            <input type="hidden" id="hidVendorFilter" value="0" />
+                            <input type="hidden" id="hidICFilter" value="0" />
+                            <input type="hidden" id="hidClientFilter" value="0" />
+
+                            <div id='internalstaff'>
+                                @if (TempData["Type"] == "0")
+                                {
+
+                                    if (Model.activeStaffdetails != null)
+                                    {
+                                        if (Model.activeStaffdetails.Count() > 0)
+                                        {
+                                    <h4>Staff</h4>
+                                    
+                                
+
+                                    <table class="table table-hover" id="tbl_Staff">
+                                        <thead>
+                                            <tr class="header">
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Business Name</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.activeStaffdetails)
+                                            {
+                                                <tr>
+                                                    <td class="width10per">
+                                                        <input type="checkbox" class="staffchk" value="@item.Id:@item.companyId" checked="checked" autocomplete="off"/></td>
+                                                    <td class="width21per">@item.fname @item.lname</td>
+                                                    <td class="width21per">@item.businessName</td>
+                                                    <td class="width21per">@if (item.phone != null && item.phone.Trim() != string.Empty)
+                                                                           {
+                                                        <span>(@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                                                                           }</td>
+                                                    <td class="width21per">@item.emailId</td>
+
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                    
+                                    <div id="Pagination" class="pagination" style="margin-left: 10px;">
+
+                                        @{ if (Model.activeStaffdetails != null)
+                                           {
+
+                                               if (@Model.activeStaffdetails.Count() > 10)
+                                               {
+                                                   int countlist = @Model.activeStaffdetails.Count();
+                                                   int divisionlist = countlist / 10;
+                                                   int remainder = countlist % 10;
+                                                   if (remainder == 0)
+                                                       remainder = 0;
+                                                   else
+                                                       remainder = 1;
+
+                                                   int total = divisionlist + remainder;
+                            
+                                            <ul>
+                                                @for (int i = 1; i <= total; i++)
+                                                {
+                                                    <li><a style="cursor: pointer;">@i</a></li>
+                                                }
+
+                                            </ul>
+                            
+                        
+                                               }
+
+                                           }
+                                        }
+
+                                    </div>
+                                        }
+                                    }
+                                    //IC
+                                    if (Model.activeICdetails != null)
+                                    {
+                                        if (Model.activeICdetails.Count() > 0)
+                                        {
+   
+                                    <h4>List of IC</h4>
+                                    <table class="table table-hover" id="tbl_IC">
+                                        <thead>
+                                            <tr class="header">
+                                                <th></th>
+                                                <th>IC Type</th>
+                                                <th>Name</th>
+                                                <th>Business Name</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.activeICdetails)
+                                            {
+
+                                                <tr>
+                                                    <td class="width10per">
+                                                        <input type="checkbox" class="icchk" value="@item.Id:@item.companyid"  checked="checked" autocomplete="off"/></td>
+                                                    <td class="width20per">@item.VType</td>
+                                                    <td class="width20per">@item.fname @item.lname </td>
+                                                    <td class="width20per">@item.businessName</td>
+                                                    <td class="width20per">@if (item.phone != null && item.phone.Trim() != string.Empty)
+                                                                           {
+                                                        <span>(@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                                                                           }</td>
+                                                    <td class="width20per">@item.emailId</td>
+
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                       
+                                    <div id="PaginationIC" class="pagination" style="margin-left: 10px;">
+
+                                        @{ if (Model.activeICdetails != null)
+                                           {
+
+                                               if (@Model.activeICdetails.Count() > 10)
+                                               {
+                                                   int countlist = @Model.activeICdetails.Count();
+                                                   int divisionlist = countlist / 10;
+                                                   int remainder = countlist % 10;
+                                                   if (remainder == 0)
+                                                       remainder = 0;
+                                                   else
+                                                       remainder = 1;
+
+                                                   int total = divisionlist + remainder;
+                            
+                                            <ul>
+                                                @for (int i = 1; i <= total; i++)
+                                                {
+                                                    <li><a style="cursor: pointer;">@i</a></li>
+                                                }
+
+                                            </ul>
+                            
+                        
+                                               }
+
+                                           }
+                                        }
+
+                                    </div>   
+                                        }
+
+
+
+                                    }
+
+
+                                    //Vendor
+                                    if (Model.vendordetails != null)
+                                    {
+                                        if (Model.vendordetails.Count() > 0)
+                                        {
+   
+                                    <h4 id="Hvendor">Vendors</h4>
+                                    <table class="table table-hover" id="tbl_Vendor">
+                                        <thead>
+                                            <tr class="header">
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Contact</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.vendordetails)
+                                            {
+
+                                                <tr>
+                                                    <td class="width10per">
+                                                        <input type="checkbox" class="vendorchk" value="@item.Id:@item.CompanyId" checked="checked" autocomplete="off"/></td>
+                                                    <td class="width21per">@item.vendor</td>
+                                                    <td class="width21per">@item.contact</td>
+
+                                                    <td class="width21per">@if (item.phone != null && item.phone.Trim() != string.Empty)
+                                                                           {
+                                                        <span>(@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                                                                           }</td>
+                                                    <td class="width21per">@item.emailId</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                      
+                                    <div id="PaginationVendor" class="pagination" style="margin-left: 10px;">
+
+                                        @{ if (Model.vendordetails != null)
+                                           {
+
+                                               if (@Model.vendordetails.Count() > 10)
+                                               {
+                                                   int countlist = @Model.vendordetails.Count();
+                                                   int divisionlist = countlist / 10;
+                                                   int remainder = countlist % 10;
+                                                   if (remainder == 0)
+                                                       remainder = 0;
+                                                   else
+                                                       remainder = 1;
+
+                                                   int total = divisionlist + remainder;
+                            
+                                            <ul>
+                                                @for (int i = 1; i <= total; i++)
+                                                {
+                                                    <li><a style="cursor: pointer;">@i</a></li>
+                                                }
+
+                                            </ul>
+                            
+                        
+                                               }
+
+                                           }
+                                        }
+
+                                    </div>   
+                                        }
+                                    }
+
+
+                                    //DDVendors
+
+                                    if (Model.DDvendordetails != null)
+                                    {
+                                        if (Model.DDvendordetails.Count() > 0)
+                                        {
+   
+                                    <h4>DD Vendors</h4>
+                                    <table class="table table-hover" id="tbl_DDVendor">
+                                        <thead>
+                                            <tr class="header">
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Contact</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.DDvendordetails)
+                                            {
+
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" class="vendorchk" value="@item.Id:@item.CompanyId" checked="checked" autocomplete="off"/></td>
+                                                    <td>@item.vendor</td>
+                                                    <td>@item.contact</td>
+
+                                                    <td>@if (item.phone != null && item.phone.Trim() != string.Empty)
+                                                        {
+                                                        <span>(@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                                                        }</td>
+                                                    <td>@item.emailId</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                      
+                                    <div id="PaginationDDVendor" class="pagination" style="margin-left: 10px;">
+
+                                        @{ if (Model.DDvendordetails != null)
+                                           {
+
+                                               if (@Model.DDvendordetails.Count() > 10)
+                                               {
+                                                   int countlist = @Model.DDvendordetails.Count();
+                                                   int divisionlist = countlist / 10;
+                                                   int remainder = countlist % 10;
+                                                   if (remainder == 0)
+                                                       remainder = 0;
+                                                   else
+                                                       remainder = 1;
+
+                                                   int total = divisionlist + remainder;
+                            
+                                            <ul>
+                                                @for (int i = 1; i <= total; i++)
+                                                {
+                                                    <li><a style="cursor: pointer;">@i</a></li>
+                                                }
+
+                                            </ul>
+                            
+                        
+                                               }
+
+                                           }
+                                        }
+
+                                    </div>   
+                                        }
+
+
+
+                                    }
+
+                                    //Client
+                                    if (Model.CurrentvendorsList != null)
+                                    {
+                                        if (Model.CurrentvendorsList.Count() > 0)
+                                        {
+   
+                                    <h4 id="HClients">Clients</h4>
+                                    <table class="table table-hover" id="tbl_Client">
+                                        <thead>
+                                            <tr class="header">
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Contact</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.CurrentvendorsList)
+                                            {
+
+                                                <tr>
+                                                    <td class="width10per">
+                                                        <input type="checkbox" class="clientchk" value="@item.Id:@item.CompanyId" checked="checked" autocomplete="off"/></td>
+                                                    <td class="width21per">@item.vendor</td>
+                                                    <td class="width21per">@item.contact</td>
+
+                                                    <td class="width21per">@if (item.phone != null && item.phone.Trim() != string.Empty)
+                                                                           {
+                                                        <span>(@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                                                                           }</td>
+                                                    <td class="width21per">@item.emailId</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                      
+                                    <div id="PaginationClient" class="pagination" style="margin-left: 10px;">
+
+
+                                        @{ if (Model.CurrentvendorsList != null)
+                                           {
+
+                                               if (@Model.CurrentvendorsList.Count() > 10)
+                                               {
+                                                   int countlist = @Model.CurrentvendorsList.Count();
+                                                   int divisionlist = countlist / 10;
+                                                   int remainder = countlist % 10;
+                                                   if (remainder == 0)
+                                                       remainder = 0;
+                                                   else
+                                                       remainder = 1;
+
+                                                   int total = divisionlist + remainder;
+                            
+                                            <ul>
+                                                @for (int i = 1; i <= total; i++)
+                                                {
+                                                    <li><a style="cursor: pointer;">@i</a></li>
+                                                }
+
+                                            </ul>
+                            
+                        
+                                               }
+
+                                           }
+                                        }
+
+                                    </div>  
+                                        }
+
+
+
+                                    }
+
+                                    //DDClient
+
+                                    if (Model.DDClientList != null)
+                                    {
+                                        if (Model.DDClientList.Count() > 0)
+                                        {
+   
+                                    <h4 id="HClients">DD Clients</h4>
+                                    <table class="table table-hover" id="tbl_DDClient">
+                                        <thead>
+                                            <tr class="header">
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Contact</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.DDClientList)
+                                            {
+
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" class="clientchk" value="@item.Id:@item.CompanyId" checked="checked" autocomplete="off"/></td>
+                                                    <td>@item.vendor</td>
+                                                    <td>@item.contact</td>
+
+                                                    <td>@if (item.phone != null && item.phone.Trim() != string.Empty)
+                                                        {
+                                                        <span>(@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                                                        }</td>
+                                                    <td>@item.emailId</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                      
+                                    <div id="PaginationDDClient" class="pagination" style="margin-left: 10px;">
+
+                                        @{ if (Model.DDClientList != null)
+                                           {
+
+                                               if (@Model.DDClientList.Count() > 10)
+                                               {
+                                                   int countlist = @Model.DDClientList.Count();
+                                                   int divisionlist = countlist / 10;
+                                                   int remainder = countlist % 10;
+                                                   if (remainder == 0)
+                                                       remainder = 0;
+                                                   else
+                                                       remainder = 1;
+
+                                                   int total = divisionlist + remainder;
+                            
+                                            <ul>
+                                                @for (int i = 1; i <= total; i++)
+                                                {
+                                                    <li><a style="cursor: pointer;">@i</a></li>
+                                                }
+
+                                            </ul>
+                            
+                        
+                                               }
+
+                                           }
+                                        }
+
+                                    </div>  
+                                        }
+
+
+
+                                    }
+
+                                }
+                            </div>
+
+                            <hr>
+                            @if (Request["type"] != "IN")
+                            {
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <button type="button" id="btnpublish" class="btn btn-primary" style="float: right;" onclick="publish()">Publish</button>
+                                        <a id="lnkstaging" class="btn btn-primary" style="padding-right: 13px; margin-right: 5px; float: right;">Staging</a>
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <button type="button" id="btnpublish" class="btn btn-primary" style="float: right;" onclick="publish()">Publish</button>
+                                        <button id="btnclose" class="btn btn-primary" style="padding-right: 13px; margin-right: 5px; float: right;">Close</button>
+
+                                    </div>
+                                </div>
+                                
+                                
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.IsCoverageareaApply)
+{
+    if (!Convert.ToString(Session["UserType"], CultureInfo.InvariantCulture).Equals(Shared.SuperAdmin))
+    {
+    <div class="trans" id="covergareareaedittrans"></div>
+    <div class="popup" id="covergareareaeditpopup" style="left: 14% !important; top: 10px !important;">
+        <div class="Reply-MessageBox" style="display: block; overflow-y: auto; height: auto !important; width: 975px !important;">
+            <div class="tittle-MessageBox">
+                <span>Coverage Area</span><a href="#">
+                    <img id="btncovergareareaeditlose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+            </div>
+            <div class="MessageSection-Box">
+                <iframe id="coverageareaiframe" src="~/Company/CoverageArea?type=3&docId=@DocId" style="border: none;" height="500px" class="span12" scrolling="no"></iframe>
+            </div>
+            <div>
+                <div class="btn btn-primary" style="float: right; margin-right: 13px; margin-top: -5px; width: 65px;" id="btnsubmited" onclick="setlocationfilter()">Submit</div>
+            </div>
+        </div>
+    </div>
+    }
+}
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;top:50%;left:50%;margin-left:-125px;margin-top:-30px;">
+    <div id="divid" style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+        <div style="clear: both;">
+            <input id="btnSaveOK" class="btn btn-primary" type="button" onclick="btnok()" value="Ok">
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<input type="hidden" id="locfill" />
+<script type="text/javascript">
+    $(window).load(function () {
+
+        $('#step1content').removeClass("active2");
+        $('#step2recipient').addClass("active2");
+        $('#step3staging').removeClass("active");
+        ShowHideTabs('communication');
+        filterrecord('load');
+        HideRows("tbl_Staff");
+        HideRows("tbl_Vendor");
+        HideRows("tbl_DDVendor");
+        HideRows("tbl_IC");
+        HideRows("tbl_Client");
+        HideRows("tbl_DDClient");
+        if ($('#icExist').val() == 1) {
+            $('#professionalTypeId').show();
+        }
+    });
+
+    function HideRows(tblId) {
+        var Rows = $("#" + tblId + " tbody tr");
+        var rowCount = $("#" + tblId + " tbody tr").length;
+        Rows.slice('@rowperpage', rowCount).hide();
+    }
+
+
+    //Filteration in webgrid using in drop down
+    function filterrecord(value) {
+        //alert('under filter record'+value);
+        if (value != "load") {
+            
+            // var rolefilter = "";
+            var servicefilter = "";
+            var titlefilter = "";
+            var locationfilter = "";
+            var typefilter = "";
+            var professionaltype = "";
+            var filtertypevalue = '';
+            if (value != '') {
+                filtertypevalue = value.split(':');
+                if (filtertypevalue[0] == 'S') {
+                    servicefilter = "All";
+                    $(".servicechk").each(function () {
+
+                        $(this).prop("checked", false);
+                    });
+                }
+                if (filtertypevalue[0] == 'T') {
+                    titlefilter = "All";
+                    $(".titlechk:checked").each(function () {
+
+                        $(this).prop("checked", false);
+                    });
+                }
+                if (filtertypevalue[0] == 'G') {
+                    $('#locfill').val("All");
+                }
+            }
+            var chkstaff = '';
+            var chkIC = '';
+            var rdVendor = '';
+            var rdClient = '';
+            //staff
+            if ($("#chkStaff").is(":checked") == true) {
+                if ($('#chkStaff').prop("checked") == true) {
+                    chkstaff = $('#chkStaff').val();
+                    $('#ddlTitle').show();
+                }
+            }
+            //IC
+            if ($("#chkIC").is(":checked") == true) {
+                if ($('#chkIC').prop("checked") == true) {
+                    chkIC = $('#chkIC:checked').val();
+                }
+            }
+            //vendor
+            if ($("#rdNotIncludeVendors").is(":checked") == true) {
+                rdVendor = $('#rdNotIncludeVendors:checked').val();
+            }
+            else if ($("#rdOurVendors").is(":checked") == true) {
+                rdVendor = $('#rdOurVendors:checked').val();
+            }
+            else if ($("#rdVendorDecendants").is(":checked") == true) {
+                rdVendor = $('#rdVendorDecendants:checked').val();
+            }
+            //client
+            if ($("#rdNotIncludeClients").is(":checked") == true) {
+                rdClient = $('#rdNotIncludeClients:checked').val();
+            }
+            else if ($("#rdOurClients").is(":checked") == true) {
+                rdClient = $('#rdOurClients:checked').val();
+            }
+            else if ($("#rdDecentantClients").is(":checked") == true) {
+                rdClient = $('#rdDecentantClients:checked').val();               
+            }
+            hideTitle();
+
+            typefilter = chkstaff + ',' + chkIC + ',' + rdVendor + ',' + rdClient;
+
+            $(".servicechk:checked").each(function () {
+
+                if ($(this).is(":checked")) {
+                    if (servicefilter == "") {
+
+                        servicefilter = $(this).val();
+                    }
+                    else {
+                        servicefilter = servicefilter + "," + $(this).val();
+                    }
+                }
+            });
+
+            $(".titlechk:checked").each(function () {
+                if ($(this).is(":checked")) {
+                    if (titlefilter == "") {
+                        titlefilter = $(this).val();
+                    }
+                    else {
+                        titlefilter = titlefilter + "," + $(this).val();
+                    }
+                }
+            });
+
+            $(".professionalchk:checked").each(function () {
+                if ($(this).is(":checked")) {
+                    if (professionaltype == "") {
+                        professionaltype = $(this).val();
+                    }
+                    else {
+                        professionaltype = professionaltype + "," + $(this).val();
+                    }
+                }
+            });
+
+            locationfilter = $('#locfill').val();
+
+           // alert(servicefilter);
+            if (servicefilter != '' || titlefilter != '' || locationfilter != '' || typefilter != '') {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Content("~/CompanyDashBoard/FilterCommunicationRecipient")',
+                    async: true,
+                    cache: false,
+                    data: JSON.stringify({
+                        servicefilter: servicefilter,
+                        titlefilter: titlefilter,
+                        locationfilter: locationfilter,
+                        typefilter: typefilter,
+                        professionalfilter: professionaltype
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        console.log("result",result);
+                        $('#internalstaff').html($(result).find('#internalstaff').html().trim());
+                        //set paging
+                        HideRows("tbl_Staff");
+                        HideRows("tbl_Vendor");
+                        HideRows("tbl_DDVendor");
+                        HideRows("tbl_IC");
+                        HideRows("tbl_Client");
+                        HideRows("tbl_DDClient");
+                        $('#internalstaff').css("display", "block");
+                        $('#covergareareaedittrans').fadeOut('slow');
+                        $('#covergareareaeditpopup').fadeOut('slow');
+                        $('#serviceouter').fadeOut('slow');
+                        $('#serviceinner').fadeOut('slow');
+                        $('#titleouter').fadeOut('slow');
+                        $('#titleinner').fadeOut('slow');
+                        $('#divManualInviteOuter').hide();
+                        $('#divManualInviteInner').hide();
+
+
+                    }, async: true,
+                    error: function (result) {
+                    },
+                    beforeSend: function (jqXHR, obj) {
+
+                        $('#divManualInviteOuter').show();
+                        $('#divManualInviteInner').show();
+                        //var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                        //var poistion = scrollTop + 10;
+                        //$('#divManualInviteInner').css("top", poistion);
+                        $('#dvSaveMsg').text('Please wait...');
+                        $('#btnSaveOK').hide();
+                    }
+
+                });
+            }
+        }
+    }
+
+    $('#chkIC').change(function () {
+        //show the profession type details
+        if ($(this).prop("checked") == true) {
+            $('#professionalTypeId').show();
+        }
+        else {
+            $('#professionalTypeId').hide();
+        }
+    })
+
+    //staff
+    $("body").on("click", "#Pagination ul li a", function (event) {
+        $('#hidStaffFilter').val("1");
+        var value = $(this).text();
+        var rowCount = $('#tbl_Staff tbody tr').length;
+        var division = parseInt(rowCount / 10);
+        var moduleDiv = rowCount % 10;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 10 + 1;
+        }
+        else {
+            i = (value - 1) * 10 + 1;
+        }
+        var rows = $("#tbl_Staff tbody tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 10).show();
+            rows.slice((i - 1) + 10, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 10).show();
+            rows.slice(0, i - 1).hide();
+        }
+        else {
+            var b1 = (i - 1);
+            var b2 = ((i - 1) + 10);
+            rows.slice(b1, b2).show();
+            rows.slice(b2, rowCount).hide();
+            rows.slice(0, b1).hide();
+        }
+        //highlight the ancre tag
+        $('#Pagination ul li a').each(function (index) {
+            if ($(this).html() == value) {
+                $(this).css("color", "#808080");
+            }
+            else {
+                $(this).css("color", "#0088CC");
+
+            }
+
+        })
+    });
+    //vendor
+    $("body").on("click", "#PaginationVendor ul li a", function (event) {
+        $('#hidVendorFilter').val("1");
+        var value = $(this).text();
+        var rowCount = $('#tbl_Vendor tbody tr').length;
+        var division = parseInt(rowCount / 10);
+        var moduleDiv = rowCount % 10;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 10 + 1;
+        }
+        else {
+            i = (value - 1) * 10 + 1;
+        }
+        var rows = $("#tbl_Vendor tbody tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 10).show();
+            rows.slice((i - 1) + 10, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 10).show();
+            rows.slice(0, i - 1).hide();
+        }
+        else {
+
+            var b1 = (i - 1);
+            var b2 = ((i - 1) + 10);
+            rows.slice(b1, b2).show();
+            rows.slice(b2, rowCount).hide();
+            rows.slice(0, b1).hide();
+
+        }
+        //highlight the ancre tag
+        $('#PaginationVendor ul li a').each(function (index) {
+            if ($(this).html() == value) {
+                $(this).css("color", "#808080");
+            }
+            else {
+                $(this).css("color", "#0088CC");
+
+            }
+
+        })
+    });
+    //DDVendor
+    $("body").on("click", "#PaginationDDVendor ul li a", function (event) {
+        $('#hidVendorFilter').val("1");
+        var value = $(this).text();
+        var rowCount = $('#tbl_DDVendor tbody tr').length;
+        var division = parseInt(rowCount / 10);
+        var moduleDiv = rowCount % 10;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 10 + 1;
+        }
+        else {
+            i = (value - 1) * 10 + 1;
+        }
+        var rows = $("#tbl_DDVendor tbody tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 10).show();
+            rows.slice((i - 1) + 10, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 10).show();
+            rows.slice(0, i - 1).hide();
+        }
+        else {
+
+            var b1 = (i - 1);
+            var b2 = ((i - 1) + 10);
+            rows.slice(b1, b2).show();
+            rows.slice(b2, rowCount).hide();
+            rows.slice(0, b1).hide();
+
+        }
+        //highlight the ancre tag
+        $('#PaginationDDVendor ul li a').each(function (index) {
+            if ($(this).html() == value) {
+                $(this).css("color", "#808080");
+            }
+            else {
+                $(this).css("color", "#0088CC");
+
+            }
+
+        })
+    });
+    //IC
+    $("body").on("click", "#PaginationIC ul li a", function (event) {
+        $('#hidICFilter').val("1");
+        var value = $(this).text();
+        var rowCount = $('#tbl_IC tbody tr').length;
+        var division = parseInt(rowCount / 10);
+        var moduleDiv = rowCount % 10;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 10 + 1;
+        }
+        else {
+            i = (value - 1) * 10 + 1;
+        }
+        var rows = $("#tbl_IC tbody tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 10).show();
+            rows.slice((i - 1) + 10, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 10).show();
+            rows.slice(0, i - 1).hide();
+        }
+        else {
+
+            var b1 = (i - 1);
+            var b2 = ((i - 1) + 10);
+            rows.slice(b1, b2).show();
+            rows.slice(b2, rowCount).hide();
+            rows.slice(0, b1).hide();
+
+        }
+        //highlight the ancre tag
+        $('#PaginationIC ul li a').each(function (index) {
+            if ($(this).html() == value) {
+                $(this).css("color", "#808080");
+            }
+            else {
+                $(this).css("color", "#0088CC");
+
+            }
+
+        })
+    });
+    //Client
+    $("body").on("click", "#PaginationClient ul li a", function (event) {
+
+        $('#hidClientFilter').val("1");
+        var value = $(this).text();
+        var rowCount = $('#tbl_Client tbody tr').length;
+        var division = parseInt(rowCount / 10);
+        var moduleDiv = rowCount % 10;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 10 + 1;
+        }
+        else {
+            i = (value - 1) * 10 + 1;
+        }
+        var rows = $("#tbl_Client tbody tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 10).show();
+            rows.slice((i - 1) + 10, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 10).show();
+            rows.slice(0, i - 1).hide();
+        }
+        else {
+
+            var b1 = (i - 1);
+            var b2 = ((i - 1) + 10);
+            rows.slice(b1, b2).show();
+            rows.slice(b2, rowCount).hide();
+            rows.slice(0, b1).hide();
+        }
+        //highlight the ancre tag
+        $('#PaginationClient ul li a').each(function (index) {
+            if ($(this).html() == value) {
+                $(this).css("color", "#808080");
+            }
+            else {
+                $(this).css("color", "#0088CC");
+
+            }
+
+        })
+    });
+    //DD Client
+    $("body").on("click", "#PaginationDDClient ul li a", function (event) {
+        $('#hidClientFilter').val("1");
+        var value = $(this).text();
+        var rowCount = $('#tbl_DDClient tbody tr').length;
+        var division = parseInt(rowCount / 10);
+        var moduleDiv = rowCount % 10;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 10 + 1;
+        }
+        else {
+            i = (value - 1) * 10 + 1;
+        }
+        var rows = $("#tbl_DDClient tbody tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 10).show();
+            rows.slice((i - 1) + 10, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 10).show();
+            rows.slice(0, i - 1).hide();
+        }
+        else {
+
+            var b1 = (i - 1);
+            var b2 = ((i - 1) + 10);
+            rows.slice(b1, b2).show();
+            rows.slice(b2, rowCount).hide();
+            rows.slice(0, b1).hide();
+
+        }
+        //highlight the ancre tag
+        $('#PaginationDDClient ul li a').each(function (index) {
+            if ($(this).html() == value) {
+                $(this).css("color", "#808080");
+            }
+            else {
+                $(this).css("color", "#0088CC");
+
+            }
+
+        })
+    });
+
+    function showlocationfilter() {
+        $('#covergareareaedittrans').fadeIn('slow');
+        $('#covergareareaeditpopup').fadeIn('slow');
+
+    }
+
+
+    //Service
+    $('#partialservice').click(function () {
+        $('#serviceouter').fadeIn('slow');
+        $('#serviceinner').fadeIn('slow');
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#serviceinner').css("top", poistion);
+        if ($('#tblservice').length) {
+            var count = $('#tblservice td').length;
+            if (count == 1) {
+                $('#tblservice').css("width", "auto");
+                $('#tblservice td').css("width", "10%");
+            }
+            else {
+                var width = parseInt(count) * 154;
+                $('#tblservice').css("width", width);
+            }
+        }
+    });
+    $('#btnserviceclose').click(function () {
+        $('#serviceouter').fadeOut('slow');
+        $('#serviceinner').fadeOut('slow');
+    });
+    $('#btnservicecancel').click(function () {
+        $('#serviceouter').fadeOut('slow');
+        $('#serviceinner').fadeOut('slow');
+    });
+
+    //Title
+    $('#partialtitle').click(function () {
+        $('#titleouter').fadeIn('slow');
+        $('#titleinner').fadeIn('slow');
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#titleinner').css("top", poistion);
+
+        if ($('#titletbale').length) {
+            var count = $('#titletbale td').length;
+            if (count == 1) {
+                $('#titletbale').css("width", "auto");
+                $('#titletbale td').css("width", "10%");
+            }
+            else {
+                var width = parseInt(count) * 154;
+                $('#titletbale').css("width", width);
+            }
+        }
+
+        //var count = $('#titletbale td').length;
+        //var width = parseInt(count) * 150;
+        //$('#titletbale').css("width", width);
+    });
+
+    $('#btntitleclose').click(function () {
+        $('#titleouter').fadeOut('slow');
+        $('#titleinner').fadeOut('slow');
+    });
+    $('#btntitlecancel').click(function () {
+        $('#titleouter').fadeOut('slow');
+        $('#titleinner').fadeOut('slow');
+    });
+
+    //Location
+    $("#btnCovAeditcancel").click(function () {
+        $('#covergareareaedittrans').fadeOut('slow');
+        $('#covergareareaeditpopup').fadeOut('slow');
+    });
+
+    $("#btncovergareareaeditlose").click(function () {
+        $('#covergareareaedittrans').fadeOut('slow');
+        $('#covergareareaeditpopup').fadeOut('slow');
+    });
+    //Preview Record
+    $('#previewrecord').click(function () {
+        $('#dumystaff').css("display", "block");
+        $('#previewrecord').css("display", "none");
+    });
+
+
+    $('#lnkstaging').click(function () {
+        window.onbeforeunload = null;
+        window.location.href = '@Url.Content("~/CompanyDashBoard/CommunicationStaging/0")';
+    })
+
+    // function to hide title dropdown 
+
+    function hideTitle() {
+        if ($("#chkStaff").is(":checked") == true) {
+            $('#ddlTitle').show();
+        } else {
+            $('#ddlTitle').hide();
+        }
+    }
+
+    //$('#btnpublish').click(function () {
+    function publish() {
+        if ('@DocId' != "0") {
+            var totalstaff = 0;
+            var totalvendor = 0;
+            var totalic = 0;
+            var totalclient = 0;
+            //pulish to staff
+            if ($('table#tbl_Staff').length) {
+                $('#tbl_Staff tr').each(function (index) {
+                    if ($(this).find(".staffchk").is(":checked")) {
+                        // alert(1);
+                        var recipientId = $(this).find(".staffchk").val();
+                        if (totalstaff != 0) {
+                            totalstaff = totalstaff + "," + recipientId;
+                        }
+                        else {
+                            totalstaff = recipientId;
+                        }
+                    }
+                });
+            }
+            //publish to vendor
+            if ($('table#tbl_Vendor').length) {
+                $('#tbl_Vendor tr').each(function (index) {
+                    if ($(this).find(".vendorchk").is(":checked")) {
+                        //  alert(2);
+                        var recipientId = $(this).find(".vendorchk").val();
+                        if (totalvendor != 0) {
+                            totalvendor = totalvendor + "," + recipientId;
+                        }
+                        else {
+                            totalvendor = recipientId;
+                        }
+
+                    }
+                });
+            }
+            //publish to IC
+            if ($('table#tbl_IC').length) {
+                $('#tbl_IC tr').each(function (index) {
+                    if ($(this).find(".icchk").is(":checked")) {
+                        // alert(3);
+                        var recipientId = $(this).find(".icchk").val();
+                        if (totalic != 0) {
+                            totalic = totalic + "," + recipientId;
+                        }
+                        else {
+                            totalic = recipientId;
+                        }
+
+                    }
+                });
+            }
+            //publish to Client
+            if ($('table#tbl_Client').length) {
+                $('#tbl_Client tr').each(function (index) {
+                    if ($(this).find(".clientchk").is(":checked")) {
+                        // alert(4);
+                        var recipientId = $(this).find(".clientchk").val();
+                        if (totalclient != 0) {
+                            totalclient = totalclient + "," + recipientId;
+                        }
+                        else {
+                            totalclient = recipientId;
+                        }
+
+                    }
+                });
+            }
+
+            if (totalstaff != 0 || totalvendor != 0 || totalic != 0 || totalclient != 0) {
+                InsertDocumenttoREcipient(totalstaff, totalic, totalclient, totalvendor, 1)
+            }
+            else {
+                InsertDocumenttoREcipient(totalstaff, totalic, totalclient, totalvendor, 0)
+            }
+        }
+        else {
+            $('#divManualInviteOuter').show();
+            $('#divManualInviteInner').show();
+            var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            var poistion = scrollTop + 100;
+            $('#divManualInviteInner').css("top", poistion);
+            $('#divManualInviteInner').css("width", "277px");
+            $('#dvSaveMsg').text('Please save communication detail');
+            $('#btnSaveOK').val('Ok');
+            $('#btnSaveOK').show();
+
+
+        }
+    }
+
+
+
+    function InsertDocumenttoREcipient(totalstaff, totalic, totalclient, totalvendor, type) {
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/CompanyDashBoard/PublishComm")',
+            cache: false,
+            data: { 'totalStaff': totalstaff, 'totalIC': totalic, 'totalClient': totalclient, 'totalVendor': totalvendor },
+
+            success: function (data) {
+
+            },
+            beforeSend: function (jqXHR, data) {
+                //set please wait during upload the communication
+                sucessstatus(2);
+
+            },
+            complete: function (jqXHR, data) {
+
+                sucessstatus(type);
+            }
+        });
+    }
+    function sucessstatus(value) {
+
+        //if (value == 1) {
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#divManualInviteInner').css("top", poistion);
+
+        if (value == 1) {
+            $('#dvSaveMsg').text('Document sent sucessfully');
+        }
+        else if (value == 0) {
+            $('#dvSaveMsg').text('There is no recipient at that time for current filteration. document sent sucessfully for future added recipient');
+            $('#divManualInviteInner').css("width", "513px");
+            $('#divid').css("height", "79px");
+        }
+        else if (value == 2) {
+            $('#dvSaveMsg').text('Please Wait..');
+        }
+        $('#btnSaveOK').hide();
+
+
+        setTimeout(function () {
+            btnok();
+        }, 2500);
+
+
+    }
+
+    function erasedocSession() {
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/Expiredocsession/")",
+            cache: false,
+            type: "POST",
+            success: function (result) {
+
+            }
+        });
+
+
+
+    }
+
+    $('#btnNo').click(function () {
+        $('#divManualInviteOuter').hide();
+        $('#divManualInviteInner').hide();
+    });
+    // $('#btnSaveOK').click(function () {
+    function btnok() {
+        erasedocSession();
+        $('#divManualInviteOuter').hide();
+        $('#divManualInviteInner').hide();
+        setTimeout(function () {
+            if ('@requesttype' == "IN") {
+               window.opener.document.location.reload(true);
+               window.open("", "_top", "", "true ");
+               window.close();
+           }
+           else {
+               window.location.href = '@Url.Content("~/CompanyDashBoard/Communication/0")';
+           }
+       }, 500);
+   }
+
+
+   $('#btnclose').click(function () {
+       window.open("", "_top", "", "true ");
+       window.close();
+   })
+
+
+</script>

@@ -1,0 +1,206 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    ViewBag.Title = "UserDashBoard : Documents";
+    WebGrid grddocumentsdetails = new WebGrid(ajaxUpdateContainerId: "documentgrid", rowsPerPage: Model.RowperPage);
+    if (Model.DocumentsDetails != null)
+    {
+        grddocumentsdetails.Bind(Model.DocumentsDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+}
+ 
+
+<div class="filter-bar">
+    <strong>Filter List By:</strong>
+<div class="dropdown">
+    
+            <a href="#" data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+             <b id="doctypedd">Type</b> 
+              <b class="caret"></b>
+            </a>
+            <ul role="menu" class="dropdown-menu">
+              <li onclick="filter('document','All','0')">
+                <a>
+                  <label style="font-weight: normal"  id="allmsg" class="checkbox">
+                    All
+                  </label>
+                </a>
+              </li>
+              <li onclick="filter('document','Training','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="Training">
+                    Training
+                  </label>
+                </a>
+              </li>
+              <li onclick="filter('document','pricingsch','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="pricingsch">
+                   Pricing Schedules
+                  </label>
+                </a>
+              </li>
+                 <li onclick="filter('document','policypro','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="policypro">
+                  Policy and Procedures
+                  </label>
+                </a>
+              </li>
+                 <li onclick="filter('document','standard','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="standard">
+                   Standards
+                  </label>
+                </a>
+              </li>
+             <li onclick="filter('document','directive','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="directive">
+                   Directives
+                  </label>
+                </a>
+              </li>
+  <li onclick="filter('document','jcr','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="jcr">
+                   Job Compliance Requirements (JCR)
+                  </label>
+                </a>
+              </li>
+                  <li onclick="filter('document','ccr','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="ccr">
+                   Company Compliance Requirements (CCR)
+                  </label>
+                </a>
+              </li>
+                 <li onclick="filter('document','softskill','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="softskill">
+                  Softskills
+                  </label>
+                </a>
+              </li>
+            </ul>
+          </div>
+</div>
+ @*funtion used for sorting in webgrid*@
+ @functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid){
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+          grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+
+<div  id='documents'>
+                            @if (Model.DocumentsDetails.Count()>0)
+                            {
+                            
+                                @grddocumentsdetails.GetHtml( htmlAttributes: new { id = "documentgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+  grddocumentsdetails.Column(columnName:"DueDate",header :Sorter("DueDate", " Due", grddocumentsdetails),format: @<text>
+    @if (item.DueDate >= DateTime.Now.Date)
+    {
+        if (item.DueDate == DateTime.Now.Date)
+        {
+            <SPAN style="color:black;">Due  Today</SPAN>
+        }
+       
+        else
+        if (Convert.ToInt32((item.DueDate - DateTime.Now.Date).ToString().Split('.')[0])<5)
+        {
+            <SPAN style="color:black;">Due  @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0]) Days</SPAN>
+        }
+        else
+        {  
+          
+            if(Convert.ToInt32((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])==1)
+            {
+                
+        <text>
+    <SPAN style="color:red;">Late   @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])  Day</SPAN>
+    </text>
+    }
+            else{
+                 <text>
+    <SPAN style="color:red;">Late   @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])  Days</SPAN>
+    </text>
+            }
+    }
+        }
+    
+    else
+    {
+
+        if (Convert.ToInt32(((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])) == 1)
+            {
+                
+       <text><SPAN style="color:red;">Late   @((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Day</SPAN></text>
+    }
+            else{
+               <text><SPAN style="color:red;">Late   @((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Days</SPAN></text>
+            }
+        
+    }
+    </text>,style:"webgridcol1" ),
+   
+    grddocumentsdetails.Column(columnName:"DocType",header :Sorter("DocType", "Type", grddocumentsdetails),format:  @<text><SPAN>@item.DocType</SPAN></text>,style:"webgridcol1"),
+        grddocumentsdetails.Column(
+                    columnName:"DocTitle",
+                    header :Sorter("DocTitle", "Title", grddocumentsdetails),
+                    format:@<text> 
+                         
+                            @Html.ActionLink((string)item.DocTitle,
+                                             "ViewDocument",
+                                             "UserDashboard",
+                                             new {id=item.DocId},
+                                             null)
+
+                             </text> ,style:"webgridcol1"),
+                                 grddocumentsdetails.Column("CompanyId",header: Sorter("CompanyId", "Ref #", grddocumentsdetails),
+                                   format:@<text>@item.CompanyId - @item.docSeqno </text>
+                                 ,style:"webgridcol1"),
+    grddocumentsdetails.Column("reference",header: Sorter("reference", "Reference", grddocumentsdetails),style:"webgridcol1"),
+    grddocumentsdetails.Column(columnName:"DocFrom",header: Sorter("DocFrom", "From", grddocumentsdetails)
+    ,
+    format:  @<text>
+    <a id="lnkfrom" onclick="showCompanyprofile('@item.deliveredUserId')" style="cursor:pointer;"> @(item.DocFrom) </a>
+    </text>
+                                ,style:"webgridcol1"),
+grddocumentsdetails.Column("", format: @<text>
+   <a id="editdocument" style="cursor:pointer;" href="/CompanyDashBoard/Communication">Edit</a>
+    <button class="btn btn-mini btn-info"  onclick="showconfirmationdiv('@item.DocId','0')"  id="(int)@item.DocId">Archive</button>
+    <button class="btn btn-mini btnminired" onclick="showconfirmationdiv('@item.DocId','1')"  id="(int)@item.DocId">Remove</button>
+    </text>, canSort: false),
+}) 
+}
+    else
+                            {
+                                 <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px;width:530px;">
+            <div style="margin-left:195px;">No Data Available</div>
+        </div>
+                            }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#historyli').removeClass("active2");
+        $('#messagedocli').addClass("active2");
+        $('#inviteli').removeClass("active2");
+        $('#incommli').removeClass("active2");
+        $('#reportingli').removeClass("active2");
+        $('#accountprofile').removeClass("active2");
+        $('#commli').removeClass("active2");
+        $('#administrationli').removeClass("active2");
+       
+        $('#txtserach').autocomplete(
+            {
+                source: '@Url.Action("SerachInhistory", "CompanyDashBoard")'
+            });
+
+    })
+
+</script>

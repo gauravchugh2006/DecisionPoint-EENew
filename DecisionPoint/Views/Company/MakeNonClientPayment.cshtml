@@ -1,0 +1,471 @@
+﻿@using DecisionPointCAL.Common;
+<div id="MakePayment" style="margin-top: 50px;">
+    @model DecisionPoint.Models.Payment
+    @{
+        ViewBag.Title = "MakeNonClientPayment";
+        Layout = "~/Views/Shared/_NonClientSetUpLayout.cshtml";
+        string bgCheckTitle = string.Empty;
+    }
+
+    @{
+        Dictionary<string, string> CardDictionary = new Dictionary<string, string>();
+
+        CardDictionary.Add("Visa", "Visa");
+        CardDictionary.Add("MasterCard", "MasterCard");
+        CardDictionary.Add("American Express", "American Express");
+        CardDictionary.Add("JCB", "JCB");
+        CardDictionary.Add("Discover", "Discover");
+        SelectList FillCardList = new SelectList(CardDictionary, "value", "key");
+    }
+    @{
+        Dictionary<string, string> MonthDictionary = new Dictionary<string, string>();
+        MonthDictionary.Add("01", "01");
+        MonthDictionary.Add("02", "02");
+        MonthDictionary.Add("03", "03");
+        MonthDictionary.Add("04", "04");
+        MonthDictionary.Add("05", "05");
+        MonthDictionary.Add("06", "06");
+        MonthDictionary.Add("07", "07");
+        MonthDictionary.Add("08", "08");
+        MonthDictionary.Add("09", "09");
+        MonthDictionary.Add("10", "10");
+        MonthDictionary.Add("11", "11");
+        MonthDictionary.Add("12", "12");
+        SelectList MonthList = new SelectList(MonthDictionary, "value", "key");
+    }
+    @{
+        Dictionary<string, string> YearDictionary = new Dictionary<string, string>();
+        YearDictionary.Add("2014", "2014");
+        YearDictionary.Add("2015", "2015");
+        YearDictionary.Add("2016", "2016");
+        YearDictionary.Add("2017", "2017");
+        YearDictionary.Add("2018", "2018");
+        YearDictionary.Add("2019", "2019");
+        YearDictionary.Add("2020", "2020");
+        YearDictionary.Add("2021", "2021");
+        YearDictionary.Add("2022", "2022");
+        YearDictionary.Add("2023", "2023");
+        YearDictionary.Add("2024", "2024");
+        YearDictionary.Add("2025", "2025");
+        SelectList YearList = new SelectList(YearDictionary, "value", "key");
+    }
+    <style type="text/css">
+        .input-validation-error {
+            border: solid 1px red !important;
+        }
+    </style>
+    <link rel="stylesheet" href="/resources/demos/style.css" />
+    
+
+        <div id="ICDetails">
+            <div style="margin-bottom: 10px;">
+                <label>IC Name</label>
+                <div>
+                    <span>@Model.FirstName @Model.MiddelName @Model.LastName</span>
+                </div>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label>IC Type</label>
+                <div>
+                    @foreach (var item in Model.ICType.Select(x => x.VendorTypeName).Distinct())
+                    {
+                        <span class="label label-info" style="margin-top: -2px;">@item
+                        </span>}
+                    @* @Html.TextBoxFor(model => model.ICType, new { @class = "input-xlarge", @placeholder = "IC Type", disabled = "disabled" })*@
+                </div>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label>Business Name</label>
+                <div>
+                    <span>@Model.BusinessName</span>
+                    @*@Html.TextBoxFor(model => model.BusinessName, new { @class = "input-xlarge", @placeholder = "BusinessName", maxlength = 50 })*@
+                </div>
+            </div>
+            <hr />
+            <div class="row-fluid">
+                <div class="span3 non-clientdiv" style="border-right:1px solid #e1e1e1;">
+                    <div>
+                        <label><b>Profile</b></label>
+                        <div>
+                            <table id="tblprofile" class="table table-hover" style="width:85%">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Date Recevied</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Resume</td>
+                                        <td style="text-align: center;">01/20/2015</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="span6 non-clientdiv" style="border-right:1px solid #e1e1e1;">
+                    <div>
+                        <label><b>Background</b></label>
+                        <div>
+                            <table id="tblbackground" class="table table-hover" style="width:95%">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Date Recevied</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.BackgroundList)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (bgCheckTitle != item.BackgroundTitle)
+                                                {
+                                                @item.BackgroundTitle
+                                                }
+                                                else
+                                                {
+                                                    <span style="font-style: italic; font-size: 12px;">@item.Description</span>
+                                                }
+                                            </td>
+                                            <td style="text-align: center;">
+                                                @if (item.ReceivedDate != null)
+                                                {
+                                                    @item.ReceivedDate.Value.ToShortDateString()
+                                                }
+                                            </td>
+                                        </tr>
+                                                bgCheckTitle = item.BackgroundTitle;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="span3 non-clientdiv" >
+                    <div>
+                        <label><b>License and Insurance</b></label>
+                        <div>
+                            <table id="tbllicandins" class="table table-hover" style="width:85%">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.LicAndInsAsDetails)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.LicenseType))
+                                                {
+                                                @item.LicenseType}
+                                                else
+                                                {@item.InsuranceType}
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div style="width: 100%; display: none">
+                <div style="float: right; width: 90px; margin-top: -5px; margin-right: 6px; background-color: black; height: 2px;"></div>
+            </div>
+            <div style="clear: both;"></div>
+
+        </div>
+    <div class="registration-LEftbox" id="div_CreditCard"  style="display: none;">
+        <div id="memberdiv" class="control-group" style="margin-bottom: 0px;">
+        <label class="control-label" style="margin-top: 30px;">Order National</label>
+        <div class="controls">
+            <div style="float: right; margin-right: 10px;">
+                @*<span style="float: left;">$ </span>*@
+                 <label id="disTotalAmount" style="float: left;">$10.00</label>
+                        @Html.HiddenFor(model => model.Amount, new { @id = "TotalAmount", value = "10" })
+                <input type="hidden" name="CompanyFee" value="0" />
+            </div>
+            <span style="float: left; width: 75%; font-size: 12px; line-height: 11px;">Criminal Data Base
+            </span>
+        </div>
+
+    </div>
+       
+        </div>
+        <div class="registration-LEftbox"  style="display: none;">
+            @*<div class="control-group" style="margin-bottom: 0px;">
+                <label class="control-label" style="margin-top: -10px;">View Profile</label>
+               
+                <div class="controls">
+                    <div style="float: right; margin-right: 10px;">
+                        <label id="disviewprofile" style="float: left;">$7.00</label>
+                       
+                    </div>
+                   <span style="float: left; width: 75%; font-size: 9px; line-height: 11px;">
+                       Fee to view ic profile
+                    </span>
+                </div>
+
+            </div>*@
+            
+            <div class="control-group">
+                <label class="control-label">Select Credit Card <sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.CreditCardType, FillCardList, "Select", new { @class = "input-xlarge", @style = "width:285px", onchange = "ValidateCreditCard()" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CreditCardType)</span>
+                    <span id="span_PayError" class="validation"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Credit Card Number<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.CardNumber, new { @class = "input-xlarge", @placeholder = "Credit Card Number", onchange = "ValidateCreditCard()", maxlength = 20 })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CardNumber)</span>
+                    <span id="span_cardError" class="validation"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Card Holder Name <sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.NameOnCard, new { @class = "input-xlarge", @placeholder = "Card Holder Name", maxlength = 50 })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.NameOnCard)</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Expiry Date <sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.ExpiryMonth, MonthList, "Month", new { @class = "input-xlarge", @style = "width:140px" })
+                    @Html.DropDownListFor(model => model.ExpiryYear, YearList, "Year", new { @class = "input-xlarge", @style = "width:140px" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.ExpiryMonth)</span>
+                    <span class="validation">@Html.ValidationMessageFor(model => model.ExpiryYear)</span>
+                    <span id="span_ExpirationError" class="validation"></span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">CVV</label>
+                <div class="controls">
+                    @Html.PasswordFor(model => model.CVC, new { @class = "input-xlarge", @placeholder = "CVV", onchange = "ValidateCreditCard()", maxlength = 4 })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CVC)</span>
+                    <span id="span_CvcError" class="validation"></span>
+                </div>
+            </div>
+
+        </div>
+       
+        <div style="clear: both"></div>
+        <div style="text-align: right;">
+            <div style="text-align: right;">
+                <div style="clear: both"></div>
+                <hr />
+              <a id="div_Backs" href="~/Company/LisenceAggrement?type=NonClient" class="btn btn-primary">Back</a>
+                
+                <a id="nextBtn" class="btn btn-primary" href="@Url.Content("~/Company/Welcome")">Next</a>
+               
+
+                @* <form method="post" action="@Model.PaymentGetwayActionUrl">
+                <input type="hidden" name="cmd" value="_xclick">
+                <input type="hidden" name="business" value="Compliance@gmail.com">
+                <input type="hidden" name="item_name" value="Guest Registration">
+               <input type="hidden" name="item_number" value="1">
+                <input type="hidden" id="payAmountIC" name="amount" value="$10">
+                 <input type="hidden" name="currency_code" value="USD">
+                <input type="hidden" name="notify_url" value="@Model.RootUrl/Company/PayPalResponse">
+                <input type="hidden" name="return" value="@Model.RootUrl/Company/Welcome">
+                <a id="backBtn" class="btn btn-primary" style="margin-top: -2px; height: 22px;display:none;">Back</a>  
+                <input id="next3"  type="image" src="~/Content/images/submit.png" style="margin-top: -3px; height: 38px;"  name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+                <input type="hidden" name="custom" value="@Session["CompanyId"],@Session["UserId"],@Session["BusinessName"],@Session["InviteeCompany"],@Session["Emailid"],0,0,0,Guest Registration" />
+            </form>*@
+                @*<button id="next3" class="btn btn-primary" style="display: none;">Submit</button>*@
+            </div>
+        </div>
+        
+        @Html.HiddenFor(model => model.ParentUserType)
+  
+
+    @functions{
+        private IEnumerable<SelectListItem> FillStateList()
+        {
+            return new SelectList(Model.StateList, "StateId", "SateName");
+        }
+
+        private IEnumerable<SelectListItem> FillCityList()
+        {
+            return new SelectList(Model.CityList, "CityId", "CityName");
+        }
+   
+    }
+
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/dashboard")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/FormatCurrency.js"></script>
+    <script src="~/Scripts/ValidateCreditCard.js"></script>
+    <script type="text/javascript">
+        function ValidateCreditCard() {
+            var myCardNo = $('#CardNumber').val();
+            var myCardType = $('#CreditCardType').val();
+            var myCvv = $('#CVC').val();
+            var result1 = false;
+            var result2 = false;
+            if (myCardNo.length > 0 && myCardType != 'Select') {
+                if (checkCreditCard(myCardNo, myCardType)) {
+                    $('#span_cardError').html("");
+                    $('#CardNumber').css('border', '');
+                    result1 = true;
+                }
+                else {
+                    $('#span_cardError').html(ccErrors[ccErrorNo]);
+                    $('#CardNumber').css('border', 'solid 1px red');
+                    result1 = false;
+
+                };
+            }
+            if (myCardType != 'Select' && myCvv.length > 0) {
+                if (validateCvvCode(myCardType, myCvv)) {
+                    $('#span_CvcError').html('');
+                    $('#CVC').css('border', '');
+                    result2 = true;
+                } else {
+                    $('#CVC').css('border', 'solid 1px red');
+                    $('#span_CvcError').html('Invalid CVV Code');
+                    result2 = false;
+
+                }
+            }
+            return (result1 && result2);
+        }
+
+
+        $(".input-xlarge").keyup(function () {
+            if (this.value.length == this.maxLength) {
+                $(this).next('.input-xlarge').focus();
+            }
+        });
+
+        $('#btnok1').click(function () {
+            $('.confirmationdivmain').hide();
+            $('.confirmationdivinner').hide();
+        });
+        $('btnOkError2').click(function () {
+            $('.confirmationdivmain').hide();
+            $('.confirmationdivinner').hide();
+        });
+        $(document).ready(function () {
+            $('#lblCompanyFee').val("0");
+            $('#li2').removeClass("active-new");
+            $('#li1').removeClass("active-new");
+            $('#li3').removeClass("active-new");
+            $('#li2').addClass("d-active-new");
+            $('#li4').addClass("d-active-new");
+            $('#li1').addClass("d-active-new");
+            $('#li4').removeClass("d-active-new");
+            $('#li4').addClass("active-new");
+
+            var errorMsg = '@TempData["ErrorMessage"]';
+        if (errorMsg != null || errorMsg != '') {
+            if (errorMsg.match(/expiration/g)) {
+                $('#span_ExpirationError').html(errorMsg);
+                $('#ExpiryMonth').css('border', 'solid 1px red');
+
+            }
+            else if (errorMsg.match(/number/g)) {
+                $('#span_cardError').html(errorMsg);
+                $('#CardNumber').css('border', 'solid 1px red');
+            }
+            else if (errorMsg.match(/security/g)) {
+                $('#span_CvcError').html(errorMsg);
+                $('#CVC').css('border', 'solid 1px red');
+            }
+            else {
+                $('#span_PayError').html(errorMsg);
+            }
+        }
+        $('#TotalAmount').val('10');
+
+    })
+
+
+
+
+
+
+
+    $("#Zip").keypress(function () {
+        var zipText = $("#Zip").val().trim();
+        if (zipText.length > 4) {
+            getStateCityByZip();
+        }
+    })
+    $("#Zip").change(function () {
+        getStateCityByZip();
+    })
+    function getStateCityByZip() {
+        var zipText = $("#Zip").val().trim();
+        if (zipText.length > 4) {
+            $.ajax({
+                url: '@Url.Content("~/Company/getStateCityByZip")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { zip: $("#Zip").val() },
+                success: function (data) {
+                    $('#Span_ZipError').hide();
+                    if (data.length > 0) {
+                        $("#City option").each(function () {
+                            this.selected = $(this).text() == data[0].CityName;
+                        });
+                        $("#State option").each(function () {
+                            this.selected = $(this).text() == data[0].StateName;
+                        });
+                        $("#City").focus();
+                        $("#State").focus();
+                    } else {
+                        $('#Span_ZipError').show();
+                        $("#City option").each(function () {
+                            this.selected = $(this).text() == "Select City";
+                        });
+                        $("#State option").each(function () {
+                            this.selected = $(this).text() == "Select State";
+                        });
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+        } else {
+            $('#Span_ZipError').show();
+            $("#City option").each(function () {
+                this.selected = $(this).text() == "Select City";
+            });
+            $("#State option").each(function () {
+                this.selected = $(this).text() == "Select State";
+            });
+        }
+    }
+    </script>
+</div>
+
+

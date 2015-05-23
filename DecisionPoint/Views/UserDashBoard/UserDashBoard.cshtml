@@ -1,0 +1,547 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "UserDashBoard : Documents";
+    WebGrid grddocumentsdetails = new WebGrid(ajaxUpdateContainerId: "documentgrid", rowsPerPage: Model.RowperPage);
+    if (Model.DocumentsDetails != null)
+    {
+        grddocumentsdetails.Bind(Model.DocumentsDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", System.Globalization.CultureInfo.InvariantCulture); 
+}
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+<script src="~/Scripts/DashBoard/_CompanyDashBoardLayout.js"></script>
+<div class='heading'>
+    <div class='row'>
+        <h3>Communication List</h3>
+    </div>
+</div>
+<div class="filter-bar">
+    <strong>Filter List By:</strong>
+    @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture)))
+    {
+        if (Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("IC"))
+        {
+        <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="groupddic" title="Group" class="dropdown-toggle btn btn-info">
+                <b id="grouptypedd">Group</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.DocumentsDetails != null)
+            {
+                if (Model.DocumentsDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li>
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                <input class="groupchkall" type="checkbox" autocomplete="off" value="All" onchange="filterForIC('document','All','2')" style="margin-left: -2px;">
+                                &nbsp;  All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.DocumentsDetails.Select(x => x.Group))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li>
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                    <input class="groupchk" type="checkbox" autocomplete="off" onchange="filterForIC('document','@refe','2')"  value="@refe" style="margin-left: -2px;">
+                                    &nbsp;   @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+    
+        }
+        else
+        {
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn btn-info">
+                <b id="grouptypedd">Group</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.GroupDetails != null)
+            {
+                if (Model.GroupDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li>
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                <input class="groupchkall" type="checkbox" autocomplete="off" onchange="filter('document','All','2')" value="All" style="margin-left: -2px;">
+                                &nbsp;  All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.GroupDetails.Select(x => x.categoryName))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li>
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                    <input class="groupchk" type="checkbox" autocomplete="off" onchange="filter('document','@refe','2')"  value="@refe" style="margin-left: -2px;">
+                                    &nbsp;   @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+        }
+    }
+   
+    @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture)))
+    {
+        if (Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("IC"))
+        {
+        <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="refddic" class="dropdown-toggle btn btn-info">
+                <b id="reftypedd">Category</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.DocumentsDetails != null)
+            {
+                if (Model.DocumentsDetails.Count() > 0)
+                {
+                <ul role="menu" id="catlis" class="dropdown-menu" style="width: auto !important;">
+                    <li onclick="filterForIC('document','All','1')">
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.DocumentsDetails.Select(x => x.reference))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li onclick="filterForIC('document','@refe','1')">
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                    @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+        }
+        else
+        {
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="refdd" class="dropdown-toggle btn btn-info">
+                <b id="reftypedd">Category</b>
+                <b class="caret"></b>
+            </a>
+            <ul role="menu" id="catlis" class="dropdown-menu" style="width: auto !important;">
+            </ul>
+        </div>
+        }
+    }
+    
+    @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture)))
+    {
+        if (Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("IC"))
+        {
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                <b id="doctypedd">Sub Category</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.DocumentsDetails != null)
+            {
+                if (Model.DocumentsDetails.Count() > 0)
+                {
+                <ul role="menu" id="refelis" class="dropdown-menu" style="width: auto !important;">
+                    <li onclick="filterForIC('document','All','0')">
+                        <a>
+                            <label style="font-weight: normal" id="alldoc" class="checkbox">
+                                All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.DocumentsDetails.Select(x => x.reqDocType))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li onclick="filterForIC('document','@refe','0')">
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                    @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+    
+        }
+        else
+        {
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                <b id="doctypedd">Sub Category</b>
+                <b class="caret"></b>
+            </a>
+            <ul role="menu" id="refelis" class="dropdown-menu" style="width: auto !important;">
+            </ul>
+        </div>
+        }
+    }
+  
+
+</div>
+
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+          grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+
+@if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"])).Equals("IC"))
+{
+    <div id='documents'>
+        @if (Model.DocumentsDetails != null)
+        {
+                            
+            @grddocumentsdetails.GetHtml(htmlAttributes: new { id = "documentgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+ grddocumentsdetails.Column(columnName:"DueDate",header :Sorter("DueDate", " Due", grddocumentsdetails),format: @<text>
+            @if (item.DueDate != null && item.DueDate != defaultdate)
+    {
+    if (item.DueDate >= DateTime.Now.Date)
+    {
+        if (item.DueDate == DateTime.Now.Date)
+        {
+<SPAN style="color:black;">Due  Today</SPAN>
+        }
+     
+        else
+        if (Convert.ToInt32((item.DueDate - DateTime.Now.Date).ToString().Split('.')[0])>0)
+        {
+<SPAN style="color:black;">Due  @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0]) Days</SPAN>
+        }
+        else
+        {  
+          
+            if(Convert.ToInt32((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])==1)
+            {
+                
+                <text>
+                <SPAN style="color:red;">Late   @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])  Day</SPAN>
+    </text>
+    }
+            else{
+                <text>
+                <SPAN style="color:red;">Late   @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])  Days</SPAN>
+    </text>
+            }
+    }
+        }
+    
+    else
+    {
+
+        if (Convert.ToInt32(((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])) == 1)
+            {
+                
+                <text><SPAN style="color:red;">Late   @((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Day</SPAN></text>
+    }
+            else{
+                <text><SPAN style="color:red;">Late   @((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Days</SPAN></text>
+            }
+        
+    }
+     }
+            </text>,style:"webgridcol1" ),
+         grddocumentsdetails.Column("CompanyId",header: Sorter("CompanyId", "Comm #", grddocumentsdetails),
+                                   format:@<text>@item.policyNo </text>
+                                 ,style:"webgridcol1"),
+    grddocumentsdetails.Column(
+                    columnName:"DocTitle",
+                    header :Sorter("DocTitle", "Title", grddocumentsdetails),
+                    format:@<text>
+
+            <a href="@Url.Action("ViewDocument", "UserDashboard", new {id=item.DocId,tbid=item.tableId }, null)" target="_blank">@item.DocTitle</a>
+            </text> ,style:"webgridcol1"),
+         grddocumentsdetails.Column("hourofcredit", header: Sorter("hourofcredit", "CE", grddocumentsdetails),
+      format:@<text>
+
+            <div>@item.hourofcredit</div>
+
+            </text>,style:"grid-width100"),
+        grddocumentsdetails.Column("reference",header: Sorter("reference", "Category", grddocumentsdetails),style:"webgridcol1"),
+   grddocumentsdetails.Column(columnName:"reqDocType",header :Sorter("reqDocType", "Sub Category", grddocumentsdetails),format:  @<text><span>@item.reqDocType</span></text>,style:"webgridcol1"),
+   
+    grddocumentsdetails.Column(columnName:"DocFrom",header: Sorter("DocFrom", "From", grddocumentsdetails) ,
+    format:  @<text>
+        <a id="lnkfrom" onclick="showCompanyprofile('@item.deliveredUserId','@item.CompanyId')" style="cursor:pointer;">@(item.DocFrom) </a>
+        </text>
+    ,style:"webgridcol1"),
+    grddocumentsdetails.Column("", format: @<text>
+            
+<button class="btn btn-mini btn-info" onclick="showconfirmationdiv('@item.tableId','0')"  
+          >Archive</button>
+        
+            </text>, canSort: false,style:"webgridcol1"),
+}) 
+        }
+
+    </div>
+}
+else
+{
+    <div id='documents'>
+        @if (Model.DocumentsDetails != null)
+        {
+                            
+            @grddocumentsdetails.GetHtml(htmlAttributes: new { id = "documentgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+ grddocumentsdetails.Column(columnName:"DueDate",header :Sorter("DueDate", " Due", grddocumentsdetails),format: @<text>
+            @if (item.DueDate != null && item.effectiveDate != null && item.DueDate != defaultdate && item.effectiveDate != defaultdate)
+    {
+    if (item.DueDate >= DateTime.Now.Date)
+    {
+        if (item.DueDate == DateTime.Now.Date)
+        {
+<SPAN style="color:black;">Due  Today</SPAN>
+        }
+     
+        else
+        if (Convert.ToInt32((item.DueDate - DateTime.Now.Date).ToString().Split('.')[0])>0)
+        {
+<SPAN style="color:black;">Due  @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0]) Days</SPAN>
+        }
+        else
+        {  
+          
+            if(Convert.ToInt32((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])==1)
+            {
+                
+                <text>
+                <SPAN style="color:red;">Late   @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])  Day</SPAN>
+    </text>
+    }
+            else{
+                <text>
+                <SPAN style="color:red;">Late   @((item.DueDate-DateTime.Now.Date).ToString().Split('.')[0])  Days</SPAN>
+    </text>
+            }
+    }
+        }
+    
+    else
+    {
+
+        if (Convert.ToInt32(((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])) == 1)
+            {
+                
+                <text><SPAN style="color:red;">Late   @((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Day</SPAN></text>
+    }
+            else{
+                <text><SPAN style="color:red;">Late   @((DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Days</SPAN></text>
+            }
+        
+    }
+     }
+            </text>,style:"webgridcol1" ),
+        
+    grddocumentsdetails.Column(
+                    columnName:"DocTitle",
+                    header :Sorter("DocTitle", "Title", grddocumentsdetails),
+                    format:@<text>
+
+            <a href="@Url.Action("ViewDocument", "UserDashboard", new {id=item.DocId,tbid=item.tableId }, null)" target="_blank">@item.DocTitle</a>
+            </text> ,style:"webgridcol1"),
+         grddocumentsdetails.Column("hourofcredit", header: Sorter("hourofcredit", "CE", grddocumentsdetails),
+      format:@<text>
+
+            <div>@item.hourofcredit</div>
+
+            </text>,style:"grid-width100"),
+   grddocumentsdetails.Column(columnName:"reqDocType",header :Sorter("reqDocType", "Category", grddocumentsdetails),format:  @<text><span>@item.reqDocType</span></text>,style:"webgridcol1"),
+   grddocumentsdetails.Column("reference",header: Sorter("reference", "Source", grddocumentsdetails),style:"webgridcol1"),
+    grddocumentsdetails.Column(columnName:"DocFrom",header: Sorter("DocFrom", "From", grddocumentsdetails)
+    ,style:"webgridcol1"),
+    grddocumentsdetails.Column("", format: @<text>
+           
+<button class="btn btn-mini btnminired" onclick="showconfirmationdiv('@item.DocId','1')"  
+          >Archive</button>
+        
+            </text>, canSort: false,style:"webgridcol1"),
+}) 
+        }
+
+    </div>
+}
+
+<script type="text/javascript">
+    sessionStorage.setItem('PageAccessor', 'User');
+    $(document).ready(function () {
+        ShowHideTabs('mycommunication');
+
+    });
+    function DeleteDoc() {
+        var type = $('#type').val();
+        var docId = parseInt($('#msgdocid').val());
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/RemoveDocument/")',
+            cache: false,
+            data: { 'docId': docId, type: parseInt(type) },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html'
+
+        })
+.success(function (data) {
+    if (data == 1) {
+
+        $('.confirmationdivinner').fadeOut('slow');
+        $('.confirmationdivmain').fadeOut('slow');
+        getdocumentsdetails();
+
+    }
+    else if (data == 0) {
+        $('.confirmationdivinner').fadeOut('slow');
+        $('.confirmationdivmain').fadeOut('slow');
+    }
+})
+.error(function (xhr, status) {
+
+})
+
+    }
+    function getdocumentsdetails() {
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/DocumentAction/")",
+             data: { id: 'All' },
+             cache: false,
+             type: "GET",
+             datatype: 'json',
+             success: function (result) {
+                 $('#documents').html($(result).find('#documents').html().trim());
+             }
+         });
+}
+//category
+//category
+$('#refdd').click(function () {
+    $("#docdd").css({ "background-color": "#0044CC" });
+    $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    $('#doctypedd').html("Sub Category");
+    $('#refelis').empty();
+})
+$('#refddic').click(function () {
+    $("#docdd").css({ "background-color": "#0044CC" });
+    $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    $('#doctypedd').html("Sub Category");
+    
+})
+//category
+$('#groupdd').click(function () {
+    $("#docdd").css({ "background-color": "#0044CC" });
+    $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    $('#doctypedd').html("Sub Category");
+    $("#refdd").css({ "background-color": "#0044CC" });
+    $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    $('#reftypedd').html("Category");
+    var chkstatus = true;
+    $('.groupchk').each(function () {
+
+        if ($(this).is(':checked')) {
+            chkstatus = false
+        }
+    })
+    if ($('.groupchkall').is(":checked")) {
+        chkstatus = false
+    }
+    
+    if (chkstatus) {
+        $('#catlis').empty();
+    }
+})
+$('#groupddic').click(function () {
+    $("#docdd").css({ "background-color": "#0044CC" });
+    $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    $('#doctypedd').html("Sub Category");
+    $("#refddic").css({ "background-color": "#0044CC" });
+    $("#refddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    $('#reftypedd').html("Category");
+   
+})
+
+</script>
+
+
+
+
+
+
+
+

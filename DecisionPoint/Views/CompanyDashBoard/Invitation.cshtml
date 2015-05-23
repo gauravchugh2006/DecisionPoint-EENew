@@ -1,0 +1,24 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Invitation";
+}
+
+<h3>Invitation</h3>
+
+<div id="invitaiondiv">
+    <div>
+        <div class="box key-documents clearfix">
+            
+            <div class="iconcontainer">
+                <div class="individual">
+                    @Html.ActionLink("bulk", "BulkInvitation", null,  new { target = "_blank", @class="bulk-invitaion" })
+                    </div>
+                <div class="bulk">
+                    @Html.ActionLink("manual", "ManualInvitation", null, new { target = "_blank", @class="manual-invitaion" })
+                    </div>
+            </div>
+               
+        </div>
+    </div>
+</div>
+<div style="height:50px;"></div>

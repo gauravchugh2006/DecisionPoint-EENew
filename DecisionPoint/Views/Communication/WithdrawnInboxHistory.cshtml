@@ -1,0 +1,296 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    ViewBag.Title = "WithdrawnInboxHistory";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grdhistory = new WebGrid(ajaxUpdateContainerId: "historygrid", rowsPerPage: Model.RowperPage);
+    if (Model.HistoryDetails != null)
+    {
+        grdhistory.Bind(Model.HistoryDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+
+
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", System.Globalization.CultureInfo.InvariantCulture);  
+}
+
+  @Styles.Render("~/Content/css/historycss")
+  @*  @Scripts.Render("~/bundles/historyscript")*@
+  
+<div id='history' style="background:none !important;">
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+<script src="~/Scripts/jquery-ui-1.10.3.js"></script>
+ <div class='heading'>
+        <div class='row'>
+           <h3>Withdrawn Communication</h3>
+        </div>
+    </div>
+    <div>
+
+         <div class="filter-bar">
+        <strong>Filter List By:</strong>
+             <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn btn-info">
+                <b id="grouptypedd" >Group</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.GroupDetails != null)
+            {
+                if (Model.GroupDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li>
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                <input class="groupchkall" type="checkbox" autocomplete="off"  value="All" onchange="filter('WithdrawnInboxHistory','All','2')" style="margin-left: -2px;">
+                               &nbsp;  All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.GroupDetails.Select(x => x.categoryName))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li>
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                     <input class="groupchk" type="checkbox" autocomplete="off" onchange="filter('WithdrawnInboxHistory','@refe','2')" value="@refe" style="margin-left: -2px;">
+                                  &nbsp;   @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+             <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="refdd" class="dropdown-toggle btn btn-info">
+                <b id="reftypedd">Category</b>
+                <b class="caret"></b>
+            </a>
+            <ul role="menu" id="catlis" class="dropdown-menu" style="width: auto !important;">
+                   
+                </ul>
+        </div>
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                <b id="doctypedd">Sub Category</b>
+                <b class="caret"></b>
+            </a>
+           <ul role="menu" id="refelis" class="dropdown-menu" style="width: auto !important;">
+                   
+                </ul>
+        </div>
+        
+
+    </div>
+
+
+ @*funtion used for sorting in webgrid*@
+ @functions {
+     public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+     {
+         return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+             grid.SortDirection == SortDirection.Ascending ? "↑" :
+             "↓" : string.Empty);
+     }
+}
+         <div id="withdrawninboxdiv">
+         @if (Model.HistoryDetails != null)
+         {
+             var gridColumns = new List<WebGridColumn>();
+             gridColumns.Add(grdhistory.Column(columnName: "", format:  @<text>
+    @if (item.versionno > 1)
+    {
+    <SPAN style="color:red;height:45px;">Updated</SPAN>
+    }
+    else
+    {
+        @*<SPAN class="label label-important w16px"><i class="icon-check-notcompleted icon-white"></i></SPAN>*@
+    }
+        </text>, style: "grid-width61px"));
+             gridColumns.Add((grdhistory.Column("reference", header: Sorter("reference", "Category", grdhistory), style: "grid-width100")));
+             gridColumns.Add((grdhistory.Column("reqDocType", header: Sorter("reqDocType", "Sub Category", grdhistory), style: "grid-width300")));
+             gridColumns.Add((grdhistory.Column("title", header: Sorter("title", "Title", grdhistory),
+    format:@<text> 
+        
+   <a id="doctitle" href="@Url.Content("~/UserDashboard/ViewDocument?id=")@item.docTypeId&tbId=@item.tableId&type=libview" target="_blank">@item.title</a>
+          
+ 
+        </text>, style: "grid-width300")));
+             gridColumns.Add((grdhistory.Column("NoOfStaff", header: Sorter("NoOfStaff", "Staff", grdhistory),
+      format:@<text>
+
+            @if (item.versionno != 0)
+            {
+                if (item.NoOfStaff != 0)
+                {
+                @((int)((item.NoOfCompStaff / item.NoOfStaff) * 100))<span>%</span>
+                }
+                else
+                {
+<span>-</span>
+                }
+            }
+
+            </text>, style: "grid-width100")));
+                    if(Model.IsICApply){
+             gridColumns.Add((grdhistory.Column("NoOfIc", header: Sorter("NoOfIc", "IC", grdhistory),
+      format:@<text>
+            @if (item.versionno != 0)
+            {
+                if (item.NoOfIc != 0)
+                {
+                @((int)((item.NoOfCompIc / item.NoOfIc) * 100))<span>%</span>
+                }
+                else
+                {
+<span>-</span>
+                }
+            }
+
+            </text>, style: "grid-width100")));
+                   }
+                    if (Model.IsVendorApply)
+                    {
+                        gridColumns.Add((grdhistory.Column("NoOfVendor", header: Sorter("NoOfVendor", "Vendor", grdhistory),
+                 format:@<text>
+            @if (item.versionno != 0)
+            {
+                if (item.NoOfVendor != 0)
+                {
+                @item.NoOfCompVendor<span>%</span> }
+                else
+                {
+<span>-</span>
+                }
+            }
+
+           </text>, style: "grid-width100")));
+                    }
+                    gridColumns.Add((grdhistory.Column("receviedDate", header: Sorter("receviedDate", "Withdrawn Date", grdhistory),
+          format: @<text> 
+        @if (item.versionno != 0)
+        {
+             <span>  @string.Format("{0:MM/dd/yyyy}",
+             item.archiveDate)</span>
+        }</text>
+, style: "grid-width100px")));
+                    gridColumns.Add((grdhistory.Column("effectiveDate", header: Sorter("effectiveDate", "Effective Date", grdhistory),
+          format:  @<text> 
+       @if (item.versionno != 0)
+       {
+             <span> 
+ @if (item.effectiveDate != defaultdate)
+ {
+     string.Format("{0:MM/dd/yyyy}",
+    item.effectiveDate);
+ }
+                </span>  <span style="color:red;"> 
+ @string.Format("{0:MM/dd/yyyy}",
+             item.archiveDate)
+             </span>
+       }</text>, style: "grid-width100px")));
+                    gridColumns.Add((grdhistory.Column("", format: @<text>
+         @if (item.versionno != 0)
+         {
+       <button class="btn btn-mini btn-info" onclick="showreactivediv('@item.tableId','2')" >Reactive</button>
+         } </text>, style: "grid-width300", canSort: false)));
+                
+                            
+    @grdhistory.GetHtml(htmlAttributes: new { id = "historygrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+     columns: grdhistory.Columns(gridColumns.ToArray()))     
+         }
+     </div>  
+       
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    function DocumentInfo() {
+        alert("Find No document Details!!");
+    }
+
+
+    $(document).ready(function () {
+        ShowHideTabs('communication');
+        $('#txtserach').autocomplete({
+               source: '@Url.Action("SerachInhistory")'
+            });
+        //set blank row width
+        $("#historygrid tbody tr").each(function (index)
+        {
+           // alert($(this).find('#doctitle').html());
+            var docname = $(this).find('#doctitle').html().trim();
+            if (docname == "") {
+               // alert(154);
+                $(this).addClass("setwidth");
+                
+            }
+        });
+        //set blank row width
+        $("#historygrid thead tr th").each(function (index) {
+            if (index == 9) {
+               // alert($(this).find('a').html());
+                $(this).find('a').html("Effective Date<br/><span style='color:red;'>Withdrawn</span>");
+                
+            }
+        });
+    })
+
+   
+    //category
+    $('#refdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $('#refelis').empty();
+    })
+    //category
+    $('#groupdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $("#refdd").css({ "background-color": "#0044CC" });
+        $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#reftypedd').html("Category");
+        var chkstatus = true;
+        $('.groupchk').each(function () {
+
+            if ($(this).is(':checked')) {
+                chkstatus = false
+            }
+        })
+        if ($('.groupchkall').is(":checked")) {
+            chkstatus = false
+        }
+        //alert(chkstatus);
+        if (chkstatus) {
+            $('#catlis').empty();
+        }
+    })
+    //refenrence
+    //$('#docdd').click(function () {
+    //    $("#refdd").css({ "background-color": "#0044CC" });
+    //    $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    //    $('#reftypedd').html("Source");
+    //})
+</script>
+ 
+

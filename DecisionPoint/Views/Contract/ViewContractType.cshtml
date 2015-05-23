@@ -1,0 +1,308 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{   
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";   
+    ViewBag.ContractType = "AddContractType";
+    WebGrid grdContractType = new WebGrid(ajaxUpdateContainerId: "contractGrid", rowsPerPage: Model.rowperpage);
+    if (Model.lstBind != null)
+    {
+        grdContractType.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+<style>
+     .row{
+    margin-left:0px !important;
+    }
+      .errorClass
+    {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div class='heading'>
+        <div class='row'>
+        <h3>Contract Type</h3>
+        </div>
+    </div>
+            <div style="line-height: 2px !important;">
+                
+                <br />
+                <div class="w100">
+                    <span style="float:left; width:13%;margin-top:10px;">Contract Type</span>
+                    <span style="float:left; width:25%;">
+                        <input type="text" id="txtContractType" placeholder="Contract Type" maxlength="50" onkeypress="ValidateTextBox(this.id,event)">
+                        <input type="hidden" id="contractId" value="0" />
+                        <input type="hidden" id="isactivestatus" value="disable" />
+                    </span>
+
+                    <span><a id="btnsaveContractType" class="btn btn-small btn-info butmargin"  title="Save ContractType">Create</a></span>
+                    <span style="display: none"><a id="btnreset" class="btn btn-small btn-info butmargin-left1" title="Reset">
+                        <img src="~/Content/images/reset.png" style="height: 17px;" /></a></span>
+
+
+                    <span><a id="btndisable"  class="btn btn-small btn-info butmargin-left1" style="visibility: hidden;" title="Enable/Disable ContractType">Disable</a></span>
+                </div>
+
+                <div class="w100">
+                   <div id="divContractTypemsg" style="font-size: 12px; padding-bottom: 10px; color:green;padding-left:100px;"></div>
+                </div>
+
+                <div id="ContractTypesdiv"  class="w100">
+                    <div >
+                        @if (Model.lstBind!=null)
+                        {
+  
+                               
+                            @grdContractType.GetHtml(htmlAttributes: new { id = "contractGrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+        
+         grdContractType.Column(columnName:"Col1",header: Sorter("Col1", "Contract Type", grdContractType), format:@<text>
+                @if(item.Col1Status)
+                        {
+<a id="title1B" onclick="EditContractType('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="title1G" onclick="EditContractType('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@(item.Col1) </a>
+                        }
+                </text>,
+                            style:"grid-width181"),
+    grdContractType.Column(columnName:"Col2",header: Sorter("Col2", "", grdContractType), format:@<text>
+
+                @if(item.Col2Status)
+                        {
+<a id="title2B" onclick="EditContractType('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="title2G" onclick="EditContractType('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col2) </a>
+                        }
+        
+          
+                </text>,style:"grid-width181"),
+              grdContractType.Column(columnName:"Col3",header: Sorter("Col3", "", grdContractType), format:@<text>
+
+                @if(item.Col3Status)
+                        {
+<a id="title3B" onclick="EditContractType('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+  
+                        }
+                        else
+                        {
+<a id="title3G" onclick="EditContractType('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col3) </a>
+                        }
+     
+                </text>,style:"grid-width181"),
+ 
+  
+    })
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+
+
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+        ShowHideTabs('contract');
+
+    });
+
+
+
+    //Add new title name
+    $('#btnsaveContractType').click(function () {
+
+        var title = $('#txtContractType').val().trim();
+        if (title != "") {
+
+            var status = $('#btnsaveContractType').html();
+            if (status == "Save") {
+                status = "Edit";
+            }
+            else if (status == "Create") {
+                status = "Save";
+            }
+            var contractId = $('#contractId').val();
+
+            $.ajax({
+                url: '@Url.Content("~/Contract/AddContractType")',
+                type: 'POST',
+                dataType: 'html',
+                data: { 'ContractType': title, 'status': status, 'contractId': parseInt(contractId) },
+            })
+          .success(function (result) {
+              if (result > 0) {
+                  if (status == "Edit") {
+
+                      $('#divtitlemsg').html("Contract Type Update Sucessfully");
+                  }
+                  else if (status == "Save") {
+
+                      $('#divContractTypemsg').html("Contract Type Saved Sucessfully");
+                      $('#ContractTypemsg').html("Contract Type Saved Sucessfully");
+
+                  }
+                  setTimeout(function () {
+
+                      FetchDetail(1);
+                      Reset();
+                  }, 1000);
+
+
+
+              }
+              else if (result == -1) {
+
+                  $('#divContractTypemsg').html("Contract Type alreay exist");
+                  setTimeout(function () {
+
+                      FetchDetail(getpageid("contractGrid"));
+                      Reset();
+                  }, 1000);
+
+              }
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+
+        }
+        else {
+            $('#txtContractType').addClass("errorClass");
+
+        }
+    });
+
+    //disable any ContractType
+    $('#btndisable').click(function () {
+        var ContractType = $('#txtContractType').val().trim();
+        if (ContractType != "") {
+            $('#txtContractType').removeClass("errorClass");
+            var contractId = $('#contractId').val();
+            var isActive = $('#isactivestatus').val();
+            $.ajax({
+                url: '@Url.Content("~/Contract/DisaEnaContractType")',
+                contentType: 'application/html; charset=utf-8',
+                type: 'POST',
+                dataType: 'html',
+                data: { 'contractId': parseInt(contractId), 'isActive': isActive },
+            })
+          .success(function (result) {
+              $('#divContractTypemsg').html("Status change sucessfully");
+              setTimeout(function () {
+                  FetchDetail(getpageid("contractGrid"));
+                  Reset();
+
+              }, 200);
+
+
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+        } else {
+            $('#txtContractType').addClass("errorClass");
+        }
+    });
+
+    function FetchDetail(pageid) {
+
+        $.ajax({
+            url: '@Url.Content("~/Contract/ViewContractType/?page=")' + pageid,
+            cache: false,
+            type: "GET",
+            success: function (result) {
+
+                $('#ContractTypesdiv').html($(result).find('#ContractTypesdiv').html().trim());
+
+            }
+        });
+
+
+
+
+    }
+
+
+    $('#txtContractType').on("paste", function (e) {
+        e.preventDefault();
+    });
+    //Edit ContractType any ContractType
+    function EditContractType(ContractType, isActive, contractId) {
+        if (isActive != '') {
+
+            $('#btndisable').show();
+            $('#isactivestatus').val("disable");
+            $('#btndisable').html('Disable');
+
+
+        }
+        else {
+            $('#btndisable').show();
+            $('#btndisable').html('Enable');
+            $('#isactivestatus').val("enable");
+        }
+
+        $('#contractId').val(contractId);
+        $('#txtContractType').val(ContractType);
+        $('#btndisable').css("visibility", "visible")
+        $('#btnsaveContractType').html("Save");
+
+    }
+
+    function Reset() {
+
+        $('#txtContractType').val("");
+        $('#btndisable').hide();
+        $('#divContractTypemsg').html('');
+        $('#btnsaveContractType').html('Create');
+        $('#contractId').val('0');
+        $('#txtContractType').removeClass("errorClass");
+        $('#isactivestatus').val('disable');
+
+    }
+
+    //disbale and enalble on check box click
+    function DisEnable(contractId, isActive) {
+        $.ajax({
+            url: '../CompanyDashBoard/DisaEnaContractType',
+            contentType: 'application/html; charset=utf-8',
+            type: 'POST',
+            dataType: 'html',
+            data: { 'contractId': parseInt(contractId), 'isActive': isActive },
+        })
+        .success(function (result) {
+            FetchDetail(getpageid("contractGrid"));
+            Reset();
+
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+    }
+
+</script>

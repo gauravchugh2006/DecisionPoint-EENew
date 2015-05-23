@@ -1,0 +1,663 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "ManageIC";
+    //Grid for Dispaly Messages details
+    WebGrid grdactivestaff = new WebGrid(ajaxUpdateContainerId: "currentICDetails1", rowsPerPage: Model.rowperpage);
+    WebGrid grdinactivestaff = new WebGrid(ajaxUpdateContainerId: "pastICDetails1", rowsPerPage: Model.rowperpage);
+    if (Model.activeICdetails != null)
+    {
+        grdactivestaff.Bind(Model.activeICdetails, autoSortAndPage: true, rowCount: Model.pagesize);
+        
+    }
+    if (Model.inactiveICdetails != null)
+    {
+        grdinactivestaff.Bind(Model.inactiveICdetails, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+<style>
+   
+
+    .errorclass {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div id='users'>
+    <div>
+        <div class='heading'>
+            <div class='row'>
+                <h3>Independent Contractors List</h3>
+                <div style="float: right">
+                    <span style="margin-right: 5px;">
+                        @if (Model.activeICdetails != null)
+                        {
+                            <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b>Current IC </b>
+                        }
+                        else
+                        {
+                            <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b>Current IC </b>
+                        }
+                    </span>
+                    <span>
+                        @if (Model.inactiveICdetails != null)
+                        {
+                            <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b> Past IC</b>
+                        }
+                        else
+                        {
+                            <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b> Past IC</b>
+                        }
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @*funtion used for sorting in webgrid*@
+    @functions {
+        public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+    @functions {
+        public static string inactiveSorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+    <div class="filter-bar">
+            <strong>Filter List By:</strong>
+            <div class="dropdown">
+
+                <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                    <b id="recordtypedd">IC Type</b>
+                    <b class="caret"></b>
+                </a>
+                <ul role="menu" class="dropdown-menu">
+                    <li onclick="filterrecord('All')">
+                        <a>
+                            <label style="font-weight: normal" class="checkbox">
+                              All
+                            </label>
+                        </a>
+                    </li>  
+                    @foreach (var item in Model.VendorTypeDetails)
+                    {
+                      <li onclick="filterrecord('@item.categoryName')">
+                        <a>
+                            <label style="font-weight: normal" class="checkbox">
+                              @item.categoryName
+                            </label>
+                        </a>
+                    </li>   
+                    }               
+                </ul>
+            </div>
+        </div>
+        <div style="float:right;margin-bottom:20px;">
+                
+                    <div class='input-append' style="margin-right:-2px; float:left;">
+
+                        <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+                        <button class='btn btn-primary' type='button' id="btngo" onclick="SearchICs(0)" style="height: 28px;">Go</button>
+                        
+                    </div>
+                    <div style="float: right; margin-left: 5px; float:left;">
+                        <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="SearchICs(1)" style="display: none; height: 28px;">View All</button>
+                        </div>
+               
+            </div>
+
+    @*Internal Staff*@
+    <div id='currentstaff' style="padding-top: 20px; display: block;">
+        @if (Model.activeICdetails != null)
+        {
+
+            var gridColumns = new List<WebGridColumn>();
+            gridColumns.Add(grdactivestaff.Column(header: "", format: @<text>
+          <input type="hidden" class="UserId" value="@item.Id" />
+         @if (item.Id != 0)
+    {
+            if (!item.InvitationStatus)
+            {
+<span style="color:red;">Pending</span>
+                if (item.LastInviteMailDate != null)
+                {
+                <span> 
+              @string.Format("{0:MM/dd/yyyy}",
+
+                 item.LastInviteMailDate)
+            </span> 
+                }
+            }
+         }
+            </text>, canSort: false, style: "width-ic"));
+            gridColumns.Add(grdactivestaff.Column(columnName: "fname", header: Sorter("fname", "Name",
+            grdactivestaff),
+            format:@<text>
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event)" style="cursor:pointer;">
+                @item.fname @item.lname
+
+            </a>
+            </text>
+));
+            gridColumns.Add(grdactivestaff.Column(columnName: "businessName", header: Sorter("businessName", "Business", grdactivestaff),
+            format:@<text>
+            <a  class="@item.Id"  onmousedown="jumptoprofilepage('@item.Id',event)" style="cursor:pointer;">
+                @item.businessName
+
+            </a>
+            </text>
+));
+            gridColumns.Add(grdactivestaff.Column(columnName: "VType", header: Sorter("VType", "IC Type", grdactivestaff)));
+
+            gridColumns.Add(grdactivestaff.Column(columnName: "emailId", header: Sorter("emailId", "Email", grdactivestaff),
+             format:@<text>
+
+        <span>@item.emailId</span>
+           @* @if (item.phone != null && item.phone.Trim() != string.Empty)
+            {
+                   
+<span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+            }*@
+
+
+            </text>));
+
+
+            gridColumns.Add(grdactivestaff.Column(header: "", format: @<text>
+         @if (item.Id != 0)
+    {
+            if (!item.invitationStatus)
+            {
+<a title="Resend invitation mail" onclick="resendMail('@item.Id')" class="btn btn-mini btn-info" style="cursor:pointer;">Resend                
+            </a>
+            }
+         }
+            </text>, canSort: false));
+            gridColumns.Add(grdactivestaff.Column(header: "Remove", format: @<text>
+         @if (item.Id != 0)
+    {
+            <a title="Remove the IC" onclick="showremovepopup('@item.Id')" style="cursor: pointer; margin-left: 19px;">
+                <img src="../../Content/images/delete.png" /></a>
+         }
+            </text>, canSort: false));
+            gridColumns.Add(grdactivestaff.Column(header: "Edit", format: @<text>
+         @if (item.Id != 0)
+    {
+            <a title="Edit the staff" onclick="showeditpopup('@item.Id','@item.fname','@item.lname','@item.emailId','@item.phone','','@item.VType','@item.companyid','IC','@item.invitationStatus')" style="cursor:pointer;">
+                <img src="../../Content/images/edit.png" style="margin-left: 5px;" />
+            </a>
+         }
+            </text>, canSort: false));
+                   
+                     
+            @grdactivestaff.GetHtml(htmlAttributes: new { id = "currentICDetails" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: grdactivestaff.Columns(gridColumns.ToArray())) 
+        }
+    </div>
+
+    <div id='paststaff' style="padding-top: 20px; display: none;">
+        @if (Model.inactiveICdetails != null)
+        {
+           
+                               
+            @grdinactivestaff.GetHtml(htmlAttributes: new { id = "pastICDetails" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+grdinactivestaff.Column(header: "",format:@<text>
+          <input type="hidden" class="UserId" value="@item.Id" />
+         @if (item.Id != 0)
+    {
+            if (!item.InvitationStatus)
+            {
+<span style="color:red;">Pending</span>
+                if (item.LastInviteMailDate != null)
+                {
+                <span> 
+              @string.Format("{0:MM/dd/yyyy}",
+
+                 item.LastInviteMailDate)
+            </span> 
+                }
+            }
+         }
+            </text>, canSort: false, style: "width-ic"),
+grdinactivestaff.Column(columnName:"fname",header : Sorter("fname", "Name", 
+grdinactivestaff),
+format:@<text>
+            @*<a href="~/CompanyDashBoard/UserDashboard?userID=@(item.Id)&parentform='mic'"  style="cursor:pointer;">*@
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event)"  style="cursor:pointer;">
+                @item.fname @item.lname
+
+            </a>
+            </text>
+),
+grdinactivestaff.Column(columnName:"businessName",header: Sorter("businessName", "Business Name", grdactivestaff),
+format:@<text>
+            @*<a  href="~/CompanyDashBoard/UserDashboard?userID=@(item.Id)&parentform='mic'"  style="cursor:pointer;">*@
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event)"  style="cursor:pointer;">
+                @item.businessName
+
+            </a>
+            </text>
+),
+grdinactivestaff.Column(columnName:"VType",header:Sorter("VType", "IC Type", grdactivestaff)),
+grdinactivestaff.Column(columnName:"emailId",header:Sorter("emailId", "Email Id", grdactivestaff),
+  format:@<text>
+        <span>@item.emailId</span>
+
+            @*@if (item.email != null && item.phone.Trim() != string.Empty)
+                {
+                   
+<span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+                }*@
+
+
+            </text>
+
+),
+
+
+grdinactivestaff.Column(header: "Reactive",format: @<text>
+         @if (item.Id != 0)
+    {
+            <a title="Reactive the IC" onclick="Reactivestaff('@item.Id')" style="cursor: pointer;">Reactive
+            </a>
+         }
+            </text>, canSort: false),
+    })
+           
+        }
+    </div>
+    <input type="hidden" id="reactivestaffid" />
+    <input type="hidden" id="removestaffid" />
+    <input type="hidden" id="editstaffid" />
+     <input type="hidden" id="userType" />
+    <input type="hidden" id="companyId" />
+    @*Edit  Popup*@
+    <div class="profiletrans" id="EditCsv"></div>
+    <div class="popup" id="popupCSV" style="width: auto; height: auto; top: 200px; margin-left: 161px;">
+        <div class="profile-popup" style="display: block; width: auto; height: auto;">
+            <div class="tittle-MessageBox">
+                <span>Edit IC</span><a>
+                    <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+            </div>
+            <div class="MessageSection-Box" style="width: auto; height: auto;">
+
+                <table class="MessageSection-Box" style="width: auto; height: auto;">
+                    <tr>
+                        <td class="td-align-textbox">First Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                        <td></td>
+                        <td>
+                            <input id="FName" name="FName" type="text" maxlength="50" class="input-txt-width"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Last Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                        <td></td>
+                        <td>
+                            <input id="LName" name="LName" type="text" maxlength="50" class="input-txt-width"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Phone </td>
+                        <td></td>
+                        <td>
+                            <input id="Phone" name="Phone" type="text" maxlength="14" title="" onkeydown="Allowonlynumericvalue(this.id)">
+                            <label id="phoneerrormsg" style="color: red; font-size: 12px;"></label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Email <sup style="color: red; font-size: 10px;">*</sup></td>
+                        <td></td>
+                        <td>
+                            <input id="Email" name="Email" type="email" title="" maxlength="100">
+                            <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>
+                        </td>
+                    </tr>
+                    @if (Model.VendorTypeDetails != null)
+                    {
+                        <tr>
+                            <td class="td-align-textbox">IC Type</td>
+                            <td></td>
+                            <td>@Html.DropDownList("ddlTitle", new SelectList(Model.VendorTypeDetails, "id", "categoryName"))</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="3">
+                            <input type="button" id="btnSubmit" value="Submit" class="btn btn-small btn-info butmargin" style="margin-left: 235px;" />
+                        </td>
+                    </tr>
+
+                </table>
+
+
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+ </div>
+
+</div>
+<input type="hidden" id="Hid_ICStatus" value="0" />
+
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        SetColStyle('currentICDetails');
+        if ($('#currentstaffrdo').is(':checked')) {
+            $('#paststaff').hide();
+            $('#currentstaff').show();
+
+        }
+        else {
+            $('#paststaff').show();
+            $('#currentstaff').hide();
+
+        }
+
+    });
+    function SetColStyle(Id) {
+
+        $("#" + Id + " tbody tr").each(function (index) {
+            var Id = $(this).find('.UserId').val();
+            if (Id == 0) {
+                $(this).addClass("setwidth");
+
+            }
+        });
+    }
+    function resendMail(Id) {
+        $('#dvSaveMsg').text('Please Wait..');
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ResendMailToUser/")',
+            data: { 'userId': parseInt(Id), 'type': 'ic' },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+                    $('#dvSaveMsg').text('Invitation Resend Success..!!');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+                } else {
+
+                    $('#dvSaveMsg').text('Something ent Wrong, Please try again.');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                    }, 1000);
+                }
+
+            }
+        });
+    }
+
+    function jumptoprofilepage(id, e) {
+        if (e.which == 1 && !e.ctrlKey && !e.shiftKey) {
+            $('.' + id).attr("href", '@Url.Content("~/CompanyDashBoard/UserDashboard?userID=")' + id + "&parentform='mic'");
+            var target = e.target;
+            e.preventDefault();
+            target.click();
+
+        }
+    }
+
+
+
+    $('#currentstaffrdo').change(function () {
+        if ($('#currentstaffrdo').is(':checked')) {
+            GetICRecord("All");
+            $('#Hid_ICStatus').val(0);
+
+        } else {
+            $('#paststaff').show();
+            $('#currentstaff').hide();
+        }
+
+    });
+    $('#paststaffrdo').change(function () {
+        if ($('#paststaffrdo').is(':checked')) {
+            $('#Hid_ICStatus').val(1);
+            GetICRecord("All");
+
+
+        } else {
+            $('#paststaff').hide();
+            $('#currentstaff').show();
+        }
+
+
+    });
+ 
+    function Reactivestaff(Id) {
+
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/ReactiveVendor/")",
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                GetICRecord("All");
+
+            }
+        });
+    }
+
+    function showremovepopup(Id) {
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/RemoveVendor/")',
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                GetICRecord("All");
+            }
+        });
+    }
+
+   
+
+    function showeditpopup(Id, fname, lname, emailid, phone, role, title, permission, usertype, invitationStatus) {
+       
+        if (usertype != "Company") {
+            if (Id == '@Session["UserId"]') {
+            ShowMsg('you can edit your own profile from my profile section.');
+            } else {
+                $('#userType').val(usertype);
+                $('#companyId').val(permission);
+                
+                ShowEditPopUpForStaffAndICOnManaScr(Id, fname, lname, emailid, phone, role, title, permission, usertype, invitationStatus);
+        }
+    }
+    else {
+        ShowMsg('you can not edit the main admin.');
+
+    }
+
+}
+function Reset() {
+    $('#FName').removeClass("errorClass");
+    $('#LName').removeClass("errorClass");
+    $('#Email').removeClass("errorclass");
+    $('#emailerrormsg').html("");
+    $('#Phone').removeClass("errorclass");
+    $('#phoneerrormsg').html("");
+}
+$('#btnClosePopup').click(function () {
+    $('#EditCsv').hide();
+    $('#popupCSV').hide();
+    Reset();
+})
+$('#btnSubmit').click(function () {
+    SaveUserDetailsFromMnaScrForStaffAndIC(ROOT,1)
+});
+$('#FName').keypress(function () {
+    if ($('#FName').val().trim() != '') {
+        $('#FName').removeClass("errorClass");
+    }
+})
+$('#LName').keypress(function () {
+    if ($('#LName').val().trim() != '') {
+        $('#LName').removeClass("errorClass");
+    }
+})
+$('#Email').keypress(function () {
+
+    if ($('#Email').val().trim() != '') {
+        $('#Email').removeClass("errorClass");
+        $('#emailerrormsg').html("");
+    }
+})
+$('#Phone').keypress(function () {
+    if ($('#Phone').val().trim() != '') {
+        $('#Phone').removeClass("errorClass");
+        $('#phoneerrormsg').html("");
+    }
+})
+
+
+function validateEmail(sEmail) {
+    var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (filter.test(sEmail)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+function validatePhone(phone) {
+    var s = false;
+
+    var filter = /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/;
+    if (filter.test(phone)) {
+        s = true;
+    }
+    else {
+        s = false;
+    }
+
+    return s;
+
+}
+//Filteration in webgrid using in drop down
+function filterrecord(filtervalue) {
+    if (filtervalue == "All") {
+        $('#recordtypedd').html("IC Type");
+    }
+    else  {
+        $('#recordtypedd').html(filtervalue);
+    }
+    GetICRecord(filtervalue);
+}
+function GetICRecord(filtervalue) {
+    var inviteType = 0;
+    var pageid = getpageid("currentICDetails");
+    if ($('#paststaffrdo').is(':checked')) {
+        inviteType = 1;
+        pageid = getpageid("pastICDetails");
+    }
+    $.ajax({
+        url: "@Url.Content("~/Invitation/ManageIC/?page=")" + pageid,
+        cache: false,
+        data: { 'id': parseInt(inviteType), 'type': filtervalue },
+        datatype: 'json',
+        type: "GET",
+        success: function (result) {
+            if (inviteType == 1) {
+                $('#paststaff').html($(result).find('#paststaff').html().trim());
+
+                $('#paststaffrdo').prop('checked', true);
+                $('#paststaff').show();
+                $('#currentstaff').hide();
+                SetColStyle('pastICDetails');
+            }
+            else if (inviteType == 0) {
+                $('#currentstaff').html($(result).find('#currentstaff').html().trim());
+                $('#currentstaffrdo').prop('checked', true);
+                $('#paststaff').hide();
+                $('#currentstaff').show();
+                SetColStyle('currentICDetails');
+            }
+        }
+    });
+}
+    function SearchICs(type) {
+        if ($('#txtserach').val().trim() != '') {
+            //0 call when user click on go button
+            if (type == 0) {
+                GetICRecord($('#txtserach').val());
+                $('#btnviewallCompany').show();
+            }
+                //1 call when user click on view all button
+            else if (type == 1) {
+                filterrecord("All");
+                $('#btnviewallCompany').hide();
+                $('#txtserach').val('');
+            }
+        }
+        else {
+            $('#btnviewallCompany').hide();
+        }
+    }
+
+    $("#txtserach").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/Invitation/SerachInICs")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term, type: $('#Hid_ICStatus').val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item, value: item };
+                    }))
+                }
+            })
+        }
+
+    });
+</script>

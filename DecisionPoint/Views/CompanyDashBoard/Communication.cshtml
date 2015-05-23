@@ -1,0 +1,3558 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "Communication";
+    string type = "save";
+    string DocId = (string)ViewData["DocId"];
+    if (DocId != "0" && DocId != null)
+    {
+        type = "update";
+    }
+    else if (DocId == null)
+    {
+        DocId = "0";
+    }
+   
+   
+}
+@Styles.Render("~/Styles/base")
+
+
+@Styles.Render("~/Styles/base")
+
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui-noscript.css" rel="stylesheet" />
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui.css" rel="stylesheet" />
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<script src="~/Scripts/Upload/jquery.iframe-transport.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload-ui.js"></script>
+
+<script src="~/Scripts/Upload/bootstrap.js"></script>
+<link href="~/Content/css/Dashboard/circle.css" rel="stylesheet" />
+<script src="~/Scripts/Upload/progress-circle.js"></script>
+
+<script>
+    $(window).load(function () {
+        window.onbeforeunload = null
+    })
+</script>
+
+
+<style type="text/css">
+    ol.a {
+        list-style-type: lower-alpha;
+        float: left;
+        width: 90%;
+        margin: 0 0 10px 40px;
+    }
+
+    p {
+        display: inline;
+    }
+
+    .mce-content-body {
+        min-height: 0px !important;
+    }
+</style>
+
+
+<div id='content'>
+    <div class='container'>
+        <div class='content-box'>
+            <br />
+            <div id='new-document'>
+
+                <ul class='nav nav-tabs' id='my_tabs'>
+                    <li id="step1content">
+                        @Html.ActionLink("STEP 1: Document Content", "Communication", "CompanyDashBoard", new { id = DocId }, null)
+
+                    </li>
+                    <li id="step2recipient" class="prevent">
+                        @Html.ActionLink("STEP 2: Assignment", "CommunicationRecipient", "CompanyDashBoard", new { id = DocId }, null)
+
+                    </li>
+                    <li id="step3staging">
+                        @Html.ActionLink("Staging ", "CommunicationStaging", "CompanyDashBoard", new { id = DocId }, null)
+
+                    </li>
+                </ul>
+
+                <div id="diveditrestiction">
+                    @if (@ViewBag.IsReipientExist)
+                    {
+                        <span style="color: red;">You can't edit this communication.Some recipients have already completed it.
+
+                        </span>
+                    }
+                </div>
+
+                <div class='tabbable'>
+
+
+
+                    <div class='tab-content' id="newdocdiv">
+                        <div class='tab-pane fade in active' id='step-1'>
+
+                            <div class='row tabbable my_pills'>
+
+                                <div class='span12'>
+                                    <div class='tab-content'>
+
+                                        <div class='tab-pane fade in active' id='basicdetailid'>
+                                            <h5>Step 1: Set Up Content</h5>
+                                            @if (Request["type"] == "Library")
+                                            {
+                                               
+                                                <div role="button" id="btnclone" style="float: right; margin-top: -31px; margin-right: 76%;" class="btn btn-small btn-info" title="Clone">Clone</div>
+                                            }
+
+
+                                            <div class="row-fluid">
+                                                <div class="span6 pull-left">
+                                                    <div class='control-group'>
+                                                        <label class='control-label'>Title<sup style="color: red; font-size: 10px;">*</sup></label>
+                                                        <div class='controls'>
+                                                            @Html.TextBoxFor(model => model.DocTitle, new { @placeholder = "Title", @class = "input-xlarge", @id = "doctitle", @style = "width: 353px;", @maxlength = "50" })
+                                                            <label style="color: red;" id="doctitleval"></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class='control-group span12' style="margin-left:0;">
+                                                        <div class="pull-left span5">
+                                                            <label class='control-label'>Due Date</label>
+                                                            <div class='datetimepicker input-append'>
+                                                                @Html.TextBoxFor(model => model.DueDate, new { @class = "input-xlarge", value = "", @id = "expirationdate", @style = "width: 153px;", @placeholder = "Due Date" })
+                                                                <label style="color: red;" id="duedateval"></label>
+                                                            </div>
+                                                        </div>
+                                                       
+                                                        <div class="span7">
+                                                            <label class='control-label'>Effective Date</label><div class='datetimepicker input-append'>
+                                                                @Html.TextBoxFor(model => model.Effectivedate, new { @class = "input-xlarge", @id = "effectivedate", @style = "width: 160px;", @placeholder = "Effective Date", @maxlength = "11" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class='control-group' style="margin-top: 9px;">
+                                                        <label class='control-label'>Retake</label>
+                                                        <div class='controls'>
+                                                            <select class="input-xlarge" style="width: 365px;" id="retak">
+                                                                <option selected="selected">DNA</option>
+                                                                <option value="6">6 months</option>
+                                                                <option value="12">12 months</option>
+                                                                <option value="18">18 months</option>
+                                                                <option value="24">24 months</option>
+                                                            </select>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class='control-group' style="margin-top: 11px;">
+                                                        <label class='control-label'>Hours of credit</label>
+                                                        <div class='controls'>
+                                                            <div class='datetimepicker input-append'>
+                                                                @Html.TextBoxFor(model => model.HourOfCredit, new { @class = "input-xlarge", @id = "hourofcredit", @style = "width: 353px;", @placeholder = "0.00", @maxlength = "4" })
+                                                                <label style="font-size: 10px; font-family: Verdana">First digit should be [0-9] and last digits should be 00,25,50,75.<br /> Ex : 0.00</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class='control-group'>
+                                                        <label class='control-label'>Group<sup style="color: red; font-size: 10px;">*</sup></label>
+                                                        <div class='controls'>
+                                                            <div class='controls'>
+                                                                @Html.DropDownListFor(model => model.Group, new SelectList(Model.groupDetails, "id", "categoryName", "select"), "-- Select --", new { @style = "width:365px;", @id = "ddgroup" })
+                                                                <label style="color: red;" id="groupval"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class='control-group'>
+                                                        <label class='control-label'>Category<sup style="color: red; font-size: 10px;">*</sup></label>
+                                                        <div class='controls'>
+                                                            <div class='controls'>
+                                                                @if (DocId != "0")
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.Reference, new SelectList(Model.referenceDetails, "id", "referenceName", "select"), "-- Select --", new { @style = "width:365px;", @id = "ddReference" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    <select id="ddReference" style="width: 365px;">
+                                                                        <option selected="selected" value="0">-- Select --</option>
+                                                                    </select>
+                                                                }
+
+                                                                <label style="color: red;" id="referenceval"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='control-group'>
+                                                        <label class='control-label'>Sub Category<sup style="color: red; font-size: 10px;">*</sup></label>
+                                                        <div class='controls'>
+                                                            @if (DocId != "0")
+                                                            {
+                                                                @Html.DropDownListFor(model => model.DocType, new SelectList(Model.categoryDetails, "id", "categoryName", "select"), "-- Select --", new { @style = "width:365px;", @id = "doctype" })
+                                                            }
+                                                            else
+                                                            {
+                                                                <select id="doctype" style="width: 365px;">
+                                                                    <option selected="selected" value="0">-- Select --</option>
+
+                                                                </select>
+
+                                                            }
+
+
+                                                            <label style="color: red;" id="doctypeval"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="span6 pull-left">
+
+                                                    <div style="border: 1px solid #e1e1e1; padding-top: 16px; text-align: center;margin-bottom: 15px;">
+                                                        <div class='control-group'>
+
+                                                            <div class='controls' style="text-align: left; padding: 0 0 0 35px;">
+                                                                @if (Model.Reqnewhirestaff)
+                                                                {
+                                                                    <input type="checkbox" style="margin-top: -3px;" id="newhirereqstaff" autocomplete="off" checked="checked" onchange="setval(this.id)" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="checkbox" style="margin-top: -3px;" id="newhirereqstaff" autocomplete="off" onchange="setval(this.id)" />
+                                                                }
+                                                                &nbsp;<span style="padding-top: 2px !important;">New Staff  </span>
+                                                                <span id="NHV">
+                                                                    @if (Model.Reqnewhirevendor)
+                                                                    {
+                                                                        <input type="checkbox" style="margin-top: -3px; margin-left: 129px;" id="newhirereqvendor" autocomplete="off" checked="checked" onchange="setval(this.id)" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input type="checkbox" style="margin-top: -3px; margin-left: 129px;" id="newhirereqvendor" autocomplete="off" onchange="setval(this.id)" />
+                                                                    }
+                                                                    <span style="padding-top: 2px !important;">&nbsp;New Vendor &nbsp; </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+
+                                                            <div class='controls' id="divDOFC" style="text-align: left; padding: 0 0 0 35px;">
+                                                                @if (Model.IsICApply)
+                                                                {
+                                                                    <span id="NHIC" style="text-align: left; padding: 15px 0 0 0;">
+                                                                        @if (Model.Reqnewhireic)
+                                                                        {
+                                                                            <input type="checkbox" style="margin-top: -3px;" id="newhirereqic" autocomplete="off" checked="checked" onchange="setval(this.id)" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <input type="checkbox" style="margin-top: -3px;" id="newhirereqic" autocomplete="off" onchange="setval(this.id)" />
+                                                                        }
+                                                                        <span style="padding-top: 2px !important; padding-right:137px;">&nbsp;New IC &nbsp; </span>
+                                                                    </span>}
+                                                                <span id="lblDOFC" style="display: none;">Days of Completion :</span>
+                                                                <select class="input-xlarge" style="width: 97px;" id="daystocomplete" title="Days To Complete">
+                                                                    <option selected="selected">--Select--</option>
+                                                                    <option>7</option>
+                                                                    <option>14</option>
+                                                                    <option>28</option>
+                                                                    <option>45</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <label style="color: red;" id="daycomval"></label>
+                                                    </div>
+                                                    Employment Requirement
+                                                <div style="border: 1px solid #e1e1e1; padding-top: 16px; padding: 10px;  min-height: 35px;">
+                                                    <div class='control-group' style="margin-left:27px;">
+                                                        
+                                                            <input type="checkbox" id="empReq" style="margin-top: -1px;" />
+                                                           <span> Make this communication required for employment</span>
+                                                        
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row-fluid">
+                                                <div class="span6">
+                                                    <h5>Content</h5>
+                                                    <form action="../api/upload" enctype="multipart/form-data">
+                                                        <div class="editor-field">
+
+                                                            <label class='control-label'>
+                                                                <a id="lnkinstintro" style="cursor: pointer">▼</a>
+                                                                Instructions/Introduction</label>
+                                                            <div id="insintrobox" style="display: none; width: 84%;">
+                                                                @Html.TextAreaFor(model => model.Introduction, new { @class = "img-shadow", id = "fckintro_0", @name = "fckquest" })
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div style="margin-top: 15px;">
+                                                            <div style="float: left;">
+
+                                                                <div class='control-group'>
+                                                                    <label class='control-label'>Add Document <span style="font-size: 10px; font-family: Verdana">(PDF or Power Point)</span></label>
+
+                                                                    <div>
+                                                                        <div class='controls'>
+                                                                            <table id="tbldoc">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <div class="file_input_div" style="display: inline;">
+                                                                                            <input type="button" class="btn btn-primary" value="Upload" />
+                                                                                            <input type="file" id="doc_0" style="opacity: 0; position: relative; left: -78px; width: 80px;" onchange="readdocURL(this,this.id)" />
+
+                                                                                        </div>
+
+                                                                                        <div style="margin-left: 81px; margin-top: -30px;">
+                                                                                            <input class='input-large' id="doclbl_0" placeholder='Title' type='text' maxlength="30" value="@Model.DocTitles" />
+                                                                                        </div>
+
+                                                                                        <input type="hidden" id="docfile" />
+
+                                                                                        @if (Model.contentsDetails != null)
+                                                                                        {
+                                                                                            if (Model.contentsDetails.Count > 0)
+                                                                                            {
+                                                                                            <div id="docfiles" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                                @{int doclink = 0;}
+                                                                                                @foreach (var content in Model.contentsDetails)
+                                                                                                {
+                                                                                                    if (content.Filetype == "document")
+                                                                                                    {
+                                                                                                    <div style="border-radius: 5px 5px 5px 5px; width: auto; height: auto; float: left;">
+                                                                                                        <a id="docfile_@doclink" href="http://docs.google.com/viewer?url=@content.FileLoc&embedded=true&chrome=false" target="_blank" title="@content.Filetitle" style="cursor:pointer;margin-left:6px;" >@content.Filetitle</a>
+                                                                                                        <img id="@doclink" src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" 
+                                                                                            title="remove document" onclick="deletedoc('@doclink')">
+                                                                                                        <input type="hidden" id="doccontentid_@doclink" value="@content.Contentid" />
+                                                                                                    </div>
+                                                                                                        doclink++;
+                                                                                                    }
+
+                                                                                                }
+                                                                                            </div>
+                                                                                       
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                            <div id="docfiles" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                            </div>
+                                                                                            }
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <div id="docfiles" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                            </div>
+                                                                                        }
+
+
+
+                                                                                        <label id="docfileName_0" style="color: red;"></label>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                </div>
+                                                                <br />
+                                                                <div class='control-group'>
+                                                                    <label class='control-label'>Add Embedded Video <span style="font-size: 10px; font-family: Verdana;">(mp4)</span></label>
+
+                                                                    <div>
+                                                                        <div class='controls'>
+                                                                            <table id="tblembededvideo">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <div class="file_input_div" style="display: inline;">
+                                                                                            <input type="button" class="btn btn-primary" value="Upload" />
+                                                                                            <input type="file" id="video_0" style="opacity: 0; position: relative; left: -78px; width: 80px;" onchange="readvideoURL(this)" />
+
+                                                                                        </div>
+
+                                                                                        <div style="margin-left: 81px; margin-top: -30px;">
+                                                                                            <input class='input-large' id="videolbl_0" placeholder='Title' type='text' maxlength="30"  value="@Model.VideoTitles" />
+                                                                                        </div>
+                                                                                        <input type="hidden" id="embededvideofileName" />
+                                                                                        @if (Model.contentsDetails != null)
+                                                                                        {
+                                                                                            if (Model.contentsDetails.Count > 0)
+                                                                                            {
+                                                                                            <div id="embededvideofiles" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                                @{int videolink = 0;}
+                                                                                                @foreach (var content in Model.contentsDetails)
+                                                                                                {
+                                                                                                    if (content.Filetype == "video")
+                                                                                                    {
+                                                                                                    <div style="border-radius: 5px 5px 5px 5px; width: auto; height: auto; float: left;">
+                                                                                                        <a id="videofile_@videolink" href="@content.FileLoc" target="_blank" title="@content.Filetitle" style="cursor:pointer;margin-left:6px;" >@content.Filetitle</a>
+                                                                                                        <img id="@videolink" src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" 
+                                                                                            title="remove document" onclick="deletevideo('@videolink')">
+                                                                                                        <input type="hidden" id="videocontentid_@videolink" value="@content.Contentid" />
+                                                                                                    </div>
+                                                                                                        videolink++;
+                                                                                                    }
+
+                                                                                                }
+                                                                                            </div>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                            <div id="embededvideofiles" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                            </div>
+                                                                                            }
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <div id="embededvideofiles" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                            </div>
+                                                                                        }
+
+                                                                                        <label id="embededvideofileName_0" style="color: red;"></label>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+
+                                                                        </div>
+
+                                                                        @*View Embeded video Popup*@
+                                                                        <div class="trans" id="previewvideoouter"></div>
+                                                                        @*View Embeded video  Popup*@
+                                                                        <div class="popup" id="previewvideoinner" style="left: 10%;">
+                                                                            <div class="Reply-MessageBox" style="display: block; overflow-y: auto; height: auto !important; width: 1004px;">
+
+                                                                                <div class="tittle-MessageBox">
+                                                                                    <span>Preview</span><a>
+                                                                                        <img id="btnclosevideo" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+                                                                                </div>
+
+                                                                                <div class="MessageSection-Box">
+
+                                                                                    <div id="loadvideodiv" style="padding-left: 247px;">
+
+                                                                                        <h1>Conversion in Progress...</h1>
+                                                                                        <label style="color: #808080; padding-left: 42px;">we are transfering your video in an online courses</label>
+                                                                                        <div id="loadingvideo" style="padding-left: 48px; height: 400px; margin-top: 40px;">
+                                                                                            <div id="videocircle"></div>
+
+                                                                                        </div>
+                                                                                        <label style="color: #808080; margin-left: -24px;">based on size of video the conversion process can take quite a bit, don't worry !</label>
+                                                                                    </div>
+                                                                                    <div id="videoouterdiv" style="padding-left: 255px;">
+                                                                                        <video id="video" width="500px" height="337px" controls>
+                                                                                            <source id="videodiv" src="../Content/documents/communications/103/movie.mp4" type="video/mp4">
+                                                                                        </video>
+
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="Bottom-ButtonControl">
+                                                                                    <button id="btnpublishvideo1" style="display: none;" class="btn btn-primary" type="button">Publish</button>
+                                                                                    <button id="btnpublishvideo" style="display: none;" class="btn btn-primary" type="button">Publish</button>
+                                                                                    <div class="clearfix">
+                                                                                    </div>
+
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <br />
+
+                                                            </div>
+
+                                                        </div>
+                                                    </form>
+                                                    @if (Model.IsScormApply)
+                                                    {
+                                                        <div class='control-group' style="float: left; width: 90%;">
+                                                            <label class='control-label'>Add Scorm Content</label>
+                                                            <div>
+                                                                <div class='controls'>
+                                                                    <table id="tblscrom">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="file_input_div" style="display: inline;">
+                                                                                    <input type="hidden" id="hdfile" value="" />
+                                                                                    <div style="float: left; width: 200px; height: 30px; display: none;" id="div_ScormHide">
+                                                                                        <div class="file_input_divs" style="display: inline;">
+
+                                                                                            <input type="button" class="btn btn-primary" value="Upload" id="btnScormUploads" style="float: left" />
+                                                                                            <input type="file" name="filedata" id="testscrom_div" style="opacity: 0; float: left; position: relative; left: -78px; width: 80px;" />
+
+                                                                                        </div>
+
+                                                                                        <div style="margin-left: -77px; float: left;">
+                                                                                            <input type="submit" id="btnDummyScormSend" value="Publish" class="btn btn-primary" style="float: right;" disabled="disabled" />
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                    <iframe name="temp_iframe" id="iframe11" style="float: left; width: 200px; height: 32px; border: none;" frameborder="0" scrolling="no" src="~/CompanyDashBoard/UploadScorm"></iframe>
+                                                                                </div>
+                                                                                <div style="margin-left: 140px; position: absolute; margin-top: 1px;">
+                                                                                    <input class='input-large' style="width: 138px; margin-left: 12px;" id="scromlbl_0" placeholder='Title' type='text' maxlength="30"  value="@Model.ScormTitles" />
+                                                                                </div>
+                                                                                <div style="clear: both"></div>
+                                                                                <div id="divScormWait" style="float: left; width: 70%; color: green; display: none;">Please Wait..</div>
+                                                                                <div id="divScormError" style="float: left; width: 70%; color: red; display: none;">Invalid File</div>
+                                                                                @if (Model.contentsDetails != null)
+                                                                                {
+                                                                                    if (Model.contentsDetails.Count > 0)
+                                                                                    {
+                                                                                    <div id="scromfileName_0" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                        @{int scormlink = 0;}
+                                                                                        @foreach (var content in Model.contentsDetails)
+                                                                                        {
+                                                                                            if (content.Filetype == "scorm")
+                                                                                            {
+                                                                                            <div id="div_@content.FileLoc.Split('&')[1].Split('=')[1]" style="border-radius: 5px 5px 5px 5px; width: auto; height: auto; float: left;">
+                                                                                                <a  href="@content.FileLoc" target="_blank" title="@content.Filetitle" style="cursor:pointer;margin-left:6px;" >@content.Filetitle</a>
+                                                                                                <img id="@content.FileLoc.Split('&')[1].Split('=')[1]" src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" 
+                                                                                            title="remove document" alt="@scormlink" onclick="DeleteScorm(this.id,this.alt)">
+                                                                                                <input type="hidden" id="scormcontentid_@scormlink" value="@content.Contentid" />
+                                                                                            </div>
+                                                                                            }
+
+                                                                                        }
+                                                                                    </div>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                    <div id="scromfileName_0" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                    </div>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <div id="scromfileName_0" style="overflow: auto; width: 305px; max-height: 100px;">
+                                                                                    </div>
+                                                                                }
+
+
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    }
+
+
+
+
+                                                    <div class='small'>
+
+
+                                                        <h5>Acknowledgement</h5>
+                                                        <label style="color: red;" id="actioncvali"></label>
+                                                    </div>
+
+                                                    <div class='control-group'>
+                                                        <div class="row">
+                                                            <div class="span12">
+                                                                @if (Model.reqactionDetails != null)
+                                                                {
+                                                                    if (Model.reqactionDetails.Count > 0)
+                                                                    {
+                                                                    <table id="tbreqaction">
+
+                                                                        @{int reqac = 0;}
+                                                                        @foreach (var action in Model.reqactionDetails)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <input type="checkbox" id="chk_@reqac" checked="checked" style="margin-top:-13px;">
+                                                                                    <input id="reqcon_@reqac" class="input-xlarge" type="text" placeholder="Add Reqiured Action..." value="@action.Condition" maxlength="250" style="margin-top:-1px;" />
+                                                                                    <img id="delaction_@reqac"  src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;margin-top:-11px;" title="Remove Action" onclick="RemoveAction(this.id)">
+                                                                                    <input type="hidden" id="reqconid_@reqac" value="@action.Reqactionid"/>
+                                                                                </td>
+
+                                                                            </tr>
+                                                                            reqac++;
+                                                                        }
+
+                                                                    </table>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                    <table id="tbreqaction">
+                                                                        <tr>
+                                                                            <td style="padding-bottom: 8px;">
+                                                                                <input type="checkbox" id="chk_0" style="margin-top: -7px;">
+                                                                                <input id="reqcon_0" class="input-xlarge" type="text" placeholder="Add Reqiured Action..." value="I have read and understood this document" maxlength="250" />
+
+                                                                                <input type="hidden" id="reqconid_0" value="0" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <table id="tbreqaction">
+                                                                        <tr>
+                                                                            <td style="padding-bottom: 8px;">
+                                                                                <input type="checkbox" id="chk_0" checked="checked" style="margin-top: -7px;">
+                                                                                <input id="reqcon_0" class="input-xlarge" type="text" placeholder="Add Reqiured Action..." value="I have read and understood this document" maxlength="250" />
+
+                                                                                <input type="hidden" id="reqconid_0" value="0" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                }
+                                                            </div>
+
+                                                        </div>
+                                                        <a id="lnkreqaction" style="cursor: pointer;">Add another required action</a>
+                                                    </div>
+                                                    <div class='control-group' style="width: 50%;">
+                                                        <label>
+                                                            <a id="gotoassesment" style="cursor: pointer">▼</a><b>Add Assessment</b>
+                                                        </label>
+
+                                                    </div>
+                                                </div>
+                                                <div class="span6">
+                                                    <div style="position: absolute;">
+                                                        <div id="DocLinkLabelDiv" class='control-group' style="overflow-y: auto; height: 275px">
+                                                            <label class='control-label'>Links</label>
+                                                            @if (Model.linksDetails != null)
+                                                            {
+                                                                if (Model.linksDetails.Count > 0)
+                                                                {
+                                                                <table id="tblDocLinks">
+
+                                                                    @{int ii = 0;}
+                                                                    @foreach (var link in Model.linksDetails)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>
+                                                                                <input class="w360" id="lnk_@ii" placeholder='http://' type='text' onchange="validateLinksOnChange('lnk_'@ii)" value="@link.LinkURl" maxlength="500" />
+                                                                                <img id="dellinks_@ii"  src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;margin-top:-11px;" title="Remove Action" onclick="RemoveLinks(this.id)">
+                                                                                <input type="hidden" id="lnkid_@ii" value="@link.LinkId" />
+
+                                                                            </td>
+
+                                                                        </tr>
+                                                                        ii++;
+                                                                    }
+
+
+
+                                                                </table>
+                                                                }
+                                                                else
+                                                                {
+                                                                <table id="tblDocLinks">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input class="w360" id="lnk_0" onchange="validateLinksOnChange('lnk_0')" placeholder='http://' type='text' maxlength="500" />
+                                                                            <input type="hidden" id="lnkid_0" value="0" />
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input class="w360" id="lnk_1" onchange="validateLinksOnChange('lnk_1')" placeholder='http://' type='text' maxlength="500" />
+                                                                            <input type="hidden" id="lnkid_1" value="0" />
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input class="w360" id="lnk_2" onchange="validateLinksOnChange('lnk_2')" placeholder='http://' type='text' maxlength="500" />
+                                                                            <input type="hidden" id="lnkid_2" value="0" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <table id="tblDocLinks">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input class="w360" id="lnk_0" onchange="validateLinksOnChange('lnk_0')" placeholder='http://' type='text' maxlength="500" />
+                                                                            <input type="hidden" id="lnkid_0" value="0" />
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input class="w360" id="lnk_1" onchange="validateLinksOnChange('lnk_1')" placeholder='http://' type='text' maxlength="500" />
+                                                                            <input type="hidden" id="lnkid_1" value="0" />
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input class="w360" id="lnk_2" onchange="validateLinksOnChange('lnk_2')" placeholder='http://' type='text' maxlength="500" />
+                                                                            <input type="hidden" id="lnkid_2" value="0" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            }
+                                                            <label style="color: red;" id="linkval"></label>
+                                                            <a id="DocLinkLabelAdd" style="cursor: pointer">Add another link</a>
+
+                                                            <br />
+                                                        </div>
+
+
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             <div class="row-fluid ">
+                                                <div class="pull-right">
+                                                    <button id="lnkmovetolibrary" class="btn btn-primary">Move To Library</button>
+                                                        <button id="lnkstaging" class="btn btn-primary">Staging</button>
+                                                        <button id="btncancelpage" class="btn btn-primary">Cancel</button>
+                                                        <button id="btnsave" class="btn btn-primary">Next</button>
+                                                        <label id="validatemandatory" style="color: red;"></label>
+                                                    </div>
+                                                 </div>
+
+
+                                        </div>
+                                        <div class='tab-pane fade in active' id='assdetailid' style="display: none; margin-top: -42px;">
+
+                                            <h3>Assessment</h3>
+                                            <div class='control-group w100'>
+
+                                                <div class="w80">
+                                                    <div class="editor-field">
+
+                                                        <b class='control-label'>Instructions</b>
+                                                        <div id="instructionboxid">
+
+                                                            <div id="instextareaid">
+                                                                @Html.TextAreaFor(model => model.Instruction, new { @id = "fckintroofass_0", @name = "fckquest", @style = "width:200px !important;" })
+                                                            </div>
+
+                                                            <div id="instructionlableid" style="display: none;">
+                                                                <label id="instructionlable">
+                                                                    @Html.Raw(Model.Instruction)
+                                                                </label>
+
+
+                                                            </div>
+                                                            <a style="cursor: pointer; text-decoration: underline; font-style: italic; display: none;" id="editassinstruction">Edit</a>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class='controls'>
+
+                                                        <div id="testrulecheckboxes">
+                                                            <h5>Test Rules</h5>
+                                                            <div class="w80">
+                                                                <input type="hidden" id="testruleid" value="@Model.Testruleid"/>
+                                                                @if (Model.RandQues)
+                                                                {
+                                                                    <input type="checkbox" style="margin-top: -1px;" id="RandQues" checked="checked" autocomplete="off" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="checkbox" style="margin-top: -1px;" id="RandQues" autocomplete="off" />
+                                                                }
+                                                                &nbsp;<span style="padding-top: 2px !important;">Randomized Questions </span>
+                                                                <span style="margin-left: 10px;">
+                                                                    @if (Model.RandAns)
+                                                                    {
+                                                                        <input type="checkbox" style="margin-top: -1px;" id="RandAns" checked="checked" autocomplete="off" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input type="checkbox" style="margin-top: -1px;" id="RandAns" autocomplete="off" />
+                                                                    }
+                                                                    &nbsp;Randomized Answers</span>
+                                                                <span style="margin-left: 10px;">
+                                                                    @if (Model.ReqReTest)
+                                                                    {
+                                                                        <input type="checkbox" style="margin-top: -1px;" id="ReqReTest" checked="checked" autocomplete="off" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input type="checkbox" style="margin-top: -1px;" id="ReqReTest" autocomplete="off" />
+                                                                    }
+                                                                    &nbsp;Require to retake test if failed</span>
+                                                            </div>
+                                                            <div class="w80">&nbsp;</div>
+                                                            <div class="w80">
+                                                                Passing score %  
+                                                                <select class="input-xsmall ass-dropdown-width" id="passingscore">
+                                                                    @for (int index = 50; index <= 100; index = index + 5)
+                                                                    {
+                                                                        <option>@index</option>
+                                                                    }
+                                                                </select>
+                                                                <span style="margin-left: 10px;">Attempts
+                                                                 <select class="input-xsmall ass-dropdown-width" id="attempt">
+
+                                                                     <option>1</option>
+                                                                     <option>2</option>
+                                                                     <option>3</option>
+                                                                     <option>4</option>
+                                                                     <option>5</option>
+                                                                     <option>unlimited</option>
+                                                                 </select>
+                                                                </span>
+                                                            </div>
+                                                            <div class="w80">&nbsp;</div>
+                                                            <div class="w80">
+                                                                @if (Model.ShowWrongeAns)
+                                                                {
+                                                                    <input type="checkbox" style="margin-top: -1px;" id="showwrongeans" checked="checked" autocomplete="off" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="checkbox" style="margin-top: -1px;" id="showwrongeans" autocomplete="off" />
+                                                                }
+                                                                &nbsp;Show wrong answers after test submitted
+                                                            </div>
+                                                            <div class="w80">&nbsp;</div>
+                                                        </div>
+
+                                                        <div id="testrulechecklable" style="display: none;">
+                                                            <h5>Test Rules</h5>
+                                                            <a id="editasstestrules" style="cursor: pointer; text-decoration: underline; font-style: italic; display: block; float: left; margin-top: -31px; margin-left: 85px;">Edit</a>
+                                                            <div class="w80">
+                                                                <ol style="list-style: none; margin-left: 3px;">
+                                                                    <li>
+                                                                        <span style="padding-top: 2px !important;">Randomized Questions :</span>
+                                                                        @if (Model.RandQues)
+                                                                        {
+                                                                            <b id="RQ" style="font-weight: 100;">Yes</b>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <b id="RQ" style="font-weight: 100;">No</b>
+                                                                        }
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>Randomized Answers :</span>
+                                                                        @if (Model.RandAns)
+                                                                        {
+                                                                            <b id="RA" style="font-weight: 100;">Yes</b>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <b id="RA" style="font-weight: 100;">No</b>
+                                                                        }
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>Require to retake test if failed </span>
+                                                                        @if (Model.ReqReTest)
+                                                                        {
+                                                                            <b id="RRT" style="font-weight: 100;">Yes</b>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <b id="RRT" style="font-weight: 100;">No</b>
+                                                                        }
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="w80">
+                                                                            Passing score % : <b id="passingscorelbl" style="font-weight: 100;">@Model.PassingScore</b>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="w80">
+                                                                            Attempts : <b id="attemptlbl" style="font-weight: 100;">@Model.Attempts</b>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="w80">
+                                                                            Show wrong answers after test submitted :
+                                                            @if (Model.ShowWrongeAns)
+                                                            {
+                                                                <b id="SWA" style="font-weight: 100;">Yes</b>
+                                                            }
+                                                            else
+                                                            {
+                                                                <b id="SWA" style="font-weight: 100;">No</b>
+                                                            }
+
+                                                                        </div>
+                                                                    </li>
+                                                                </ol>
+
+
+
+
+
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <br />
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="w80">
+
+                                                @{int ques = 1; int ans = 1; int correctans = 0;}
+                                                @if (Model.assesmentDetails != null)
+                                                {
+                                                    if (Model.assesmentDetails.Count > 0)
+                                                    {
+                                                    <div class="w80" style="display: block;" id="divquestions">
+
+                                                        @foreach (var assess in Model.assesmentDetails)
+                                                        {
+                                                            ans = 1;
+                                                            <div style="clear: both; width: 100%;"></div>
+                                                            <span id="bullet_@ques" style="float: left; width: auto; font-weight: bold;">
+                                                                @ques.&nbsp;</span>
+                                                            <span id="span_@ques" style="float: left; width: auto; max-width: 90%; font-weight: bold;">
+                                                                <label id="lbl_@ques">@Html.Raw(assess.Question)</label>
+                                                                <input type="hidden" id="spanqId_@ques" value="@assess.AssesmentId"/>
+
+                                                            </span>
+                                                            
+                                                            <a onclick="EditQuestionAnswer(this.id)" id="edtQust_@ques" style="float: left; width: auto; margin-left: 10px; cursor:pointer;" >edit</a> 
+                                                            <a onclick="RemoveQuestionAnswer(this.id)" id="removeQust_@ques" style="float:left;width:auto;margin-left:10px;cursor:pointer;" >remove</a>
+                                                            
+                                                            if (Model.ansDetails != null)
+                                                            {
+                                                                if (Model.ansDetails.Count > 0)
+                                                                {
+                                                            <ol value="@ques" class="a" id="ol_@ques">
+                                                                @foreach (var assessans in Model.ansDetails)
+                                                                {
+                                                                    if (assess.AssesmentId == assessans.QuestionId)
+                                                                    {
+                                                                        if (assessans.IsCorrect)
+                                                                        {
+                                                                
+                                                                    <li id="li_@ques@ans">
+                                                                        @Html.Raw(assessans.Answer)
+
+                                                                    </li>
+                                                                            correctans = (ans - 1);
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                               
+                                                                    <li id="li_@ques@ans">
+                                                                        @Html.Raw(assessans.Answer)
+                                                                    </li>
+                                                              
+                                                                        }
+                                                                        ans++;
+                                                                    }
+                                                                }
+                                                            </ol>
+                                                            <input type="hidden" value="@("0" + (correctans))" id="hd_@ques" />
+                                                                }
+                                                            }
+                                                            ques++;
+                                                        }
+                                                    </div>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div class="w80" style="display: block;" id="divquestions"></div>
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    <div class="w80" style="display: block;" id="divquestions"></div>
+                                                }
+
+
+
+                                                <hr>
+                                            </div>
+                                            <div style="float: left; margin-top: 3px;">
+                                                <div role="button" id="btnclose_00" class="btn btn-small btn-info">Complete</div>
+                                                <div role="button" id="link-Add-another-question" class="btn btn-small btn-info">Add New Question </div>
+
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+        <div style="clear: both;">
+            <input id="btnSaveOK" class="btn btn-primary" type="button" value="Ok">
+        </div>
+
+
+    </div>
+
+</div>
+@*Add Question PopUp*@
+<div class="profiletrans" id="AssessmentOuter"></div>
+<div class="popup" id="Assessmentpopup" style="left: 5%; width: 95%;">
+    <div class="profile-popup-new" style="display: block; width: 90%;">
+        <div class="tittle-MessageBox">
+            <span>Questions</span><a>
+                <img id="btncloseassesment" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box">
+            <div style="float: left; width: 100%;">
+                <div id="divAssesement" style="float: left; width: 100%; overflow-y: auto; height: auto; min-height: 440px; padding-bottom: 5px; max-height: 505px;">
+                    <table id="tblAssessment_0" style="width: 100%">
+                        <tr id="trQuestion_00">
+                            <td>
+                                <div style="background-color: #EFEFDE !important;">
+                                    <div class="w80-00" style="width: 100%;">
+                                        <div class="w50-new">
+                                            <span style="margin: 0px 0; font-weight: bold;">Question</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="w80-new" style="width: 100%;">
+                                        <textarea id="fckques_00" name="fckquest"></textarea>
+                                        <div class="clr"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="trAnswer_00">
+                            <td>
+                                <div class="w80">
+                                    <div class="w50">
+                                        <span style="font-weight: bold;">Answer</span>
+                                    </div>
+
+                                </div>
+                                <div class="w80-00" style="width: 100%;">
+                                    <label style="font-family: Helvetica,Arial,sans-serif; float: left;">
+                                        <input type="radio" id="rdbans_00" checked="checked" name="fckques_00" title="Correct Answer" style="vertical-align: text-bottom;" />&nbsp;Correct Answer</label>
+                                </div>
+                                <div class="w80-new" style="width: 100%;">
+                                    <textarea id="fckans_00" name="fckquest"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="trAnswer_01">
+                            <td>
+                                <div class="w80">
+                                    <div class="w50">
+                                        <span style="font-weight: bold;">Answer</span>
+                                    </div>
+
+                                </div>
+                                <div class="w80-00" style="width: 100%;">
+                                    <label style="font-family: Helvetica,Arial,sans-serif; float: left;">
+                                        <input type="radio" id="rdbans_01" name="fckques_00" title="Correct Answer" style="vertical-align: text-bottom;" />&nbsp;Correct Answer</label>
+                                </div>
+                                <div class="w80-new" style="width: 100%;">
+                                    <textarea id="fckans_01" name="fckquest"></textarea>
+                                    <input type="hidden" id="hidQuestion" value="" />
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+                    <input type="hidden" id="docId" />
+                    @Html.HiddenFor(model => model.Reference, new { @id = "refhide" })
+                    @Html.HiddenFor(model => model.Group, new { @id = "griuphide" })
+                    @Html.HiddenFor(model => model.DaysOfCompletion, new { @id = "daycompletionhide" })
+                    @Html.HiddenFor(model => model.DocType, new { @id = "doctypehide" })
+                    @Html.HiddenFor(model => model.PassingScore, new { @id = "passhide" })
+                    @Html.HiddenFor(model => model.Attempts, new { @id = "attempthide" })
+                    @Html.HiddenFor(model => model.Retake, new { @id = "retakehide" })
+                </div>
+                <div style="float: left; width: 70%;">
+                    <label style="color: red; font-family: Verdana; font-size: 12px; margin-top: 10px;" id="divAlertMsg"></label>
+                </div>
+                <div class="addanser-btn" style="float: right; margin-top: 10px; width: 15%;">
+                    <div role="button" id="btnaddans_00" onclick="addanswer(this.id)" class="btn btn-small btn-info" title="Add another answer">Add Answer</div>
+                    <div role="button" id="btnsave_00" onclick="savequesans(this.id)" class="btn btn-small btn-info" title="Save Q & A">Save</div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="clr"></div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+
+    $(window).unload(function () {
+        window.onbeforeunload = null;
+    })
+
+
+    $('.prevent a').unbind();
+    $('.prevent a').click(function () {
+        return false;
+    });
+    function RemoveQuestionAnswer(id) {
+
+        var finalid = id.split('removeQust_')[1];
+
+        var assesmentid = 'spanqId_' + finalid;
+        var assesmentidvalue = $('#' + assesmentid).val();
+
+        if (assesmentidvalue != 0) {
+            //Remove form database
+            var url = '@Url.Action("../CompanyDashBoard/DeleteAssesment")';
+            $.post(url, { id: parseInt(assesmentidvalue) }, function (result) {
+                var spanid = 'span_' + finalid;
+                var editid = 'edtQust_' + finalid;
+                var olid = 'ol_' + finalid;
+                var hiddenid = 'hd_' + finalid;
+                $('#divquestions').find('#bullet_' + finalid + '').remove();
+
+                $('#divquestions').find('#' + spanid + '').remove();
+                $('#divquestions').find('#' + editid + '').remove();
+                $('#divquestions').find('#' + olid + '').remove();
+                $('#divquestions').find('#' + hiddenid + '').remove();
+                $('#divquestions').find('#' + id + '').remove();
+                var ss = finalid;
+                $('#divquestions').find('[id^="bullet_"]').each(function (idx, parm) {
+                    var bulletId = parm.id.split('bullet_')[1];
+                    if (bulletId > finalid) {
+                        $('#' + parm.id).html(ss + '.');
+                        ss = parseInt(ss) + 1;
+                    }
+                })
+            });
+        }
+        else {
+            var spanid = 'span_' + finalid;
+            var editid = 'edtQust_' + finalid;
+            var olid = 'ol_' + finalid;
+            var hiddenid = 'hd_' + finalid;
+            $('#divquestions').find('#bullet_' + finalid + '').remove();
+
+            $('#divquestions').find('#' + spanid + '').remove();
+            $('#divquestions').find('#' + editid + '').remove();
+            $('#divquestions').find('#' + olid + '').remove();
+            $('#divquestions').find('#' + hiddenid + '').remove();
+            $('#divquestions').find('#' + id + '').remove();
+            var ss = finalid;
+            $('#divquestions').find('[id^="bullet_"]').each(function (idx, parm) {
+                var bulletId = parm.id.split('bullet_')[1];
+                if (bulletId > finalid) {
+                    $('#' + parm.id).html(ss + '.');
+                    ss = parseInt(ss) + 1;
+                }
+            })
+        }
+
+    }
+
+
+    //$('#scromfileName_0').bind('DOMNodeInserted DOMNodeRemoved', function (event) {
+    //    alert(event.type);
+    //    if (event.type == 'DOMNodeInserted') {
+    //        var anchor = $('#scromfileName_0 div:last a');
+    //        anchor.text($('#hdfile').val());
+    //    }
+    //})
+    function UploadScorm() {
+        $('#previewscormouter').fadeIn('slow');
+        $('#previewscorminner').fadeIn('slow');
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#previewscorminner').css("top", poistion);
+    }
+    function DeleteScorm(id, index) {
+
+        var contentid = "scormcontentid_" + index;
+
+        var contentvalue = $("#" + contentid).val();
+
+
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashboard/DeleteScorm")',
+            cache: false,
+            type: 'POST',
+            data: { 'courseId': id, 'Id': parseInt(contentvalue) },
+            async: false,
+            success: function (data) {
+                if (data.length > 0) {
+                    $('#div_' + id).remove();
+
+
+                } else {
+
+                }
+            },
+            error: function (data) {
+            }
+        })
+    }
+
+    function AddEditor(id) {
+        tinymce.init({
+            selector: id, browser_spellcheck: true,
+            plugins: [
+                    "advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "table contextmenu directionality emoticons template textcolor paste fullpage textcolor "
+            ],
+
+            toolbar1: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect | forecolor backcolor | cut copy paste | searchreplace | bullist numlist",
+
+
+
+            menubar: false,
+            toolbar_items_size: 'small',
+
+            style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+            ],
+
+            templates: [
+                    { title: 'Test template 1', content: 'Test 1' },
+                    { title: 'Test template 2', content: 'Test 2' }
+            ]
+
+        });
+    }
+    $(document).ready(function () {
+
+        if ('@Model.IsVendorApply' == "False") {
+            $('#NHV').css("visibility", "hidden");
+            $('#lblDOFC').show();
+        }
+        else {
+            $('#NHV').css("visibility", "visible");
+            $('#lblDOFC').show();
+        }
+        if ('@Model.IsICApply' == "True") {
+            $('#lblDOFC').hide();
+        }
+
+
+        //disable next and other button in case of resitict the user to edit
+
+        if ('@ViewBag.IsReipientExist' == "True") {
+            $('#lnkstaging').attr("disabled", "disabled");
+            $('#lnkmovetolibrary').attr("disabled", "disabled");
+            $('#btnsave').attr("disabled", "disabled");
+        }
+        else {
+            $('#lnkstaging').removeAttr("disabled");
+            $('#lnkmovetolibrary').removeAttr("disabled");
+            $('#btnsave').removeAttr("disabled");
+        }
+        var datefield = document.createElement("input")
+        datefield.setAttribute("type", "date")
+        jQuery(function ($) {
+            var myDate = new Date();
+            var prettyDate = (myDate.getMonth() + 1) + '/' + myDate.getDate() + '/' +
+                    myDate.getFullYear();
+            $('#effectivedate').datepicker();
+
+            $('#expirationdate').datepicker();
+
+
+        })
+
+        function formattedDate(date) {
+            var d = new Date(date || Date.now()),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [month, day, year].join('/');
+        }
+        var docId = '@DocId';
+        //check expiration date
+        if ($('#effectivedate').val() == "1/1/1900 12:00:00 AM") {
+            $('#effectivedate').val('');
+        }
+        else {
+            if (docId != "0") {
+                var date = dateFormat(new Date($('#effectivedate').val()), 'mm/dd/yyyy')
+                $('#effectivedate').val(date);
+            }
+        }
+        //check due date
+        if ($('#expirationdate').val() == "1/1/1900 12:00:00 AM") {
+            $('#expirationdate').val('');
+        }
+        else {
+            if (docId != "0") {
+                var date = dateFormat(new Date($('#expirationdate').val()), 'mm/dd/yyyy')
+
+                $('#expirationdate').val(date);
+            }
+        }
+        if (docId != "0") {
+
+            $('#testrulecheckboxes').css("display", "none");
+            $('#testrulechecklable').css("display", "block");
+            $('#instextareaid').css("display", "none");
+            $('#instructionlableid').css("display", "block");
+            $('#editassinstruction').css("display", "block");
+            $('#editasstestrules').css("display", "block");
+
+
+        }
+        else {
+            $('#testrulecheckboxes').css("display", "block");
+            $('#testrulechecklable').css("display", "none");
+            $('#instextareaid').css("display", "block");
+            $('#instructionlableid').css("display", "none");
+            $('#editassinstruction').css("display", "none");
+            $('#editasstestrules').css("display", "none");
+        }
+
+
+        // HideCloneOnStaging();
+        ShowHideTabs('communication');
+        AddEditor('textarea');
+        Setvalues();
+
+
+        setTimeout(function () {
+
+            var tinyEdit = 'fckintro_0';
+
+            if (tinymce.get(tinyEdit).getContent() == "") {
+                var tinymce_editor_id1 = 'fckintro_0';
+                tinymce.get(tinymce_editor_id1).setContent('');
+            }
+            if (tinymce.get('fckintroofass_0').getContent() == "") {
+                var tinymce_editor_id2 = 'fckintroofass_0';
+                tinymce.get(tinymce_editor_id2).setContent('');
+            }
+
+        }, 1000);
+        //top tab
+        $('#step1content').addClass("active");
+        $('#step2recipient').removeClass("active");
+        $('#step3staging').removeClass("active");
+        //add required action
+        $("#lnkreqaction").click(function () {
+            var id = $('#tbreqaction tbody tr').length;
+            if (validatereqaction()) {
+
+                $('#tbreqaction tr:last').after('<tr><td><input id="chk_' + id + '" type="checkbox" style="margin-top:-13px;" checked="checked" /> ' +
+                '<input id="reqcon_' + id + '" class="input-xlarge" placeholder="Add Reqiured Action..." type="text" maxlength="250" style="margin-top:-1px;" />' +
+                '<img id="delaction_' + id + '"  src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;margin-top:-11px;" title="Remove Action" onclick="RemoveAction(this.id)">' +
+                '<input type="hidden" id="reqconid_' + id + '" value="0"/></td></tr>');
+                $('#reqcon_' + id + '').focus();
+            }
+        })
+        //add document links
+        $("#DocLinkLabelAdd").click(function () {
+            var id = $('#tblDocLinks tr').length;
+            // alert(id);
+            if (validatelinks()) {
+                $('#tblDocLinks tr:last').after('<tr><td><input class="w360" id="lnk_' + id + '" placeholder="http://" type="text" maxlength="500" />' +
+                    '<img id="dellinks_' + id + '"  src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;margin-top:-11px;" title="Remove Action" onclick="RemoveLinks(this.id)">' +
+                    '<input type="hidden" id="lnkid_' + id + '" value="0" /></td></tr>');
+                $('#lnk_' + id + '').focus();
+            }
+        })
+
+
+        //Added  another question
+        $("#link-Add-another-question").click(function () {
+            $('#AssessmentOuter').fadeIn('slow');
+            $('#Assessmentpopup').fadeIn('slow');
+            var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            $('#Assessmentpopup').css("top", scrollTop);
+            ResetQuestionPoup();
+            $('body').css('overflow', 'hidden');
+        })
+        //show instruction document
+        $("#lnkinstintro").click(function () {
+            if ($('#lnkinstintro').html() == "▼") {
+                $('#lnkinstintro').text("▲");
+                $('#insintrobox').show();
+            }
+            else if ($('#lnkinstintro').html() == "▲") {
+                $('#lnkinstintro').text("▼");
+                $('#insintrobox').hide();
+            }
+
+        })
+        //show add test
+        $("#lnkaddtest").click(function () {
+            if ($('#lnkaddtest').html() == "▼") {
+                $('#lnkaddtest').text("▲");
+                $('#Include-assessment-form').show();
+            }
+            else if ($('#lnkaddtest').html() == "▲") {
+                $('#lnkaddtest').text("▼");
+                $('#Include-assessment-form').hide();
+            }
+
+        })
+        //show included assessment
+        $("#checkBoxIncludeAssessment").click(function () {
+            if ($('#checkBoxIncludeAssessment').html() == "▼") {
+                $('#checkBoxIncludeAssessment').text("▲");
+                // $('#addtestdiv').show();
+                $('#Include-assessment-form').show();
+                $('#link-Add-another-question').show();
+
+            }
+            else if ($('#checkBoxIncludeAssessment').html() == "▲") {
+                $('#checkBoxIncludeAssessment').text("▼");
+                $('#Include-assessment-form').hide();
+                // $('#addtestdiv').hide();
+                $('#Include-assessment-form').hide();
+                $('#link-Add-another-question').hide();
+            }
+
+        })
+        //show assessment instruction fck
+        $("#lnkinstintroofass").click(function () {
+            if ($('#lnkinstintroofass').html() == "▼") {
+                $('#lnkinstintroofass').text("▲");
+                $('#insintroboxofass').show();
+            }
+            else if ($('#lnkinstintroofass').html() == "▲") {
+                $('#lnkinstintroofass').text("▼");
+                $('#insintroboxofass').hide();
+            }
+
+        })
+
+    });
+    function ResetQuestionPoup() {
+
+        var tinymce_editor_id = 'fckques_00';
+        tinymce.get(tinymce_editor_id).setContent('');
+
+        var trcount = $('#tblAssessment_0  tr').length;
+        for (var i = 0; i < trcount - 1; i++) {
+            var tinymce_editor_ids = 'fckans_0' + i;
+            tinymce.get(tinymce_editor_ids).setContent('');
+
+            if (i > 1) {
+                $("#trAnswer_0" + i).remove();
+            }
+            $('#divAlertMsg').html('');
+        }
+        $('#rdbans_00').prop("checked", true);
+    }
+
+    function hideAlert() {
+
+        $('#divAlertMsg').html('');
+    }
+    function fck(id) {
+        var oFCKeditor = new FCKeditor(id);
+        oFCKeditor.BasePath = "../Scripts/fckeditor/";
+        oFCKeditor.ReplaceTextarea();
+
+    }
+    //edit Q & A
+    function EditQuestionAnswer(id) {
+        ResetQuestionPoup();
+        var split = id.split('_')[1];
+        $('#hidQuestion').val(split);
+        var olcount = $('#ol_' + split).length;
+        var question = $('#span_' + split).html();
+        $('#AssessmentOuter').fadeIn('slow');
+        $('#Assessmentpopup').fadeIn('slow');
+
+        $('#fckques_00').val(question);
+        var tinymce_editor_id = 'fckques_00';
+        tinymce.get(tinymce_editor_id).setContent(question);
+
+        var listItems = $('#ol_' + split + ' li');
+        listItems.each(function (idx, li) {
+            var product = $(li);
+            var isCorrect = $('#hd_' + split).val();
+
+            if (idx > 1) {
+                addanswer('btnaddans_00');
+            }
+            var tinymce_editor_ids = 'fckans_0' + idx;
+            tinymce.get(tinymce_editor_ids).setContent(product.html());
+
+            $('#rdbans_' + isCorrect).prop("checked", "checked");
+            // }
+        });
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        $('#Assessmentpopup').css("top", scrollTop);
+
+    }
+
+    $('#editassinstruction').click(function () {
+        if ($('#editassinstruction').html() == "Edit") {
+            $('#instructionlableid').css("display", "none");
+            $('#editassinstruction').html('Update');
+            $('#instextareaid').css("display", "block");
+            var fckIns = tinymce.get('fckintroofass_0');
+            fckIns.setContent($('#instructionlable').html());
+        }
+        else if ($('#editassinstruction').html() == "Update") {
+            $('#instructionlableid').css("display", "block");
+            $('#editassinstruction').css("display", "block");
+            $('#instextareaid').css("display", "none");
+            var fckIns = tinymce.get('fckintroofass_0').getContent();
+            $('#editassinstruction').html('Edit');
+
+            $('#instructionlable').html(fckIns);
+        }
+    })
+    //Edit Test rule
+    $('#editasstestrules').click(function () {
+        if ($('#editasstestrules').html() == "Edit") {
+            $('#testrulechecklable').css("display", "none");
+            $('#editasstestrules').html('Update');
+            $('#testrulecheckboxes').css("display", "block");
+            SetTestrulevalues();
+
+        }
+        else if ($('#editasstestrules').html() == "Update") {
+            $('#testrulechecklable').css("display", "block");
+            $('#editasstestrules').css("display", "block");
+            $('#testrulecheckboxes').css("display", "none");
+            SetTestrulevalues();
+            $('#editasstestrules').html('Edit');
+
+        }
+    })
+    function EditOnTestRuleAndIns() {
+        //set Instruction state
+        $('#instructionlableid').css("display", "block");
+        $('#editassinstruction').css("display", "block");
+        $('#instextareaid').css("display", "none");
+        var fckIns = tinymce.get('fckintroofass_0').getContent();
+        $('#instructionlable').html(fckIns);
+        //set Test Rule state
+        $('#testrulechecklable').css("display", "block");
+        $('#editasstestrules').css("display", "block");
+        $('#testrulecheckboxes').css("display", "none");
+        SetTestrulevalues();
+
+    }
+    function SetTestrulevalues() {
+        //R Ques
+        if ($('#RandQues').is(':checked')) {
+            $('#RQ').html("Yes");
+        }
+        else { $('#RQ').html("No"); }
+        // R Ans
+        if ($('#RandAns').is(':checked')) {
+            $('#RA').html("Yes");
+        }
+        else { $('#RA').html("No"); }
+        //ReqReTest
+        if ($('#ReqReTest').is(':checked')) {
+            $('#RRT').html("Yes");
+        }
+        else { $('#RRT').html("No"); }
+        //passingscore
+        $('#passingscorelbl').html($("#passingscore option:selected").text());
+        //attempt
+        $('#attemptlbl').html($("#attempt option:selected").text());
+        //showwrongeans
+        if ($('#showwrongeans').is(':checked')) {
+            $('#SWA').html("Yes");
+        }
+        else { $('#SWA').html("No"); }
+    }
+    //Save Q & A
+    function savequesans(id) {
+        if (validateAddQust() == true) {
+            //Put Edit Link on Test Rule and Instruction
+            EditOnTestRuleAndIns();
+            var isCorrect = $('#tblAssessment_0 :radio:checked').attr('id');
+            var res = isCorrect.split("_")[1];
+
+            var ids = res;
+            if ($('#hidQuestion').val() != '') {
+
+                var fckQuestion = tinymce.get('fckques_00').getContent();
+                var trcount = $('#tblAssessment_0  tr').length;
+                var olcount = $('#hidQuestion').val();
+                var html2 = '';
+                for (var i = 0; i < trcount - 1; i++) {
+
+                    var fckanswer = tinymce.get('fckans_0' + i).getContent();
+
+                    html2 = html2 + '<li id="li_' + olcount + i + '">' + fckanswer + '</li>';
+
+                }
+
+                $('#span_' + olcount).replaceWith('<span id="span_' + olcount + '" style="float:left;max-width:90%; width:auto;font-weight:bold;">' + fckQuestion + '</span>');
+                $('#edtQust_' + olcount).replaceWith('<a onclick="EditQuestionAnswer(this.id)" id="edtQust_' + olcount + '" style="float:left;width:auto;margin-left:10px;cursor:pointer;" >edit</a>');
+                $('#ol_' + olcount).replaceWith('<ol class="a" value="' + ids + '" id="ol_' + olcount + '">' + html2 + '</ol>');
+                $('#hd_' + olcount + '').replaceWith('<input type="hidden" value="' + ids + '" id="hd_' + olcount + '" />');
+                $('#hidQuestion').val('');
+            } else {
+
+                var fckQuestion = tinymce.get('fckques_00').getContent();
+                var trcount = $('#tblAssessment_0  tr').length;
+                var olcount = $('#divquestions  ol').length;
+                olcount = parseInt(olcount) + 1;
+                var html2 = '';
+                for (var i = 0; i < trcount - 1; i++) {
+
+                    var fckanswer = tinymce.get('fckans_0' + i).getContent();
+
+                    html2 = html2 + '<li id="li_' + olcount + i + '">' + fckanswer + '</li>';
+
+                }
+                var html1 = '<div style="clear:both;width:100%;"></div><span id="bullet_' + olcount + '" style="float:left;width:auto;font-weight:bold;">' + olcount + '.&nbsp;</span> <span id="span_' + olcount + '" style="float:left; width:auto;max-width:90%;font-weight:bold;"> <label id="lbl_' + olcount + '">' + fckQuestion + '</label><input type="hidden" id="spanqId_' + olcount + '" value="0"/></span><a onclick="EditQuestionAnswer(this.id)" id="edtQust_' + olcount + '" style="float:left;width:auto;margin-left:10px;cursor:pointer;" >edit</a><a onclick="RemoveQuestionAnswer(this.id)" id="removeQust_' + olcount + '" style="float:left;width:auto;margin-left:10px;cursor:pointer;" >remove</a> <ol value="' + ids + '" class="a" id="ol_' + olcount + '">' + html2 + '</ol><input type="hidden" value="' + ids + '" id="hd_' + olcount + '" />';
+                $('#divquestions').append(html1);
+
+            }
+
+            ResetQuestionPoup();
+            $('#AssessmentOuter').fadeOut('slow');
+            $('#Assessmentpopup').fadeOut('slow');
+            $('body').css('overflow', 'auto');
+        } else {
+            $("#divAlertMsg").text("Fill All Question and Answers.");
+        }
+
+    }
+
+    function Setvalues() {
+
+        var theText = $('#refhide').val();
+        $("#ddReference option").each(function () {
+            if ($(this).text() == theText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var theText = $('#griuphide').val();
+        $("#ddgroup option").each(function () {
+            if ($(this).text() == theText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var thedayofcomText = $('#daycompletionhide').val();
+        $("#daystocomplete option").each(function () {
+            if ($(this).text() == thedayofcomText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var thedocText = $('#doctypehide').val();
+        $("#doctype option").each(function () {
+            if ($(this).text() == thedocText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var thepassText = $('#passhide').val();
+        $("#passingscore option").each(function () {
+            if ($(this).text() == thepassText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var theattempText = $('#attempthide').val();
+        $("#attempt option").each(function () {
+            if ($(this).text() == theattempText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var theretakeText = $('#retakehide').val();
+        $("#retak option").each(function () {
+            if ($(this).val() == theretakeText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+
+
+    }
+
+
+    //validate add new question
+    function validateAddQust() {
+
+        var result = true;
+        $('#tblAssessment_0 tr').find('textarea').each(function () {
+
+            var pageValue = tinymce.get(this.id).getContent();
+            var bodyText = new RegExp(/<body[^>]*>([\S\s]*?)<\/body>/).exec(pageValue)[1];
+
+            if (bodyText.trim() == "") {
+                result = false;
+
+                return result;
+            }
+
+        });
+        return result;
+    }
+
+
+    //function cancel() {
+    $('#btncancelpage').click(function () {
+        erasedocSession();
+        window.onbeforeunload = null;
+        window.location.href = '@Url.Content("~/CompanyDashBoard/DocumentAction/All")';
+        // window.location.href = "../DocumentAction/All";
+    })
+
+    function erasedocSession() {
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/Expiredocsession/")",
+            cache: false,
+            type: "POST",
+            success: function (result) {
+
+            }
+        });
+
+
+    }
+    function deletedoc(id) {
+
+        $("#docfiles div").each(function (index) {
+            if (index == id) {
+                var filename = $(this).find('#docfile_' + id + '');
+                var filenamevalue = filename.html();
+                var imgname = $(this).find('#' + id + '');
+                var fileidvalue = $(this).find('#doccontentid_' + id + '');
+                var fileid = fileidvalue.val();
+
+                //Remove form database
+                $.ajax({
+                    url: '@Url.Content("~/CompanyDashBoard/DeleteDocVideo/")',
+                    data: { name: filenamevalue, id: parseInt(fileid) },
+                    cache: false,
+                    type: "POST",
+                    success: function (result) {
+                        filename.remove();
+                        imgname.remove();
+                        fileidvalue.remove();
+                        $(this).remove();
+
+                    }
+                });
+
+
+            }
+        });
+    }
+    function deletevideo(id) {
+
+        $("#embededvideofiles div").each(function (index) {
+
+            if (index == id) {
+                var filename = $(this).find('#videofile_' + id + '');
+                var filenamevalue = filename.html();
+                var imgname = $(this).find('#' + id + '');
+                var fileidvalue = $(this).find('#videocontentid_' + id + '');
+                var fileid = fileidvalue.val();
+
+                //Remove form database
+                $.ajax({
+                    url: "@Url.Content("~/CompanyDashBoard/DeleteDocVideo/")",
+                    data: { name: filenamevalue, id: parseInt(fileid) },
+                    cache: false,
+                    type: "POST",
+                    success: function (result) {
+                        filename.remove();
+                        imgname.remove();
+                        fileidvalue.remove();
+                        $(this).remove();
+
+                    }
+                });
+
+            }
+        });
+    }
+
+
+
+    $('#btnpublish').click(function () {
+        $('body').css("overflow-y", "auto");
+        var count = $('#docfiles div').length;
+
+        if (count >= 1) {
+            var status = "0";
+            $("#docfiles div").each(function (index) {
+
+                var id = "docfile_" + index;
+
+                if ($('#' + id).html() == $('#docfile').val()) {
+
+                    status = "1";
+                    return;
+                }
+
+            });
+
+            if (status != 1) {
+                var fileurl = '@Model.hostURL@Model.uploadedcontentpath/' + $('#docfile').val() + '';
+
+                var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+
+                $('#docfiles').append('<div style="border-radius: 5px 5px 5px 5px; width:auto;height:auto;float:left;"><a id="docfile_' + count + '" href="' + url1 + '" target="_blank" title=' + $('#docfile').val() + ' style="cursor:pointer;margin-left:6px;" >' + $('#docfile').val() + '</a><img id=' + count + ' src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" title="remove document" onclick="deletedoc(' + count + ')">' +
+                        '<input type="hidden" id="doccontentid_' + count + '" value="0" /></div>');
+            }
+        }
+        else {
+            var fileurl = '@Model.hostURL@Model.uploadedcontentpath/' + $('#docfile').val() + '';
+
+            var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+            $('#docfiles').append('<div style="border-radius: 5px 5px 5px 5px;  width:auto;height:auto;float:left;"><a id="docfile_' + count + '" href="' + url1 + '" target="_blank" title=' + $('#docfile').val() + ' style="cursor:pointer;margin-left:6px;" >' + $('#docfile').val() + '</a><img id=' + count + ' src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" title="remove document" onclick="deletedoc(' + count + ')">' +
+                    '<input type="hidden" id="doccontentid_' + count + '" value="0" /></div>');
+        }
+        CloseOpenPopup("previewdocinner", "previewdocouter");
+
+    });
+
+
+    //Upload Video
+    function setvideofilename(input) {
+
+        // var fileName = input.files[0].name;
+        var fileName = $("input[id='" + input.id + "']").val().split('/').pop().split('\\').pop();
+        var ext = fileName.substr(fileName.lastIndexOf('.') + 1);
+        switch (ext) {
+            case 'mp4':
+                $('#embededvideofileName_0').html('');
+                return true;
+                break;
+            default:
+                $('#embededvideofileName_0').html("Not Allowed");
+                return false;
+        }
+
+    }
+    $('#btnclosevideo').click(function () {
+        $('body').css("overflow-y", "auto");
+        $('#previewvideoouter').fadeOut('slow');
+        $('#previewvideoinner').fadeOut('slow');
+    })
+    function ResetVideo() {
+        $('#btnpublishvideo').hide();
+        $('#loadvideodiv').show();
+        $('#videoouterdiv').hide();
+    }
+
+
+    $('#btnpublishvideo').click(function () {
+        $('body').css("overflow-y", "auto");
+        var count = $('#embededvideofiles div').length;
+
+        if (count > 1) {
+            var status = "0";
+            $("#embededvideofiles div").each(function (index) {
+                if (index != 0) {
+                    var id = "#docfile_" + index;
+
+                    if ($(id).html() == $('#docfile').val()) {
+
+                        status = "1";
+                    }
+                }
+            });
+
+            if (status != 1) {
+
+                var url1 = '@Model.hostURL@Model.uploadedcontentpath/' + $('#embededvideofileName').val() + '';
+
+                $('#embededvideofiles').append('<div style="border-radius: 5px 5px 5px 5px; width:auto;"><a id="videofile_' + count + '" href="' + url1 + '" target="_blank" title=' + $('#embededvideofileName').val() + ' style="cursor:pointer;margin-left:6px;">' + $('#embededvideofileName').val() + '</a><img id=' + count + ' src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" title="remove document" onclick="deletevideo(' + count + ')">' +
+                        '<input type="hidden" id="videocontentid_' + count + '" value="0" /></div>');
+            }
+        }
+        else {
+            var url1 = '@Model.hostURL@Model.uploadedcontentpath/' + $('#embededvideofileName').val() + '';
+
+            $('#embededvideofiles').append('<div style="border-radius: 5px 5px 5px 5px; width:auto;"><a id="videofile_' + count + '" href="' + url1 + '" target="_blank" title=' + $('#embededvideofileName').val() + ' style="cursor:pointer;margin-left:6px;">' + $('#embededvideofileName').val() + '</a><img id=' + count + ' src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" title="remove document" onclick="deletevideo(' + count + ')">' +
+                    '<input type="hidden" id="videocontentid_' + count + '" value="0" /></div>');
+        }
+
+        $('#btnclosevideo').click();
+    });
+
+
+
+
+    //Upload Scrom
+    function setscromfilename(id, value) {
+        //  alert("setscromfilename");
+        var finalid = "scromfileName_" + id;
+        document.getElementById(finalid).innerHTML = value
+
+    }
+    //Links
+    function validatelinks() {
+       
+        var ret = false;
+        $('#tblDocLinks tr').each(function (index) {            
+            var lnk = $(this).find('input[class="w360"]');
+             //alert(lnk.val());
+            if (lnk.val().trim() == null || lnk.val().trim() == "") {
+                lnk.addClass('errorClass');
+                ret = false;
+            }
+            else if (lnk.val().trim() != null || lnk.val().trim() != "") {
+                lnk.removeClass('errorClass');
+                ret = true;
+            }
+        });
+        //  alert(ret);
+        return ret;
+    }
+
+    function validateLinksOnChange(id) {        
+        if ($('#' + id).val().trim() != null || $('#' + id).val().trim() != "") {
+            $('#' + id).removeClass('errorClass');
+        } else {
+            $('#' + id).addClass('errorClass');
+        }
+    }
+    //Actions
+    function validatereqaction() {
+        var ret = false;
+        $('#tbreqaction tr').each(function (index) {
+            //if (index != 0) {
+            var lnk = $(this).find('input[class="input-xlarge"]');
+
+            if (lnk.val().trim() == null || lnk.val().trim() == "") {
+                lnk.addClass('errorClass');
+                ret = false;
+            }
+            else if (lnk.val().trim() != null || lnk.val().trim() != "") {
+                lnk.removeClass('errorClass');
+                ret = true;
+
+
+            }
+            // }
+
+            // else { ret = true; }
+
+        });
+        return ret;
+    }
+    //Get Recipient Details
+    function Recipeintdetail() {
+        var url = '@Url.Action("../CompanyDashBoard/CommunicationRecipient")';
+        $.get(url, function (result) {
+        });
+    }
+    $("#btncloseassesment").click(function () {
+        window.onbeforeunload = null;
+        ResetQuestionPoup();
+        $('#AssessmentOuter').fadeOut('slow');
+        $('#Assessmentpopup').fadeOut('slow');
+        $('body').css('overflow', 'auto');
+
+    });
+    tinymce.init({
+        selector: 'textarea', browser_spellcheck: true,
+        plugins: [
+                "advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
+                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                "table contextmenu directionality emoticons template textcolor paste fullpage textcolor "
+        ],
+
+        toolbar1: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect | forecolor backcolor | cut copy paste | searchreplace | bullist numlist",
+
+
+
+        menubar: false,
+        toolbar_items_size: 'small',
+
+        style_formats: [
+                { title: 'Bold text', inline: 'b' },
+                { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                { title: 'Example 1', inline: 'span', classes: 'example1' },
+                { title: 'Example 2', inline: 'span', classes: 'example2' },
+                { title: 'Table styles' },
+                { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+        ],
+
+        templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+        ]
+
+    });
+    //Add new answer
+    function addanswer(id) {
+        var id = id;
+        var res = id.split("_")[1];
+        res = res.substring(0, res.length - 1);
+        var ids = res;
+        var trcount = $('#tblAssessment_' + ids + ' tr').length;
+        var insertAt = trcount;
+        trcount = parseInt(trcount) - 1;
+        var html = '<tr id="trAnswer_' + ids + trcount + '"><td><div class="w80"><div class="w50"><span style="font-weight:bold;">Answer</span></div></div>' +
+            '<div class="w80-00" style="width:100%;"><label style="font-family: Helvetica,Arial,sans-serif;float:left;">' +
+    '<input type="radio" id="rdbans_' + ids + trcount + '" name="fckques_' + ids + '0' + '" title="Correct Answer" style="vertical-align:text-bottom;" />' +
+    '&nbsp;Correct Answer</label>' +
+            '</div><div class="w80-new" style="width:100%;"><textarea id="fckans_' + ids + trcount + '" name="fckquest"></textarea></div></td></tr>';
+        if (trcount < 5) {
+            $('#tblAssessment_' + ids + ' > tbody > tr').eq(insertAt - 1).after(html);
+
+        } else {
+
+            $("#divAlertMsg").html("You can't add more than 5 answers to a question.");
+        }
+        AddEditor('#fckans_' + ids + trcount);
+        $('#divAssesement').scrollTop($('#divAssesement')[0].scrollHeight);
+    }
+    $("#gotoassesment").click(function () {
+        $('#basicdetailid').css("display", "none");
+        $('#assdetailid').css("display", "block");
+        $('.r-menu-base').css("display", "none");
+        $('#my_tabs').css("display", "none");
+        window.scroll(2, 2);
+    });
+    $("#btnclose_00").click(function () {
+
+        $('#assdetailid').css("display", "none");
+        $('#basicdetailid').css("display", "block");
+        $('.r-menu-base').css("display", "block");
+        $('#my_tabs').css("display", "block");
+    });
+
+
+    //check validation of doc type
+    $("#doctype").change(function () {
+        //Doc Type
+        if ($("#doctype option:selected").text() == '-- Select --') {
+            $('#doctype').addClass('errorClass');
+
+        } else {
+            $('#doctype').removeClass('errorClass');
+            $('#doctypeval').html('');
+            $('#validatemandatory').html("");
+        }
+    })
+    //check validation of reference
+    $("#ddgroup").change(function () {
+        //Doc Type
+        if ($("#ddgroup option:selected").text() == '-- Select --') {
+            $('#ddgroup').addClass('errorClass');
+
+        } else {
+            $('#ddgroup').removeClass('errorClass');
+            $('#groupval').html('');
+            $('#validatemandatory').html("");
+        }
+        FetchCategory();
+    })
+    //check validation of title
+    $("#doctitle").keyup(function () {
+        //Title
+        if ($('#doctitle').val() == '') {
+            $('#doctitle').addClass('errorClass');
+
+        }
+        else {
+            $('#doctitle').removeClass('errorClass');
+            $('#doctitleval').html('');
+            $('#validatemandatory').html("");
+        }
+    })
+    function checkReqFields() {
+        var valdoctitle = true;
+        var valref = true;
+        var valdoctype = true;
+        var valreqac = true;
+        var vallnks = true;
+        //Title 
+        if ($('#doctitle').val().trim() == '') {
+            $('#doctitle').addClass('errorClass');
+            $('#doctitleval').html('Please enter title');
+            valdoctitle = false;
+        }
+        else {
+            $('#doctitle').removeClass('errorClass');
+            $('#doctitleval').html('');
+        }
+        //Reference
+        if ($("#ddReference option:selected").text() == '-- Select --') {
+            $('#ddReference').addClass('errorClass');
+            $('#referenceval').html('Please select Category');
+            valref = false;
+        } else {
+            $('#ddReference').removeClass('errorClass');
+            $('#referenceval').html('');
+        }
+        //Group
+        if ($("#ddgroup option:selected").text() == '-- Select --') {
+            $('#ddgroup').addClass('errorClass');
+            $('#groupval').html('Please select group');
+            valref = false;
+        } else {
+            $('#ddgroup').removeClass('errorClass');
+            $('#groupval').html('');
+        }
+        //Doc type
+        if ($("#doctype option:selected").text().trim() == '-- Select --') {
+            $('#doctype').addClass('errorClass');
+            $('#doctypeval').html('Please select Sub-Category');
+            valdoctype = false;
+        } else {
+            $('#doctype').removeClass('errorClass');
+            $('#doctypeval').html('');
+        }
+
+        $('#tbreqaction tr').each(function (index) {
+            $(this).removeClass('errorClass');
+        })
+        //if ($('#effectivedate').val() == '') {
+        //    $('#effectivedate').addClass('errorClass');
+        //    return false;
+        //}
+        //else {
+        //    $('#effectivedate').removeClass('errorClass');
+
+        //}
+        //if ($('#expirationdate').val() == '') {
+        //    $('#expirationdate').addClass('errorClass');
+        //    return false;
+        //}
+        //else {
+        //    $('#expirationdate').removeClass('errorClass');
+
+        //}
+        //Required action
+        //var checked = 0;
+        //$('#tbreqaction tr').each(function (index) {
+        //    if ($(this).find("#chk_" + index).is(":checked")) {
+        //        checked = checked + 1;
+        //    }
+        //})
+        //if (checked != parseInt($('#tbreqaction tr').length)) {
+        //    $('#actioncvali').html('please checked all acknowledgement');
+        //    valreqac= false;
+        //}
+        //else {
+        //    $('#actioncvali').html('');
+        //}
+            @*var date1 = new Date($('#expirationdate').val());
+            var date2 = new Date($('#effectivedate').val());
+            var currentday = new Date();
+
+            var docid = '@DocId';
+
+            if (docid == "0") {
+                if (date2.getDate() < currentday.getDate()) {
+                    $('#duedateval').html('Effective Date should be greater than current date')
+                    return false;
+                }
+                else {
+                    $('#duedateval').html('');
+                }
+            }
+            if (date1 < date2) {
+                $('#duedateval').html('Due Date should be greater than effective date')
+                return false;
+            }
+            else {
+                $('#duedateval').html('');
+            }*@
+
+        //validate links
+        var checkedlnk = true;
+        $('#tblDocLinks tr').each(function (index) {
+            var linktextbox = $(this).find("#lnk_" + index);
+
+            var link = linktextbox.val().trim();
+            if (link != "" && link != undefined) {
+                if (!validatelink(link.toString().toLowerCase())) {
+
+                    checkedlnk = false;
+                    vallnks = false;
+                }
+                else {
+
+                }
+            }
+
+
+        })
+        if (!checkedlnk) {
+            $('#linkval').html('Enter valid link');
+
+
+        }
+        else {
+            $('#tblDocLinks tr').each(function (index) {
+                $(this).removeClass('errorClass');
+            })
+            $('#linkval').html('');
+            $('#validatemandatory').html("");
+        }
+        var checknewhire = true;
+        //check new hire check or not
+        if ($('#newhirereqstaff').is(":checked") || $('#newhirereqic').is(":checked") || $('#newhirereqvendor').is(":checked")) {
+            if ($("select#daystocomplete")[0].selectedIndex <= 0) {
+                $('#daystocomplete').addClass('errorClass');
+                $('#daycomval').html('please select days of completion or uncheck new hire');
+                checknewhire = false;
+            }
+        }
+        else {
+            $('#daycomval').html('');
+            $('#daystocomplete').removeClass('errorClass');
+        }
+        if (valdoctitle && valref && valdoctype && valreqac && vallnks && checknewhire) {
+            return true;
+        }
+        else {
+            $('#validatemandatory').html("Please fill correct and * mandatory record");
+            return false;
+        }
+
+    }
+    $('#daystocomplete').change(function () {
+        if ($("select#daystocomplete")[0].selectedIndex > 0) {
+            $('#daycomval').html('');
+            $('#daystocomplete').removeClass('errorClass');
+            $('#validatemandatory').html("");
+        }
+    })
+    function setval(id) {
+
+        if (!$('#' + id).is(":checked") && $('#daycomval').html() != '') {
+            $('#daycomval').html('');
+            $('#daystocomplete').removeClass('errorClass');
+            $('#validatemandatory').html("");
+        }
+    }
+    function FetchCategory() {
+        var source = "";
+        if ($("#ddgroup option:selected").text() != '-- Select --') {
+            $('#ddgroup').removeClass("errorClass");
+            source = $('#ddgroup :selected').text();
+        }
+        else {
+            source = "All";
+        }
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/getCategoryOnbasisOfGroup/")',
+            cache: false,
+            data: { 'group': source },
+            type: "GET",
+            success: function (result) {
+                $('#doctype').html('');
+                $('#doctype').prepend('<option disabled="disabled">-- Select --</option>');
+                $('#ddReference').html('');
+                $('#ddReference').prepend('<option disabled="disabled">-- Select --</option>');
+                for (var i = 0; i < result.length; i++) {
+                    $('#ddReference').append('<option>' + result[i].referenceName + '</option>')
+                }
+                $("#ddReference option").each(function () {
+                    if ($(this).text() == "-- Select --") {
+                        $(this).attr('selected', 'selected');
+                    }
+                });
+
+            }
+        });
+
+
+
+    }
+    //check validation of reference
+    $("#ddReference").change(function () {
+        //Reference
+        if ($("#ddReference option:selected").text() != '-- Select --') {
+            $('#ddReference').removeClass('errorClass');
+            $('#referenceval').html('');
+            $('#validatemandatory').html("");
+
+        }
+        FetchSubCategory();
+
+    })
+
+    function FetchSubCategory() {
+        var value = "";
+        var source = "";
+        if ($("#ddReference option:selected").text() != '-- Select --') {
+            source = $('#ddReference :selected').text();
+        }
+
+        var group = "";
+        if ($("#ddgroup option:selected").text() != '-- Select --') {
+            group = $('#ddgroup :selected').text();
+        }
+        if (source.trim() == "" && group.trim() == "") {
+            value = "All";
+        }
+        else {
+            value = source + "$" + group;
+        }
+
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/getSubCategoryOnbasisOfCategory/")',
+            data: { 'id': value },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+                $('#doctype').html('');
+                $('#doctype').prepend('<option disabled="disabled">-- Select --</option>');
+                for (var i = 0; i < result.length; i++) {
+                    $('#doctype').append('<option>' + result[i].categoryName + '</option>')
+                }
+                $("#doctype option").each(function () {
+                    if ($(this).text() == "-- Select --") {
+                        $(this).attr('selected', 'selected');
+                    }
+                });
+            }
+        });
+    }
+    function validatelink(link) {
+        var re = /(http(s)?:\\)?([\w-]+\.)+[\w-]+[.com|.in|.org]+(\[\?%&=]*)?/
+        if (re.test(link)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    //save communication
+    $('#btnsave').click(function () {
+
+        Savedocument("save");
+
+    });
+    $('#lnkstaging').click(function () {
+
+        Savedocument("staging");
+
+    });
+    $('#btnclone').click(function () {
+
+        createColne();
+
+    });
+    $('#lnkmovetolibrary').click(function () {
+
+        Savedocument("library");
+
+    });
+
+    function Savedocument(type) {
+        var firstins = false;
+        var secondins = false;
+        var thirdins = false;
+        var foruthins = false;
+        var fifthins = false;
+
+        if (checkReqFields()) {
+
+            var intro = tinymce.get('fckintro_0').getContent();
+            //rand question
+            var RequHirestaff = false;
+            if ($('#newhirereqstaff').is(":checked")) {
+                RequHirestaff = true;
+            }
+            var RequHireic = false;
+            if ($('#newhirereqic').is(":checked")) {
+                RequHireic = true;
+            }
+            var newhirereqvendor = false;
+            if ($('#newhirereqvendor').is(":checked")) {
+                newhirereqvendor = true;
+            }
+            var documenttype = '';
+
+            if ($("select#doctype")[0].selectedIndex > 0) {
+                documenttype = $('#doctype :selected').text();
+            }
+            var reftype = '';
+
+            if ($("select#ddReference")[0].selectedIndex > 0) {
+                reftype = $('#ddReference :selected').text();
+            }
+            var daystocomplete = '0';
+            if ($("select#daystocomplete")[0].selectedIndex > 0) {
+                daystocomplete = $('#daystocomplete :selected').text();
+            }
+            var group = '';
+
+            if ($("select#ddgroup")[0].selectedIndex > 0) {
+                group = $('#ddgroup :selected').text();
+            }
+            var doctitles = $('#doclbl_0').val();
+            var videotitles = $('#videolbl_0').val();
+            var scormtitles = $('#scromlbl_0').val();
+            var onstaging = true;
+            var Onlib = false;
+            if (type == "library") {
+                onstaging = false;
+                Onlib = true;
+            }
+
+            // alert($('#expirationdate').val());
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/CompanyDashBoard/SaveCommunication")',
+                    cache: false,
+                    data: JSON.stringify({
+                        DocTitle: $("#doctitle").val().trim(),
+                        DocType: documenttype,
+                        Instruction: intro,
+                        DueDate: $('#expirationdate').val(),
+                        Reference: reftype,
+                        RequHirestaff: RequHirestaff,
+                        RequHireic: RequHireic,
+                        RequHirevendor: newhirereqvendor,
+                        retake: $('#retak :selected').val(),
+                        EffectiveDate: $('#effectivedate').val(),
+                        type: "@type",
+                        Docid: "@DocId",
+                        HOC: $('#hourofcredit').val(),
+                        DaysToComplete: parseInt(daystocomplete),
+                        Group: group,
+                        DocTitles: doctitles,
+                        VideoTitles: videotitles,
+                        ScormTitles: scormtitles,
+                        Onstaging: onstaging,
+                        Onlib: Onlib,
+                        IsEmpReq: $('#empReq').is(":checked")
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        $('#docId').val(result);
+
+                        if ($('#tblDocLinks').length) {
+                            if ($('#tblDocLinks tr').length > 0) {
+                                //Save links details
+                                $('#tblDocLinks tr').each(function (index) {
+                                    var link = $(this).find("#lnk_" + index).val().trim();
+
+                                    var linkid = $(this).find("#lnkid_" + index).val();
+
+                                    if (link != '') {
+                                        firstins = false;
+                                        $.ajax({
+                                            url: "@Url.Content("~/CompanyDashBoard/SaveCommLinks/")",
+                                            data: { 'docId': parseInt($('#docId').val()), 'linkValue': link, type: "@type", 'linkid': parseInt(linkid) },
+                                            cache: false,
+                                            type: "POST",
+                                            success: function (result) {
+                                                firstins = true;
+                                                // alert("from link");
+                                                setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+
+                                            }
+                                        });
+
+
+                                    }
+
+                                });
+                            }
+                            else { firstins = true; setpage(firstins, secondins, thirdins, foruthins, fifthins, type); }
+                        }
+                        else { firstins = true; setpage(firstins, secondins, thirdins, foruthins, fifthins, type); }
+                        //Save Required Action
+                        if ($('#tbreqaction').length) {
+                            if ($('#tbreqaction tr').length > 0) {
+                                $('#tbreqaction tr').each(function (index) {
+
+                                    if ($(this).find("#chk_" + index).is(":checked")) {
+                                        var reqaction = $(this).find("#reqcon_" + index).val().trim();
+                                        var reqactionid = $(this).find("#reqconid_" + index).val();
+
+                                        if (reqaction != '') {
+                                            secondins = false;
+                                            $.ajax({
+                                                url: "@Url.Content("~/CompanyDashBoard/SaveCommReqAction/")",
+                                                data: { 'docId': parseInt($('#docId').val()), 'reqActionval': reqaction, type: "@type", 'reqactionid': parseInt(reqactionid) },
+                                                cache: false,
+                                                type: "POST",
+                                                success: function (result) {
+                                                    secondins = true;
+                                                    // alert("from action");
+                                                    setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+
+                                                }
+                                            });
+
+
+                                        }
+                                    }
+
+                                });
+                            }
+                            else { secondins = true; setpage(firstins, secondins, thirdins, foruthins, fifthins, type); }
+                        }
+                        else { secondins = true; setpage(firstins, secondins, thirdins, foruthins, fifthins, type); }
+                        //Test Rules save
+                        var randques = false;
+                        var randans = false;
+                        var reqretest = false;
+                        var showwrongeans = false;
+
+                        //rand question
+                        if ($('#RandQues').is(":checked")) {
+                            randques = true;
+                        }
+
+                        //rand answer
+                        if ($('#RandAns').is(":checked")) {
+                            randans = true;
+                        }
+
+                        //retake test
+                        if ($('#ReqReTest').is(":checked")) {
+                            reqretest = true;
+                        }
+
+                        //show wronge answer on test
+                        if ($('#showwrongeans').is(":checked")) {
+                            showwrongeans = true;
+                        }
+
+                        var passingscore = $('#passingscore :selected').text();
+                        var attempts = $('#attempt :selected').text();
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Content("~/CompanyDashBoard/SaveCommTestRules")',
+                            cache: false,
+                            data: JSON.stringify({
+                                RandQues: randques,
+                                RandAns: randans,
+                                ReqReTest: reqretest,
+                                ShowWrongeAns: showwrongeans,
+                                PassingScore: passingscore,
+                                Instruction: tinymce.get('fckintroofass_0').getContent(),
+                                Attempts: attempts,
+                                docid: parseInt($('#docId').val()),
+                                type: "@type",
+                                    Testruleid: parseInt($('#testruleid').val())
+
+                                }),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (result) {
+                                thirdins = true;
+                                // alert("from testrule");
+                                setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+                            }
+                        });
+
+                        //Save Assessment Questions
+                        var indexcount = 0;
+                        //alert($('#divquestions span').length);
+                        if ($('#divquestions').length) {
+                            if ($('#divquestions span').length > 0) {
+                                $('#divquestions span').each(function (index) {
+
+                                    var span = $(this).find("#span_" + index);
+                                    var quest = '';
+                                    var questionid = '';
+                                    $('#span_' + index).each(function (index1) {
+
+                                        quest = $(this).find('#lbl_' + index + '').html().trim();
+                                        questionid = $(this).find('#spanqId_' + index + '').val();
+
+                                    });
+
+                                    if (quest != '') {
+                                        // alert("QUSETION:   " + quest);
+
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '@Url.Content("~/CompanyDashBoard/SaveCommQuesAns")',
+                                            cache: false,
+                                            data: JSON.stringify({
+                                                docId: parseInt($('#docId').val()),
+                                                question: quest,
+                                                type: 'ques',
+                                                savestatus: "@type",
+                                                    assessmentid: parseInt(questionid)
+
+
+                                                }),
+                                            contentType: 'application/json; charset=utf-8',
+                                            success: function (data) {
+
+                                                quest = '';
+                                                var correctans = $('#hd_' + index).val();
+
+                                                $('#ol_' + index + ' li').each(function (index2) {
+                                                    var correctvalue = false;
+                                                    if (index2 == parseInt(correctans)) {
+                                                        correctvalue = true;
+                                                    }
+                                                    quest = $(this).html().trim() + ":" + correctvalue;
+                                                    // alert("ANSWER:   " + quest);
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: '@Url.Content("~/CompanyDashBoard/SaveCommQuesAns")',
+                                                            cache: false,
+                                                            data: JSON.stringify({
+                                                                docId: parseInt(data),
+                                                                question: quest,
+                                                                type: 'ans',
+                                                                savestatus: "@type"
+
+
+
+                                                        }),
+                                                            contentType: 'application/json; charset=utf-8',
+                                                            success: function (data) {
+                                                                indexcount = indexcount + 1;
+                                                                if ($('#divquestions span').length == indexcount) {
+                                                                    foruthins = true;
+                                                                    // alert("from assesment");
+                                                                    setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+                                                                }
+                                                            }
+                                                        });
+
+                                                    });
+
+                                                }
+                                        });
+                                    }
+
+
+                                });
+                            }
+                            else {
+                                foruthins = true;
+                                // alert("from assesment if no");
+                                setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+                            }
+                        }
+                        else {
+                            foruthins = true;
+                            // alert("from assesfffffment if no");
+                            setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+                        }
+
+                        //save uploaded contents
+                        //documents
+                        var docfiles = '';
+                        $("#docfiles div").each(function (index) {
+
+                            if ($(this).find('#docfile_' + index + '').length) {
+                                var doc = $(this).find('#docfile_' + index + '').attr('href').split('?')[1].split('&')[0].split('=')[1];
+
+                                if (docfiles != '') {
+                                    docfiles = docfiles + "," + doc;
+                                }
+                                else {
+                                    docfiles = doc;
+                                }
+                            }
+                        });
+
+                        var videofiles = '';
+                        $("#embededvideofiles div").each(function (index) {
+                            if ($(this).find('#videofile_' + index + '').length) {
+                                var video = $(this).find('#videofile_' + index + '').attr('href')
+                                if (videofiles != '') {
+                                    videofiles = videofiles + "," + video;
+                                }
+                                else {
+                                    videofiles = video;
+                                }
+                            }
+                        });
+                        var scormfiles = '';
+                        var scormname = '';
+                        $("#scromfileName_0 div").each(function (index) {
+                            if ($(this).find('a').length) {
+                                var tagobject = $(this).find('a');
+                                var name = tagobject.html();
+                                var scormlink = tagobject.attr('href');
+
+                                if (scormfiles != '') {
+                                    scormfiles = scormfiles + "," + scormlink;
+                                }
+                                else {
+                                    scormfiles = scormlink;
+                                }
+                                if (scormname != '') {
+                                    scormname = scormname + "," + name;
+                                }
+                                else {
+                                    scormname = name;
+                                }
+                            }
+                        });
+                        if (docfiles !== '' || videofiles !== '' || scormfiles != '') {
+                            fifthins = false;
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Content("~/CompanyDashBoard/SaveCommContents/")',
+                                data: JSON.stringify({
+                                    docId: parseInt($('#docId').val()),
+                                    docfiles: docfiles,
+                                    videofiles: videofiles,
+                                    scormfiles: scormfiles,
+                                    type: "@type",
+                                        doctitle: $('#doclbl_0').val(),
+                                        videotitle: $('#videolbl_0').val(),
+                                        scormtitle: $('#scromlbl_0').val(),
+                                        scormname: scormname
+                                    }),
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (result) {
+                                    fifthins = true;
+                                    // alert("from content");
+                                    setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+                                }
+                            })
+
+
+                            }
+                            else {
+                                fifthins = true;
+                                setpage(firstins, secondins, thirdins, foruthins, fifthins, type);
+                            }
+
+                        // }, 4500);
+                    },
+                    beforeSend: function (jqXHR, obj) {
+
+
+                        $('#divManualInviteOuter').show();
+                        $('#divManualInviteInner').show();
+                        $('#dvSaveMsg').text('Please wait...');
+                        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                        var poistion = scrollTop + 100;
+                        $('#divManualInviteInner').css("top", poistion);
+                        $('#btnSaveOK').hide();
+
+                    },
+                    error: function (result) {
+                        $('#dvMsg').text('Error in input details : Communication not saved sucessfully');
+                        setTimeout(function () {
+                            $('#divManualInviteOuter').fadeOut('slow');
+                            $('#divManualInviteInner').fadeOut('slow');
+                            window.onbeforeunload = null;
+                            window.location.href = '@Url.Content("~/CompanyDashBoard/Communication/0")';
+                            //window.location.href = "../../CompanyDashBoard/Communication/0";
+                        }, 1000);
+
+                    }
+
+                });
+
+
+            }
+        }
+        function setpage(firstins, secondins, thirdins, foruthins, fifthins, type) {
+
+            //setTimeout(function () {
+            // alert('come' + "1 "+firstins+"2 " + secondins+"3 " + thirdins+"4 " + foruthins+"5  " + fifthins);
+            if (fifthins && secondins && thirdins && foruthins && fifthins) {
+                //    alert('come');
+                if (type == "save") {
+                    if ('@DocId' != 0) {
+                        $('#dvSaveMsg').text('Update sucessfully');
+                    }
+                    else {
+                        $('#dvSaveMsg').text('Saved sucessfully');
+                    }
+                    // setTimeout(function () {
+                    $('#divManualInviteOuter').fadeOut('slow');
+                    $('#divManualInviteInner').fadeOut('slow');
+                    publishdoc(parseInt($('#docId').val()));
+
+                    // }, 4500)
+                }
+                else if (type == "staging") {
+                    window.onbeforeunload = null;
+                    erasedocSession();
+                    window.location.href = '@Url.Content("~/CompanyDashBoard/CommunicationStaging/0")';
+                        // window.location.href = "../CommunicationStaging/0";
+                    }
+                    else if (type == "library") {
+                        window.onbeforeunload = null;
+                        erasedocSession();
+                        window.location.href = '@Url.Content("~/CompanyDashBoard/GlobalLibrary/All")';
+
+                }
+    }
+}
+function createColne() {
+    var firstins = false;
+    var secondins = false;
+    var thirdins = false;
+    var foruthins = false;
+    var fifthins = false;
+    if (checkReqFields()) {
+
+        var intro = tinymce.get('fckintro_0').getContent();
+
+        //rand question
+        var RequHirestaff = false;
+        if ($('#newhirereqstaff').is(":checked")) {
+            RequHirestaff = true;
+        }
+        var RequHireic = false;
+        if ($('#newhirereqic').is(":checked")) {
+            RequHireic = true;
+        }
+        var newhirereqvendor = false;
+        if ($('#newhirereqvendor').is(":checked")) {
+            newhirereqvendor = true;
+        }
+
+        var documenttype = '';
+
+        if ($("select#doctype")[0].selectedIndex > 0) {
+            documenttype = $('#doctype :selected').text();
+        }
+        var reftype = '';
+
+        if ($("select#ddReference")[0].selectedIndex > 0) {
+            reftype = $('#ddReference :selected').text();
+        }
+        var group = '';
+
+        if ($("select#ddgroup")[0].selectedIndex > 0) {
+            group = $('#ddgroup :selected').text();
+        }
+        var daystocomplete = '0';
+        if ($("select#daystocomplete")[0].selectedIndex > 0) {
+            daystocomplete = $('#daystocomplete :selected').text();
+        }
+        var doctitles = $('#doclbl_0').val();
+        var videotitles = $('#videolbl_0').val();
+        var scormtitles = $('#scromlbl_0').val();
+        var onstaging = true;
+        var Onlib = false;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/CompanyDashBoard/SaveCommunication")',
+            cache: false,
+            data: JSON.stringify({
+                DocTitle: $("#doctitle").val().trim(),
+                DocType: documenttype,
+                Instruction: intro,
+                DueDate: $('#expirationdate').val(),
+                Reference: reftype,
+                RequHirestaff: RequHirestaff,
+                RequHireic: RequHireic,
+                RequHirevendor: newhirereqvendor,
+                retake: $('#retak :selected').val(),
+                EffectiveDate: $('#effectivedate').val(),
+                type: "clone",
+                Docid: "@Model.Policyno",
+                HOC: $('#hourofcredit').val(),
+                DaysToComplete: parseInt(daystocomplete),
+                Group: group,
+                DocTitles: doctitles,
+                VideoTitles: videotitles,
+                ScormTitles: scormtitles,
+                Onstaging: onstaging,
+                Onlib: Onlib
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                $('#docId').val(result);
+                if ($('#tblDocLinks').length) {
+                    if ($('#tblDocLinks tr').length > 0) {
+                        //Save links details
+                        $('#tblDocLinks tr').each(function (index) {
+                            var link = $(this).find("#lnk_" + index).val().trim();
+
+                            var linkid = $(this).find("#lnkid_" + index).val();
+
+                            if (link != '') {
+                                $.ajax({
+                                    url: "@Url.Content("~/CompanyDashBoard/SaveCommLinks/")",
+                                    data: { 'docId': parseInt($('#docId').val()), 'linkValue': link, type: "save", 'linkid': parseInt(linkid) },
+                                    cache: false,
+                                    type: "POST",
+                                    success: function (result) {
+                                        firstins = true; setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+                                    }
+                                });
+
+
+                            }
+
+                        });
+                    }
+                    else { firstins = true; setclonepage(firstins, secondins, thirdins, foruthins, fifthins); }
+                }
+                else { firstins = true; setclonepage(firstins, secondins, thirdins, foruthins, fifthins); }
+                //Save Required Action
+                if ($('#tbreqaction').length) {
+                    if ($('#tbreqaction tr').length > 0) {
+                        $('#tbreqaction tr').each(function (index) {
+
+                            if ($(this).find("#chk_" + index).is(":checked")) {
+                                var reqaction = $(this).find("#reqcon_" + index).val().trim();
+                                var reqactionid = $(this).find("#reqconid_" + index).val();
+                                if (reqaction != '') {
+                                    $.ajax({
+                                        url: "@Url.Content("~/CompanyDashBoard/SaveCommReqAction/")",
+                                        data: { 'docId': parseInt($('#docId').val()), 'reqActionval': reqaction, type: "save", 'reqactionid': parseInt(reqactionid) },
+                                        cache: false,
+                                        type: "POST",
+                                        success: function (result) {
+                                            secondins = true; setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+
+                                        }
+                                    });
+
+
+                                }
+                            }
+
+                        });
+                    }
+                    else { secondins = true; setclonepage(firstins, secondins, thirdins, foruthins, fifthins); }
+                }
+                else { secondins = true; setclonepage(firstins, secondins, thirdins, foruthins, fifthins); }
+                //Test Rules save
+                var randques = false;
+                var randans = false;
+                var reqretest = false;
+                var showwrongeans = false;
+
+                //rand question
+                if ($('#RandQues').is(":checked")) {
+                    randques = true;
+                }
+
+                //rand answer
+                if ($('#RandAns').is(":checked")) {
+                    randans = true;
+                }
+
+                //retake test
+                if ($('#ReqReTest').is(":checked")) {
+                    reqretest = true;
+                }
+
+                //show wronge answer on test
+                if ($('#showwrongeans').is(":checked")) {
+                    showwrongeans = true;
+                }
+
+                var passingscore = $('#passingscore :selected').text();
+                var attempts = $('#attempt :selected').text();
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Content("~/CompanyDashBoard/SaveCommTestRules")',
+                    cache: false,
+                    data: JSON.stringify({
+                        RandQues: randques,
+                        RandAns: randans,
+                        ReqReTest: reqretest,
+                        ShowWrongeAns: showwrongeans,
+                        PassingScore: passingscore,
+                        Instruction: tinymce.get('fckintroofass_0').getContent(),
+                        Attempts: attempts,
+                        docid: parseInt($('#docId').val()),
+                        type: "save",
+                        Testruleid: parseInt($('#testruleid').val())
+
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        thirdins = true;
+                        // alert("from testrule");
+                        setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+                    }
+                });
+
+                //Save Assessment Questions
+                var indexcount = 0;
+                //alert($('#divquestions span').length);
+                if ($('#divquestions').length) {
+                    if ($('#divquestions span').length > 0) {
+                        $('#divquestions span').each(function (index) {
+
+                            var span = $(this).find("#span_" + index);
+                            var quest = '';
+                            var questionid = '';
+                            $('#span_' + index).each(function (index1) {
+
+                                quest = $(this).find('#lbl_' + index + '').html().trim();
+                                questionid = $(this).find('#spanqId_' + index + '').val();
+
+                            });
+
+                            if (quest != '' && quest != undefined) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: '@Url.Content("~/CompanyDashBoard/SaveCommQuesAns")',
+                                    cache: false,
+                                    data: JSON.stringify({
+                                        docId: parseInt($('#docId').val()),
+                                        question: quest,
+                                        type: 'ques',
+                                        savestatus: "save",
+                                        assessmentid: parseInt(questionid)
+
+
+                                    }),
+                                    contentType: 'application/json; charset=utf-8',
+                                    success: function (data) {
+                                        quest = '';
+                                        var correctans = $('#hd_' + index).val();
+
+                                        $('#ol_' + index + ' li').each(function (index2) {
+                                            var correctvalue = false;
+                                            if (index2 == parseInt(correctans)) {
+                                                correctvalue = true;
+                                            }
+                                            quest = $(this).html().trim() + ":" + correctvalue;
+
+                                            //Save answers
+                                            $.ajax({
+                                                type: "POST",
+                                                url: '@Url.Content("~/CompanyDashBoard/SaveCommQuesAns")',
+                                                cache: false,
+                                                data: JSON.stringify({
+                                                    docId: parseInt(data),
+                                                    question: quest,
+                                                    type: 'ans',
+                                                    savestatus: "save"
+                                                }),
+                                                contentType: 'application/json; charset=utf-8',
+                                                success: function (data) {
+                                                    indexcount = indexcount + 1;
+                                                    if ($('#divquestions span').length == indexcount) {
+                                                        foruthins = true;
+                                                        // alert("from assesment");
+                                                        setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+                                                    }
+                                                },
+                                                error: function (data) {
+                                                    alert("error");
+                                                }
+                                            });
+
+                                        });
+
+
+                                    }
+                                });
+                            }
+
+
+                        });
+                    }
+                    else {
+                        foruthins = true;
+                        // alert("from assesment if no");
+                        setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+                    }
+                }
+                else {
+                    foruthins = true;
+                    // alert("from assesment if no");
+                    setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+                }
+
+                //save uploaded contents
+                //documents
+                var docfiles = '';
+                $("#docfiles div").each(function (index) {
+                    if ($(this).find('#docfile_' + index + '').length) {
+
+                        var doc = $(this).find('#docfile_' + index + '').attr('href').split('?')[1].split('&')[0].split('=')[1];
+
+                        if (docfiles != '') {
+                            docfiles = docfiles + "," + doc;
+                        }
+                        else {
+                            docfiles = doc;
+                        }
+                    }
+                });
+
+                //Ebeded videos
+                var videofiles = '';
+                $("#embededvideofiles div").each(function (index) {
+                    if ($(this).find('#videofile_' + index + '').length) {
+                        var video = $(this).find('#videofile_' + index + '').attr('href')
+                        if (videofiles != '') {
+                            videofiles = videofiles + "," + video;
+                        }
+                        else {
+                            videofiles = video;
+                        }
+                    }
+                });
+
+                //Scorm Content
+                var scormfiles = '';
+                var scormname = '';
+                $("#scromfileName_0 div").each(function (index) {
+                    if ($(this).find('a').length) {
+                        var tagobject = $(this).find('a');
+                        var name = tagobject.html();
+                        var scormlink = tagobject.attr('href');
+
+                        if (scormfiles != '') {
+                            scormfiles = scormfiles + "," + scormlink;
+                        }
+                        else {
+                            scormfiles = scormlink;
+                        }
+                        if (scormname != '') {
+                            scormname = scormname + "," + name;
+                        }
+                        else {
+                            scormname = name;
+                        }
+                    }
+                });
+                if (docfiles !== '' || videofiles !== '' || scormfiles != '') {
+                    fifthins = false;
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Content("~/CompanyDashBoard/SaveCommContents/")',
+                        data: JSON.stringify({
+                            docId: parseInt($('#docId').val()),
+                            docfiles: docfiles,
+                            videofiles: videofiles,
+                            scormfiles: scormfiles,
+                            type: "save",
+                            doctitle: $('#doclbl_0').val(),
+                            videotitle: $('#videolbl_0').val(),
+                            scormtitle: $('#scromlbl_0').val(),
+                            scormname: scormname
+                        }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (result) {
+                            fifthins = true;
+                            setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+                        }
+                    })
+                }
+                else {
+                    fifthins = true;
+                    setclonepage(firstins, secondins, thirdins, foruthins, fifthins);
+                }
+            },
+            beforeSend: function (jqXHR, obj) {
+
+
+                $('#divManualInviteOuter').show();
+                $('#divManualInviteInner').show();
+                $('#dvSaveMsg').text('Please wait...');
+                var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                var poistion = scrollTop + 100;
+                $('#divManualInviteInner').css("top", poistion);
+                $('#btnSaveOK').hide();
+
+            },
+            error: function (result) {
+                $('#dvMsg').text('Error in input details : Clone not create sucessfully');
+                setTimeout(function () {
+
+                    $('#divManualInviteOuter').fadeOut('slow');
+                    $('#divManualInviteInner').fadeOut('slow');
+                    window.onbeforeunload = null;
+                    window.location.href = '@Url.Content("~/CompanyDashBoard/Communication/0")';
+                }, 1000);
+
+            }
+
+        });
+
+
+    }
+}
+function setclonepage(firstins, secondins, thirdins, foruthins, fifthins) {
+    // alert('come' + "1 "+firstins+"2 " + secondins+"3 " + thirdins+"4 " + foruthins+"5  " + fifthins);
+    if (fifthins && secondins && thirdins && foruthins && fifthins) {
+        $('#dvSaveMsg').text('Clone create sucessfully');
+        $('#divManualInviteOuter').fadeOut('slow');
+        $('#divManualInviteInner').fadeOut('slow');
+        publishdoc(parseInt($('#docId').val()));
+    }
+}
+$('#btnSaveOK').click(function () {
+    $('#divManualInviteOuter').fadeOut('slow');
+    $('#divManualInviteInner').fadeOut('slow');
+    publishdoc(parseInt($('#docId').val()));
+});
+function publishdoc(docId) {
+    // alert(docId);
+    var rootpath = location.protocol + '//' + location.host;
+    //alert(rootpath);
+    if (docId != null && docId != NaN) {
+        window.onbeforeunload = null;
+        window.location.href = '@Url.Content("~/CompanyDashBoard/CommunicationRecipient/")' + docId + "";
+    }
+}
+function erasedocSession() {
+    $.ajax({
+        url: "@Url.Content("~/CompanyDashBoard/Expiredocsession/")",
+        cache: false,
+        type: "POST",
+        success: function (result) {
+
+
+        }
+    });
+}
+
+//Hour of credit validation
+
+$('#hourofcredit').bind('input propertychange', function () {
+
+    if ($(this).val().length == 1) {
+        if ($(this).val() != '.' && /^[a-zA-Z0-9- ]*$/.test($(this).val()) == true && $(this).val().trim() != '' && /[^0-9]/g.test($(this).val()) == false) {
+            return true;
+        }
+        else {
+            $(this).val('');
+            return false;
+        }
+
+    }
+
+    if ($(this).val().length == 2) {
+        if ($(this).val().toString().substring(1, 2) == '.') {
+
+            return true;
+        }
+        else {
+
+            $(this).val($(this).val().toString().substr(0, 1));
+            return false;
+        }
+    }
+    if ($(this).val().length == 3) {
+        if (($(this).val().toString().substring(2, 3) == '0' || $(this).val().toString().substring(2, 3) == '2' || $(this).val().toString().substring(2, 3) == '5' || $(this).val().toString().substring(2, 3) == '7') && /^[a-zA-Z0-9- ]*$/.test($(this).val()) == false) {
+            return true;
+        }
+        else {
+            $(this).val($(this).val().toString().substr(0, 2));
+            return false;
+        }
+    }
+    if ($(this).val().length == 4) {
+        if (($(this).val().toString().substring(3, 4) == '0' || $(this).val().toString().substring(3, 4) == '5') && /^[a-zA-Z0-9- ]*$/.test($(this).val()) == false) {
+            if ($(this).val().toString().substring(2, 4) == '00' || $(this).val().toString().substring(2, 4) == '25' || $(this).val().toString().substring(2, 4) == '50' || $(this).val().toString().substring(2, 4) == '75') {
+
+                return true;
+            }
+            else {
+                $(this).val($(this).val().toString().substr(0, 2));
+                return false;
+            }
+            return true;
+        }
+        else {
+            $(this).val($(this).val().toString().substr(0, 3));
+            return false;
+        }
+
+    }
+
+
+})
+
+$(function () {
+    //alert(33);
+    $('#doc_0').fileupload({
+
+        url: '@Url.Content("~/CompanyDashBoard/upload")',
+        dataType: "json",
+        limitConcurrentUploads: 1,
+        sequentialUploads: true,
+        progressInterval: 100,
+        maxChunkSize: 10000,
+        add: function (e, data) {
+            $('#btnpublishdoc').click(function () {
+                data.submit();
+
+            });
+        },
+        done: function (e, data) {
+            $('#doccircle').progressCircle({
+                nPercent: 100,
+                showPercentText: true,
+                circleSize: 300,
+                thickness: 3
+            });
+
+            setTimeout(function () {
+                //added document name
+                var fileurl = '@Model.hostURL@Model.uploadedcontentpath/' + $('#docfile').val() + '';
+
+                            var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+                            $('#pdfdiv').attr('src', url1);
+
+                            $('#loaddiv').hide();
+                            $('#btnpublish').show();
+                            $('#pdfdiv').show();
+                            $('#doccircle').progressCircle({
+                                nPercent: 0,
+                                showPercentText: true,
+                                circleSize: 300,
+                                thickness: 3
+                            });
+
+                        }, 1000);
+
+                    },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#doccircle').progressCircle({
+                nPercent: progress,
+                showPercentText: true,
+                circleSize: 300,
+                thickness: 3
+            });
+            $('#progressfile').css('width', progress + '%');
+        },
+        progress: function (e, data) {
+
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#doccircle').progressCircle({
+                nPercent: progress,
+                showPercentText: true,
+                circleSize: 300,
+                thickness: 3
+            });
+
+        },
+
+    });
+});
+
+                $(function () {
+
+                    $('#video_0').fileupload({
+
+                        dataType: "json",
+                        url: '@Url.Content("~/CompanyDashBoard/upload")',
+                            limitConcurrentUploads: 1,
+                            sequentialUploads: true,
+                            progressInterval: 100,
+                            maxChunkSize: 10000,
+                            add: function (e, data) {
+                                $('#btnpublishvideo1').click(function () {
+                                    data.submit();
+
+                                });
+                            },
+                            done: function (e, data) {
+                                $('#videocircle').progressCircle({
+                                    nPercent: 100,
+                                    showPercentText: true,
+                                    circleSize: 300,
+                                    thickness: 3
+                                });
+
+                                setTimeout(function () {
+                                    var url = '@Model.hostURL@Model.uploadedcontentpath/' + $('#embededvideofileName').val() + '';
+
+
+                                $("#video").find("#videodiv").attr("src", url);
+                                $("#video").attr("src", url);
+                                var video_block = $('#video');
+                                video_block.load();
+                                $('#btnpublishvideo').show();
+                                $('#videodiv').show();
+                                $('#videoouterdiv').show();
+                                $('#loadvideodiv').hide();
+                                $('#videocircle').progressCircle({
+                                    nPercent: 0,
+                                    showPercentText: true,
+                                    circleSize: 300,
+                                    thickness: 3
+                                });
+                                $('#btnclosevideo').show();
+                            }, 1000);
+                        },
+                            progressall: function (e, data) {
+
+                                var progress = parseInt(data.loaded / data.total * 100, 10);
+                                $('#videocircle').progressCircle({
+                                    nPercent: progress,
+                                    showPercentText: true,
+                                    circleSize: 300,
+                                    thickness: 3
+                                });
+
+                                $('#progressfile').css('width', progress + '%');
+                            },
+                            progress: function (e, data) {
+
+                                var progress = parseInt(data.loaded / data.total * 100, 10);
+                                $('#videocircle').progressCircle({
+                                    nPercent: progress,
+                                    showPercentText: true,
+                                    circleSize: 300,
+                                    thickness: 3
+                                });
+
+
+                            }
+                        });
+                    });
+                    function readvideoURL(input) {
+                        $('body').css("overflow-y", "hidden");
+                        if (setvideofilename(input)) {
+                            ResetVideo();
+                            $('#previewvideoouter').fadeIn('slow');
+                            $('#previewvideoinner').fadeIn('slow');
+                            var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                            var poistion = scrollTop + 10;
+                            $('#previewvideoinner').css("top", poistion);
+                            // add loading image to div
+
+                            $('#embededvideofileName').val('');
+                            var VideofileName = $("input[id='" + input.id + "']").val().split('/').pop().split('\\').pop();
+                            $('#embededvideofileName').val(VideofileName);
+
+                            setTimeout(function () {
+                                $('#btnclosevideo').hide();
+                                $('#btnpublishvideo1').click();
+
+                            }, 1000);
+
+
+                        }
+                    }
+                    function readdocURL(input, id) {
+
+                        if (setdocfilename(input)) {
+                            ResetDoc();
+
+
+                            $('#docfile').val('');
+                            var fileNames = $("input[id='" + input.id + "']").val().split('/').pop().split('\\').pop();
+                            $('#docfile').val(fileNames);
+                            var isexist = false;
+                            var count = $('#docfiles div').length;
+
+                            if (count >= 1) {
+                                var status = "0";
+                                $("#docfiles div").each(function (index) {
+
+                                    var id = "docfile_" + index;
+
+                                    if ($('#' + id).html() == $('#docfile').val()) {
+
+                                        isexist = true;
+                                        return;
+                                    }
+                                })
+                            }
+
+                            if (!isexist) {
+                                $('body').css("overflow-y", "hidden");
+                                var width = 0;
+                                var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                                var poistion = parseInt(scrollTop) + 10
+
+                                $('#previewdocinner').css("top", poistion);
+                                $('#previewdocinner').fadeIn('slow');
+                                $('#previewdocouter').fadeIn('slow');
+                                $('#docUpload').html('we are Uploading your document for communication');
+                                setTimeout(function () {
+
+                                    $('#btnpublishdoc').click();
+
+                                    //        // $('#loading').html('');
+                                }, 1000);
+                            }
+                            else {
+                                $('#docfileName_0').html("same name file allowed");
+                            }
+                        }
+                    }
+
+
+                    function RemoveAction(id) {
+                        var idindex = id.split('_')[1];
+
+                        if ($('#tbreqaction tr').length == 1) {
+                            $('#reqcon_' + idindex + '').val('');
+                        }
+                        else {
+
+
+                            var actionId = $('#reqconid_' + idindex + '').val();
+                            $('#reqcon_' + idindex + '').closest('tr').remove();
+
+                            if (actionId != 0 && actionId != undefined) {
+                                $(this).remove();
+                                //Remove form database
+                                $.ajax({
+                                    url: "@Url.Content("~/CompanyDashBoard/RemoveReqActions/")",
+                                    data: { reqactions: parseInt(actionId), type: 'action' },
+                                    cache: false,
+                                    type: "GET",
+                                    success: function (result) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                    }
+                    function RemoveLinks(id) {
+                        var idindex = id.split('_')[1];
+
+                        if ($('#tblDocLinks tr').length == 1) {
+                            $('#lnk_' + idindex + '').val('');
+                        }
+                        else {
+                            var actionId = $('#lnkid_' + idindex + '').val();
+                            $('#lnk_' + idindex + '').closest('tr').remove();
+                            if (actionId != 0 && actionId != undefined) {
+                                $(this).remove();
+                                //Remove form database
+                                $.ajax({
+                                    url: "@Url.Content("~/CompanyDashBoard/RemoveReqActions/")",
+                            data: { reqactions: parseInt(actionId), type: 'link' },
+                            type: "GET",
+                            success: function (result) {
+
+                            }
+                        });
+                    }
+                }
+
+
+            }
+
+</script>
+

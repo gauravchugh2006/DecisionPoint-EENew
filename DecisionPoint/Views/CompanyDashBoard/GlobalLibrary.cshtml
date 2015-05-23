@@ -1,0 +1,322 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    ViewBag.Title = "UserDashBoard : GlobalLibrary";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grdhistory = new WebGrid(ajaxUpdateContainerId: "historygrid", rowsPerPage: Model.RowperPage);
+    if (Model.HistoryDetails != null)
+    {
+        grdhistory.Bind(Model.HistoryDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", System.Globalization.CultureInfo.InvariantCulture);  
+}
+
+
+@Styles.Render("~/Content/css/historycss")
+
+
+<div style="background: none !important;">
+  <div class='heading'>
+        <div class='row'>
+           <h3>Global Library</h3>
+            </div>
+    </div>
+
+
+    <div class="filter-bar">
+        <strong>Filter List By:</strong>
+          <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn btn-info">
+                <b id="grouptypedd" >Group</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.GroupDetails != null)
+            {
+                if (Model.GroupDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li>
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                <input class="groupchkall" type="checkbox" autocomplete="off" value="All" onchange="filter('globallibrary','All','2')" style="margin-left: -2px;">
+                               &nbsp;  All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.GroupDetails.Select(x => x.categoryName))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li>
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                     <input class="groupchk" type="checkbox" autocomplete="off" value="@refe" onchange="filter('globallibrary','@refe','2')" style="margin-left: -2px;">
+                                  &nbsp;   @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+        <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="refdd" class="dropdown-toggle btn btn-info">
+                <b id="reftypedd">Category</b>
+                <b class="caret"></b>
+            </a>
+          <ul role="menu" id="catlis" class="dropdown-menu" style="width: auto !important; display:none;">
+          </ul>
+        </div>
+        <div class="dropdown">
+
+            <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                <b id="doctypedd">Sub Category</b>
+                <b class="caret"></b>
+            </a>
+            <ul role="menu" id="refelis" class="dropdown-menu" style="width: auto !important;display:none;">
+                   
+                </ul>
+        </div>
+        
+
+    </div>
+
+
+    @*funtion used for sorting in webgrid*@
+    @functions {
+        public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+    <div id="historydiv">
+        @if (Model.HistoryDetails != null)
+        {
+
+
+            var gridColumns = new List<WebGridColumn>();
+            gridColumns.Add(grdhistory.Column(columnName: "", format:  @<text>
+            @if (item.versionno > 1)
+            {
+<SPAN style="color:red;height:45px;display:none;">Updated</SPAN>
+            }
+            else
+            {
+@*<SPAN class="label label-important w16px"><i class="icon-check-notcompleted icon-white"></i></SPAN>*@
+            }
+            </text>, style: "grid-width61px"));
+
+            gridColumns.Add((grdhistory.Column(columnName: "policyNo", header: Sorter("policyNo", "Comm #", grdhistory), canSort: true,
+            format:@<text>
+            @if (item.versionno != 0)
+            {
+                @item.policyNo <span style="height:45px;">v<sub>@item.versionno</sub></span>
+            }
+            else
+            {
+<span>&nbsp;</span>
+            }
+            </text>
+, style: "grid-width100")));
+            gridColumns.Add((grdhistory.Column("reference", header: Sorter("reference", "Category", grdhistory), style: "grid-width100")));
+            gridColumns.Add((grdhistory.Column("reqDocType", header: Sorter("reqDocType", "Sub Category", grdhistory), style: "grid-width300")));
+            gridColumns.Add((grdhistory.Column("title", header: Sorter("title", "Title", grdhistory),
+            format:@<text>
+            <span id="doctitle" >@item.title</span>
+          
+               </text>, style: "grid-width300")));
+             @*gridColumns.Add((grdhistory.Column("hourofcredit", header: Sorter("hourofcredit", "CE", grdhistory),
+
+format:@<text>
+            @if (item.versionno != 0)
+            {
+<div>@item.hourofcredit</div> }
+
+            </text>, style: "grid-width100")));*@
+            gridColumns.Add((grdhistory.Column("NoOfStaff", header: Sorter("NoOfStaff", "Staff", grdhistory),
+format:@<text>
+
+            @if (item.versionno != 0)
+            {
+                if (item.NoOfStaff != 0)
+                {
+                @((int)((item.NoOfCompStaff / item.NoOfStaff) * 100))<span>%</span>
+                }
+                else
+                {
+<span>-</span>
+                }
+            }
+
+            </text>, style: "grid-width100")));
+                   if(Model.IsICApply){
+            gridColumns.Add((grdhistory.Column("NoOfIc", header: Sorter("NoOfIc", "IC", grdhistory),
+      format:@<text>
+            @if (item.versionno != 0)
+            {
+                if (item.NoOfIc != 0)
+                {
+                @((int)((item.NoOfCompIc / item.NoOfIc) * 100))<span>%</span>
+                }
+                else
+                {
+<span>-</span>
+                }
+            }
+
+            </text>, style: "grid-width100")));
+                   }
+                    if(Model.IsVendorApply){
+            gridColumns.Add((grdhistory.Column("NoOfVendor", header: Sorter("NoOfVendor", "Vendor", grdhistory),
+      format:@<text>
+            @if (item.versionno != 0)
+            {
+                if (item.NoOfVendor != 0)
+                {
+                @item.NoOfCompVendor<span>%</span> }
+                else
+                {
+<span>-</span>
+                }
+            }
+
+           </text>, style: "grid-width100")));
+                  }
+                    gridColumns.Add((grdhistory.Column("effectiveDate", header: Sorter("effectiveDate", "Effective Released", grdhistory),
+           format:  @<text>
+            @if (item.versionno != 0)
+            {
+<span> 
+     @if (item.effectiveDate != defaultdate)
+   {
+       <span>  @string.Format("{0:MM/dd/yyyy}",
+             item.effectiveDate)</span>  <br />
+      
+   }
+     else
+     {<span style="margin-left:27px;">-</span><br />}
+                </span> 
+<span > 
+     @if (item.receviedDate != defaultdate)
+     {
+          if (item.receviedDate != null)
+                {
+          <span>  @string.Format("{0:MM/dd/yyyy}",
+             item.receviedDate)</span>
+     }
+      
+     }
+     else
+     {<span style="margin-left:27px;">-</span>}
+
+            </span>
+            }</text>, style: "grid-width100px")));
+                    gridColumns.Add((grdhistory.Column("", format: @<text>  @if (item.versionno != 0)
+                                                                            {
+
+
+                                                                                if (!string.IsNullOrEmpty(Convert.ToString(Session["CompanyId"], System.Globalization.CultureInfo.InvariantCulture)))
+                                                                                {
+                                                                                    if (Convert.ToString(Session["CompanyId"], System.Globalization.CultureInfo.InvariantCulture) == item.CreatorCompanyid)
+                                                                                    {
+             <a   title="Remove"  onclick="showconfirmationdiv('@item.docTypeId','1')"  class="btn btn-mini btnminired">Withdraw</a>
+<a   title="Edit" href="../../CompanyDashBoard/Communication?id=@item.docTypeId&type=Library"  style="text-decoration:underline;font-style:italic;margin-left: 7px;cursor:pointer;">Edit</a>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+            <a   title="Remove"  onclick="showconfirmationdiv('@item.docTypeId','4')"  class="btn btn-mini btnminired">Withdraw</a>
+                                                                                    }
+                                                                                }
+
+
+                                                                            } </text>, style: "grid-width300", canSort: false)));
+           
+
+
+
+                            
+            @grdhistory.GetHtml(htmlAttributes: new { id = "historygrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: grdhistory.Columns(gridColumns.ToArray())) 
+           
+            
+           
+        }
+       
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    function DocumentInfo() {
+        alert("Find No document Details!!");
+    }
+
+
+    $(document).ready(function () {
+        ShowHideTabs('globallib');
+        $('#txtserach').autocomplete({
+            source: '@Url.Content("~/CompanyDashBoard/SerachInhistory")'
+         });
+        //set blank row width
+        $("#historygrid tbody tr").each(function (index) {
+            var docname = $(this).find('#doctitle').html().trim();
+            if (docname == "") {
+           $(this).addClass("setwidth");
+
+            }
+        });
+     
+    })
+    //category
+    $('#refdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $('#refelis').empty();
+        $('#refelis').css("display", "none");
+    })
+    //category
+    $('#groupdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $("#refdd").css({ "background-color": "#0044CC" });
+        $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#reftypedd').html("Category");
+        var chkstatus = true;
+        $('.groupchk').each(function () {
+
+            if ($(this).is(':checked')) {
+                chkstatus = false
+            }
+        })
+        if ($('.groupchkall').is(":checked")) {
+            chkstatus = false
+        }
+       
+        if (chkstatus) {
+            $('#catlis').empty();
+            $('#catlis').css("display", "none");
+        }
+    })
+  
+</script>
+
+

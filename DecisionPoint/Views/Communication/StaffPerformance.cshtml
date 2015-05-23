@@ -1,0 +1,125 @@
+﻿@model DecisionPoint.Models.CommunicationModel
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "Staff Performance";
+    WebGrid grdStaffPerformance = new WebGrid();
+    if (Model.staffPerformanceLst != null)
+    {
+
+       
+            grdStaffPerformance = new WebGrid(ajaxUpdateContainerId: "grdStaffPerformance", rowsPerPage: Model.rowperpage);
+            grdStaffPerformance.Bind(Model.staffPerformanceLst, autoSortAndPage: true, rowCount: Model.pagesize);
+        
+    }
+}
+
+<style>
+    .grid-width400
+    {
+        width: 150px;
+    }
+
+    .grid-width300
+    {
+        width: 150px;
+    }
+
+    .grid-width100
+    {
+        width: 80px;
+    }
+</style>
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Staff Performance</title>
+</head>
+<body>
+    <div class='heading'>
+        <div class='row'>
+           <h3>Staff Performance</h3>
+            </div>
+    </div>
+   @* <div style="float: left; width: 100%;">
+
+        <h3><span style="margin-top: 10px; margin-right: 20px; float: left; width: 100%;">Staff Performance</span></h3>
+        <br />
+        <br />
+
+    </div>*@
+
+
+    <div id="divtitle" style="float: left; width: 100%;">
+        @if (Model.staffPerformanceLst != null )
+        {
+            
+                                   
+            @grdStaffPerformance.GetHtml(htmlAttributes: new { id = "grdStaffPerformance" }, exclusions: new[] { "ID" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+ columns: grdStaffPerformance.Columns(
+
+
+ grdStaffPerformance.Column("StaffName", "Staff Name", style: "grid-width400",format: 
+ @<text> 
+        <a class="@item.StaffId" onmousedown="jumptoprofilepage('@item.StaffId',event)" style="cursor:pointer;">
+             @(item.StaffName)
+        </a>
+ </text> ),
+ grdStaffPerformance.Column("Title", "Title", style: "grid-width300"),
+ grdStaffPerformance.Column("CompletedDocument", "Received/Completed  ", format: (item) =>
+ {
+     return Html.Raw("<div> <div style='text-align:right;width:70px;float:left'>" + @item.TotalDocument + "</div><div style='text-align:center;width:10px;float:left'> / </div><div style='text-align:left;width:20;float:left'>" + @item.CompletedDocument + "</div></div>");
+         
+         
+         
+         
+         
+        
+
+ }, style: "grid-width400"
+  ),
+
+                    grdStaffPerformance.Column("Performance", "Completion %", format: (item) =>
+                        {
+                            return Html.Raw("<span Style='text-align:right;float:right'>" + @item.Performance + "<span style='width:10px;float:right;margin-right:70px'>%</span>" + "</span>");
+                        }, style: "grid-width100")
+
+
+     ))
+               
+            }
+           
+    </div>
+   
+
+</body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ShowHideTabs('communication');
+        });
+
+      
+        function jumptoprofilepage(id, e) {
+            if (e.which == 1 && !e.ctrlKey && !e.shiftKey) {
+                var userid = id;
+                $('.' + userid).attr("href", '@Url.Content("~/CompanyDashBoard/UserDashboard?userID=")' + userid + "&parentform=sp");
+                var target = e.target;
+                e.preventDefault();
+                target.click();
+
+            }
+
+        }
+    
+
+    </script>
+</html>

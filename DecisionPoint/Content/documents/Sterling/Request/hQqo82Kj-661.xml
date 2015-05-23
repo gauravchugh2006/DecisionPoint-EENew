@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BackgroundCheck account="DecisionPoint" password="DecisionPointtp456" userId="DecisionPointtp" dpuserId="661" xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <BackgroundSearchPackage type="Driver License">
+    <ProcessingInformation>
+      <AccessCredential type="UserName">DPINT</AccessCredential>
+      <AccessCredential type="Password">password456@</AccessCredential>
+      <AccessCredential type="Account">DP</AccessCredential>
+    </ProcessingInformation>
+    <ReferenceId>
+      <IdValue>hQqo82Kj-661</IdValue>
+    </ReferenceId>
+    <PersonalData>
+      <PersonName>
+        <GivenName>IC242015</GivenName>
+        <MiddleName>
+        </MiddleName>
+        <FamilyName primary="true">IC242015</FamilyName>
+      </PersonName>
+      <PostalAddress>
+        <PostalCode>
+        </PostalCode>
+        <Region>
+        </Region>
+        <Municipality>
+        </Municipality>
+        <DeliveryAddress>
+          <AddressLine>
+          </AddressLine>
+        </DeliveryAddress>
+      </PostalAddress>
+      <ContactMethod>
+        <Telephone>
+          <FormattedNumber>4564635353</FormattedNumber>
+        </Telephone>
+        <InternetEmailAddress>IC24201577@yopmail.com</InternetEmailAddress>
+      </ContactMethod>
+    </PersonalData>
+    <Screenings>
+      <PackageId idOwner="Sterling">
+        <IdValue name="NumValue">Driver License</IdValue>
+      </PackageId>
+    </Screenings>
+  </BackgroundSearchPackage>
+</BackgroundCheck>

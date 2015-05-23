@@ -1,0 +1,802 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@using System.Globalization;
+@using DecisionPointBAL.Implementation
+@{
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    ViewBag.Title = "UserDashBoard : View Document";
+    WebGrid grdStudentView = new WebGrid();
+    grdStudentView.Bind(Model.GetUserViewList);
+
+    IEnumerable<DecisionPointBAL.Implementation.Response.UserTrainingMaterialsResponse> objTrainingMaterials = null;
+    WebGrid grddocumentsdetails = new WebGrid(ajaxUpdateContainerId: "documentgrid", rowsPerPage: 7);
+}
+
+<link href="~/Content/css/UserDashboard/common.css" rel="stylesheet" />
+
+<style>
+    .grid-width400 {
+        width: 350px;
+    }
+
+    .grid-width100 {
+        width: 50px;
+    }
+
+
+
+    .StudentInfo {
+        float: left;
+        font-weight: bold;
+        margin-bottom: 3px;
+        width: 14%;
+    }
+
+    .StudentDetail {
+        float: left;
+        margin-bottom: 3px;
+        width: 86%;
+    }
+
+    .Instructions {
+        margin-left: 20px;
+    }
+
+
+    .table th, .table td {
+        border-top: 1px solid #DDDDDD;
+        font-size: 14px;
+        line-height: 20px;
+        padding: 8px;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .table th {
+        font-weight: bold;
+        padding-bottom: 15px !important;
+    }
+
+    p {
+        display: inline;
+    }
+</style>
+
+
+
+
+<div id='content'>
+
+
+
+    <div class='container'>
+        
+     
+
+        <div class='content-box'>
+
+            <div id='document'>
+
+                <div class='control-group w100' style="width: 100% !important;">
+
+                    <div class="control-group w100">
+                        <div class="Stdwidth">From:</div>
+                        <div class="Inforest">
+                            <div style="display: block; width: auto !important;">
+                                @if (Model.GetUserViewList != null && Model.GetUserViewList.Count() > 0)
+                                {
+
+                                    if (!String.IsNullOrEmpty(Model.GetUserViewList.ToList()[0].Name))
+                                    {
+                                    @(String.Format("{0}{1}", char.ToUpper(@Model.GetUserViewList.ToList()[0].Name[0]), @Model.GetUserViewList.ToList()[0].Name.Substring(1)));
+
+
+                                    }
+                                }
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="control-group w100">
+                        <div class="Stdwidth">Title:</div>
+                        <div class="Inforest">
+                            <div style="display: block; width: auto !important;">
+
+                                @if (Model.GetUserViewList != null && Model.GetUserViewList.Count() > 0)
+                                {
+                                    if (!String.IsNullOrEmpty(Model.GetUserViewList.ToList()[0].UserTitle))
+                                    {
+                                    
+                                    @(String.Format("{0}{1}", char.ToUpper(@Model.GetUserViewList.ToList()[0].UserTitle[0]), @Model.GetUserViewList.ToList()[0].UserTitle.Substring(1)));
+                                    }
+                                }
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="control-group w100" style="margin-top: 12px;">
+                        <div class="Stdwidth">Course Name:</div>
+                        <div class="Inforest">
+                            <div style="display: block; width: auto !important;">
+
+                                @if (Model.GetUserViewList != null && Model.GetUserViewList.Count() > 0)
+                                {
+                                    if (!String.IsNullOrEmpty(Model.GetUserViewList.ToList()[0].CourseName))
+                                    {
+                                    @(String.Format("{0}{1}", char.ToUpper(@Model.GetUserViewList.ToList()[0].CourseName[0]), @Model.GetUserViewList.ToList()[0].CourseName.Substring(1)));
+
+                                    }
+                                }
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="control-group w100">
+                        <div class="Stdwidth">Source:</div>
+                        <div class="Inforest">
+                            <div style="display: block; width: auto !important;">
+
+
+                                @if (Model.GetUserViewList != null && Model.GetUserViewList.Count() > 0)
+                                {
+                                    if (!String.IsNullOrEmpty(Model.GetUserViewList.ToList()[0].Reference))
+                                    {
+                                    @(String.Format("{0}{1}", char.ToUpper(@Model.GetUserViewList.ToList()[0].Reference[0]), @Model.GetUserViewList.ToList()[0].Reference.Substring(1)));
+
+                                    }
+                                }
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="control-group w100">
+                        <div class="Stdwidth">Status:</div>
+                        <div class="Inforest">
+                            <div style="display: block; width: auto !important;" id="divStatus">
+                                @if (Model.GetUserViewList != null && Model.GetUserViewList.Count() > 0)
+                                {
+                                    if (!String.IsNullOrEmpty(Model.GetUserViewList.ToList()[0].Status))
+                                    {
+                                        
+                                         
+                                    @(String.Format("{0}{1}", char.ToUpper(@Model.GetUserViewList.ToList()[0].Status[0]), @Model.GetUserViewList.ToList()[0].Status.Substring(1)));
+
+                                    }
+                                }
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="control-group w100">
+                        <div class="Stdwidth">Due Date:</div>
+                        <div class="Inforest">
+                            <div style="display: block; width: auto !important;" id="lblfname">
+                                @if (Model.GetUserViewList != null && Model.GetUserViewList.Count() > 0)
+                                {
+                                    @Model.GetUserViewList.ToList()[0].DueDate.ToString("MMMM dd, yyyy")
+                                }
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="control-group w100">
+                        <div class="Stdwidth" style="margin-top: 20px;">Instruction</div>
+
+                    </div>
+                    <div>
+                        <div style="display: block; width: auto !important; margin-top: 4px;">
+                            @if (Model.GetUserViewList.ToList() != null && Model.GetUserViewList.Count() > 0)
+                            {
+                                <label>@Html.Raw(HttpUtility.HtmlDecode(@Model.GetUserViewList.ToList()[0].Instruction))</label>
+                                  
+                            }
+                            else
+                            {
+
+@* No Data Available
+                                   *@
+                            }
+
+
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <div style="float: left; margin-bottom: 3px; width: 60%;">
+                </div>
+            </div>
+
+            <br />
+            <div style="clear: both; width: 100%; height: 10px;"></div>
+
+            <div>
+                @*funtion used for sorting in webgrid*@
+                @functions {
+                    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+                    {
+                        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                          grid.SortDirection == SortDirection.Ascending ? "↑" :
+                            "↓" : string.Empty);
+                    }
+                    }
+                @{
+                       
+                    if (@Model.GetUserViewList != null && @Model.GetUserViewList.Count() > 0)
+                    {
+                        DecisionPointBAL.Implementation.DecisionPointEngine objDecisionPointEngine = new DecisionPointBAL.Implementation.DecisionPointEngine();
+                        objTrainingMaterials = objDecisionPointEngine.GetTrainingMaterialsDetails(Convert.ToInt32(Session["UserId"]), @Model.GetUserViewList.ToList()[0].DocID);
+
+
+
+                        objTrainingMaterials = objTrainingMaterials.OrderBy(p => p.FileType);
+                        ViewBag.objTrainingMaterials = objTrainingMaterials;
+
+                        if (objTrainingMaterials != null)
+                        {
+                            grddocumentsdetails.Bind(objTrainingMaterials, autoSortAndPage: true, rowCount: Model.PageSize);
+                        }
+                    }
+                }
+                <div id='documents'>
+                    @if (objTrainingMaterials != null)
+                    {
+                            
+                            
+                        @grddocumentsdetails.GetHtml(htmlAttributes: new { id = "documentgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    rowStyle: "webgrid-row-style",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+                                                       
+     grddocumentsdetails.Column(header: "Training Materials",
+
+                    format:
+                    @<text>
+
+                        @if (item.FileType == "document")
+        {
+<img src="~/Content/images/document.png" style="height:20px; width:20px" alt="Document" title="Document" /> 
+                              if(Request["type"]!="libview")
+                              {
+                              
+<a href="@Url.Action("TrainingDocument", "UserDashboard", new {docid=(int)item.DocID,status=(bool)item.status,filetype=item.FileType,fileTitle=item.FileTitle,FileLocation=item.FileLocation  } )" 
+  target="_blank" style="margin-left:4px;">@item.FileTitle</a>
+                            }
+                            else{
+<a href="@Url.Action("TrainingDocument", "UserDashboard", new {docid=(int)item.DocID,status=(bool)item.status,filetype=item.FileType,fileTitle=item.FileTitle,FileLocation=item.FileLocation,type="libview"  } )" 
+  target="_blank" style="margin-left:4px;">@item.FileTitle</a>
+                              }
+  
+
+                               
+     
+        }
+                        @if (item.FileType == "scorm")
+        {
+<img src="~/Content/images/scrom.png" style="height:20px; width:20px" alt="Scrom" title="Video" />  
+                                if(Request["type"]!="libview")
+                              {
+@*  <a href="@item.FileLocation" target="_blank" style="margin-left:4px;">@item.FileTitle</a>*@
+<a href="@Url.Action("TrainingDocument", "UserDashboard", new {docid=(int)item.DocID,status=(bool)item.status,filetype=item.FileType,fileTitle=item.FileTitle,FileLocation=item.FileLocation } )" 
+  target="_blank" style="margin-left:4px;">@item.FileTitle</a>
+                            }
+                            else{
+@*<a href="@item.FileLocation" target="_blank" style="margin-left:4px;">@item.FileTitle</a>*@
+<a href="@Url.Action("TrainingDocument", "UserDashboard", new {docid=(int)item.DocID,status=(bool)item.status,filetype=item.FileType,fileTitle=item.FileTitle,FileLocation=item.FileLocation,type="libview" } )" 
+  target="_blank" style="margin-left:4px;">@item.FileTitle</a>
+                                }
+                         
+        }
+                        @if (item.FileType == "video")
+        {
+<img src="~/Content/images/video.png" style="height:20px; width:20px" alt="Video" title="Video" /> 
+                                  if(Request["type"]!="libview")
+                              {
+<a href="@Url.Action("TrainingDocument", "UserDashboard", new {docid=(int)item.DocID,status=(bool)item.Status,filetype=item.FileType,fileTitle=item.FileTitle, FileLocation=item.FileLocation } )" 
+  target="_blank" style="margin-left:4px;">@item.FileTitle</a>
+                            }
+                            else{
+<a href="@Url.Action("TrainingDocument", "UserDashboard", new {docid=(int)item.DocID,status=(bool)item.Status,filetype=item.FileType,fileTitle=item.FileTitle, FileLocation=item.FileLocation,type="libview" } )" 
+  target="_blank" style="margin-left:4px;">@item.FileTitle</a>
+                                  }
+                                
+       }
+
+                        </text>),
+                    
+    
+
+  
+   grddocumentsdetails.Column(header: "   Status     ",
+
+                    format:
+                    @<text>
+                        @if(item.Status==true)
+                        {
+<img src="~/Content/images/check-in.png" height="25" style="padding-left:inherit" width="25" alt="Status" title="Completed" />
+                              
+                        }
+                        else 
+                        {
+                                if(!string.IsNullOrEmpty(Convert.ToString(item.ViewDate)))
+                                {
+<span>In Progress</span>
+                                }else
+                                {
+                                   
+                                }
+
+                        }
+
+
+                        </text>),
+                            
+                            grddocumentsdetails.Column(header: "     View Date  ", format:@<text>
+                     
+                        @if (Convert.ToInt32(Session["superAdmin"], CultureInfo.InvariantCulture) != Convert.ToInt32(Session["UserId"], CultureInfo.InvariantCulture))
+                         {
+                             if(String.IsNullOrEmpty(Convert.ToString(item.ViewDate)))
+                             {
+<span>No View Date</span>
+                             }
+                             else
+                             {
+<span>@item.ViewDate.ToString("MMMM dd, yyyy")</span>
+                             }
+                        
+                             
+                         }
+                         
+                        </text>),
+                           
+                           
+                                         grddocumentsdetails.Column(header: "  Time  ", format:@<text>
+                       
+                                 
+                                         @if (Convert.ToInt32(Session["superAdmin"],CultureInfo.InvariantCulture) != Convert.ToInt32(Session["UserId"],CultureInfo.InvariantCulture))
+                            {
+                                if (item.TimeSpan != null && item.TimeSpan>0)
+                                     {
+                                     
+                                         Int64 totaltime = item.TimeSpan;
+                                       int minute = Convert.ToInt32(totaltime / 60) ;
+                                       string min = (minute < 10 ? "0" : "") + minute; 
+                                         
+                                         int second= Convert.ToInt32( totaltime%60);
+                                         string sec = (second < 10 ? "0" : "") + second; 
+                                        
+                                         
+                                        
+<span>@min<b>:</b>@sec</span>
+                                    
+                                     }
+                                     else
+                                     {
+<span>00:00</span>
+                                 }
+                                     
+                                    
+                           }
+                        else
+                        {
+                            if (String.IsNullOrEmpty(Convert.ToString(item.CompletionDate)))
+                             {
+<span>No Completion Date</span>
+                             }
+                             else
+                             {
+<span>@item.CompletionDate.ToString("MMMM dd, yyyy")</span>
+                             }
+                                     
+                                 
+                                 }
+                                     
+
+                        </text>)
+                            
+                            });
+
+                    }
+
+
+                </div>
+
+                @{
+                    bool showassesment = true;
+                    if (Model.GetAssesmentViewList.Count() > 0)
+                    {
+                        if (Convert.ToInt32(Session["superAdmin"], CultureInfo.InvariantCulture) == Convert.ToInt32(Session["UserId"], CultureInfo.InvariantCulture))
+                        {
+                            if(!object.Equals(objTrainingMaterials,null)){
+                            foreach (var status in objTrainingMaterials)
+                            {
+                                if (status.status != true)
+                                {
+                                    showassesment = false;
+
+
+
+                                }
+                            }}
+                        }
+                        if (showassesment)
+                        { 
+                            
+                                
+                    <input type="hidden" id="hd_showAssessment" value="true" />
+                        }
+                        else
+                        {
+                    <input type="hidden" id="hd_showAssessment" value="false" />
+                        
+                        }
+                    }
+                }
+
+                @if (Model.GetAssesmentViewList.Count() > 0)
+                { 
+                    
+                    <div style="float: left; width: 100%; border-bottom: 1px solid #DDDDDD; line-height: 20px; padding: 8px; text-align: left; vertical-align: top; margin-top: -20px; margin-bottom: 31px;">
+                        <img title="Video" alt="Video" style="height: 20px; width: 20px" src="~/Content/images/test.png" />
+                        @if (Request["type"] != "libview")
+                        {
+                            @Html.ActionLink("Assessment", "AssesssmentOpen", "UserDashboard", new { target = "_blank", id = "Assementlink" })
+                        }
+                        else
+                        {
+                            <a id="Assementlink" href="@Url.Action("AssesssmentOpen", "UserDashboard", new { type = "libview" })" 
+  target="_blank">Assessment</a>
+                             
+                        }
+
+                    </div>
+                             
+                }
+                else
+                {<br />
+                    <br />}
+
+            </div>
+            <form id="acknowledgementForm">
+                <div class='control-group'>
+                    <b>Acknowledgements</b>
+
+                    <br />
+
+                </div>
+                <div class='control-group' style="margin-top: -10px;" id="divAckCheck">
+                    @if (Model.GetAcknowledgment.ToList() != null && Model.GetAcknowledgment.Count() > 0)
+                    {
+                        foreach (var ack in Model.GetAcknowledgment)
+                        {
+                        <div class="controls">
+
+                            <label class="checkbox" style="float: left; width: 0.5%">
+                                @if (Request["type"] != "libview")
+                                {
+                                    <input type="checkbox"  id="@ack.id" /> 
+                                }
+                                else
+                                {
+                                    <input type="checkbox"  id="@ack.id" checked="checked" /> 
+                                }
+                            </label>
+                            <label class="checkbox" style="float: left; width: 95.5%; padding: 0px; margin-top: 5px; cursor: default;">
+                                @ack.Acknowlegment
+                            </label>
+
+                        </div>
+                                
+                        }
+                    }
+
+
+                </div>
+                <br />
+                <div class='control-group'>
+                    <div class='controls' style="float: right;">
+                        <button class='btn btn-primary' type="button" onclick="close_window()">Close</button>
+                        @if (Request["type"] != "libview")
+                        {
+                            if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], CultureInfo.InvariantCulture)))
+                            {
+                                
+                                    if (string.IsNullOrEmpty(Convert.ToString(Session["parentUserid"], CultureInfo.InvariantCulture)))
+                                    {
+                            <button class='btn btn-primary' type="button" onclick="ValidateStatus()">Mark As Complete</button>
+                                    }
+                                
+                            }
+                        }
+
+                    </div>
+                </div>
+            </form>
+            <br />
+            <br />
+            <br />
+            <hr />
+        </div>
+
+
+
+    </div>
+    <div id="previewdocinner" class='content-box' style="display: none;">
+
+        <div id="pdfDocDiv" style="padding-left: 0px;">
+            <iframe id="pdfdiv" src="" style="width: 100%; height: 600px;"></iframe>
+
+        </div>
+        <div id="videoouterdiv" style="padding-left: 255px;">
+            <video id="video" width="500px" height="337px" controls>
+                <source id="videodiv" src="~/Content/documents/communications/103/movie.mp4" type="video/mp4">
+            </video>
+
+
+        </div>
+
+        <br />
+        <div style="float: left; width: 100%;">
+            <input type="hidden" id="docID" />
+            <a href="#" onclick="ChangeDocStatus()" id="btnCompleteTraining" class="btn btn-primary" style="float: right;">Complete</a>
+            <a href="#" onclick="closeDoc()" id="btnCloseTraining" class="btn btn-primary" style="float: right;">Close</a>
+            <label id="msgComplete" style="color: green; display: none; font-size: large;"><b>This Training Material has been already completed.</b></label>
+
+        </div>
+
+
+    </div>
+
+</div>
+@*    </div>
+</div>*@
+<div class="trans" id="previewdocouter"></div>
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 320px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 77px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+        <div style="clear: both;">
+            <input id="btnSaveOK" class="btn btn-primary" type="button" value="Ok" onclick="ClosePopUp();">
+        </div>
+    </div>
+
+</div>
+@* Saved Pop up End *@
+
+
+
+<div class="popup" id="previewAssesment" style="top: 30px !important; left: 19%;">
+    <div class="Reply-MessageBox" style="display: block; overflow-y: auto; height: auto !important; width: 962px;">
+        <div class="tittle-MessageBox">
+            <span>Assessment</span><a href="#">
+                <img id="btnclosedoc" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" onclick="closeDoc()" /></a>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#lnkinstintro").click(function () {
+            if ($('#lnkinstintro').html() == "▼") {
+                $('#lnkinstintro').text("▲");
+                $('#insintrobox').show();
+            }
+            else if ($('#lnkinstintro').html() == "▲") {
+                $('#lnkinstintro').text("▼");
+                $('#insintrobox').hide();
+            }
+        })
+
+        if ($('#hd_showAssessment').val() == "true") {
+            $('#Assementlink').removeAttr("readonly")
+        }
+        else {
+            $('#Assementlink').attr("readonly", "readonly")
+            $('#Assementlink').css('color', '#787878')
+        }
+
+        $('#Assementlink').click(function () {
+            if ($('#hd_showAssessment').val() == "true") {
+                return true;
+            } else {
+                return false;
+
+            }
+        })
+
+        $('#Assementlink').bind("contextmenu", function (e) {
+
+            return false;
+        });
+
+        $('#documentgrid th:nth-child(1)').css('text-align', 'left');
+        $('#documentgrid td:nth-child(1)').css('text-align', 'left');
+
+        if ($('#hipermission').val() == 'Admin' || $('#hipermission').val() == 'Compliance Manager') {
+
+            $('#documentgrid th:nth-child(4)').show();
+            $('#documentgrid th:nth-child(3)').hide();
+            $('#documentgrid td:nth-child(3)').hide();
+
+        }
+        else {
+            $('#documentgrid th:nth-child(4)').text('Completion Date');
+            $('#documentgrid th:nth-child(4)').show();
+            $('#documentgrid th:nth-child(3)').show();
+        }
+        if ('@Session["superAdmin"]' == '@Session["UserId"]') {
+            $('#documentgrid th:nth-child(4)').text('Completion Date');
+            $('#documentgrid th:nth-child(3)').hide();
+            $('#documentgrid td:nth-child(3)').hide();
+        } else {
+            $('#documentgrid th:nth-child(4)').text('Time Spent');
+
+        }
+
+    });
+
+
+
+    function reloadPage() {
+        location.reload(true);
+    }
+
+    function closeDoc() {
+
+        $('#previewdocinner').fadeOut('slow');
+        $('#previewdocouter').fadeOut('slow');
+
+        location.reload(true);
+    }
+
+    function Assementclick() {
+
+        var assement = $('#hd_showAssessment').val();
+
+        var assdiv = $('#previewAssesment');
+        if (assement != 'false') {
+
+            return true;
+
+        } else {
+
+            return false;
+        }
+
+    }
+
+
+    function close_window() {
+
+        window.open("", "_top", "", "true ");
+        window.close();
+
+    }
+    function ClosePopUp() {
+        
+        if ($('#divStatus').val() == "Completed") {
+
+            window.opener.document.location.reload(true);
+            window.open("", "_top", "", "true ");
+
+            close();
+        }
+        else {
+            $('#divManualInviteOuter').fadeOut("slow");
+            $('#divManualInviteInner').fadeOut("slow");
+           
+            //location.reload(true);
+
+        }
+
+
+    }
+
+    function ValidateStatus() {
+        if (CheckDocumentStatus()) {
+            var chkStatus;
+            var statusval, asstResult;
+            var checkcount = $('#divAckCheck').find('input:checkbox').length;
+
+
+
+            $('#divAckCheck').find('input:checkbox').each(function (idx, ol) {
+                var chk_id = $(ol).attr('id');
+                var checked = $(this).is(':checked');
+                if (checked == undefined) {
+                    chkStatus = false; //return false;
+                }
+                else if (checked == false) {
+                    chkStatus = false;
+                    //return false;
+                }
+                else {
+                    chkStatus = true;
+                }
+
+            })
+            // alert(chkStatus);
+            if (chkStatus) {
+
+                $.ajax({
+                    url: '@Url.Content("~/UserDashboard/SaveMarkAsComplete/")',
+                    type: 'POST',
+                    cache: false,
+                    data: {
+                        accepted: chkStatus
+                    },
+                    success: function (data) {
+
+                        if (data > 0) {
+                            if (data == 1) { ShowMsgPopup('Submitted successfully'); $('#divStatus').val('Completed') }
+                            else if (data == 3) { ShowMsgPopup('Please complete the whole training process.') }
+                            else { ShowMsgPopup('Please complete the whole training process.') }
+                        }
+                        else { ShowMsgPopup('Not Submited Successfully.') }
+
+                    },
+                    error: function (data) {
+
+                    }
+                })
+            }
+            else { ShowMsgPopup('Please check the Acknowledgements First.') }
+        }
+        else { ShowMsgPopup('Please complete the attached documents/video/scorm') }
+    }
+
+    function CheckDocumentStatus() {
+        var checkstatus = true;
+        $('#documentgrid tbody tr').each(function (index) {
+            $(this).find('td').each(function (i) {
+                if (i == 0) {
+                  
+                    if ($(this).html().trim() == "") {
+                        checkstatus = false;
+                        return;
+                    }
+                }
+            })
+        })
+
+        return checkstatus;
+    }
+    function ShowMsgPopup(msg) {
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        $('#dvSaveMsg').text(msg);
+        $('#SuccessMsg').fadeIn("slow");
+    }
+    function CloseChildWindow() {
+        window.opener.document.location.reload(true);
+        window.open("", "_top", "", "true ");
+        close();
+    }
+</script>

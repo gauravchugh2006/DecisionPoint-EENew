@@ -1,0 +1,515 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@using System.Globalization;
+@using PagedList.Mvc;
+@using PagedList;
+
+@using DecisionPointBAL.Implementation
+@{
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    ViewBag.Title = "UserDashBoard : View Document";
+   
+   
+}
+
+
+<script src="~/Scripts/jquery.simplePagination.js"></script>
+<link type="text/css" href="~/Content/css/UserDashboard/simplePagination.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.ui.widget.js"></script>
+
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<style>
+    .grid-width400
+    {
+        width: 350px;
+    }
+
+    .grid-width100
+    {
+        width: 50px;
+    }
+
+    #documentgrid th
+    {
+        padding-left: 0px;
+    }
+
+    .StudentInfo
+    {
+        float: left;
+        font-weight: bold;
+        margin-bottom: 3px;
+        width: 14%;
+    }
+
+    .StudentDetail
+    {
+        float: left;
+        margin-bottom: 3px;
+        width: 86%;
+    }
+
+    #document #assessment li
+    {
+        margin-bottom: 0px;
+    }
+
+    #Instuction ol li
+    {
+        margin-left: -13px;
+    }
+
+    p
+    {
+        display: inline;
+    }
+     ol.d {list-style-type:lower-alpha;padding-left: 23px;}
+        ol.d input
+        {
+            padding:0px;margin:0px;
+        }
+</style>
+
+
+
+
+
+<div id='content'>
+
+    <div class='container' style="margin-top: -30px;">
+        <div class='content-box'>
+
+            <div id='document'>
+                <h3>Assessment</h3>
+                <div class="control-group" style="width: 100%; line-height: 21px;">
+                    <div style="float: left; font-weight: bold; margin-bottom: 3px; width: 40%;">
+                        <br />
+                        <br />
+
+                        @if (Model.GetInstructions.ToList() != null && Model.GetInstructions.Count() > 0)
+                        { 
+                            <label class="control-label">
+                                <b style="float: left; margin-left: 5px; margin-bottom: -10px;">Instructions/Introduction</b>
+                            </label>
+                           
+                            <br />
+                              
+                            <div id="Instuction" style="margin-left: 18px;">
+                                <ol style="list-style-type: none; margin: 0;">
+                                    <li>
+                                        <label class="Instructions">@Html.Raw(HttpUtility.HtmlDecode(Model.Instructions))</label>
+                                    </li>
+                                </ol>
+                                <label class="control-label" style="margin-top: 10px; margin-left: -13px;"><b>Test Rules</b></label>
+                                <ol style="list-style-type: none; margin: 0;">
+
+                                    @foreach (var inst in Model.GetInstructions)
+                                    {
+                                   
+                                        <li>
+                                            <input type="hidden" id="hiAttempts" value="@inst.Attempts" />
+                                            <label class="Instructions">Number of attempts allowed  :  @inst.Attempts</label></li>
+                                        if (inst.ReqReTest == true)
+                                        {
+                                        <li>
+                                            <label class="Instructions">Require to retake test if failed </label>
+                                        </li>
+                                      
+                                        }
+                                        else
+                                        {
+
+                                        }
+
+                                        if (inst.PassingScore != null)
+                                        {
+                                   
+                                        <li>
+                                            <label class="Instructions">Required score to pass is  :   @inst.PassingScore%</label></li>
+                                        }
+                                        else
+                                        { }
+
+
+                                    }
+
+                                    <li>
+                                        <label class="Instructions">You may not exit test before completed. </label>
+                                    </li>
+                                </ol>
+                            </div>
+                        }
+
+
+                    </div>
+                    <div style="float: left; margin-bottom: 3px; width: 60%;">
+                    </div>
+                </div>
+                <div style="clear: both; width: 100%; height: 10px;"></div>
+                <div id="assessment" class="tab-pane fade active in " style="margin: 10px 30px 10px 5px;">
+
+
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        <table id="Question_Tbl">
+
+                            @if (Model.GetAssesmentViewList.ToList() != null && Model.GetAssesmentViewList.Count() > 0)
+                            {
+                                int i = 1;
+
+                                foreach (var item in Model.GetAssesmentViewList)
+                                {
+                            
+                                <tr>
+                                    <td colspan="3">
+                                        <label>
+
+                                            @i.ToString().  @Html.Raw(HttpUtility.HtmlDecode(@item.Question))</label>
+
+
+
+
+                                        <ol style="list-style: lower-alpha; padding-left: 20px;" id="@item.Id">
+                                            @foreach (var items in Model.GetAssesmentAnsViewList.Where(x => x.QuestionId == item.Id))
+                                            {
+                                                <li>
+
+                                                      <input type="radio" name="@item.Id" id="@items.Id" value="@items.Id"   />
+                                                    <label style="display:inline-block;">@Html.Raw(HttpUtility.HtmlDecode(items.Answer))</label>
+                                                </li>
+                                            }
+
+                                        </ol>
+
+
+                                    </td>
+                                </tr>
+                       
+                                            i++;
+                                }
+
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 530px;">
+                                            <div style="margin-left: 195px;">No Assesment Available</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+                        <div id="Pagination" class="pagination" style="margin-left: 10px;">
+
+                            @{
+                             
+                            if (@Model.GetAssesmentViewList.Count() > 5)
+                            {
+                                int countlist = @Model.GetAssesmentViewList.Count();
+                                int divisionlist = countlist / 5;
+                                int remainder = countlist % 5;
+                                if (remainder == 0)
+                                    remainder = 0;
+                                else
+                                    remainder = 1;
+
+                                int total = divisionlist + remainder;
+                            
+                                <ul>
+                                    @for (int i = 1; i <= total; i++)
+                                    {
+                                        <li><a style="cursor: pointer;">@i</a></li>
+                                    }
+
+                                </ul>
+                            
+                        
+                            }
+                                   
+                            }
+
+                        </div>
+                       
+                    }
+                    <div class='control-group' style="margin-bottom: 70px;">
+                        <div class='controls' style="float: right;">
+                             @if(Request["type"]!="libview")
+                              {
+                            if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"],CultureInfo.InvariantCulture)))
+                                 {
+                                     
+                                         if (string.IsNullOrEmpty(Convert.ToString(Session["parentUserid"], CultureInfo.InvariantCulture)))
+                                     {
+                                <button type="submit" class="btn btn-primary" onclick="PassJSONToAction()">Submit</button>
+                                     }
+                                
+                                }
+                                }
+
+                            <button onclick="close_window()" class="btn btn-primary">Close</button>
+
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+
+
+
+            </div>
+
+            <div style="display: none;" id="SuccessMsg">
+                <h3>Thank you</h3>
+                <h5>Your Assessment submitted successfully.</h5>
+                <button onclick="close_window()" class="btn btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    @* Saved Pop up *@
+    <div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+    <div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+        <div id="Confirmdiv" style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+            <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+            <div style="float: left; width: 50px;">
+            </div>
+            <div style="clear: both;" id="DivOkBtn">
+                <input id="btnSaveOK" class="btn btn-primary" type="button" value="Ok" onclick="ClosePopUp();">
+            </div>
+        </div>
+
+    </div>
+    @* Saved Pop up End *@
+</div>
+
+<script>
+
+
+    function close_window() {
+        window.open("", "_top", "", "true ");
+        window.close();
+
+    }
+
+    function reloadPage() {
+        location.reload(true);
+    }
+
+
+    $(document).ready(function () {
+
+        var newRowStart = 0;
+        var rowCount = $('#Question_Tbl tr').length;
+        var rowsToShow = 5;
+        var $rows = $("#Question_Tbl tr");
+        var i = rowCount - 5
+        while (rowCount >= 5) {
+            $rows.eq(rowCount).hide();
+            rowCount--;
+        }
+
+    });
+
+
+
+    $('#Pagination').find(' ul li').find('a').click(function () {
+        var value = $(this).text();
+
+        var rowCount = $('#Question_Tbl tr').length;
+        var division = parseInt(rowCount / 5);
+        var moduleDiv = rowCount % 5;
+        if (moduleDiv == 0) {
+            moduleDiv = 0;
+        }
+        else {
+            moduleDiv = 1;
+        }
+        var pagenumber = division + moduleDiv;
+        var i = 0;
+        if (value == 1) {
+            i = i * 5 + 1;
+        }
+        else {
+            i = (value - 1) * 5 + 1;
+        }
+
+        var rows = $("#Question_Tbl tr");
+
+        if (value == 1) {
+            rows.slice(0, (i - 1) + 5).show();
+            rows.slice((i - 1) + 5, rowCount).hide();
+        }
+        else if (pagenumber == value) {
+            rows.slice(i - 1, (i - 1) + 5).show();
+            rows.slice(0, i - 1).hide();
+
+        }
+        else {
+            rows.slice((i - 1) - 5, (i - 1)).hide();
+            rows.slice((i - 1), (i - 1) + 5).show();
+            rows.slice((i - 1) + 5, rowCount).hide();
+
+
+        }
+
+    });
+
+    function CreateJSO() {
+
+        var jsonObj = [];
+
+        $('#Question_Tbl tbody tr ol').each(function (idx, ol) {
+            var ol_id = $(ol).attr('id');
+            var answerid = 0;
+            var checked = $('input[name=' + ol_id + ']:checked').val();
+            if (checked == undefined) {
+                checked = 0;
+            }
+            var item = {};
+            item["QuestionId"] = ol_id;
+            item["GivenAnsId"] = checked;
+            jsonObj.push(item);
+
+        })
+        var jsonD = JSON.stringify(jsonObj);
+        return JSON.stringify(jsonObj);
+    }
+
+    function PassJSONToAction() {
+        var tr_length = $('#Question_Tbl tbody tr ol').length;
+        
+        if (tr_length <= 0) {
+            $('#divManualInviteOuter').show();
+            $('#divManualInviteInner').show();
+            $('#DivOkBtn').show();
+            $('#dvSaveMsg').text('No Assessment Available.');
+        }
+        else {
+            var data = CreateJSO();;
+           // alert("data"+data);
+            var attempts = $('#hiAttempts').val();
+            if (attempts == undefined) { attempts = 1; }
+           // alert(attempts);
+            if (attempts == "unlimited") { attempts = 0; }
+            $.ajax({
+                url: '@Url.Content("~/UserDashboard/SaveAssessmentAnswers")',
+                 type: 'POST',
+                 cache: false,
+                 data: {
+
+                     JsonData: data,
+                     Attempts: parseInt(attempts)
+                 },
+
+                 success: function (data) {
+                  //  alert(data);
+                     if (data > 0) {
+
+                         if (data == 2) {
+                             $('#divManualInviteOuter').show();
+                             $('#divManualInviteInner').show();
+                             $('#divManualInviteInner').css('width', '300px').css('height', '70px');
+                             $('#Confirmdiv').css('height', '70px');
+                             $('#DivOkBtn').show();
+                             $('#dvSaveMsg').text('Your number of attempts is completed!');
+                             //setTimeout(function () {
+                             //    $('#divManualInviteOuter').hide();
+                             //    $('#divManualInviteInner').hide();
+                             //    window.parent.location.reload(true);
+                             //    window.open("", "_top", "", "true ");
+                             //    window.close();
+                             //    window.opener.open("", "_top", "", "true ");
+                             //    window.opener.close();
+                                 
+                             //}, 1000);
+                            
+                         }
+                         else if (data == 1) {
+
+                             SaveAsst();
+                         }
+                         else if (data == 3) {
+                             $('#divManualInviteOuter').show();
+                             $('#divManualInviteInner').show();
+                             $('#divManualInviteInner').css('width', '300px').css('height', '70px');
+                             $('#Confirmdiv').css('height', '70px');
+                             $('#DivOkBtn').show();
+                             $('#dvSaveMsg').text('Please complete assessment first.');
+
+                         }
+
+
+                     }
+                 },
+                 beforeSend: function (jqXHR, obj) {
+                     $('#divManualInviteOuter').show();
+                     $('#divManualInviteInner').show();
+                     $('#DivOkBtn').hide();
+                     $('#dvSaveMsg').text('Please wait...');
+
+                 },
+                 complete: function (jqHRX, obj) {
+
+                 },
+                 error: function (data) {
+                 }
+             })
+         }
+
+
+     }
+
+
+
+     function SaveAsst() {
+         var attempts = $('#hiAttempts').val();
+         if (attempts == undefined) { attempts = 1; }
+         if (attempts == "unlimited") { attempts = 0; }
+         var tr_len = $('#Question_Tbl tbody tr ol').length;
+
+         $.ajax({
+             url: '@Url.Content("~/UserDashboard/SaveAsstAtempts/")',
+             cache: false,
+             type: 'POST',
+
+             data: {
+                 attempts: parseInt(attempts)
+             },
+             success: function (data) {
+
+                 if (data > 0) {
+                     if (data == 1) {
+                         window.open('@Url.Content("~/UserDashboard/SaveAsst/")', '_parent');
+                     }
+                     else if (data == 2) {
+                         $('#divManualInviteOuter').show();
+                         $('#divManualInviteInner').css('width', '300px').css('height', '70px');
+                         $('#Confirmdiv').css('height', '70px');
+                         $('#divManualInviteInner').show();
+                         $('#DivOkBtn').show();
+                         $('#dvSaveMsg').text('You have taken a retest!');
+
+                     }
+                 }
+             },
+
+             error: function (data) {
+             }
+         });
+
+     }
+     function ClosePopUp() {
+         $('#divManualInviteOuter').fadeOut("slow");
+         $('#divManualInviteInner').fadeOut("slow");
+
+     }
+
+</script>
+
+
+

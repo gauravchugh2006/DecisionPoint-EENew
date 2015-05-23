@@ -1,0 +1,308 @@
+﻿@model DecisionPoint.Models.MyDashBoard
+@using DecisionPointBAL.Implementation.Response;
+@using DecisionPointCAL;
+@using DecisionPointCAL.Common;
+@using System.Globalization;
+@{
+    ViewBag.Title = "MyDashBoard";
+
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    bool chkmyprofilealertstatus = false;
+    bool chkmycommalertstatus = false;
+
+    bool chkadminalertstatus = false;
+    bool chkviewicprofilestatus = false;
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", CultureInfo.InvariantCulture);
+}
+
+@Styles.Render("~/bundles/fullcalendercss")
+@Scripts.Render("~/bundles/fullcalenderjs")
+<script src="~/Scripts/dateformat.min.js"></script>
+<style>
+    .fc-header {
+        width: 90%;
+    }
+</style>
+<div>
+    <div id="alertdiv" class="left-alert">
+
+        <h3>Alerts</h3>
+        @if (!Convert.ToString(Session["UserType"], CultureInfo.InvariantCulture).Equals(Shared.NonClient))
+        {
+            chkviewicprofilestatus = true;
+            if (!object.Equals(Model.ProfileDetailsAlerts, null) || !object.Equals(Model.JCRDetailsAlerts, null))
+            {
+
+                <div class="alert-box" id="profile">
+                    <div><b><a id="myprofilealerts" onclick="showalertsdiv(this.id,'myprofilealertdiv')">▼</a> My Profile</b></div>
+                    <div style="display: none;" id="myprofilealertdiv" class="scrolling-panel">
+                        @if (!object.Equals(Model.ProfileDetailsAlerts, null))
+                        {
+                            if (Model.IsServiceApply)
+                            {
+                                if (Model.ProfileDetailsAlerts.Select(x => x.Serviecdetail).FirstOrDefault() == 0)
+                                {
+                                    chkmyprofilealertstatus = true;
+                                    if (Convert.ToString(Session["UserType"]).Equals("IC"))
+                                    {
+                                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg1 <a href="@Url.Content("~/UserDashBoard/ICProfile")">services</a> </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg1 <a href="@Url.Content("~/UserDashBoard/MyProfileAction")">services</a> </div>}
+                                }
+                            }
+                            if (Model.IsCoverageAreaApply)
+                            {
+                                if (Model.ProfileDetailsAlerts.Select(x => x.CoverageAreadetail).FirstOrDefault() == 0)
+                                {
+                                    chkmyprofilealertstatus = true;
+                                    if (Convert.ToString(Session["UserType"]).Equals("IC"))
+                                    {
+                                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg1 <a href="@Url.Content("~/UserDashBoard/ICProfile")">coverage area</a></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg1 <a href="@Url.Content("~/UserDashBoard/MyProfileAction")">coverage area</a></div>}
+                                }
+                            }
+                        }
+                        @if (!object.Equals(Model.JCRDetailsAlerts, null))
+                        {
+                            if (Model.JCRDetailsAlerts.Count > 0)
+                            {
+                                chkmyprofilealertstatus = true;
+                                <div class="alert-box">
+                                    @DecisionPointR.MyDashBoardMyProfileMsg4
+                                    <a class="jcrreview" onmouseover="showdiv('jcrdetails')" onmouseout="hidediv('jcrdetails')" href="@Url.Content("~/UserDashBoard/MyProfileAction")">@Model.JCRDetailsAlerts.Count</a>
+
+                                    <div class="popup jcrdetails" onmouseover="showdiv('jcrdetails')" onmouseout="hidediv('jcrdetails')" style="left: 21%; margin-top: -7px;">
+                                        <div class="jcr-popup-box">
+
+                                            @foreach (var item in Model.JCRDetailsAlerts)
+                                            {
+                                                <span>
+                                                    @item.title
+                                                <br />
+                                            </span>
+                                            }
+                                        </div>
+                                    </div>
+                                    @DecisionPointR.MyDashBoardMyProfileMsg5
+
+                                </div>
+                            }
+                        }
+                        @if (!object.Equals(Model.LicAndInsAsDetails, null))
+                        {
+                            if (Model.JCRDetailsAlerts.Count > 0)
+                            {
+                                chkmyprofilealertstatus = true;
+                                foreach (var item in Model.LicAndInsAsDetails)
+                                {
+
+                                    if (Model.LicAndInsAsDetails.Where(x => x.reqiuredDocId == item.reqiuredDocId && (x.IsCompleted == 2 || x.IsCompleted == 0)).Count() > 0)
+                                    {
+                                        <div class="alert-box"><a href="@Url.Content("~/UserDashBoard/ICProfile")"><b>@item.reqiuredDoctName</b></a> @DecisionPointR.MyProfileOutstandingActionMsg3 @DecisionPointR.MyProfileOutstandingActionMsg2</div>
+                                    }
+
+
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+            if (!object.Equals(Model.IncomFromCompCommAlerts, null))
+            {
+                if (Model.IncomFromCompCommAlerts.Count > 0)
+                {
+                    chkmycommalertstatus = true;
+                    <div class="alert-box" id="mycommunication">
+
+                        <div><b><a id="mycommalerts" onclick="showalertsdiv(this.id,'mycommalertdiv')">▼</a> My Communication</b></div>
+                        <div style="display: none;" id="mycommalertdiv" class="scrolling-panel">
+
+                            @foreach (var item in Model.IncomFromCompCommAlerts)
+                            {
+
+                                <div class="alert-box">
+                                    <span style="font-weight: bold;"><a href="@Url.Content("~/UserDashBoard/DocumentAction/All")">@item.DocType</a></span>
+                                    <br />
+                                    @DecisionPointR.MyDashBoardCommunicationMsg1 @if (item.DueDate != defaultdate)
+                                    { <span>@DecisionPointR.MyDashBoardCommunicationMsg2</span>
+                                        @item.DueDate.Value.Date.ToShortDateString()
+                                    }
+                                    else
+                                    {
+                                        <span>@DecisionPointR.MyDashBoardCommunicationMsg3</span>
+                                    }
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>}
+            }
+
+            if (!object.Equals(Model.IncomInviteAlerts, null))
+            {
+                if (Model.IncomInviteAlerts.Count > 0)
+                {
+                    chkadminalertstatus = true;<div class="alert-box" id="invite">
+
+                        <div><b><a id="myinvitesalerts" onclick="showalertsdiv(this.id,'myinvitesalertdiv')">▼</a> My Invites</b></div>
+
+                        <div class="alert-box scrolling-panel" style="display: none;" id="myinvitesalertdiv">
+                            @DecisionPointR.MyDashBoardMyProfileMsg4
+                            <a class="inviteview" onmouseover="showdiv('invitedetails')" onmouseout="hidediv('invitedetails')" href="@Url.Content("~/Invitation/ICInvites/All?type=1")">@Model.IncomInviteAlerts.Count</a>
+
+                            <div class="popup invitedetails" onmouseover="showdiv('invitedetails')" onmouseout="hidediv('invitedetails')" style="left: 21%; margin-top: -7px;">
+                                <div class="jcr-popup-box">
+
+                                    @foreach (var item in Model.IncomInviteAlerts)
+                                    {
+                                        <span>
+                                            @DecisionPointR.MyDashBoardAdminMsg7 @item.Contact (@item.EmailId) on @string.Format("{0:MMM dd, yyyy}",
+                                                                                    item.Date);
+                                            <br />
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            @DecisionPointR.MyDashBoardAdminMsg2
+
+                        </div>
+
+
+                    </div>}
+            }
+
+        }
+        else
+        {
+            chkmyprofilealertstatus = true;
+            chkadminalertstatus = true;
+            chkmycommalertstatus = true;
+        }
+
+        @* check alerts status*@
+        @if (!chkmyprofilealertstatus && !chkmycommalertstatus && !chkadminalertstatus && !chkviewicprofilestatus)
+        {
+            <div class="alert-box">
+                No Alerts !
+            </div>
+        }
+    </div>
+
+    <div class="claender-wraper">
+        <div id="calendar" style="width: 100%;"></div>
+        <div id="datepicker"></div>
+    </div>
+</div>
+
+<input type="hidden" id="selectedateval" value="@Model.SelectedDate" />
+<script>
+    $(document).ready(function () {
+        SetAlertVisibility();
+        ShowHideTabs('mycalender');
+
+        var calendar = $('#calendar');
+        calendar.fullCalendar({
+            header: {
+                left: 'title',
+                center: '',
+                right: 'today prev,next'
+            },
+            titleFormat: {
+                day: 'mmm dd, yyyy'
+            },
+            dayClick: function (date, jsEvent, view) {
+
+                $('.fc-header-title h2').html(dateFormat(new Date(date), 'mmm dd, yyyy'));
+                $('#calendar').fullCalendar('select', date);
+                showalerts(dateFormat(new Date(date), 'mm/dd/yyyy'));
+            }
+
+        })
+        var Sdatenew = new Date($('#selectedateval').val());
+
+        $('#calendar').fullCalendar('gotoDate', Sdatenew);
+        //Date Change On click on Next button
+        $('.fc-button-next').click(function () {
+            var date = $("#calendar").fullCalendar('getDate');
+            var myDate = dateFormat(new Date(date), 'mm/dd/yyyy');
+            showalerts(myDate);
+        })
+        //Date Change On click on Prev button
+        $('.fc-button-prev').click(function () {
+            var date = $("#calendar").fullCalendar('getDate');
+            var myDate = dateFormat(new Date(date), 'mm/dd/yyyy');
+
+            showalerts(myDate);
+
+        })
+
+    });
+    function SetAlertVisibility() {
+        if ($('#myprofilealertdiv').length) {
+
+            if ($('#myprofilealertdiv').html().trim() == "") {
+
+                $('#profile').hide();
+            }
+        }
+        if ($('#mycommalertdiv').length) {
+            if ($('#mycommalertdiv').html().trim() == "") {
+                $('#mycommunication').hide();
+            }
+        }
+
+        if ($('#myinvitesalertdiv').length) {
+            if ($('#myinvitesalertdiv').html().trim() == "") {
+                $('#myinvitesalertdiv').hide();
+            }
+        }
+
+    }
+
+    function showalerts(date) {
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/MyDashBoard/")",
+            data: { 'date': date },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (result) {
+
+                $('#alertdiv').html($(result).find('#alertdiv').html().trim());
+                SetAlertVisibility();
+
+            },
+            error: function (result) {
+                alert('error');
+            }
+        });
+    }
+
+    function showalertsdiv(id, divid) {
+
+        if ($('#' + id).html() == "▼") {
+            $('#' + id).html("▲");
+            $('#' + divid).show();
+        }
+        else {
+            $('#' + divid).hide();
+            $('#' + id).html("▼");
+        }
+    }
+    function showdiv(divid) {
+        $('.' + divid).show();
+    }
+    function hidediv(divid) {
+        $('.' + divid).hide();
+    }
+</script>
+

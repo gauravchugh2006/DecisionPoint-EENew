@@ -1,0 +1,503 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+
+@{
+    ViewBag.Title = "ManualInvitation";
+}
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap.min.css" />
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap-datetimepicker.min.css" />
+@Styles.Render("~/Content/css/UserDashboard")
+@Scripts.Render("~/bundles/dashboard")
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<style>
+    .ui-autocomplete
+    {
+        max-height: 150px;
+        overflow-y: auto;
+       
+        overflow-x: hidden;
+        
+        padding-right: 20px;
+        font-size: 11px;
+    }
+  
+    * html .ui-autocomplete
+    {
+        height: 150px;
+    }
+
+    .inputauto
+    {
+        width: 135px!important;
+    }
+
+    .errorClass
+    {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+
+<div id='content'>
+    <div class='container'>
+        <div class='content-box'>
+            <div class='row'>
+                <div class='span7'>
+                    <img src="~/Content/images/logo.png" />
+                </div>
+
+            </div>
+            <div style="border: 1px solid #e1e1e1; box-shadow: 4px 4px 4px #E1E1E1;">
+                <div class='row'>
+                    <div class='span5' style="margin-top: 11px; margin-left: 82px !important;">
+                        <h3 style="font-weight: bold;">Manual Invitation</h3>
+
+                    </div>
+                </div>
+                <hr />
+                @*Staff*@
+                <div class='tabbable'>
+                    <div class='tab-content' style="padding-left: 24px !important;">
+
+                        <div class="cnt_txt paddingleft15">Staff</div>
+                        <table id="tblstaff" class="table table-hover">
+                            <thead style="">
+                                <tr>
+                                    <th style="margin-left: 10px;">First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Title</th>
+                                    <th>Role</th>
+                                    <th>Permission</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Html.HiddenFor(model => model.staffFName, new { id = "staffFName" })
+                                    
+                                        <input class='inputauto' placeholder='First Name' type='text' name="fname" />
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(model => model.staffLName, new { id = "stafflname" })
+                                       
+                                        <input class='inputauto' placeholder='Last Name' type='text' name="lname" />
+                                    </td>
+                                    <td style="width:130px">
+                                        @Html.HiddenFor(model => model.staffTitleId, new { id = "staffTitleId" })
+                                        @Html.DropDownList("ddTitle", new SelectList(Model.titleDetails, "id", "titleName"), new { @name = "ddTitle",  @style = "width:130px;"})
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(model => model.staffRoleId, new { id = "staffRoleId" })
+                                        @Html.DropDownList("ddRole", new SelectList(Model.roleDetails, "RoleId", "RoleName"), new { @style = "width:100px;" })
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(model => model.staffPermissionId, new { id = "staffPermissionId" })
+                                        @Html.DropDownList("ddPermission", new SelectList(Model.permissionDetails, "permissionId", "permissionName"), new { @style = "width:100px;" })
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(model => model.staffEmailId, new { id = "staffEmailId" })
+                                      
+                                        <input class='inputauto' placeholder='Email Id' type='text' name="emailid" />
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <div id="addnewstaff" class="paddingleft15">
+                            <a style="cursor: pointer">Add another</a>
+                        </div>
+                    </div>
+                </div>
+                @*Vendor With ID*@
+                <div class='tabbable'>
+                    <div class='tab-content' style="padding-left: 24px !important;">
+                        <div class="cnt_txt paddingleft15">Vendor With ID</div>
+                        <table id="tblvendorwithid" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Company ID</th>
+                                    <th>Flow</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">
+                                      
+                                        <input class='compId' id="CmpId0" placeholder='Company ID' type='text' style="width: 250px !important;" name="companyid" />
+                                    </td>
+                                    <td>
+                                        @Html.DropDownList("ddFlow", new SelectList(Model.flowDetails, "flowId", "flowName"), new { @style = "width:250px;" })
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <div id="addnewvendorwithid" class="paddingleft15">
+                            <a id="ff" style="cursor: pointer">Add another</a>
+                        </div>
+                    </div>
+                </div>
+
+                @*Vendor With unknown ID*@
+                <div class='tabbable'>
+                    <div class='tab-content' style="padding-left: 24px !important;">
+                        <div class="cnt_txt paddingleft15">Vendor With Unknown ID</div>
+                        <table id="tblvendorwithunknownid" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Flow</th>
+                                    <th>Contact First Name</th>
+                                    <th>Last Name </th>
+                                    <th>E-mail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                      
+                                        <input class='inputauto' placeholder='Company Name' type='text' name="companyname" />
+                                    </td>
+                                    <td style="width:150px;">
+                                        @Html.DropDownList("ddFlow", new SelectList(Model.flowDetails, "flowId", "flowName"), new { @name = "ddFlow",@style="width:150px" })
+                                    </td>
+                                    <td>
+                                       
+                                        <input class='inputauto' placeholder='Contact First Name' type='text' name="fname" />
+                                    </td>
+                                    <td>
+                                       
+                                        <input class='inputauto' placeholder='Last Name' type='text' name="lname" />
+                                    </td>
+
+                                    <td>
+                                       
+                                        <input class='inputauto' placeholder='Email Id' type='text' name="emailid" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div id="addnewvendorwithunknownid" class="paddingleft15">
+                            <a style="cursor: pointer">Add another</a>
+                        </div>
+                      <span style="padding-top:14px;float:left;width:100%;">&nbsp;</span>
+                        <span ><a id="btninvite" class="btn btn-primary" title="Save Title">Send Invite</a></span>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* Staff *@
+        <script id="ddtitle" type="text/template">
+         @Html.DropDownList("ddTitle", new SelectList(Model.titleDetails, "id", "titleName"), new { @style = "width:130px;" })
+        </script>
+        <script id="ddrole" type="text/template">
+              @Html.DropDownList("ddRole", new SelectList(Model.roleDetails, "RoleId", "RoleName"), new { @style = "width:100px;" })
+        </script>
+        <script id="ddpermission" type="text/template">
+         @Html.DropDownList("ddPermission", new SelectList(Model.permissionDetails, "permissionId", "permissionName"), new { @style = "width:100px;" })
+        </script>
+        @*Vendor  Without unknown ID*@
+        <script id="ddflow" type="text/template">
+           @Html.DropDownList("ddFlow", new SelectList(Model.flowDetails, "flowId", "flowName"), new { @name = "ddFlow",@style="width:150px" })
+        </script>
+        @*Vendor With ID *@
+        <script id="ddwithidFlow" type="text/template">
+           @Html.DropDownList("ddFlow", new SelectList(Model.flowDetails, "flowId", "flowName"), new { @style = "width:150px;" })
+        </script>
+
+    <div class="confirmationdivmain" style="display: none"></div>
+    <div class="confirmationdivinner" style="display: none;">
+        <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+            <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvMsg"></div>
+
+            <div style="float: left; width: 50px;">
+                <input type="button" id="btnok" class="btn btn-primary" value="Ok">
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        
+    </div>
+
+ 
+           
+
+        <script type="text/javascript">
+            //Staff
+            $(document).ready(function () {
+              
+                $("#addnewstaff").click(function () {
+                    if (validateAddStaff() == true) {
+                        var template = '<tr><td> <input class="inputauto" placeholder="First Name" type="text" name="fname" /></td><td><input class="inputauto" placeholder="Last Name" type="text" name="lname" /></td><td>' + ($("#ddtitle").html()) + '</td><td>' + ($("#ddrole").html()) + '</td><td>' + ($("#ddpermission").html()) + '</td><td><input class="inputauto" placeholder="Email Id" type="text" name="emailid" /></td><td class="removeStaff" ><img  src="../Content/images/delete.png" /></td></tr>';
+                        $('#tblstaff tr:last').after(template);
+                    }
+
+                })
+                $('#tblstaff ').on('click', 'tr td', function () {
+                    if ($(this).index() == 6) {
+                        if (confirm("Are you sure to remove this row?")) {
+                            $(this).parent('tr').remove();
+                        }
+                    }
+                });
+                
+                //Vendor With ID
+                $("#addnewvendorwithid").click(function () {
+                    if (validateAddvendorwithId() == true) {
+                        var rowCount = $('#tblvendorwithid tbody tr').length;
+                        $('#tblvendorwithid tr:last').after('<tr><td style="width:200px;"> <input id="CmpId' + rowCount + '" class="compId" placeholder="Company ID" type="text" style="width:250px !important;" name="companyid" /></td><td>' + ($("#ddwithidFlow").html()) + '</td><td class="removeid" ><img  src="../Content/images/delete.png" /></td></tr>');
+                        
+                    }
+                })
+                $('#tblvendorwithid ').on('click', 'tr td', function () {
+                    if ($(this).index() == 2) {
+                        if (confirm("Are you sure to remove this row?")) {
+                            $(this).parent('tr').remove();
+                        }
+                    }
+                });
+                //Vendor With unkonown ID
+                $("#addnewvendorwithunknownid").click(function () {
+                    if (validateAddvendorwithoutId() == true) {
+                        $('#tblvendorwithunknownid tr:last').after('<tr><td> <input class="inputauto" placeholder="Company Name" type="text" name="companyid" /></td><td>' + ($("#ddflow").html()) + '</td><td> <input class="inputauto" placeholder="Contact First Name" type="text" name="fname" /></td><td> <input class="inputauto" placeholder="Last Name" type="text" name="lname" /></td><td><input class="inputauto" placeholder="Email ID" type="text" name="emailid" /></td><td class="removeWithoutId" ><img  src="../Content/images/delete.png" /></td></tr>');
+                    }
+                })
+                $('#tblvendorwithunknownid ').on('click', 'tr td', function () {
+                    if ($(this).index() == 5) {
+                        if (confirm("Are you sure to remove this row?")) {
+                            $(this).parent('tr').remove();
+                        }
+                    }
+                });
+
+            })
+            function validateAddStaff() {
+                var ret = false;
+                $('#tblstaff tr').each(function (index) {
+
+                    if (index != 0) {
+                        var firstName = $(this).find('input[name="fname"]');
+                        var lastName = $(this).find('input[name="lname"]');
+                        var emailId = $(this).find('input[name="emailid"]');
+
+                        if (firstName.val() == null || firstName.val() == "") {
+                            firstName.addClass('errorClass');
+                            ret = false;
+                        }
+                        else if (firstName.val() != null || firstName.val() != "") {
+                            firstName.removeClass('errorClass');
+                            ret = true;
+                        }
+                        if (lastName.val() == null || lastName.val() == "") {
+                            lastName.addClass('errorClass');
+                            ret = false;
+                        }
+                        else if (lastName.val() != null || lastName.val() != "") {
+                            lastName.removeClass('errorClass');
+                            ret = true;
+                        }
+                        if (emailId.val() == null || emailId.val() == "") {
+                            emailId.addClass('errorClass');
+                            ret = false;
+                        }
+                        else if (emailId.val() != null || emailId.val() != "") {
+                           
+                            emailId.removeClass('errorClass');
+                            ret = true;
+                        }
+                    }
+
+                });
+                return ret;
+            }
+
+            function validateAddvendorwithId() {
+                var str = false;
+                $('#tblvendorwithid tr').each(function (index) {
+                    if (index != 0) {
+                        var companyId = $(this).find('input[name="companyid"]');
+
+
+                        if (companyId.val() == null || companyId.val() == "") {
+                            companyId.addClass('errorClass');
+                            str = false;
+                        }
+                        else if (companyId.val() != null || companyId.val() != "") {
+                            companyId.removeClass('errorClass');
+                            str = true;
+                        }
+
+                    }
+                });
+                return str;
+            }
+
+            function validateAddvendorwithoutId() {
+                var res = false;
+                $('#tblvendorwithunknownid tr').each(function (index) {
+                    if (index != 0) {
+                        var companyname = $(this).find('input[name="companyname"]');
+                        var firstName = $(this).find('input[name="fname"]');
+                        var lastName = $(this).find('input[name="lname"]');
+                        var email = $(this).find('input[name="emailid"]');
+
+
+                        if (companyname.val() == null || companyname.val() == "") {
+                            companyname.addClass('errorClass');
+                            res = false;
+                        }
+                        else if (companyname.val() != null || companyname.val() != "") {
+                            companyname.removeClass('errorClass');
+                            res = true;
+
+                        }
+                        if (firstName.val() == null || firstName.val() == "") {
+                            firstName.addClass('errorClass');
+                            res = false;
+                        }
+                        else if (firstName.val() != null || firstName.val() != "") {
+                            firstName.removeClass('errorClass');
+                            res = true;
+                        }
+                        if (lastName.val() == null || lastName.val() == "") {
+                            lastName.addClass('errorClass');
+                            res = false;
+                        }
+                        else if (lastName.val() != null || lastName.val() != "") {
+                            lastName.removeClass('errorClass');
+                            res = true;
+
+                        }
+                        if (email.val() == null || email.val() == "") {
+                            email.addClass('errorClass');
+                            res = false;
+                        }
+                        else if (email.val() != null || email.val() != "") {
+                            email.removeClass('errorClass');
+                            res = true;
+                        }
+
+                    }
+                });
+                return res;
+            }
+
+          
+            $(".compId").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "../CompanyDashboard/GetCompanyId",
+                        type: "GET",
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.CompanyId, value: item.Id };
+                            }))
+
+                        },
+                        error: (function (data) {
+                            $('.compId').val('');
+                        })
+                    })
+                },
+                select: function (event, ui) {
+                    $('.compId').val(ui.item.label);
+
+                    return false;
+                }, minLength: 1,
+                messages: {
+                    noResults: "", results: ""
+                }
+
+            });
+            function getCompanyId(txtId) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '../CompanyDashboard/GetCompanyId',
+                    success: function (data) {
+                        var abc = data;
+                        $('#' + txtId).val(abc);
+                    },
+                    async: false
+                });
+            }
+
+            //Send Invitaion
+            $("#btninvite").click(function () {
+
+                //Staff
+                if (validateAddStaff() == true) {                   
+                    $('#tblstaff tr').each(function (index) {
+                        if (index != 0) {
+                            var firstName = $(this).find('input[name="fname"]').val();
+                            var lastName = $(this).find('input[name="lname"]').val();
+                            var titleId = $(this).find('select[id="ddTitle"]').val();
+                            var roleId = $(this).find('select[id="ddRole"]').val();
+                            var permissionId = $(this).find('select[id="ddPermission"]').val();
+                            var emailId = $(this).find('input[name="emailid"]').val();
+                            var staffurl = '@Url.Action("SendInvitation", "CompanyDashBoard")';
+                            $.get(staffurl, { 'firstName': firstName, 'lastName': lastName, 'titleId': parseInt(titleId), 'roleId': parseInt(roleId), 'permissionId': parseInt(permissionId), 'emailId': emailId, 'companyId': '0', 'companyName': '', 'flowId': 0, 'type': 'staff' }, function (result) {
+                                if (result > 0) {
+                                    $('.confirmationdivmain').show();
+                                    $('.confirmationdivinner').show();
+                                    $('#dvMsg').text('Invitaion send sucessfully');
+                                }
+                                
+                            });
+                        }
+                    });
+                }
+
+                //Vendor with ID
+                if (validateAddvendorwithId() == true) {
+                    $('#tblvendorwithid tr').each(function (index) {
+                        if (index != 0) {
+                            var companyId = $(this).find('input[name="companyid"]').val();
+                            var flowid = $(this).find('select[name="ddFlow"] :selected').val();                            
+                            var vendorurl = '@Url.Action("SendInvitation", "CompanyDashBoard")';
+                            $.get(vendorurl, { 'firstName': '', 'lastName': '', 'titleId': parseInt(0), 'roleId': parseInt(0), 'permissionId': parseInt(0), 'emailId': '', 'companyId': companyId, 'companyname': '', 'flowId': flowid, 'type': 'vendorwithid' }, function (result) {
+                                if (result > 0) {
+                                    $('.confirmationdivmain').show();
+                                    $('.confirmationdivinner').show();
+                                    $('#dvMsg').text('Invitaion send sucessfully');
+                                }
+                            });
+                        }
+                    });
+                }
+                //Vendor Without ID
+                if (validateAddvendorwithoutId() == true) {
+                    alert("2");
+                    $('#tblvendorwithunknownid tr').each(function (index) {
+                        if (index != 0) {
+                            var companyname = $(this).find('input[name="companyname"]').val();
+                            var flowid = $(this).find('select[name="ddFlow"] :selected').val();
+                            var firstName = $(this).find('input[name="fname"]').val();
+                            var lastName = $(this).find('input[name="lname"]').val();
+                            var emailId = $(this).find('input[name="emailid"]').val();
+                            var vendorurl = '@Url.Action("SendInvitation", "CompanyDashBoard")';
+                            $.get(vendorurl, { 'firstName': firstName, 'lastName': lastName, 'titleId': 0, 'roleId': 0, 'permissionId': 0, 'emailId': emailId, 'companyId': 0, 'companyname': companyname, 'flowId': flowid, 'type': 'vendorwithoutid' }, function (result) {
+                                if (result > 0) {
+                                    $('.confirmationdivmain').show();
+                                    $('.confirmationdivinner').show();
+                                    $('#dvMsg').text('Invitaion send sucessfully');
+                                }
+                            });
+                        }
+
+                    });
+                }
+
+            });
+            $('#btnok').click(function () {
+                $('.confirmationdivmain').hide();
+                $('.confirmationdivinner').hide();
+            });
+
+        </script>
+    </div>
+</div>
+
+

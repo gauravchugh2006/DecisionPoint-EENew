@@ -1,0 +1,617 @@
+﻿@model DecisionPoint.Models.MyDashBoard
+@using DecisionPointBAL.Implementation.Response
+@using DecisionPointCAL;
+@using DecisionPointCAL.Common;
+@using System.Globalization;
+@{
+    ViewBag.Title = "MyDashBoard";
+
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+
+    #region GlobalVariables
+    bool chkmyprofilealertstatus = false;
+    bool chkmycommalertstatus = false;
+    bool chkcomplainecalertstatus = false;
+    bool chkadminalertstatus = false;
+
+    int coverageareaDetails = 0;
+    if (Convert.ToString(Session["UserType"], CultureInfo.InvariantCulture).Equals("SuperAdmin"))
+    {
+        coverageareaDetails = 1;
+    }
+    else
+    {
+        if (!object.Equals(Model.ProfileDetailsAlerts, null))
+        {
+            coverageareaDetails = Model.ProfileDetailsAlerts.Select(x => x.CoverageAreadetail).FirstOrDefault();
+        }
+    }
+
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", CultureInfo.InvariantCulture);
+    #endregion
+}
+@Styles.Render("~/bundles/fullcalendercss")
+@Scripts.Render("~/bundles/fullcalenderjs")
+
+<style>
+    .fc-header {
+        width: 90%;
+    }
+</style>
+<div>
+    <div id="alertdiv" class="left-alert">
+        <h3>Alerts</h3>
+        @{ 
+            if (!object.Equals(Model.ProfileDetailsAlerts, null) || !object.Equals(Model.JCRDetailsAlerts, null))
+            {
+
+                /* start profile Alerts */
+            <div class="alert-box" id="profile">
+
+                <div><b><a id="myprofilealerts" onclick="showalertsdiv(this.id,'myprofilealertdiv')">▼</a>My Profile</b></div>
+
+
+                <div style="display: none;" id="myprofilealertdiv" class="scrolling-panel">
+
+                    @if (!object.Equals(Model.ProfileDetailsAlerts, null))
+                    {
+                        if (Model.ProfileDetailsAlerts.Select(x => x.Serviecdetail).FirstOrDefault() == 0)
+                        {
+                            chkmyprofilealertstatus = true;
+
+                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg1 <a href="@Url.Content("~/CompanyDashBoard/Accountprofile")">services</a> </div>
+
+                        }
+
+                        if (Model.ProfileDetailsAlerts.Select(x => x.Titledetail).FirstOrDefault() == 0)
+                        {
+                            chkmyprofilealertstatus = true;
+                            
+                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg1 <a href="@Url.Content("~/CompanyDashBoard/ViewTitle")">Titles</a> </div>
+                            
+                        }
+                        if (Model.ProfileDetailsAlerts.Select(x => x.Staffdetail).FirstOrDefault() == 0)
+                        {
+                            chkmyprofilealertstatus = true;
+                            
+                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg2 <a href="@Url.Content("~/CompanyDashBoard/InviteStaff")">staff</a> @DecisionPointR.MyDashBoardMyProfileMsg3</div>
+                            
+                        }
+
+
+
+
+                        if (coverageareaDetails == 0)
+                        {
+                            chkmyprofilealertstatus = true;
+                                
+                        <div class="alert-box">@DecisionPointR.MyDashBoardMyProfileMsg1 <a href="@Url.Content("~/CompanyDashBoard/Accountprofile")">coverage area</a></div>
+                                
+                        }
+
+                    }
+
+                    @if (!object.Equals(Model.JCRDetailsAlerts, null))
+                    {
+                        if (Model.JCRDetailsAlerts.Count > 0)
+                        {
+                            chkmyprofilealertstatus = true;     
+                        <div class="alert-box">
+                            @DecisionPointR.MyDashBoardMyProfileMsg4
+                            <a class="jcrreview" onmouseover="showdiv('jcrdetails')" onmouseout="hidediv('jcrdetails')" href="@Url.Content("~/CompanyDashBoard/Accountprofile")">@Model.JCRDetailsAlerts.Count</a>
+
+                            <div class="popup jcrdetails" onmouseover="showdiv('jcrdetails')" onmouseout="hidediv('jcrdetails')" style="left: 21%; margin-top: -7px;">
+                                <div class="jcr-popup-box">
+
+                                    @foreach (var item in Model.JCRDetailsAlerts)
+                                    {
+                                        <span>@item.title
+                                            <br />
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            @DecisionPointR.MyDashBoardMyProfileMsg5
+
+                        </div>
+                        }
+                    }
+
+
+                </div>
+
+            </div> 
+                
+            }
+            /* end profile Alerts */
+
+            /* start Comm Alerts */
+            if (!object.Equals(Model.IncomFromCompCommAlerts, null))
+            {
+                if (Model.IncomFromCompCommAlerts.Count > 0)
+                { <div class="alert-box" id="mycommunication">
+
+                    <div><b><a id="mycommalerts" onclick="showalertsdiv(this.id,'mycommalertdiv')">▼</a> My Communication</b></div>
+
+                    <div style="display: none;" id="mycommalertdiv"  class="scrolling-panel">
+
+                        @{chkmycommalertstatus = true;}
+                        @foreach (var item in Model.IncomFromCompCommAlerts)
+                        {
+                        
+                            <div class="alert-box">
+                                <span style="font-weight: bold;"><a href="@Url.Content("~/CompanyDashBoard/DocumentAction/All")">@item.DocType</a></span>
+                                <br />
+                                @DecisionPointR.MyDashBoardCommunicationMsg1
+                                @if (item.DueDate != defaultdate)
+                                { <span>@DecisionPointR.MyDashBoardCommunicationMsg2</span>
+                                    @item.DueDate.Value.Date.ToShortDateString()
+                                }
+                                else
+                                {
+                                    <span>@DecisionPointR.MyDashBoardCommunicationMsg3</span>
+                                }
+
+                            </div>
+               
+                        }
+
+
+
+
+
+                    </div>
+                </div>
+           
+                }
+            }
+
+            /* end Comm Alerts */
+            if (!object.Equals(Model.CompanyBasedCommAlerts, null))
+            {
+                if (Model.CompanyBasedCommAlerts.Count > 0)
+                { <div class="alert-box" id="compliance">
+                    <div><b><a id="compliancealerts" onclick="showalertsdiv(this.id,'compliancealertsdiv')">▼</a> Compliance</b></div>
+
+                    <div style="display: none;" id="compliancealertsdiv"  class="scrolling-panel">
+
+
+                        @{chkcomplainecalertstatus = true;}
+                        @if (Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "staff").Count() > 0)
+                        {    
+                            <div class="alert-box">
+                                @DecisionPointR.MyDashBoardCoplianceMsg1 <a class="staffcommlnk" onmouseover="showdiv('staffcommetails')" onmouseout="hidediv('staffcommetails')" href="~/Communication/StaffPerformance">@Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "staff").Select(x => x.DocId).Distinct().Count()</a>
+                                <div class="popup staffcommetails" onmouseover="showdiv('staffcommetails')" onmouseout="hidediv('staffcommetails')" style="left: 21%; margin-top: -7px;">
+                                    <div class="jcr-popup-box">
+
+                                        @foreach (var item in Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "staff"))
+                                        {
+                                            <span><b>@item.DocType</b><br />
+                                                @if (item.DueDate != defaultdate)
+                                                { <span>@DecisionPointR.MyDashBoardCommunicationMsg2</span>
+                                        
+                                                    @item.DueDate.Value.Date.ToShortDateString()
+                                                }
+                                                else
+                                                {
+                                                    <span>@DecisionPointR.MyDashBoardCommunicationMsg3</span>
+                                                }<br />
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                @DecisionPointR.MyDashBoardCoplianceMsg2
+                            </div>
+                        }
+                        @if (Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "ic").Count() > 0)
+                        {
+                            <div class="alert-box">
+                                @DecisionPointR.MyDashBoardCoplianceMsg1 <a class="iccommlnk" onmouseover="showdiv('iccommetails')" onmouseout="hidediv('iccommetails')" href="~/Communication/ICCompliance">@Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "ic").Select(x => x.DocId).Distinct().Count()</a>
+                                <div class="popup iccommetails" style="left: 21%; margin-top: -7px;" onmouseover="showdiv('iccommetails')" onmouseout="hidediv('iccommetails')">
+                                    <div class="jcr-popup-box">
+
+                                        @foreach (var item in Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "ic"))
+                                        {
+                                            <span><b>@item.DocType</b>
+                                                <br />
+                                                @if (item.DueDate != defaultdate)
+                                                {<span>@DecisionPointR.MyDashBoardCommunicationMsg2</span>
+                                                                                            
+                                                    @item.DueDate.Value.Date.ToShortDateString()
+                                                }
+                                                else
+                                                {
+                                                    <span>@DecisionPointR.MyDashBoardCommunicationMsg3</span>
+                                                }<br />
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                @DecisionPointR.MyDashBoardCoplianceMsg3
+                            </div>
+                        }
+                        @if (Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "vendor").Count() > 0)
+                        {
+                            <div class="alert-box">
+                                @DecisionPointR.MyDashBoardCoplianceMsg1 <a class="vendorcommlnk" onmouseover="showdiv('vendorcommetails')" onmouseout="hidediv('vendorcommetails')" href="~/Communication/VendorPerformance">@Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "vendor").Select(x => x.DocId).Distinct().Count()</a>
+                                <div class="popup vendorcommetails" onmouseover="showdiv('vendorcommetails')" onmouseout="hidediv('vendorcommetails')" style="left: 21%; margin-top: -7px;">
+                                    <div class="jcr-popup-box">
+
+                                        @foreach (var item in Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "vendor"))
+                                        {
+                                            <span><b>@item.DocType</b><br />
+                                                @if (item.DueDate != defaultdate)
+                                                { <span>@DecisionPointR.MyDashBoardCommunicationMsg2</span>
+                                                                                             
+                                                    @item.DueDate.Value.Date.ToShortDateString()
+                                                }
+                                                else
+                                                {
+                                                    <span>@DecisionPointR.MyDashBoardCommunicationMsg3</span>
+                                                }<br />
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                @DecisionPointR.MyDashBoardCoplianceMsg4
+                            </div>
+                        }
+                        @if (Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "client").Count() > 0)
+                        {
+                            <div class="alert-box">
+                                @DecisionPointR.MyDashBoardCoplianceMsg1 <a class="clientcommlnk" onmouseover="showdiv('clientcommetails')" onmouseout="hidediv('clientcommetails')" href="~/Communication/ClientPerfromance">@Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "client").Select(x => x.DocId).Distinct().Count()</a>
+                                <div class="popup clientcommetails" onmouseover="showdiv('clientcommetails')" onmouseout="hidediv('clientcommetails')" style="left: 21%; margin-top: -7px;">
+                                    <div class="jcr-popup-box">
+
+                                        @foreach (var item in Model.CompanyBasedCommAlerts.Where(x => x.reqDocType == "client"))
+                                        {
+                                            <span><b>@item.DocType</b><br />
+                                                @if (item.DueDate != defaultdate)
+                                                {  <span>@DecisionPointR.MyDashBoardCommunicationMsg2</span>
+                                                                                            
+                                                    @item.DueDate.Value.Date.ToShortDateString()
+                                                }
+                                                else
+                                                {
+                                                    <span>@DecisionPointR.MyDashBoardCommunicationMsg3</span>
+                                                }<br />
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                @DecisionPointR.MyDashBoardCoplianceMsg5
+                            </div>
+                        }
+
+
+                    </div>
+
+
+                </div>}
+            }
+
+            /* start Invite Alerts */
+            if (!object.Equals(Model.IncomFromOutCompCommAlerts, null) || !object.Equals(Model.IncomInviteAlerts, null) || !object.Equals(Model.OutgoStaffInviteAlerts, null) || !object.Equals(Model.OutgoICVendorInviteAlerts, null))
+            {<div class="alert-box" id="admin">
+
+                <div><b><a id="adminalerts" onclick="showalertsdiv(this.id,'adminalertdiv')">▼</a>Admin</b></div>
+
+                <div style="display: none;" id="adminalertdiv"  class="scrolling-panel">
+
+                    @if (!object.Equals(Model.IncomFromOutCompCommAlerts, null))
+                    {
+                        if (Model.IncomFromOutCompCommAlerts.Count > 0)
+                        {
+                            chkadminalertstatus = true;
+                            foreach (var item in Model.IncomFromOutCompCommAlerts)
+                            {
+                        
+                        <div class="alert-box">
+                            <span style="font-weight: bold;"><a href="@Url.Content("~/CompanyDashBoard/Incomming/All")">@item.DocType</a></span>
+                            <br />
+                            @DecisionPointR.MyDashBoardAdminMsg1 @if (item.DueDate != defaultdate)
+                                                                 { <span>@DecisionPointR.MyDashBoardCommunicationMsg2 </span>
+                                                                      
+                                @item.DueDate.Value.Date.ToShortDateString()
+                                                                 }
+                                                                 else
+                                                                 {
+                                <span>@DecisionPointR.MyDashBoardCommunicationMsg3</span>
+                                                                 }
+
+                        </div>
+                            }
+
+
+                        }
+                    }
+
+                    @if (!object.Equals(Model.IncomInviteAlerts, null))
+                    {
+                        if (Model.IncomInviteAlerts.Count > 0)
+                        {
+                            chkadminalertstatus = true;     
+                        <div class="alert-box">
+                            @DecisionPointR.MyDashBoardMyProfileMsg4
+                            <a class="inviteview" onmouseover="showdiv('invitedetails')" onmouseout="hidediv('invitedetails')"  href="@Url.Content("~/Invitation/Invite/All?type=1")">@Model.IncomInviteAlerts.Count</a>
+
+                            <div class="popup invitedetails" style="left: 21%; margin-top: -7px;" onmouseover="showdiv('invitedetails')" onmouseout="hidediv('invitedetails')">
+                                <div class="jcr-popup-box">
+
+                                    @foreach (var item in Model.IncomInviteAlerts)
+                                    {
+                                        <span>@DecisionPointR.MyDashBoardAdminMsg7 @item.EmailId on 
+                                         @if (item.Date != null)
+                                         {
+                                             @item.Date.Value.Date.ToShortDateString()
+                                         }
+                                            <br />
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            @DecisionPointR.MyDashBoardAdminMsg2
+
+                        </div>
+                        }
+                    }
+                    @if (!object.Equals(Model.OutgoStaffInviteAlerts, null))
+                    {
+                        if (Model.OutgoStaffInviteAlerts.Count > 0)
+                        {
+                            chkadminalertstatus = true;
+                           
+                        <div class="alert-box">
+                            @DecisionPointR.MyDashBoardAdminMsg3 <a class="invitedstaff" onmouseover="showdiv('invitedstaffdetails')" onmouseout="hidediv('invitedstaffdetails')" href="~/CompanyDashboard/InternalStaff/0?type=All">@Model.OutgoStaffInviteAlerts.Count</a>
+                            <div class="popup invitedstaffdetails" onmouseover="showdiv('invitedstaffdetails')" onmouseout="hidediv('invitedstaffdetails')" style="left: 21%; margin-top: -7px;">
+                                <div class="jcr-popup-box">
+
+                                    @foreach (var item in Model.OutgoStaffInviteAlerts)
+                                    {
+                                        <span>@item.EmailId was invited on
+                               @if (item.Date != null)
+                               {
+                                   @item.Date.Value.Date.ToShortDateString()
+                               }
+                                            <br />
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            @DecisionPointR.MyDashBoardAdminMsg4
+                        </div>
+                   
+                    
+                        }
+                    }
+                    @if (!object.Equals(Model.OutgoICVendorInviteAlerts, null))
+                    {
+                        if (Model.OutgoICVendorInviteAlerts.Count > 0)
+                        {
+                            chkadminalertstatus = true;
+
+                            if (Model.OutgoICVendorInviteAlerts.Where(x => x.UserType == "IC").Count() > 0)
+                            {       
+                        <div class="alert-box">
+                            @DecisionPointR.MyDashBoardAdminMsg3 <a class="invitedic" onmouseover="showdiv('invitedicdetails')" onmouseout="hidediv('invitedicdetails')" href="~/Invitation/ManageIC/0?type=All">@Model.OutgoICVendorInviteAlerts.Where(x => x.UserType == "IC").Count()</a>
+                            <div class="popup invitedicdetails" onmouseover="showdiv('invitedicdetails')" onmouseout="hidediv('invitedicdetails')" style="left: 21%; margin-top: -7px;">
+                                <div class="jcr-popup-box">
+
+                                    @foreach (var item in Model.OutgoICVendorInviteAlerts)
+                                    {
+                                        <span>@item.EmailId was invited on   @if (item.Date != null)
+                                                                             {
+                                            @item.Date.Value.Date.ToShortDateString()
+                                                                             }
+                                            <br />
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            @DecisionPointR.MyDashBoardAdminMsg5
+                        </div>
+                            }
+
+                            if (Model.OutgoICVendorInviteAlerts.Where(x => x.UserType == "Company").Count() > 0)
+                            {       
+                        <div class="alert-box">
+                            @DecisionPointR.MyDashBoardAdminMsg3 <a class="invitevendors" onmouseover="showdiv('invitevendorsdetails')" onmouseout="hidediv('invitevendorsdetails')" href="~/CompanyDashboard/Vendors/1?type=All">@Model.OutgoICVendorInviteAlerts.Where(x => x.UserType == "Company").Count()</a>
+                            <div class="popup invitevendorsdetails" onmouseover="showdiv('invitevendorsdetails')" onmouseout="hidediv('invitevendorsdetails')" style="left: 21%; margin-top: -7px;">
+                                <div class="jcr-popup-box">
+
+                                    @foreach (var item in Model.OutgoICVendorInviteAlerts)
+                                    {
+                                        <span>@item.EmailId was invited on  @if (item.Date != null)
+                                                                            {
+                                            @item.Date.Value.Date.ToShortDateString()
+                                                                            }
+                                            <br />
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            @DecisionPointR.MyDashBoardAdminMsg6
+                        </div>
+                            }
+                        }
+                    }
+                </div>
+
+            </div> }
+            if (!object.Equals(Model.ContractsAlerts, null))
+            {
+                if (Model.ContractsAlerts.Count > 0)
+                {
+            <div class="alert-box" id="contract">
+
+                <div><b><a id="contractalerts" onclick="showalertsdiv(this.id,'contractalertdiv')">▼</a> Contract</b></div>
+
+                <div style="display: none;" id="contractalertdiv"  class="scrolling-panel">
+                    <ul style="list-style: none;">
+                        alert('under');
+                        @foreach (var item in Model.ContractsAlerts)
+                        {
+                           
+                            <li><a href="~/Contract/MyContract/All?type=0">
+
+                                @DecisionPointR.MyDashBoardContractMsg1 @item.ManagerName for @item.ServiceName
+                                @if (item.ExpirationDate != null)
+                                {
+                                    if (item.ExpirationDate < System.DateTime.Now.Date)
+                                    {
+                                    @DecisionPointR.MyDashBoardContractMsg3 @item.ExpirationDate.Value.ToShortDateString()}
+                                    else if (item.ExpirationDate == System.DateTime.Now.Date)
+                                    {
+                                    @DecisionPointR.MyDashBoardContractMsg4
+                                    }
+                                    else
+                                    {@DecisionPointR.MyDashBoardContractMsg2 @item.ExpirationDate.Value.ToShortDateString()}
+
+                                }
+
+                            </a>
+                                <br />
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            
+                }
+            }
+            /* end Invite Alerts */
+
+            //check alerts status
+            if (!chkmyprofilealertstatus && !chkmycommalertstatus && !chkcomplainecalertstatus && !chkadminalertstatus)
+            {
+            <div class="alert-box">
+                @DecisionPointR.MyDashBoardNoAlertMsg
+            </div>
+            }
+        }
+
+
+    </div>
+
+    <div class="claender-wraper">
+        <div id="calendar" style="width: 100%;"></div>
+        <div id="datepicker"></div>
+    </div>
+</div>
+
+<input type="hidden" id="selectedateval" value="@Model.SelectedDate"/>
+<div class="tasksDiv"></div>
+<script>
+    $(document).ready(function () {
+        SetAlertVisibility();
+        ShowHideTabs('mycalender');
+
+
+        var calendar = $('#calendar');
+        calendar.fullCalendar({
+            header: {
+                left: 'title',
+                center: '',
+                right: 'today prev,next'
+            },
+            titleFormat: {
+                day: 'mmm dd, yyyy'
+            },
+            dayClick: function (date, jsEvent, view) {
+
+                $('.fc-header-title h2').html(dateFormat(new Date(date), 'mmm dd, yyyy'));
+                $('#calendar').fullCalendar('select', date);
+                showalerts(dateFormat(new Date(date), 'mm/dd/yyyy'));
+
+            }
+        })
+
+        var Sdatenew = new Date($('#selectedateval').val());
+
+        $('#calendar').fullCalendar('gotoDate', Sdatenew);
+        //Date Change On click on Next button
+        $('.fc-button-next').click(function () {
+            var date = $("#calendar").fullCalendar('getDate');
+            var myDate = dateFormat(new Date(date), 'mm/dd/yyyy');
+            showalerts(myDate);
+
+        })
+        //Date Change On click on Prev button
+        $('.fc-button-prev').click(function () {
+            var date = $("#calendar").fullCalendar('getDate');
+            var myDate = dateFormat(new Date(date), 'mm/dd/yyyy');
+
+            showalerts(myDate);
+
+
+        })
+
+
+
+
+
+    });
+
+    function SetAlertVisibility() {
+        if ($('#myprofilealertdiv').length) {
+            if ($('#myprofilealertdiv').html().trim() == "") {
+                $('#profile').hide();
+            }
+        }
+        if ($('#mycommalertdiv').length) {
+            if ($('#mycommalertdiv').html().trim() == "") {
+                $('#mycommunication').hide();
+            }
+        }
+        if ($('#compliancealertsdiv').length) {
+            if ($('#compliancealertsdiv').html().trim() == "") {
+                $('#compliance').hide();
+            }
+        }
+        if ($('#adminalertdiv').length) {
+            if ($('#adminalertdiv').html().trim() == "") {
+                $('#admin').hide();
+            }
+        }
+
+    }
+    function showdiv(divid) {
+        $('.' + divid).show();
+    }
+    function hidediv(divid) {
+        $('.' + divid).hide();
+    }
+    function showalerts(date) {
+        // window.location.href = "@Url.Content("~/CompanyDashBoard/MyDashBoard?date=")" + date;
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/MyDashBoard/")",
+            data: { 'date': date },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (result) {
+                $('#alertdiv').html($(result).find('#alertdiv').html().trim());
+                SetAlertVisibility();
+
+            },
+            error: function (result) {
+                alert('error');
+            }
+        });
+    }
+
+
+    function showalertsdiv(id, divid) {
+
+        if ($('#' + id).html() == "▼") {
+            $('#' + id).html("▲");
+            $('#' + divid).show();
+        }
+        else {
+            $('#' + divid).hide();
+            $('#' + id).html("▼");
+        }
+    }
+</script>
+

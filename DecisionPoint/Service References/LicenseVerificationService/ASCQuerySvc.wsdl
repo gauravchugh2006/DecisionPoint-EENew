@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetQueryableFields">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="bGetApplicableValues" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetQueryableFieldsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetQueryableFieldsResult" type="tns:ArrayOfFieldHelper" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfFieldHelper">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="FieldHelper" nillable="true" type="tns:FieldHelper" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="FieldHelper">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FieldName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FieldType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ApplicableValues" type="tns:ArrayOfValueHelper" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfValueHelper">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ValueHelper" nillable="true" type="tns:ValueHelper" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ValueHelper">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UserCredentialsSoapHeader" type="tns:UserCredentialsSoapHeader" />
+      <s:complexType name="UserCredentialsSoapHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="RunQuery">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="outputFields" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="filters" type="tns:ArrayOfFilterCondition" />
+            <s:element minOccurs="1" maxOccurs="1" name="showDiscipline" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="maxResults" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfFilterCondition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="FilterCondition" nillable="true" type="tns:FilterCondition" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="FilterCondition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FieldName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Operator" type="tns:AvailableOperators" />
+          <s:element minOccurs="0" maxOccurs="1" name="Operands" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="AvailableOperators">
+        <s:restriction base="s:string">
+          <s:enumeration value="Equals" />
+          <s:enumeration value="GreaterThan" />
+          <s:enumeration value="GreaterThanOrEqualTo" />
+          <s:enumeration value="LessThan" />
+          <s:enumeration value="LessThanOrEqualTo" />
+          <s:enumeration value="NotEqualTo" />
+          <s:enumeration value="Between" />
+          <s:enumeration value="Like" />
+          <s:enumeration value="In" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="RunQueryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RunQueryResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetQueryableFieldsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetQueryableFields" />
+  </wsdl:message>
+  <wsdl:message name="GetQueryableFieldsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetQueryableFieldsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetQueryableFieldsUserCredentialsSoapHeader">
+    <wsdl:part name="UserCredentialsSoapHeader" element="tns:UserCredentialsSoapHeader" />
+  </wsdl:message>
+  <wsdl:message name="RunQuerySoapIn">
+    <wsdl:part name="parameters" element="tns:RunQuery" />
+  </wsdl:message>
+  <wsdl:message name="RunQuerySoapOut">
+    <wsdl:part name="parameters" element="tns:RunQueryResponse" />
+  </wsdl:message>
+  <wsdl:message name="RunQueryUserCredentialsSoapHeader">
+    <wsdl:part name="UserCredentialsSoapHeader" element="tns:UserCredentialsSoapHeader" />
+  </wsdl:message>
+  <wsdl:portType name="ASCQuerySvcSoap">
+    <wsdl:operation name="GetQueryableFields">
+      <wsdl:input message="tns:GetQueryableFieldsSoapIn" />
+      <wsdl:output message="tns:GetQueryableFieldsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RunQuery">
+      <wsdl:input message="tns:RunQuerySoapIn" />
+      <wsdl:output message="tns:RunQuerySoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ASCQuerySvcSoap" type="tns:ASCQuerySvcSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetQueryableFields">
+      <soap:operation soapAction="http://tempuri.org/GetQueryableFields" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetQueryableFieldsUserCredentialsSoapHeader" part="UserCredentialsSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RunQuery">
+      <soap:operation soapAction="http://tempuri.org/RunQuery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:RunQueryUserCredentialsSoapHeader" part="UserCredentialsSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ASCQuerySvcSoap12" type="tns:ASCQuerySvcSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetQueryableFields">
+      <soap12:operation soapAction="http://tempuri.org/GetQueryableFields" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetQueryableFieldsUserCredentialsSoapHeader" part="UserCredentialsSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RunQuery">
+      <soap12:operation soapAction="http://tempuri.org/RunQuery" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:RunQueryUserCredentialsSoapHeader" part="UserCredentialsSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ASCQuerySvc">
+    <wsdl:port name="ASCQuerySvcSoap" binding="tns:ASCQuerySvcSoap">
+      <soap:address location="https://www.asc.gov/wsvc/ASCQuerySvc.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ASCQuerySvcSoap12" binding="tns:ASCQuerySvcSoap12">
+      <soap12:address location="https://www.asc.gov/wsvc/ASCQuerySvc.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,679 @@
+﻿@model DecisionPoint.Models.CoverageAreaModel
+@using DecisionPointCAL.Common;
+@using System.Globalization;
+@using DecisionPointCAL;
+@{
+    ViewBag.Title = "CoverageArea";
+    int requestType = 1;
+    int docId = Convert.ToInt32(Request["docId"], CultureInfo.InvariantCulture);
+    if (Convert.ToInt32(Request["type"], CultureInfo.InvariantCulture).Equals(3))
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    }
+    if (Convert.ToInt32(Request["type"], CultureInfo.InvariantCulture).Equals(0))
+    {
+        requestType = 0;
+    }
+    
+    }
+@Styles.Render("~/Content/css/Dashboardcss")
+@Scripts.Render("~/bundles/dashboard")
+<script src="~/Scripts/DashBoard/Coveragrea.js"></script>
+
+
+@if (!Convert.ToInt32(Request["type"], CultureInfo.InvariantCulture).Equals(3))
+{
+    <div class="row-fluid" id="topdiv">
+        <div class="span12" style="min-height: 155px; margin-top: 20px;">
+            <div class="span12 coverage-box" style="margin-left: 0;">
+
+                <div class="span4 pull-left">Does coverage area apply to your services ? </div>
+                <div class="span8 pull-right">
+                    @if (object.Equals(Session["parentUserId"], null) || object.Equals(Session["UserType"], Shared.Company) || object.Equals(Session["UserType"], Shared.Individual))
+                    {
+                        <select id="ddlNationWide">
+                            <option value="0">-- Select --</option>
+                            <option value="1">No</option>
+                            <option value="2">Yes</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="ddlNationWide" disabled="disabled">
+                            <option value="0">-- Select --</option>
+                            <option value="1">No</option>
+                            <option value="2">Yes</option>
+                        </select>
+                    }
+                </div>
+
+
+
+            </div>
+
+
+            <div id="divIsWholeState" class="span12 coverage-box" style="display: none; margin-left: 0;">
+                <div class="span4 pull-left">Do you cover the whole United States and it districts? </div>
+                <div class="span8 pull-right">
+                    @if (object.Equals(Session["parentUserId"], null) || object.Equals(Session["UserType"], Shared.Company) || object.Equals(Session["UserType"], Shared.Individual))
+                    {
+                        <select id="ddlCoverWholeState">
+                            <option value="0">-- Select --</option>
+                            <option value="1">No</option>
+                            <option value="2">Yes</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="ddlCoverWholeState" disabled="disabled">
+                            <option value="0">-- Select --</option>
+                            <option value="1">No</option>
+                            <option value="2">Yes</option>
+                        </select>
+                    }
+                </div>
+            </div>
+
+            <div id="divNotWholeState" class="span12 pull-left coverage-box" style="display: none; margin-left: 0;">
+                <div class="span4 pull-left">Would you like to identify your coverage area by uploading and entering zip codes?</div>
+                <div class="span8 pull-right">
+                    @if (object.Equals(Session["parentUserId"], null) || object.Equals(Session["UserType"], Shared.Company) || object.Equals(Session["UserType"], Shared.Individual))
+                    {
+                        <select id="ddlNotCoverWholeState">
+                            <option value="0">-- Select --</option>
+                            <option value="1">No</option>
+                            <option value="2">Yes</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="ddlNotCoverWholeState" disabled="disabled">
+                            <option value="0">-- Select --</option>
+                            <option value="1">No</option>
+                            <option value="2">Yes</option>
+                        </select>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div style="margin-top: 15px;" class="row-fluid pull-left" id="save">
+    <div id="nocoveragearea">Company has not added coverage area yet, Please contact your admin !</div>
+    <div id="uploadZipCodeDiv" style="display: none;">
+        <h5 id="savetitle">Coverage Area</h5>
+        <div class="span12" id="divUploadZip" style="display: block; margin-top: 10px;">
+            <iframe id="myiframe" src="~/Company/UploadZipList?type=@Request["type"]&docId=@docId" style="border: none;" height="500px" class="span12" scrolling="no"></iframe>
+        </div>
+    </div>
+    <div id="selectCoverArea" style="display: none;">
+        <h5 id="savetitle">Coverage Area</h5>
+        <div id="divSelectedByAddress">
+
+            <div class="leftcol1 span12 row-fluid" style="width: 100%;">
+
+                <div class="span4" style="margin-top: -8px; float: left;" id="States">
+                    <div class="selectheading" style="width: 100%;">Selected States</div>
+                    <div style="width: 100%; border-radius: 3px; border-left: 1px solid rgb(204, 204, 204); border-right: 1px solid rgb(204, 204, 204);">
+                        <div style="width: 14%; margin-left: 31px; font-weight: bold;">All</div>
+                        <div style="width: 50%; margin-top: -20px; margin-left: 62px; font-weight: bold;">Partial</div>
+                    </div>
+                    <div id="StateList" class="sss" style="width: 100%; min-height: 350px; overflow-y: auto; height: 214px; border-radius: 3px; border: solid 1px #ddd; font-size: 12px;">
+                        @if (!object.Equals(Model.StateDetails, null))
+                        {
+                            if (Model.StateDetails.Count > 0)
+                            {
+                                foreach (var item in Model.StateDetails)
+                                {
+                                    bool isallstate = false;
+                                    bool ispartialstate = false;
+                                    string stateType = string.Empty;
+                                    if (item.StateType.Equals(0))
+                                    {
+                                        isallstate = true;
+                                        stateType = "all";
+                                    }
+                                    else { ispartialstate = true; stateType = "partial"; }
+                            <div id="@item.Abbrebiation" >
+                                <a id="edit_@item.Abbrebiation" class="editlnk" onclick="EditCoverageArea(this.id,0,'@stateType',@requestType)">edit</a>
+                                <input style="margin: 7px 2px;" type="checkbox" class="AllState" id="rdAllState_@item.Abbrebiation" checked="@isallstate" disabled="disabled"
+                                       value="@item.Abbrebiation" name="StateAllPartial" onchange="SetValesAsPerSeclection(0,this.id,@requestType)"/>
+                                <input type="checkbox" style="margin: 7px 11px;" class="PartialStates" id="rdPartialState_@item.Abbrebiation" value="@item.Abbrebiation" 
+                                         name="StateAllPartial" checked="@ispartialstate" disabled="disabled"
+                                        onchange="GetValesAsPerSeclection(0,this.value,this.id,@requestType)"/><span style="margin-left: -6px;"> @item.SateName</span>
+                            </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="span5" style="margin-top: -8px; float: left; display: none; margin-left: 10px;" id="Counties">
+                    <div class="selectheading" style="width: 100%;">Selected Counties</div>
+                    <div style="width: 100%; border-radius: 3px; border-left: 1px solid rgb(204, 204, 204); border-right: 1px solid rgb(204, 204, 204);">
+                        <div style="width: 14%; margin-left: 31px; font-weight: bold;">All</div>
+                        <div style="width: 50%; margin-top: -20px; margin-left: 63px; font-weight: bold;">Partial</div>
+                    </div>
+                    <div id="CountyList" style="width: 100%; min-height: 350px; overflow-y: auto; height: 214px; border-radius: 3px; border: solid 1px #ddd; font-size: 12px;">
+                        @if (!object.Equals(Model.CountyDetails, null))
+                        {
+                            if (Model.CountyDetails.Count > 0)
+                            {
+                                foreach (var item in Model.CountyDetails)
+                                {
+                                    bool isallcounty = false;
+                                    bool ispartialcounty = false;
+                                    string countyType = string.Empty;
+                                    if (item.CountyType.Equals(0))
+                                    {
+                                        isallcounty = true;
+                                        countyType = "all";
+                                    }
+                                    else { ispartialcounty = true; countyType = "partial"; }
+                            <div id="@item.OptionsVal" >
+                                <a id="edit_@item.OptionsVal" class="editlnk" onclick="EditCoverageArea(this.id,1,'@countyType',@requestType)">edit</a>
+                                <input style="margin: 7px 2px;" type="checkbox" class="AllCounty" checked="@isallcounty" disabled="disabled"
+                                        id="rdAllCounty_@item.OptionsVal" value="@item.OptionsVal" name="CountyAllPartial" 
+                                        onchange="SetValesAsPerSeclection(1,this.id,@requestType)" /><input type="checkbox" style="margin: 7px 13px;" class="PartialCounty"
+                                            id="rdPartialCounty_@item.OptionsVal" value="@item.OptionsVal" name="CountyAllPartial" checked="@ispartialcounty" disabled="disabled"
+                                            onchange="GetValesAsPerSeclection(1,this.value,this.id,@requestType)"/><span style="margin-left: 3px;">@item.CountyName</span>
+
+                            </div>
+                                }
+                            }
+                        }
+
+                    </div>
+                </div>
+                <div class="span3" style="margin-top: -8px; float: left; display: none; margin-left: 10px;" id="City">
+                    <div class="selectheading" style="width: 100%;">
+                        Selected City
+                    </div>
+                    <div id="CityList" style="width: 100%; min-height: 370px; overflow-y: auto; height: 214px; border-radius: 3px; border: solid 1px #ddd; font-size: 12px;">
+                        @if (!object.Equals(Model.CityDetails, null))
+                        {
+                            if (Model.CityDetails.Count > 0)
+                            {
+                                foreach (var item in Model.CityDetails)
+                                {
+                            <div id="@item.OptionsVal" style="margin-left:8px;">
+                                <input type="checkbox" style="margin: 7px 3px;" class="PartialCity" checked="checked"
+                                       id="rdPartialState_@item.OptionsVal.Split(char.Parse(Shared.UnderScore))[0]" value="@item.OptionsVal" name="StateAllPartial" />
+                                <span style="margin-left: 3px;">@item.CityName</span>
+                            </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row-fluid pull-left">
+    <h5 id="CVATitle" style="display: none;">Coverage Area</h5>
+    <div style="margin-top: 15px; margin-left: 0px; display: none; height: 395px; overflow-y: auto; border: 1px solid #e1e1e1;" class="span12" id="view">
+    </div>
+</div>
+<div class="row-fluid">
+    @if (object.Equals(Session["parentUserId"], null) || object.Equals(Session["UserType"], Shared.Company) || object.Equals(Session["UserType"], Shared.Individual))
+    {
+        <div class="btn btn-primary" style="float: right; margin-right: 0px; margin-top: 7px; display: none;" id="btnahowascomplete">Continue</div>
+
+        <div class="btn btn-primary" style="float: right; margin-top: 7px; display: none;" id="btnedit">Edit</div>
+    }
+
+    <label id="validatemsg" style="color: red;"></label>
+</div>
+@if (!Convert.ToInt32(Request["type"], CultureInfo.InvariantCulture).Equals(3))
+{
+    <div class="row-fluid">
+        @if (object.Equals(Session["parentUserId"], null) || object.Equals(Session["UserType"], Shared.Company) || object.Equals(Session["UserType"], Shared.Individual))
+        {
+            <div class="btn btn-primary" style="float: right; margin-right: 0px; margin-top: 10px; display: none;" id="btnmarkascomplete">Publish</div>
+        }
+        <div class="btn btn-primary" style="float: right; margin-top: 10px; margin-right: 5px;" id="btnclose">Close</div>
+    </div>
+}
+
+<div class="confirmationdivmain" id="ConfiramtionPopupouter" style="display: none;"></div>
+<div class="confirmationdivinner" id="ConfiramtionPopupinner" style="display: none; width: 250px; top:50%;left:50%;margin-top:-45px;margin-left:-125px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 90px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; padding-bottom: 10px;" id="dvMsg"></div>
+        <div style="clear: both;" id="yesNoDiv">
+            <input id="btnOK" class="btn btn-primary" type="button" value="Yes" style="display: none;">
+            <input id="btnno" class="btn btn-primary" type="button" value="No" style="display: none;">
+        </div>
+    </div>
+</div>
+<input type="hidden" id="ziplisthid" />
+@if (!object.Equals(Model.CoverageAreaStatus, null))
+{
+    <input type="hidden" id="coverageareastatus" value="@Model.CoverageAreaStatus" />
+}
+<input type="hidden" id="coverageAreaFor" value="@requestType" />
+
+@if (!object.Equals(Model.StateDetails, null))
+{
+    if (Model.StateDetails.Count > 0)
+    { 
+    <input type="hidden" class="coverageAreaType" value="1" />
+    }
+    else
+    {
+    <input type="hidden" class="coverageAreaType" value="0" />
+    }
+}
+else
+{
+    <input type="hidden" class="coverageAreaType" value="0" />
+}
+
+<input type="hidden" id="isPState" value="0" />
+<input type="hidden" id="isPCounty" value="0" />
+<input type="hidden" id="isAState" value="0" />
+<input type="hidden" id="isACounty" value="0" />
+<input type="hidden" id="isCitySelected" value="0" />
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        //disabled contorls if request type is 1
+        if ($('#coverageAreaFor').val() == 1) {
+            $('#topdiv').hide();
+            //$("#ddlNationWide").attr('disabled', 'disabled');
+            //$("#ddlCoverWholeState").attr('disabled', 'disabled');
+            //$("#ddlNotCoverWholeState").attr('disabled', 'disabled');
+        }
+        $('#step1').click(function () {
+            $('#step1').addClass('active');
+            $('#step3').removeClass('active');
+            $('#step2').removeClass('active');
+            $('#divUploadZip').show();
+            $('#divSelectedByZip').hide();
+            $('#divSelectedByAddress').hide();
+
+        });
+        $('#step2').click(function () {
+            $('#step2').addClass('active');
+            $('#step1').removeClass('active');
+            $('#step3').removeClass('active');
+            $('#divSelectedByZip').show();
+            $('#divUploadZip').hide();
+            $('#divSelectedByAddress').hide();
+
+        });
+        $('#step3').click(function () {
+            $('#step3').addClass('active');
+            $('#step1').removeClass('active');
+            $('#step2').removeClass('active');
+            $('#divSelectedByAddress').show();
+            $('#divUploadZip').hide();
+            $('#divSelectedByZip').hide();
+        });
+
+
+        SetCAStatusForStates();
+
+
+        //set coverage area if it is in edit mode
+        //  if ($('.coverageAreaType').length) {
+        // if ($('.coverageAreaType').val() == 1 || $('#coverageAreaFor').val() == 1) {
+        if ($('#coverageareastatus').length) {
+            if ($('#coverageareastatus').val() == "dna") {
+                $('#nocoveragearea').hide();
+                // 
+                $('#ddlNationWide').val(1);
+                // alert('come');
+                // setTimeout(function () {
+                $('#btnmarkascomplete').hide();
+                //}, 500);
+            }
+            else {
+                // alert($('#coverageareastatus').val());
+                if ($('#coverageareastatus').val() != "all") {
+
+                    SetCAStatusForStates();
+
+                    $('#ddlNationWide').val(2);
+                    $('#divIsWholeState').show();
+                    $('#ddlCoverWholeState').val(1);
+                    $('#divNotWholeState').show();
+
+                    if ($('#coverageareastatus').val() == "state") {
+                        $('#ddlNotCoverWholeState').val(1);
+                        $('#nocoveragearea').hide();
+                        getAllStates(ROOT, $('#coverageAreaFor').val());
+                        if ($('#coverageAreaFor').val() == 1) {
+                            $('#selectCoverArea').show(); $('#btnahowascomplete').show(); $('#btnmarkascomplete').show();
+                        }
+                        if ($('.coverageAreaType').val() == 1) {
+                            SaveCoverageAreaAsPerStates(ROOT, 1, '@DecisionPointR.ComleteStateTitle', '@DecisionPointR.CompleteCountyTitle', $('#coverageAreaFor').val());
+                    }
+                }
+                else if ($('#coverageareastatus').val() == "zip") {
+                    $('#nocoveragearea').hide();
+                    // alert('121212');
+                    $('#ddlNotCoverWholeState').val(2);
+                    $('#uploadZipCodeDiv').show();
+
+                }
+            }
+            else {
+
+                    // alert($('#coverageAreaFor').val());//
+                $('#divIsWholeState').show();
+                $('#ddlCoverWholeState').val(2); $('#ddlNationWide').val(2);
+                if ($('#coverageAreaFor').val() == 1) {
+                    getAllStates(ROOT, $('#coverageAreaFor').val());
+                }
+                if ($('.coverageAreaType').val() == 1) {
+                    SaveCoverageAreaAsPerStates(ROOT, 1, '@DecisionPointR.ComleteStateTitle', '@DecisionPointR.CompleteCountyTitle', $('#coverageAreaFor').val());
+                }
+                if ($('#coverageAreaFor').val() == 1 && $('.coverageAreaType').val() != 1) {
+                    $('#selectCoverArea').show(); $('#btnahowascomplete').show(); $('#btnmarkascomplete').show();
+                }
+
+            }
+        }
+    }
+        // }
+        // }
+    });
+
+$('#ddlNationWide').change(function () {
+    //alert('come IN Change');
+    if ($('#ddlNationWide').val() == 1) {
+        $('#divIsWholeState').hide();
+        $('#divNotWholeState').hide();
+        $('#uploadZipCodeDiv').hide();
+        SetCoverageAreaDoesNotApply('dna');
+
+
+    } else {
+        $('#ddlCoverWholeState').val(0);
+        $('#divIsWholeState').show();
+
+
+    }
+});
+
+function SetCoverageAreaDoesNotApply(coverageAreaStatus) {
+    SetCoverageAreaForAllOrDNA(ROOT, $('#coverageAreaFor').val(), coverageAreaStatus)
+}
+$('#ddlCoverWholeState').change(function () {
+    if ($('#ddlCoverWholeState').val() == 1) {
+        $('#ddlNotCoverWholeState').val(0);
+        $('#divNotWholeState').show();
+
+    } else {
+        $('#StateList').empty();
+        $('#States').hide();
+       $('#btnmarkascomplete').hide();
+        $('#btnedit').hide();
+        $("#btnclose").css("margin-right", "5px");
+
+        $('#btnahowascomplete').hide();
+
+        $('#CountyList').empty();
+        $('#CityList').empty();
+        $('#Counties').hide();
+        $('#City').hide();
+        $('#uploadZipCodeDiv').hide();
+        $('#divNotWholeState').hide();
+        $('#view').hide();
+        $('#view').empty();
+        $('#CVATitle').hide();
+
+        $('#btnOK').show();
+        $('#btnno').show();
+        $('#ConfiramtionPopupinner').css("width", "415px");
+        $('#dvMsg').html("Are you sure you cover the whole United States, District of Columbia and the US Territories?")
+        ShowPopup('ConfiramtionPopupouter', 'ConfiramtionPopupinner');
+    }
+});
+$('#ddlNotCoverWholeState').change(function () {
+    $('#btnmarkascomplete').show();
+    $('#btnedit').hide();
+    $("#btnclose").css("margin-right", "5px");
+
+
+    if ($('#ddlNotCoverWholeState').val() == 1) {
+        $('#view').empty();
+        $('#view').hide();
+        $('#CVATitle').hide();
+        $('#save').show();
+        $('#selectCoverArea').show();
+        $('#uploadZipCodeDiv').hide();
+        $('#btnahowascomplete').show();
+        $('#myiframe').contents().find("#ZipList2").empty();
+        $('#States').show();
+        //get all state list
+        getAllStates(ROOT, $('#coverageAreaFor').val());
+
+    } else {
+        $('#selectCoverArea').hide();
+        $('#uploadZipCodeDiv').show();
+        $('#btnahowascomplete').hide();
+        $('#view').empty();
+        $('#view').hide();
+        $('#CVATitle').hide();
+        $('#save').show();
+        $('#StateList').empty();
+        $('#CountyList').empty();
+        $('#CityList').empty();
+        $('#Counties').hide();
+        $('#City').hide();
+
+    }
+});
+
+$('#myiframe').load(function () {
+    $('#myiframe').contents().find("#div_citylists").hide();
+});
+
+$('#btnOK').click(function () {
+    SetCoverageAreaDoesNotApply('all');
+
+})
+
+$('#btnahowascomplete').click(function () {
+    if ($('#validatemsg').html().trim() == '') {
+        if (ValidateCoverageArea(0)) {
+            $('#City').hide();
+            var vallevel = ChkValASPerPartialSelection();
+            // alert(vallevel);
+            if (vallevel == 0) {
+                var edittype = "partial";
+                //loop on states
+                $('#StateList div').each(function (index) {
+                    var id = $(this).attr('id');
+                    var PcheckboxId = $(this).find('.PartialStates').attr('id');
+                    var AcheckboxId = $(this).find('.AllState').attr('id');
+                    var editlnkId = $(this).find('.editlnk').attr('id');
+                    if ($('#' + PcheckboxId).prop("checked") == true) {
+                        if ($('#' + PcheckboxId).prop("disabled") == false) {
+                            $('#' + PcheckboxId).attr("disabled", true);
+                            $('#' + AcheckboxId).attr("disabled", true);
+                            if ($('#' + id).find('#edit_' + id).length) {
+                            } else {
+                                $('#' + id).prepend('<a id="edit_' + id + '" class="editlnk" onclick="EditCoverageArea(this.id,0,\'' + edittype + '\',\'' + $("#coverageAreaFor").val() + '\')">edit</a>');
+                                $('#' + PcheckboxId).css('margin', '7px 12px');
+                                $('#' + AcheckboxId).css('margin', '3px 5px');
+                                $('#' + id).find('span').css('margin-left', '3px');
+                            }
+
+                        }
+                        $('#' + editlnkId).removeAttr("readonly"); $('#' + editlnkId).css('color', '')
+                    }
+                    else if ($('#' + AcheckboxId).prop("checked") == true) {
+                        $('#' + AcheckboxId).attr("disabled", true);
+                        $('#' + editlnkId).removeAttr("readonly"); $('#' + editlnkId).css('color', '')
+                    }
+                    else {
+                        $('#' + AcheckboxId).attr("disabled", false);
+                        $('#' + PcheckboxId).attr("disabled", false);
+
+                    }
+                })
+                //loop on county
+                $('#CountyList div').each(function (index) {
+                    var id = $(this).attr('id');
+
+                    var PcheckboxId = $(this).find('.PartialCounty').attr('id');
+                    var AcheckboxId = $(this).find('.AllCounty').attr('id');
+                    var editlnkId = $(this).find('.editlnk').attr('id');
+                    if ($('#' + PcheckboxId).prop("checked") == true) {
+
+                        if ($('#' + PcheckboxId).prop("disabled") == false) {
+
+                            $('#' + PcheckboxId).attr("disabled", true);
+                            $('#' + AcheckboxId).attr("disabled", true);
+                            if ($('#' + id).find('#edit_' + id).length) {
+
+                            } else {
+
+                                $('#' + id).prepend('<a id="edit_' + id + '" class="editlnk" onclick="EditCoverageArea(this.id,1,\'' + edittype + '\',\'' + $("#coverageAreaFor").val() + '\')">edit</a>');
+                                $('#' + PcheckboxId).css('margin', '7px 11px');
+                                $('#' + AcheckboxId).css('margin', '3px 4px');
+                                $('#' + id).find('span').css('margin-left', '3px');
+                            }
+
+                        }
+                        $('#' + editlnkId).removeAttr("readonly"); $('#' + editlnkId).css('color', '');
+                    }
+                    else if ($('#' + AcheckboxId).prop("checked") == true) {
+
+                        $('#' + AcheckboxId).attr("disabled", true);
+                        $('#' + editlnkId).removeAttr("readonly"); $('#' + editlnkId).css('color', '');
+                    }
+                    else {
+
+                        $('#' + AcheckboxId).attr("disabled", false);
+                        $('#' + PcheckboxId).attr("disabled", false);
+
+                    }
+                })
+
+                HideCity();
+            }
+            else {
+                if (vallevel == 1) {
+                    $('#validatemsg').html('Please select at least one county of selected partial state.');
+                    setTimeout(function () {
+                        $('#validatemsg').html('');
+                    }, 2500);
+                }
+                else if (vallevel == 2) {
+                    $('#validatemsg').html('Please select at least one city of selected partial county.');
+                    setTimeout(function () {
+                        $('#validatemsg').html('');
+                    }, 2500);
+                }
+            }
+        }
+        else {
+
+            $('#validatemsg').html('Please select at least one state.');
+            setTimeout(function () {
+                $('#validatemsg').html('');
+            }, 2500);
+        }
+    }
+    else {
+        $('#validatemsg').html('No county in this state please unselect it.');
+        $('#validatemsg').show();
+        setTimeout(function () {
+            $('#validatemsg').hide();
+        }, 2500);
+    }
+    //reset partial check status
+    $('#isPState').val(0);
+    $('#isPCounty').val(0);
+    $('#isCitySelected').val(0);
+})
+
+$('#btnno').click(function () {
+    CloseOpenPopup('ConfiramtionPopupouter', 'ConfiramtionPopupinner')
+})
+$('#btnmarkascomplete').click(function () {
+    $('#view').empty();
+    if ($('#selectCoverArea').css('display') == 'block') {
+        if (ValidateCoverageArea(0)) {
+            var vallevel = ChkValASPerPartialSelection();
+            if (vallevel == 0) {
+                SaveCoverageAreaAsPerStates(ROOT, 0, '@DecisionPointR.ComleteStateTitle', '@DecisionPointR.CompleteCountyTitle', $('#coverageAreaFor').val());
+        }
+        else {
+            if (vallevel == 1) {
+                $('#validatemsg').html('Please select at least one county of selected partial state.');
+                setTimeout(function () {
+                    $('#validatemsg').html('');
+                }, 2500);
+            }
+            else if (vallevel == 2) {
+                $('#validatemsg').html('Please select at least one city of selected partial county.');
+                setTimeout(function () {
+                    $('#validatemsg').html('');
+                }, 2500);
+            }
+        }
+    }
+    else {
+        $('#validatemsg').html('Please select at least one state.');
+        setTimeout(function () {
+            $('#validatemsg').html('');
+        }, 2500);
+    }
+
+}
+else if ($('#uploadZipCodeDiv').css('display') == 'block') {
+    if (ValidateCoverageArea(1)) {
+        $('#dvMsg').html("Please wait...")
+        $('#dvMsg').css("color", "green");
+        $('#btnOK').hide();
+        $('#btnno').hide();
+        $('#ConfiramtionPopupinner').css("width", "220px");
+        ShowPopup('ConfiramtionPopupouter', 'ConfiramtionPopupinner');
+        SaveCoverageAreaAsPerZipCode(ROOT, $('#coverageAreaFor').val(), 0);
+    }
+    else {
+        $('#validatemsg').html('Please select at least one zip.');
+        setTimeout(function () {
+            $('#validatemsg').html('');
+        }, 2500);
+    }
+}
+})
+$('#btnedit').click(function () {
+    //  alert(120);
+    $('#view').hide();
+    $('#CVATitle').hide();
+    $('#save').show();
+    $('#btnedit').hide();
+    $("#btnclose").css("margin-right", "5px");
+    $('body', window.parent.document).find('#btnsubmited').css("margin-right", "34px");
+
+    $('#btnmarkascomplete').show();
+
+    if ($('#ddlNotCoverWholeState').val() == 1 || ($('#coverageAreaFor').val() == 1 && $('#coverageareastatus').val() == "all")) {
+
+        $('#selectCoverArea').show();
+        $('#btnahowascomplete').show();
+    }
+})
+$('#btnclose').click(function () {
+    CloseChildWindow();
+})
+function SetCAStatusForStates() {
+    if ($('.coverageAreaType').val() == 0 && $('#coverageAreaFor').val() != 0 && $('#coverageareastatus').val() != "all") { $('#nocoveragearea').show(); }
+    else {
+
+        $('#nocoveragearea').hide();
+    }
+}
+</script>

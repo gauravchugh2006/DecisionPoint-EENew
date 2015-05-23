@@ -1,0 +1,314 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    if (Request["Type"] == "V")
+    {
+        Layout = "~/Views/Shared/_VendorSetUpProfileLayout.cshtml";
+    }else{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    }
+    ViewBag.Title = "AddTitle";
+    WebGrid grdtitle = new WebGrid(ajaxUpdateContainerId: "titlegrid", rowsPerPage: Model.rowperpage);
+    if (Model.lstBind != null)
+    {
+        grdtitle.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+<style>
+     .row{
+    margin-left:0px !important;
+    }
+      .errorClass
+    {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div class='heading'>
+        <div class='row'>
+        <h3>Manage Staff Titles</h3>
+        </div>
+    </div>
+            <div style="line-height: 2px !important;">
+                
+                <br />
+                <div class="w100">
+                    <span class="w200" style="margin-top: 10px;">Title Name</span><span>
+                        <input type="text" id="txttitle" placeholder="Title Name" maxlength="50" onkeypress="ValidateTextBox(this.id,event)">
+                        <input type="hidden" id="titleid" value="0" />
+                        <input type="hidden" id="isactivestatus" value="disable" />
+                    </span>
+
+                    <span><a id="btnsavetitle" class="btn btn-small btn-info butmargin" style="margin-top: -5px;" title="Save Title">Create</a></span>
+                    <span style="display: none"><a id="btnreset" class="btn btn-small btn-info butmargin-left1" title="Reset">
+                        <img src="~/Content/images/reset.png" style="height: 17px;" /></a></span>
+
+
+                    <span><a id="btndisable"  class="btn btn-small btn-info butmargin-left1" style="visibility: hidden; margin-top: -9px;" title="Enable/Disable Title">Disable</a></span>
+                </div>
+
+                <div class="w100">
+                   <div id="divtitlemsg" style="font-size: 12px; padding-bottom: 10px; color:green;padding-left:100px;"></div>
+                </div>
+
+                <div id="titlesdiv"  class="w100">
+                    <div >
+                        @if (Model.lstBind!=null)
+                        {
+  
+                               
+                            @grdtitle.GetHtml(htmlAttributes: new { id = "titlegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+        
+         grdtitle.Column(columnName:"Col1",header: Sorter("Col1", "Title Name", grdtitle), format:@<text>
+                @if(item.Col1Status)
+                        {
+<a id="title1B" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="title1G" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@(item.Col1) </a>
+                        }
+                </text>,
+                            style:"grid-width181"),
+    grdtitle.Column(columnName:"Col2",header: Sorter("Col2", "", grdtitle), format:@<text>
+
+                @if(item.Col2Status)
+                        {
+<a id="title2B" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="title2G" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col2) </a>
+                        }
+        
+          
+                </text>,style:"grid-width181"),
+              grdtitle.Column(columnName:"Col3",header: Sorter("Col3", "", grdtitle), format:@<text>
+
+                @if(item.Col3Status)
+                        {
+<a id="title3B" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+  
+                        }
+                        else
+                        {
+<a id="title3G" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col3) </a>
+                        }
+     
+                </text>,style:"grid-width181"),
+ 
+  
+    })
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+
+
+<script type="text/javascript">
+   
+        
+       
+       
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+       
+    });
+
+
+   
+    //Add new title name
+    $('#btnsavetitle').click(function () {
+        
+        var title = $('#txttitle').val().trim();
+        if (title != "") {
+          
+                var status = $('#btnsavetitle').html();
+                if (status == "Save") {
+                    status = "Edit";
+                }
+                else if (status == "Create") {
+                    status = "Save";
+                }
+                var titleId = $('#titleid').val();
+
+                $.ajax({
+                    url: '../CompanyDashBoard/AddTitle',
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    data: { 'title': title, 'status': status, 'titleId': parseInt(titleId) },
+                })
+              .success(function (result) {
+                  if (result > 0) {
+                      if (status == "Edit") {
+                          
+                          $('#divtitlemsg').html("Title Update Sucessfully");
+                      }
+                      else if (status == "Save") {
+                         
+                          $('#divtitlemsg').html("Title Saved Sucessfully");
+                          $('#titlemsg').html("Title Saved Sucessfully");
+
+                      }
+                      setTimeout(function () {
+                         
+                          FetchDetail(1);
+                          Reset();
+                      }, 1000);
+
+                   
+
+                  }
+                  else if (result == -1) {
+                     
+                      $('#divtitlemsg').html("Title Name alreay exist");
+                      setTimeout(function () {
+                     
+                          FetchDetail(getpageid("titlegrid"));
+                          Reset();
+                      }, 1000);
+                     
+                  }
+              })
+              .error(function (xhr, status) {
+                  alert(status);
+              })
+            
+        }
+        else {
+            $('#txttitle').addClass("errorClass");
+           
+        }
+    });
+  
+    //disable any title
+    $('#btndisable').click(function () {
+        var title = $('#txttitle').val().trim();
+        if (title != "") {
+            $('#txttitle').removeClass("errorClass");
+            var titleId = $('#titleid').val();
+            var isActive = $('#isactivestatus').val();
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/DisaEnaTitle")',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'titleId': parseInt(titleId), 'isActive': isActive },
+            })
+          .success(function (result) {
+              $('#divtitlemsg').html("Status change sucessfully");
+              setTimeout(function () {
+                  FetchDetail(getpageid("titlegrid"));
+                  Reset();
+
+              }, 200);
+
+
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+        } else {
+            $('#txttitle').addClass("errorClass");
+        }
+    });
+
+    function FetchDetail(pageid) {
+       
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ViewTitle/?page=")' + pageid,
+            cache: false,
+             type: "GET",
+             success: function (result) {
+               
+                 $('#titlesdiv').html($(result).find('#titlesdiv').html().trim());
+                 
+             }
+         });
+
+
+     
+       
+    }
+
+
+    $('#txttitle').on("paste", function (e) {
+        e.preventDefault();
+    });
+    //Edit title any title
+    function EditTitle(title, isActive, titleId) {      
+        if (isActive != '') {           
+           
+            $('#btndisable').show();
+            $('#isactivestatus').val("disable");
+            $('#btndisable').html('Disable');
+
+
+        }
+        else {            
+            $('#btndisable').show();
+            $('#btndisable').html('Enable');
+            $('#isactivestatus').val("enable");
+        }
+
+        $('#titleid').val(titleId);
+        $('#txttitle').val(title);
+        $('#btndisable').css("visibility", "visible")
+        $('#btnsavetitle').html("Save");
+
+    }
+  
+    function Reset()
+    {
+       
+        $('#txttitle').val("");
+        $('#btndisable').hide();
+        $('#divtitlemsg').html('');
+        $('#btnsavetitle').html('Create');
+        $('#titleid').val('0');
+        $('#txttitle').removeClass("errorClass");
+        $('#isactivestatus').val('disable');
+      
+    }
+   
+    //disbale and enalble on check box click
+    function DisEnable(titleId, isActive) {
+        $.ajax({
+            url: '../CompanyDashBoard/DisaEnaTitle',
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            data: { 'titleId': parseInt(titleId), 'isActive': isActive },
+        })
+        .success(function (result) {
+            FetchDetail(getpageid("titlegrid"));
+            Reset();
+         
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+    }
+
+</script>

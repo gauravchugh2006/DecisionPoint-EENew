@@ -1,0 +1,1007 @@
+﻿@model DecisionPoint.Models.InviteVendorBulk
+
+@{
+    ViewBag.Title = "ICBulkInvitation";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+@{
+   
+    WebGrid grdCSV = new WebGrid();
+    if (Model.LstVendorCsv != null)
+    {
+        
+            grdCSV = new WebGrid(ajaxUpdateContainerId: "grdCSV", rowsPerPage: Model.rowperpage, canPage: false);
+            grdCSV.Bind(Model.LstVendorCsv, autoSortAndPage: false, rowCount: Model.pagesize);
+        
+    }
+ 
+}
+
+
+
+@Styles.Render("~/Content/css/UserDashboard")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/dashboard")
+@Scripts.Render("~/bundles/jqueryval")
+
+<style>
+    .w20
+    {
+        margin-right: 50px;
+        float: left;
+        margin-bottom: 10px;
+        line-height: 26px;
+    }
+
+    .pdr5
+    {
+        padding-right: 5px;
+        float: left;
+        padding-top: 3px;
+    }
+
+    .w100
+    {
+        width: 100%;
+        float: left;
+    }
+
+    .w200
+    {
+        width: 80px;
+        float: left;
+        margin-right: 20px;
+        margin-top: 5px;
+    }
+
+    .w50
+    {
+        width: 100px;
+    }
+    
+    .overdue
+    {
+        color: red;
+    }
+    .butmargin
+    {
+        margin: 2px 0 5px 10px;
+    }
+
+    .butmargin-left1
+    {
+        margin: -2px 0px 1px 0px;
+    }
+
+    .grid-width100
+    {
+        width: 100px;
+    }
+
+    .grid-width181
+    {
+        width: 181px;
+    }
+
+    .iconcontainer
+    {
+        width: 70%;
+        overflow: hidden;
+        margin: 1% auto;
+    }
+
+    .individual
+    {
+        width: 202px;
+        height: 202px;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+        box-shadow: 2px 2px 2px 2px #E1E1E1;
+        border: 1px solid #e1e1e1;
+    }
+
+    .bulk
+    {
+        width: 202px;
+        height: 202px;
+        float: right;
+        text-align: center;
+        box-shadow: 2px 2px 2px 2px #E1E1E1;
+        border: 1px solid #e1e1e1;
+    }
+
+    #download
+    {
+        background: url(../Content/images/download.png) no-repeat;
+        width: 28px;
+        height: 32px;
+        float: right;
+        width: 175px;
+        padding-left: 32px;
+        line-height: 30px;
+        text-decoration: underline;
+    }
+
+    .autodetect
+    {
+        margin-left: 10px;
+        margin-top: 10px;
+        display: inline;
+        background: red;
+    }
+
+    .forlabel
+    {
+        float: left;
+    }
+
+    .fl
+    {
+        float: left;
+    }
+
+
+    label
+    {
+        font-weight: normal;
+        vertical-align: baseline;
+    }
+
+    label
+    {
+        margin-bottom: 5px;
+        margin-left: 15px;
+    }
+
+    label, input, button, select, textarea
+    {
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 23px;
+        float: left;
+    }
+
+    .manualinput
+    {
+        width: 50px;
+        margin-left: 10px;
+    }
+
+    .considerfirstrow
+    {
+        margin-left: 166px;
+        float: left;
+        display: block;
+        float: left;
+    }
+
+    .mt20
+    {
+        margin-top: 15px;
+    }
+
+    .mr10
+    {
+        margin-right: 10px;
+        float: left;
+    }
+
+    .w250
+    {
+        width: 100px;
+        float: left;
+        margin-top: 5px;
+    }
+
+    .wcol1
+    {
+        width: 14%;
+        float: left;
+    }
+
+    .wcol2
+    {
+        width: 220px;
+        float: left;
+    }
+
+    .wcol3
+    {
+        width: 30%;
+        float: left;
+    }
+
+    .mt5px
+    {
+        margin-top: 5px;
+    }
+
+    .wcol4
+    {
+        width: 14%;
+        float: left;
+    }
+
+    .wcol5
+    {
+        width: 220px;
+        float: left;
+    }
+
+    .wcol6
+    {
+        width: 30%;
+        float: left;
+    }
+
+    .w206
+    {
+        width: 206px;
+    }
+
+    .selectheading
+    {
+        background: #eee;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 3px 3px 3px 3px;
+        padding: 5px 0px;
+    }
+
+    .clear
+    {
+        clear: both;
+    }
+
+    .multiselectable
+    {
+        display: block;
+        overflow: hidden;
+        width: 60%;
+        padding-right: 20px;
+        margin-bottom: 10px;
+    }
+
+        .multiselectable select, .multiselectable div
+        {
+            width: 216px;
+            float: left;
+        }
+
+            .multiselectable div *
+            {
+                display: block;
+                margin: 0 auto;
+            }
+
+        .multiselectable div
+        {
+            display: inline;
+            overflow: hidden;
+        }
+
+        .multiselectable .m-selectable-controls
+        {
+            margin-top: 4em;
+            width: 70px;
+        }
+
+            .multiselectable .m-selectable-controls button
+            {
+                margin-top: 2em;
+                margin-left: .5em;
+            }
+
+    a.bulk-invitaion
+    {
+        background: url("../../images/bulk.jpg") repeat-x scroll left;
+        display: block;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+    a.manual-invitaion
+    {
+        background: url("../../images/manual.jpg") repeat-x scroll left;
+        display: block;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+</style>
+<div class='heading'>
+        <div class='row'>
+            <h3>Bulk Independent Contractor Upload</h3>
+        </div>
+    </div>
+<div>
+
+    <div class='content-box'>
+      
+
+        <div class='row' style="padding-top: 5px;">
+            @using (Html.BeginForm("ICBulkCSvUpload", "Invitation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+          
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" id="txtcsvs" style="margin-top: 3px;height:19px;" placeholder="Upload IC CSV/Excel" />
+                        
+                        <label class="btn btn-small btn-info butmargin" style="height: 25px; color: #fff; width: 80px;">
+                            <p style="padding-top: 2px;">Browse</p>
+                            @Html.TextBoxFor(m => m.File, new { @name = "attachment", @id = "txtcsv", type = "file", @style = "opacity:0; margin-top:-33px;width:80px;" })
+                        </label>
+                        <input type="submit" value="Upload File" class="btn btn-small btn-info butmargin" style="height: 30px; width: 100px;" id="btnUploadZip" />
+                        @*<div id="download" style="width: 245px;">
+                            @Html.ActionLink("Download Template IC with ID", "DownloadICInviteSample", "Invitation", new { Format = "ICListWithID" }, null)
+                            
+                        </div>*@
+                        <div id="download" style="width: 245px;">
+                            @Html.ActionLink("Download Template", "DownloadICInviteSample", "Invitation", new { Format = "ICListWithoutID" }, null)
+
+
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div style="clear: both"></div>
+                <div class="control-group" style="display: none">
+                    <div class="controls">
+                    </div>
+                </div>
+
+                <div class="control-group" style="display: none;">
+                    <div class="controls">
+                        <label style="margin-left: 0px; cursor: auto;">
+                            Consider first row as header</label>
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+               
+                <div id="divtitle">
+                    @if (Model.LstVendorCsv != null)
+                    {
+                        if (Model.LstVendorCsv.Count > 0)
+                        {
+                            if (@Model.LstVendorCsv[0].CheckType == "vendorwithid")
+                            {
+                        @grdCSV.GetHtml(htmlAttributes: new { id = "grdCSV" }, exclusions: new[] { "ID" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+ columns: grdCSV.Columns(
+ grdCSV.Column("No", "No"),
+ grdCSV.Column("companyName", header:  "Company Name"),
+             grdCSV.Column("FlowValue", "Flow"),
+              grdCSV.Column("PaymentType", "Payment"),
+             grdCSV.Column("FName", header:"First Name"),
+             grdCSV.Column("LName", "Last Name"),
+
+
+                  grdCSV.Column("EmailId", "Email"),
+            grdCSV.Column(header: "Remove",
+  format: @<text> <a id="btnDelete1" style="cursor: pointer;margin-left: 23px;" onclick="FunDelete(this.id,@item.No)">
+      <img src="../Content/images/delete.png" /></a> </text>, canSort: false)
+
+
+
+
+
+
+
+
+     ))
+                            }
+                            else
+                            {
+                            
+                            
+                    
+                                                   
+                        @grdCSV.GetHtml(htmlAttributes: new { id = "grdCSV" }, exclusions: new[] { "ID" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+ columns: grdCSV.Columns(
+
+ grdCSV.Column("No", "No"),
+ grdCSV.Column("companyName", header: "Company Name"),
+             grdCSV.Column("BGCheck", "Background Check",
+             format: (item) =>
+               {
+                   var css = @"class=""overdue""";
+                   if (string.IsNullOrWhiteSpace(@item.BGCheck))
+                   {
+                       return Html.Raw("<span " + css + ">" + "--------" + "</span>");
+                   }
+                   else
+                   {
+                       return Html.Raw("<span>" + @item.BGCheck + "</span>");
+                   }
+               }),
+             grdCSV.Column("PaymentType", "Payment",
+              format: (item) =>
+               {
+                   var css = @"class=""overdue""";
+                   if (string.IsNullOrWhiteSpace(@item.PaymentType))
+                   {
+                       return Html.Raw("<span " + css + ">" + "--------" + "</span>");
+                   }
+                   else
+                   {
+                       return Html.Raw("<span>" + @item.PaymentType + "</span>");
+                   }
+               }),
+                grdCSV.Column("VType", "IC Type",
+              format: (item) =>
+               {
+                   var css = @"class=""overdue""";
+                   if (string.IsNullOrWhiteSpace(@item.VType))
+                   {
+                       return Html.Raw("<span " + css + ">" + "--------" + "</span>");
+                   }
+                   else
+                   {
+                       return Html.Raw("<span>" + @item.VType + "</span>");
+                   }
+               }),
+             grdCSV.Column("FName", header: "First Name"),
+             grdCSV.Column("LName", "Last Name"),
+
+
+                  grdCSV.Column("EmailId", "Email"),
+            grdCSV.Column(header: "Remove",
+  format: @<text> <a id="btnDelete" style="cursor: pointer;margin-left: 23px;" onclick="FunDelete(this.id,@item.No)">
+      <img src="../Content/images/delete.png" /></a> </text>, canSort: false),
+
+
+            grdCSV.Column(header: "Edit",
+ format: @<text> <a id="messagetitle" onclick="showpopupInbox('@item.CompanyName','@item.VTID','@item.FName','@item.LName','@item.EmailId','@item.No','@item.PaymentType','@item.BGCheck')" style="cursor:pointer;margin-left: 8px;">
+     <img src="../Content/images/edit.png" />
+ </a></text>, canSort: false)
+
+
+
+
+
+
+     )) }
+
+                        <button id="btnSendInvite" type="button" class="btn btn-small btn-info butmargin" style="float: right; margin-right: 17px;">Send Invite</button>
+                        <label id="finalvalmsg" style="color:red;margin-right:-93px;float:right;margin-top:26px;"></label>
+                       
+
+                        }
+                        else
+                        {
+                        <div>
+                           @if (ViewBag.Error == null)
+                           {
+                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                    <div style="margin-left: 195px;">Please Upload CSV File</div>
+                                </div>
+                           }
+                           else
+                           {
+                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                    <div style="margin-left: 195px;">@ViewBag.Error</div>
+                                </div>
+                           }
+
+                        </div>
+                        }
+                    }
+                    else
+                    {
+                        <div>
+                            @if (ViewBag.Error == null)
+                            {
+                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                    <div style="margin-left: 195px;">Please Upload CSV File</div>
+                                </div>
+                            }
+                            else
+                            {
+                                <h4>@ViewBag.Error</h4>
+                            }
+
+                        </div>
+                    }
+                </div>
+                    
+                @Html.HiddenFor(model => model.CsvFileName, new { id="lblCSVFileName",Value=Model.CsvFileName})
+                
+            }
+        </div>
+    </div>
+
+</div>
+@*Edit  Popup*@
+<div class="profiletrans" id="EditCsv"></div>
+<div class="popup" id="popupCSV" style="width: auto; height: auto; top: 200px; margin-left: 161px;">
+    <div class="profile-popup" style="display: block; width: auto; height: auto;">
+        <div class="tittle-MessageBox">
+            <span>Edit Inependent Contractor</span><a>
+                <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box" style="width: auto; height: auto;">
+
+            <table class="MessageSection-Box" style="width: auto; height: auto;">
+                <tr>
+                    <td>Company Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+
+                        <input id="CName" name="CName" type="text" maxlength="50"></td>
+
+                </tr>
+                 <tr>
+                    <td>Background Check<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                         <select id="Isbackgrdcheck" style = "width:219px">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Profession</td>
+                    <td></td>
+                    <td>
+                         @if (Model.CompanyVendorTypeDetails != null)
+                        {
+                       @Html.DropDownList("ddVendorType", new SelectList(Model.CompanyVendorTypeDetails, "VendorTypeId", "VendorTypeName"), new { @name = "ddVendorType", @style = "width:220px" })
+                         }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Payment</td>
+                    <td></td>
+                    <td>
+                        @if (Model.GetICPaymentMode != null)
+                        {
+                            @Html.DropDownList("ddlPayment", new SelectList(Model.GetICPaymentMode, "PaymentId", "PaymentMode"), "-- Select --",new { disabled = "disabled" })
+                        }
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>First Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="FName" name="LName" type="text" maxlength="50" style="width:205px;"></td>
+
+                </tr>
+                <tr>
+                    <td>Last Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="LName" name="LName" type="text" maxlength="50" style="width:205px;"></td>
+
+                </tr>
+                <tr>
+                    <td>Email<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="Email" name="Email" type="email" maxlength="100">
+                        <label id="emailidval" style="color:red;margin-left:-220px; margin-top:26px;"></label>
+                    </td>
+
+                </tr>
+
+
+
+                <tr>
+                    <td colspan="3">
+
+                        <input id="No" type="hidden" />
+                        <input type="button" id="btnSubmit" value="Submit" class="btn btn-small btn-info butmargin" style="float:right;" />
+                        
+                    </td>
+                </tr>
+
+            </table>
+
+
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+@*Edit  Popup End *@
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+      
+    </div>
+
+</div>
+@* Saved Pop up End *@
+<input type="hidden" id="tempVal" />
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        var $radios = $('input:radio[id=rdSelectByZip]');
+        if ($radios.is(':checked') === false) {
+            $radios.filter('[id=rdSelectByZip]').prop('checked', true);
+        }
+
+        $('#btnSendInvite').focus();
+
+    })
+    $('input[id="txtcsv"]').change(function () {
+        var filename = $(this).val();
+        filename = filename.replace("C:\\fakepath\\", "");
+        $('#txtcsvs').val(filename);
+
+    });
+
+        @* Pop up jquery  *@
+
+
+    function showpopupInbox(CName, VId, FName, LName, Email, No, Payment,BGC) {
+
+        var paymentType;
+        $('#CName').val(CName);
+        $('#FName').val(FName);
+        $('#LName').val(LName);
+        $('#Email').val(Email);
+        $("#ddVendorType").val(VId);
+     //   alert(BGC);
+        $("#Isbackgrdcheck option").each(function () {
+            if ($(this).text() == BGC) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        
+        $('#No').val(No);
+
+        if (Payment.trim().toLowerCase() == 'we pay') {
+            paymentType = '1';
+        }
+        else {
+            paymentType = '2';
+        }
+        $('#ddlPayment').val(paymentType);
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#popupCSV').css("top", poistion);
+
+    }
+
+    $('#btnClosePopup').click(function () {
+        $('#EditCsv').hide();
+        $('#popupCSV').hide();
+       
+    })
+
+    //getting value of Row .. which should be update
+
+    $('#grdCSV tbody tr').click(function () {
+        var $tr = $(this).closest('tr');
+        var myRow = $tr.index();
+        $('#tempVal').val(parseInt(myRow) + 1);
+    });
+
+    $('#btnSubmit').click(function () {
+
+        if (validatebulkVendor()) {
+
+            var CName = $('#CName').val();
+            var FName = $('#FName').val();
+            var LName = $('#LName').val();
+            var Email = $('#Email').val();
+            var PaymentType = $('#ddlPayment').val();
+            var PaymentMode = $('#ddlPayment').find('option:selected').text();
+            var VID = $("#ddVendorType").val();
+            var VType = $("#ddVendorType").find('option:selected').text();
+            var BgCheck = $("#Isbackgrdcheck").find('option:selected').text();
+            
+            var No = $('#No').val();
+            var row = $('#tempVal').val();
+
+            //var url = "?No=" + No + "&FName=" + FName + "&LName=" + LName + "&CName=" + CName + "&Email=" + Email + "&PaymentType=" + PaymentType + "&PaymentMode=" + PaymentMode + "&VTID=" + VID + "&BGCheck=" + BgCheck;
+            //var pageid = getpageid("grdCSV");
+            $.ajax({
+                type: "POST",
+                UpdateTargetId: 'divtitle',
+
+                url:'@Url.Content("~/Invitation/VendorUpdateItem")' ,
+
+                data: JSON.stringify({
+                    "No": No,
+                    "FName": FName,
+                    "LName": LName,
+                    "CName": CName,
+                    "Email": Email,
+                    "PaymentType": PaymentType,
+                    "PaymentMode": PaymentMode,
+                    "VTID": VID,
+                    "VType":VType,
+                    "BGCheck": BgCheck,
+                    "CsvFileName": $('#lblCSVFileName').val()
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+
+                    $('#EditCsv').hide();
+                    $('#popupCSV').hide();
+                    $('#grdCSV').html($(data).find('#grdCSV').html().trim())
+                    validateemailid();
+
+
+                }
+            });
+        }
+    });
+
+
+        @* Pop up jquery  End *@
+
+
+    $('#rdSelectByZip').change(function () {
+        if ($('#rdSelectByZip').is(':checked')) {
+            window.location.href = "InviteVendorBulk";
+        }
+    })
+    $('#rdSelectByAddress').change(function () {
+
+        if ($('#rdSelectByAddress').is(':checked')) {
+            window.location.href = "InviteVendorManual";
+        }
+    })
+
+    // Delete Method....
+    function FunDelete(rowId, No) {
+       /// var pageid = getpageid("grdCSV");
+       
+      
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/Invitation/ICDeleteItem")' ,
+            cache: false,
+            data: { 'ID': No, 'csvFileName': $('#lblCSVFileName').val() },
+
+            success: function (data) {
+                $('#grdCSV').html($(data).find('#grdCSV').html().trim())
+
+            }
+
+        });
+    }
+    function validateemailid() {
+        var chkstatus = true;
+        $('#grdCSV tr').each(function (index) {
+            if (index != 0) {
+                if (!validateEmail($(this).find("td").eq(7).html())) {
+                    $(this).find("td").eq(7).addClass("errorClass");
+                    $(this).find("td").eq(7).attr("title", "Please input correct emailid");
+                    chkstatus = false;
+                }
+                if ($(this).find("td").eq(4).find('span').html().trim() == "--------") {
+                    $(this).find("td").eq(4).addClass("errorClass");
+                    $(this).find("td").eq(4).attr("title", "Please input IC Type");
+                    chkstatus = false;
+                }
+                if ($(this).find("td").eq(3).find('span').html().trim() == "--------") {
+                    $(this).find("td").eq(3).addClass("errorClass");
+                    $(this).find("td").eq(3).attr("title", "Please input payment Type");
+                    chkstatus = false;
+                }
+            }
+        })
+        if (!chkstatus) {
+            $('#finalvalmsg').html("Please fill correct record");
+            return false;
+        }
+        else {
+            $('#finalvalmsg').html("");
+            return true;
+        }
+      
+    }
+
+    $('#btnSendInvite').click(function () {
+        if (validateemailid()) {
+            var orgText = $('document').text();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/CompanyDashBoard/ICBulkSaveItem")',
+                cache: false,
+                data: { 'CsvFileName': $('#lblCSVFileName').val() },
+                success: function (data) {
+                   
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvSaveMsg').text('Invitation sent sucessfully');
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.onbeforeunload = null;
+                        window.location.href ='@Url.Content("~/Invitation/InviteICBulk")';
+                    }, 1000);
+                },
+                beforeSend: function (jqXHR, obj) {
+
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvSaveMsg').text('Please wait...');
+
+
+                },
+                error: function (data) {
+
+
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvMsg').text('Error in input details : Invitation not sent sucessfully');
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+
+                }
+
+
+            });
+        }
+
+
+    });
+
+    $('#btnSaveOK').click(function () {
+        window.location.href = '@Url.Content("~/Invitation/InviteICBulk")';
+    });
+    $('#FName').keypress(function () {
+        if ($('#FName').val().trim() != "") {
+            $('#FName').removeClass('errorClass');
+        }
+    })
+    $('#LName').keypress(function () {
+        if ($('#LName').val().trim() != "") {
+            $('#LName').removeClass('errorClass');
+        }
+    })
+    $('#Email').keypress(function () {
+        if ($('#Email').val().trim() != "") {
+            $('#Email').removeClass('errorClass');
+            $('#emailidval').html("");
+        }
+    })
+    $('#CName').keypress(function () {
+        if ($('#CName').val().trim() != "") {
+            $('#CName').removeClass('errorClass');
+        }
+    })
+    $('#ddlFlow').change(function(){
+        if ($('#ddlFlow').find('option:selected').text().trim() != '-- Select --') {
+            $('#ddlFlow').removeClass('errorClass');
+        }
+    })
+    function validatebulkVendor() {
+        var res = false;
+
+
+        var firstName = $('#FName').val();
+        var lastName = $('#LName').val();
+        var email = $('#Email').val();
+        var CompanyName = $('#CName').val();
+        var firstNameval = true;
+        var lastNameval = true;
+        var emailval = true;
+        var companynameval = true;
+        var flowval = true;
+
+        var flow = $('#ddlFlow').find('option:selected').text();
+        var payment = $('#ddlPayment').find('option:selected').text();
+
+        if (CompanyName.trim() == null || CompanyName.trim() == "") {
+            $('#CName').text(lastName);
+            $('#CName').addClass("errorClass");
+            companynameval = false;
+        }
+        //else if (CompanyName.trim() != null || CompanyName.trim() != "") {
+        //    $('#CName').removeClass('errorClass');
+        //    res = true;
+        //}
+
+        if (flow.trim() == '-- Select --') {
+            $('#ddlFlow').addClass('errorClass');
+            flowval = false;
+        }
+     
+        //if (payment.trim().toLowerCase() == 'we pay' || payment.trim().toLowerCase() == 'they pay') {
+        //    $('#ddlPayment').removeClass('errorClass');
+        //    res = true;
+        //}
+        //else {
+        //    $('#ddlPayment').addClass('errorClass');
+        //    return false;
+        //}
+        if (firstName.trim() == null || firstName.trim() == "") {
+            $('#FName').addClass('errorClass');
+            firstNameval = false;
+        }
+        //else if (firstName.trim() != null || firstName.trim() != "") {
+        //    $('#FName').removeClass('errorClass');
+        //    res = true;
+        //}
+        if (lastName.trim() == null || lastName.trim() == "") {
+            $('#LName').addClass('errorClass');
+            lastNameval = false;
+        }
+        //else if (lastName.trim() != null || lastName.trim() != "") {
+        //    $('#LName').removeClass('errorClass');
+        //    res = true;
+
+        //}
+        if (email.trim() == null || email.trim() == "") {
+            $('#Email').addClass('errorClass');
+            emailval = false;
+        }
+        else if (email.trim() != null || email.trim() != "") {
+
+            if (!validateEmail(email.trim())) {
+                $('#Email').addClass('errorClass');
+                $('#emailidval').html("Please enter correct email id")
+                emailval = false;
+            }
+            //else {
+
+            //    $('#Email').addClass('errorClass');
+            //    return false;
+            //}
+
+
+        }
+
+
+        if (firstNameval && lastNameval && emailval && companynameval && flowval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+</script>
+
+

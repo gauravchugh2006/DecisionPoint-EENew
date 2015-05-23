@@ -1,0 +1,141 @@
+﻿@using DecisionPointCAL.Common;
+@using System.Globalization;
+@{
+    ViewBag.Title = "Welcome";
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    string userType = string.Empty;
+    string userName = Convert.ToString(ViewBag.UserName, CultureInfo.InvariantCulture);
+    if (!object.Equals(Session["UserType"], null))
+    {
+        userType = Convert.ToString(Session["UserType"]);
+    }
+}
+
+@if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"])))
+{
+    if (Convert.ToString(Session["UserType"]) == "IC")
+    {
+        <h2 class="package-p-heading">CONGRATULATIONS!</h2>
+        <div class="congratulations-msg-box" style="margin-top: 15px;">
+            <p>You have successfully joined <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span>.</p>
+        </div>
+        <div class="congratulations-msg-box">
+            <h2>
+                At this point, it is very important that you respond to the email(s) that you received from Sterling you signed up for ANY of the following:  (You receive an e-mail for each item you selected)
+            </h2>
+            <ul>
+                <li>Standard Package</li>
+                <li>Premium Package</li>
+                <li>Professional License</li>
+                <li>Drivers License</li>
+            </ul>
+            <p>NOTE: If you ONLY signed up for a Basic Membership, you will not be received any emails from Sterling.</p>
+
+            <p>In the meantime, please take a few minutes to complete your <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span> Profile, which is on the next page. Be sure to:</p>
+
+            <p>
+                The following page will be your profile page.  Click on "Edit Profile" in the upper right corner to upload your photo and make any changes to your information.
+                Click on anything that is flashing (these are your "Outstanding Actions") and complete what is requested. The exception is "Edit Visibility" which you should do ONLY after you receive the results of your background check.
+            </p>
+            <p>Questions? Send us an email at <a href="mailto:Jim@compliancetracker.org">Jim@compliancetracker.org</a>.</p>
+
+
+        </div>
+        <a role="button" class="btn btn-primary goLive" onclick="ChangeRegStatus('@userType',event)" style="float: right; margin:50px 3px 3px 3px">Complete Profile</a>
+    }
+    else if (Convert.ToString(Session["UserType"]) == Shared.NonClient)
+    {
+        <h2 class="package-p-heading">THANK YOU</h2>
+        <div class="congratulations-msg-box" style="margin-top: 15px;">
+            <p>
+                Your initial <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span>
+                registration is complete. The next and final step will give you unlimited access to @userName's <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span> profile. Here is all you have to do:
+            </p>
+        </div>
+        <div class="congratulations-msg-box">
+            <ul>
+                <li>
+                    Watch your inbox for an email from <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span>.
+                    It will contain <span style="font-weight:bold;">3 attachments that you have to complete and return</span>.
+                </li>
+                <li>Once you send your documents to Sterling, they will be verified, and you can expect to receive your <span style="font-weight:bold;">profile viewing credentials within 24 hours</span>.</li>
+            </ul>
+
+            <p>
+                <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span> is an extremely effective and inexpensive way for your company to manage risk,
+                communicate compliance requirements and meet regulatory mandates. To learn more about the benefits of becoming a
+                <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span> member, go to <a href="http://getcompliancetracker.com">getcompliancetracker.com</a>
+            </p>
+
+
+        </div>
+        <a role="button" class="btn btn-primary goLive" onclick="ChangeRegStatus('@userType',event)" style="float: right; margin: 3px">Complete Profile</a>
+    }
+    else
+    {
+        <h2 class="package-p-heading">CONGRATULATIONS!</h2>
+        <div class="congratulations-msg-box" style="margin-top: 15px;"><p>You have successfully joined <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span>. We know you'll find it easy to use and helpful in managing your Directives, Training, Credentials, Policy and Procedures.<p> </div>
+        <div class="congratulations-msg-box">
+            <h2>
+                Please take a few minutes to complete your <span style="color:#0065a3; font-weight:bold;">COMPLIANCE</span><span style="color:#8dc73f;font-weight:bold;">TRACKER</span> Profile, which is on the next page. Be sure to:
+            </h2>
+            <ul>
+                <li>Click on "Edit Profile" in the upper right corner to upload your photo and make any changes to your information.</li>
+                <li>Click on anything that is flashing (these are your "Outstanding Actions") and complete what is requested.</li>
+            </ul>
+
+            <p>Questions? Send us an email at <a href="mailto:helpdesk@compliancetracker.org">helpdesk@compliancetracker.org</a>.</p>
+
+
+        </div>
+        <a role="button" class="btn btn-primary goLive" onclick="ChangeRegStatus('@userType',event)" style="float: right; margin: 3px">Complete Profile</a>
+    }
+}
+<script>
+
+
+    function ChangeRegStatus(userType, e) {
+
+        $.ajax({
+            url: '@Url.Content("~/Company/ChangeRegistrationStatus")',
+            cache: false,
+            data: { type: userType },
+            type: 'get',
+            async: true,
+            success: function (data) {
+                if (userType == "IC") {
+                    window.location.href = "@Url.Content("~/UserDashBoard/ICProfile")";
+                }
+                else if (userType == "Company") {
+                    window.location.href = "@Url.Content("~/CompanyDashBoard/Accountprofile")";
+                }
+                else if (userType == "Guest") {
+                    SendMailWithAttachements();
+                }
+                else {
+                    window.location.href = "@Url.Content("~/CompanyDashBoard/Accountprofile")";
+                }
+
+            },
+            error: function (data) {
+
+            }
+
+        });
+    }
+    function SendMailWithAttachements() {
+        $.ajax({
+            url: '@Url.Content("~/Company/SendMailToICGuest")',
+            cache: false,
+            type: 'GET',
+            async: true,
+            success: function (data) {
+                window.location.href = "@Url.Content("~/CompanyDashBoard/CompanyProfile")";
+            },
+            error: function (data) {
+
+            }
+
+        });
+    }
+</script>

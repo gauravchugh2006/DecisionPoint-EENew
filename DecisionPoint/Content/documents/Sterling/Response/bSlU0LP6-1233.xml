@@ -1,0 +1,26 @@
+<BackgroundReports xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" dpuserId="1233" xsi:schemaLocation="http://ns.hr-xml.org/2006-02-28 http://ns.hr-xml.org/2_4/HR-XML-2_4/Screening/US/BackgroundReports.xsd" userId="DecisionPointtp" account="DecisionPoint" password="DecisionPointtp456">
+  <BackgroundReportPackage xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sish="http://schemas.st.com/data/v1/SterlingHeader" xmlns:oa="http://www.openapplications.org/oagis/9" type="Driver License">
+    <ProcessingInformation>
+      <AccessCredential type="UserName">DPINT</AccessCredential>
+      <AccessCredential type="Account">DP</AccessCredential>
+      <AccessCredential type="Password">password456@</AccessCredential>
+    </ProcessingInformation>
+    <ProviderReferenceId>
+      <IdValue>2758423</IdValue>
+    </ProviderReferenceId>
+    <ClientReferenceId>
+      <IdValue>bSlU0LP6-1233</IdValue>
+    </ClientReferenceId>
+    <ScreeningStatus>
+      <OrderStatus>InProgress</OrderStatus>
+    </ScreeningStatus>
+    <ScreeningsSummary>
+      <Organization>
+        <OrganizationName />
+        <OrganizationId>
+          <IdValue />
+        </OrganizationId>
+      </Organization>
+    </ScreeningsSummary>
+  </BackgroundReportPackage>
+</BackgroundReports>

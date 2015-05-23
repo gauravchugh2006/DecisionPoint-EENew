@@ -1,0 +1,633 @@
+﻿@model DecisionPoint.Models.InviteStaffModel
+
+@{
+    ViewBag.Title = "ManualInvitation";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grdCSV = new WebGrid();
+    if (Model.lst_Csv != null)
+    {
+        grdCSV = new WebGrid(ajaxUpdateContainerId: "grdCSV", rowsPerPage: Model.rowperpage, canPage: false);
+        grdCSV.Bind(Model.lst_Csv, autoSortAndPage: false, rowCount: Model.pagesize);
+    }
+}
+
+
+<div class='heading'>
+    <div class='row'>
+        <h3>Upload Staff</h3>
+    </div>
+</div>
+
+
+<div>
+    @using (Html.BeginForm("InviteStaffBulkCSvUpload", "CompanyDashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+             
+        <div class='content-box'>
+
+
+            <div class='row' style="padding-top: 5px;">
+
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" id="txtcsvs" style="margin-top: 3px; height: 19px;" placeholder="Upload Staff CSV/Excel" />
+
+                        <label class="btn btn-small btn-info butmargin" style="height: 25px; color: #fff; width: 80px;">
+                            <p style="padding-top: 2px;">Browse</p>
+                            @Html.TextBoxFor(m => m.File, new { @name = "attachment", @id = "txtcsv", type = "file", @style = "opacity:0; margin-top:-33px;width:80px;" })
+                        </label>
+                        <input type="submit" value="Upload File" class="btn btn-small btn-info butmargin" style="height: 30px; width: 100px;" id="btnUploadZip" />
+                        <div id="download">
+                            @Html.ActionLink("Download Template", "DownloadStaffIviteSample", "CompanyDashboard")
+
+                        </div>
+                    </div>
+                    <div class="controls" style="color: red;">
+                        @Html.ValidationMessageFor(m => m.File)
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+                <div class="control-group" style="display: none">
+                    <div class="controls">
+                        <div class="fl">Choose Seperators :</div>
+                        <div class="forlabel" alignment="center">
+                            <label style="float: left; margin-left: 10px;">
+                                <input type="radio" id="" name="ss" value="," checked="checked" class=" mr10" style="margin-right: 7px;" />
+                                (,)</label>
+                            <label style="float: left; margin-left: 10px;">
+                                <input type="radio" id="" name="ss" value="." class=" mr10" style="margin-right: 7px;" />
+                                (.)</label>
+                            <label style="float: left; margin-left: 10px;">
+                                <input type="radio" id="" name="ss" value=";" class=" mr10" style="margin-right: 7px;" />
+                                (;)</label>
+                            @Html.HiddenFor(model => model.Seprator, new { @id = "hidSeprator", @value = "," })
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group" style="display: none;">
+                    <div class="controls">
+                        <label style="margin-left: 0px;">
+                            @Html.CheckBoxFor(model => model.FirstRowHeader, new { @id = "firstRowHeader", @style = "margin-top:5px;" })
+                            <span style="margin-left: 5px">Consider first row as header</span></label>
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+
+
+
+                <div class="w100">
+                    <div class='tabbable'>
+                        <div class='tab-content'>
+                            <div class='tab-pane fade in active' id='messages'>
+                                <div id="divtitle">
+                                    @if (Model.lst_Csv != null)
+                                    {
+                                        if (Model.lst_Csv.Count > 0)
+                                        {
+                                        <div class="cnt_txt">List of User Data</div>                        
+                                        @grdCSV.GetHtml(htmlAttributes: new { id = "grdCSV" }, exclusions: new[] { "ID" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+
+
+ columns: grdCSV.Columns(
+
+ grdCSV.Column("No", "No"),
+ grdCSV.Column("StaffFName", "First Name"),
+             grdCSV.Column("StaffLName", "Last Name"),
+              grdCSV.Column("StaffTitle", "Title", format: (item) =>
+              {
+                  var css = @"class=""overdue""";
+                  if (string.IsNullOrWhiteSpace(@item.StaffTitle))
+                  {
+                      return Html.Raw("<span " + css + ">" + "--------" + "</span>");
+                  }
+                  else
+                  {
+                      return Html.Raw("<span>" + @item.StaffTitle + "</span>");
+                  }
+              }
+
+               ),
+                  grdCSV.Column("staffEmail", "Email"),
+            grdCSV.Column(header: "Remove",
+  format: @<text> <a id="btnDelete" style="cursor: pointer;" onclick="FunDelete(this.id,@item.No)">
+      <img src="../Content/images/delete.png" /></a> </text>, canSort: false),
+
+            grdCSV.Column(header: "Edit",
+ format: @<text> <a id="Edit" onclick="showpopupInbox('@item.StaffFName','@item.StaffLName','@item.staffEmail','@item.StaffRoleID','@item.StaffTitleID','@item.StaffPermissionID','@item.No')" style="cursor:pointer;">
+     <img id="messagetitles" src="../Content/images/edit.png" />
+ </a></text>, canSort: false)
+
+
+
+
+
+     )) 
+                                        <button id="btnSendInvite" type="button" class="btn btn-small btn-info butmargin" style="float: right; margin-right: 17px;">Send Invite</button>
+                                        <label id="finalvalmsg" style="color: red; margin-right: -93px; float: right; margin-top: 26px;"></label>
+                                        }
+                                        else
+                                        {
+                                        <div>
+                                            @if (ViewBag.Error == null)
+                                            {
+                                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                                    <div style="margin-left: 195px;">Please Upload CSV File</div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                                    <div style="margin-left: 195px;">@ViewBag.Error</div>
+                                                </div>
+                                            }
+
+                                        </div>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            @if (ViewBag.Error == null)
+                                            {
+                                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                                    <div style="margin-left: 195px;">Please Upload CSV File</div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                                    <div style="margin-left: 195px;">@ViewBag.Error</div>
+                                                </div>
+                                            }
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div> 
+        @Html.HiddenFor(model => model.CsvFileName, new { id = "lblCSVFileName", Value = Model.CsvFileName })           
+    }
+</div>
+
+
+
+
+
+<div class="profiletrans" id="EditCsv"></div>
+
+@*Edit  Popup*@
+<div class="popup" id="popupCSV" style="width: auto; height: auto; top: 200px; margin-left: 161px;">
+
+    <div class="profile-popup" style="display: block; width: auto; height: auto;">
+        <div class="tittle-MessageBox">
+            <span>Edit Staff</span><a>
+                <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box" style="width: auto; height: auto;">
+
+            <table class="MessageSection-Box" style="width: auto; height: auto;">
+                <tr>
+                    <td class="td-align-textbox">First Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="FName" name="FName" type="text" maxlength="50" style="width:205px;" />
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="td-align-textbox">Last Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="LName" name="LName" type="text" maxlength="50" style="width:205px;" /></td>
+
+                </tr>
+                <tr>
+                    <td class="td-align-textbox">Email<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="Email" name="Email" type="email" maxlength="100" /><br />
+                        <label id="emailidval" style="color: red; margin-top: 4px;"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-align-textbox">Title</td>
+                    <td></td>
+                    <td>
+                        @if (Model.titleDetails != null)
+                        {
+                            @Html.DropDownList("ddlTitle", new SelectList(Model.titleDetails, "id", "titleName"), "--Select--")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+
+                        <input id="No" type="hidden" />
+                        <input type="button" id="btnSubmit" value="Submit" class="btn btn-small btn-info butmargin" style="margin-left: 235px;" />
+
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+@*Edit  Popup End *@
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+
+    </div>
+</div>
+@* Saved Pop up End *@
+
+<input type="hidden" id="tempVal" />
+
+<div class="confirmationdivmain" style="display: none"></div>
+
+<div class="confirmationdivinner" style="display: none;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvMsg"></div>
+
+        <div style="float: left; width: 50px;">
+            <input type="button" id="btnok" class="btn btn-primary" value="Ok">
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    //Staff
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        $('input[id="txtcsv"]').change(function () {
+            var filename = $(this).val();
+            filename = filename.replace("C:\\fakepath\\", "");
+            $('#txtcsvs').val(filename);
+
+        });
+        $('#hidSeprator').val(',');
+        $('input[type="radio"]').change(function () {
+            var seprators = $(this).val();
+            $('#hidSeprator').val(seprators);
+        })
+
+
+
+
+
+    })
+
+
+
+        @* Pop up jquery  *@
+
+    function showpopupInbox(FName, LName, Email, RoleID, TitleID, PermisionID, No) {
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+        $('#FName').val(FName);
+        $('#LName').val(LName);
+        $('#Email').val(Email);
+        //  alert(TitleID);
+        if (TitleID != 0) {
+            $("#ddlTitle").val(TitleID);
+        }
+        if (RoleID != 0) {
+            $("#ddlRole").val(RoleID);
+        }
+        if (PermisionID != 0) {
+            $("#ddlPermission").val(PermisionID);
+        }
+
+        $('#No').val(No);
+
+
+
+    }
+
+    $('#btnClosePopup').click(function () {
+        $('#EditCsv').hide();
+        $('#popupCSV').hide();
+
+    })
+
+    //getting value of Row .. which should be update
+
+    $('#grdCSV tbody tr').click(function () {
+        var $tr = $(this).closest('tr');
+        var myRow = $tr.index();
+        $('#tempVal').val(parseInt(myRow) + 1);
+    });
+
+    $('#btnSubmit').click(function () {
+        // alert('call');
+        if (validatebulkInviteStaff()) {
+
+            var Fname = $('#FName').val();
+            var Lname = $('#LName').val();
+            var Email = $('#Email').val();
+
+            var RoleID = $("#ddlRole").val();
+            var TitleID = $("#ddlTitle").val();
+            var PermissionID = $("#ddlPermission").val();
+
+            var Role = $('#ddlRole').find('option:selected').text();
+            var Title = $('#ddlTitle').find('option:selected').text();
+            var Permission = $('#ddlPermission').find('option:selected').text();
+
+            var No = $('#No').val();
+            var row = $('#tempVal').val();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/CompanyDashBoard/UpdateItem")',
+                data: JSON.stringify({
+                    No: No,
+                    StaffFName: Fname,
+                    StaffLName: Lname,
+                    staffEmail: Email,
+                    StaffRoleID: RoleID,
+                    StaffTitleID: TitleID,
+                    StaffPermissionID: PermissionID,
+                    StaffRole: Role,
+                    StaffTitle: Title,
+                    StaffPermission: Permission,
+                    CsvFileName: $('#lblCSVFileName').val()
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+
+
+                    $('#EditCsv').hide();
+                    $('#popupCSV').hide();
+
+                    $('#grdCSV').html($(data).find('#grdCSV').html().trim())
+                    validateemailid();
+
+
+                }
+            });
+        }
+    });
+
+
+        @* Pop up jquery  End *@
+
+
+    function getCompanyId(txtId) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '@Url.Content("~/CompanyDashboard/GetCompanyId")',
+            success: function (data) {
+                var abc = data;
+                $('#' + txtId).val(abc);
+            },
+            async: false
+        });
+    }
+
+
+    $('#btnok').click(function () {
+        $('.confirmationdivmain').hide();
+        $('.confirmationdivinner').hide();
+    });
+
+    // Delete Method....
+
+    function FunDelete(rowId, No) {
+
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/CompanyDashboard/DeleteItem")',
+            data: { 'id': No, 'csvFileName': $('#lblCSVFileName').val() },
+
+            success: function (data) {
+                $('#grdCSV').html($(data).find('#grdCSV').html().trim())
+
+            }
+
+        });
+    }
+
+
+    function validateemailid() {
+        var chkstatus = true;
+        $('#grdCSV tr').each(function (index) {
+            if (index != 0) {
+                // alert($(this).find("td").eq(6).html());
+                if (!validateEmail($(this).find("td").eq(4).html())) {
+                    $(this).find("td").eq(4).addClass("errorClass");
+                    $(this).find("td").eq(4).attr("title", "Please input correct emailid");
+                    chkstatus = false;
+                }
+            }
+        })
+        if (!chkstatus) {
+            $('#finalvalmsg').html("Please fill correct record");
+            return false;
+        }
+        else {
+            $('#finalvalmsg').html("");
+            return true;
+        }
+    }
+
+    // For Save
+
+    $('#btnSendInvite').click(function () {
+   
+        if (validateemailid()) {
+         
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/CompanyDashBoard/SaveItem")',
+                cache: false,
+                data: { CsvFileName: $('#lblCSVFileName').val() },
+                success: function (data) {
+
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvSaveMsg').text('Invitation sent sucessfully');
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.href = "InviteStaffBulk";
+                    }, 1000);
+
+
+                },
+                beforeSend: function (jqXHR, obj) {
+
+
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvSaveMsg').text('Please wait...');
+
+                },
+                error: function (data) {
+
+
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    $('#dvMsg').text('Error in input details : Invitation not sent sucessfully');
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+
+                }
+
+
+            });
+
+        }
+
+    });
+    $('#FName').keypress(function () {
+        if ($('#FName').val().trim() != "") {
+            $('#FName').removeClass('errorClass');
+        }
+    })
+    $('#LName').keypress(function () {
+        if ($('#LName').val().trim() != "") {
+            $('#LName').removeClass('errorClass');
+        }
+    })
+    $('#Email').keypress(function () {
+        if ($('#Email').val().trim() != "") {
+            $('#Email').removeClass('errorClass');
+            $('#emailidval').html("");
+        }
+    })
+    $('#ddlRole').change(function () {
+        if ($('#ddlRole').find('option:selected').text().trim() != '-- Select --') {
+            $('#ddlRole').removeClass('errorClass');
+        }
+    })
+    $('#ddlPermission').change(function () {
+        if ($('#ddlPermission').find('option:selected').text().trim() != '-- Select --') {
+            $('#ddlPermission').removeClass('errorClass');
+        }
+    })
+    $('#ddlTitle').change(function () {
+        if ($('#ddlTitle').find('option:selected').text().trim() != '-- Select --') {
+            $('#ddlTitle').removeClass('errorClass');
+        }
+    })
+    function validatebulkInviteStaff() {
+        var firstName = $('#FName').val();
+        var lastName = $('#LName').val();
+        var email = $('#Email').val();
+        var firstNameval = true;
+        var lastNameval = true;
+        var emailval = true;
+        var roleval = true;
+        var titleval = true;
+        var perval = true;
+
+        var role = $('#ddlRole').find('option:selected').text();
+        var per = $('#ddlPermission').find('option:selected').text();
+        var title = $('#ddlTitle').find('option:selected').text();
+
+        if (role.trim() == '-- Select --') {
+            $('#ddlRole').addClass('errorClass');
+            roleval = false;
+        }
+        if (per.trim() == '-- Select --') {
+            $('#ddlPermission').addClass('errorClass');
+            perval = false;
+        }
+        if (title.trim() == '-- Select --') {
+            $('#ddlTitle').addClass('errorClass');
+            titleval = false;
+        }
+
+        if (firstName.trim() == null || firstName.trim() == "") {
+            $('#FName').addClass('errorClass');
+            firstNameval = false;
+        }
+        //else if (firstName.trim() != null || firstName.trim() != "") {
+        //    $('#FName').removeClass('errorClass');
+        //    res = true;
+        //}
+        if (lastName.trim() == null || lastName.trim() == "") {
+            $('#LName').addClass('errorClass');
+            lastNameval = false;
+        }
+        //else if (lastName.trim() != null || lastName.trim() != "") {
+        //    $('#LName').removeClass('errorClass');
+        //    res = true;
+
+        //}
+        if (email.trim() == null || email.trim() == "") {
+            $('#Email').addClass('errorClass');
+            emailval = false;
+        }
+        else if (email.trim() != null || email.trim() != "") {
+
+            if (!validateEmail(email.trim())) {
+                $('#Email').addClass('errorClass');
+                emailval = false;
+                $('#emailidval').html("Please enter correct email id")
+            }
+            //else {
+
+            //    $('#Email').addClass('errorClass');
+            //    return false;
+            //}
+
+
+        }
+
+
+        if (firstNameval && lastNameval && emailval && roleval && titleval && perval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+
+    }
+
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>
+
+
+
+

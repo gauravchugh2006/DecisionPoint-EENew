@@ -1,0 +1,238 @@
+﻿@model DecisionPoint.Models.WebinarDashboardModel
+@{
+    ViewBag.Title = "Invite";
+}
+@Styles.Render("~/Content/css/Logincss")
+@Styles.Render("~/Content/css/bootcss")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jqueryval")
+<link href="~/Content/css/Dashboard/style.css" rel="stylesheet" />
+<style type="text/css">
+    .input-validation-error
+    {
+        border: solid 1px red !important;
+    }
+
+    p
+    {
+        margin: 0;
+        padding: 0;
+        display: inline;
+    }
+
+
+
+    table tr th
+    {
+        color: #0088CC;
+        text-decoration: none;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // $('#div_getUpcomingWebinars').click(function () {
+        $.ajax({
+            url: '@Url.Content("~/Webinar/getUpcomingWebinar")',
+                type: 'POST',
+                async: true,
+                success: function (data) {
+                    var str = '';
+                    result = $.parseJSON(data);
+                    $.each(result, function (i, item) {
+                        var startdate = new Date(item.times[0].startTime);
+                        var enddate = new Date(item.times[0].endTime);
+                        str += '<tr><td>' + item.webinarKey + '</td><td>' + item.subject + '</td><td>' + item.organizerKey + '</td><td>' + startdate + '</td><td>' + enddate + '</td><td><a href="#" onclick="showInvitePopup(' + item.webinarKey + ')">Invite User</a></td></tr>';
+                    });
+                    $('#tbl_UpcomingWebinarDetails tbody').html(str);
+                    $('#div_UpcomingWebinarDetails').show();
+                },
+                error: function (data) {
+
+
+                }
+            })
+        //  })
+
+        $('#btnClosePopup').click(function () {
+            $('#EditCsv').hide();
+            $('#popupCSV').hide();
+        })
+    })
+        function getRegistrants(webinarid) {
+
+            $.ajax({
+                url: '@Url.Content("~/Webinar/getRegistrants")',
+            type: 'POST',
+            async: true,
+            data: { webinarId: webinarid },
+            success: function (data) {
+                var str = '';
+                result = $.parseJSON(data);
+               // $.each(result, function (i, item) {
+                    //var startdate = new Date(item.times[0].startTime);
+                    //var enddate = new Date(item.times[0].endTime);
+                    //str += '<tr><td>' + item.webinarKey + '</td><td>' + item.subject + '</td><td>' + item.organizerKey + '</td><td>' + startdate + '</td><td>' + enddate + '</td><td><a href="#" onclick="showInvitePopup(' + item.webinarKey + ')">Invite User</a></td></tr>';
+                //});
+                //$('#tbl_UpcomingWebinarDetails tbody').html(str);
+                //$('#div_UpcomingWebinarDetails').show();
+            },
+            error: function (data) {
+
+
+            }
+        })
+    }
+    function showInvitePopup(webinarid) {
+        $('#hid_invite').val(webinarid);
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+        $('#tbl_userList tbody tr').each(function (i, val) {
+            $('td').find($("input[name=WebinarId]")).val(webinarid);
+
+        });
+    }
+</script>
+@using (Html.BeginForm("Invite", "Webinar", FormMethod.Post, new { id = "SubmitForm" }))
+{ 
+    <div id='header'>
+        <div class='navbar navbar-static-top'>
+            <div class='navbar-inner'>
+                <div class='container'>
+                    <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                    </a>
+                    <div class='brand'>
+                    </div>
+                    <div class='container nav-collapse'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id='content'>
+        <div class='container'>
+            <div id='login'>
+                <div style="width: 100%; min-height: 400px;">
+                    <h2>
+                        <i class='iconic-user'></i>
+                        GoToWebinar      
+                    </h2>
+                    <h3>Invite</h3>
+                    <hr />
+                    <ul class='nav nav-tabs' id='my_tabs'>
+                        <li id="step1content">
+                            @Html.ActionLink("STEP 1: Schedule Webinar", "WebinarDashboard", "Webinar")
+
+                        </li>
+                        <li id="step2recipient" class="prevent">
+                            @Html.ActionLink("STEP 2: Invite User", "Invite", "Webinar")
+
+                        </li>
+                        @*<li id="step3staging">
+                        @Html.ActionLink("Staging ", "CommunicationStaging", "CompanyDashBoard", new { id = 1 }, null)
+
+                    </li>*@
+                    </ul>
+                    <div class='row'>
+
+
+                        <div id="div_getUpcomingWebinars" class="btn btn-primary">Get Upcoming Webinars</div>
+                        <div id="div_UpcomingWebinarDetails" style="float: left; width: 100%; display: none;">
+                            <h3>Upcoming Webinars</h3>
+                            <table id="tbl_UpcomingWebinarDetails" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Webinar Key</th>
+                                        <th>Subject</th>
+                                        <th>Organizer Key</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Invite</th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id='footer'>
+        <div class='container'>
+            <div class='row'>
+                <div class='span6'>
+                </div>
+                <div class='span6'>
+                    <div class='text-right'>
+                        Copyright 2014 &sdot; All rights reserved
+                        <div onclick="getRegistrants(1386443841567016449)">Get Registrants</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@*Edit Popup*@
+    <div class="profiletrans" id="EditCsv"></div>
+    <div class="popup" id="popupCSV" style="width: 83%; height: auto; top: 200px; left: 9%; z-index: 10;">
+        <div class="profile-popup" style="display: block; width: auto; height: auto; min-height: 250px;">
+            <div class="tittle-MessageBox">
+                <span>Invite Users</span>
+                <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" />
+            </div>
+            @if (Model.WebinarUsersList != null)
+            { 
+                <table id="tbl_userList" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email Id</th>
+                            <th>Role</th>
+                            <th>Webinar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.WebinarUsersList)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="chk" value="true" checked="checked" name="Ischeck" /></td>
+                                <td>
+                                    <input type="text" value="@item.FirstName" name="FName" style="border:none; background:#ffffff;" readonly="readonly" /></td>
+                                <td>
+                                    <input type="text" value="@item.LastName" name="LName" style="border:none;background:#ffffff;" readonly="readonly"/></td>
+                                <td>
+                                    <input type="text" value="@item.Email" name="Email" style="border:none;background:#ffffff;" readonly="readonly" /></td>
+                                <td>
+                                    <input type="text" value="@item.Role" name="Roles" style="border:none;background:#ffffff; width:100px;" readonly="readonly" /></td>
+                                <td>
+                                    <input type="text" value="--" name="WebinarId" style="border: none; background: #ffffff;" readonly="readonly" />
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+               
+                <div style="float: left; width: 100%; margin-top: 10px;">
+                    <input type="submit" value="Invite" class="btn btn-primary" />
+                    <input type="hidden" id="hid_invite" />
+                </div>
+            }
+        </div>
+
+    </div>
+   
+}
+

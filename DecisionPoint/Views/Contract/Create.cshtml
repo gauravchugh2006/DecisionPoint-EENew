@@ -1,0 +1,1515 @@
+﻿@model DecisionPoint.Models.ContractModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+
+}
+@functions {
+    /// <summary>
+    /// Used for make the list of states for fill in drop down list
+    /// </summary>
+    /// <returns>IEnumerable<SelectListItem></returns>
+    private IEnumerable<SelectListItem> FillStateList()
+    {
+        return new SelectList(Model.StateList, "StateId", "SateName");
+    }
+}
+@{
+    Dictionary<string, string> ReminderDictionary = new Dictionary<string, string>();
+
+    ReminderDictionary.Add("15", "15");
+    ReminderDictionary.Add("30", "30");
+    ReminderDictionary.Add("45", "45");
+    ReminderDictionary.Add("60", "60");
+    ReminderDictionary.Add("90", "90");
+    ReminderDictionary.Add("120", "120");
+    SelectList FillReminderList = new SelectList(ReminderDictionary, "value", "key");
+}
+@Styles.Render("~/Styles/base")
+
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui-noscript.css" rel="stylesheet" />
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui.css" rel="stylesheet" />
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<script src="~/Scripts/Upload/jquery.iframe-transport.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload-ui.js"></script>
+
+<script src="~/Scripts/Upload/bootstrap.js"></script>
+<link href="~/Content/css/Dashboard/circle.css" rel="stylesheet" />
+<script src="~/Scripts/Upload/progress-circle.js"></script>
+<script src="~/Scripts/DashBoard/MyProfile.js"></script>
+<script src="~/Scripts/jquery.maskedinput.js"></script>
+
+<style>
+    input.disabpled-input {
+        background: none;
+        border: 0;
+        cursor: default;
+        box-shadow: none;
+        pointer-events: none;
+    }
+
+    .event-list-table {
+        width: 90%;
+        margin: 0 0 10px 0;
+        padding: 0;
+        border: 1px solid #eee;
+        background: #fafafa;
+    }
+
+        .event-list-table td {
+            padding: 6px 5px 3px 10px;
+            text-align: left;
+            border-bottom: solid 1px #e1e1e1;
+            vertical-align: text-top;
+        }
+
+    .areatext1 {
+        display: none;
+        width: 615px;
+        height: 180px;
+    }
+
+    .leftCol {
+        float: left;
+        width: 60%;
+    }
+
+    .leftCol2 {
+        float: left;
+        width: 40%;
+    }
+
+    .title-box td {
+        border-bottom: none;
+    }
+
+    .ui-autocomplete {
+        max-height: 150px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+        font-size: 11px;
+    }
+    /* IE 6 doesn't support max-height
+    * we use height instead, but this forces the menu to always be this tall
+    */
+    * html .ui-autocomplete {
+        height: 150px;
+    }
+</style>
+@using (Html.BeginForm("SetCreateContract", "Contract", FormMethod.Post, new { id = "SubmitForm", onsubmit = "return SaveValidate();" }))
+{
+    <div id='content'>
+        <div class='container'>
+            <div class='content-box'>
+                @if (Request["id"] != null && Convert.ToInt32(Request["id"]) > 0)
+                {
+                    <h5>Update Contract</h5>
+                }
+                else
+                {
+                    <h5>Create Contract</h5>
+                }
+
+                <form action="../api/upload" enctype="multipart/form-data">
+
+                    <div class="leftCol">
+                        <div class="control-group">
+                            <label class='control-label'>Add Document <span style="font-size: 10px; font-family: Verdana">(PDF or Power Point)</span></label>
+
+                            <div>
+                                <div class='controls'>
+                                    <table id="tbldoc">
+                                        <tr>
+                                            <td>
+
+
+                                                <div style="float: left;">
+                                                    @*  <input class='input-large' id="doclbl_0" placeholder='Title' type='text' maxlength="30" value="@Model.DocTitles" />*@
+                                                    @Html.TextBoxFor(model => model.Title, new { @id = "doclbl_0", @placeholder = "Title", @maxlength = "30" })
+                                                </div>
+                                                <div class="file_input_div" style="display: inline; float: left; margin-left: 3px;">
+                                                    <input type="button" class="btn btn-primary" value="Upload" />
+                                                    <input type="file" id="doc_0" style="opacity: 0; position: relative; left: -78px; width: 80px;" onchange="readdocURL(this,this.id)" />
+
+                                                </div>
+                                                <input type="hidden" id="docfile" />
+
+                                                <div id="docfiles" style="overflow: auto; width: 305px; max-height: 100px; float: left; margin-right: 250px;">
+                                                    <label id="docfileName_0" style="color: red;"></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="control-group">
+
+                            <label class="control-label">Owner <sup style="color: red; font-size: 10px;">*</sup></label>
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.OwnerName, new { @class = "input-xlarge", @id = "txtowner", @style = "width: 285px;", @placeholder = "Owner", maxlength = 50, onkeypress = "checkval(this.id)" })
+
+                                @Html.TextBoxFor(model => model.OwnerId, new { @style = "display:none;", @id = "hid_ownerId" })
+                            </div>
+                            @* <input type="hidden" id="hid_ownerId" />*@
+                        </div>
+                    </div>
+                    <div class="leftCol2">
+                        <div class="control-group">
+                            <label class="control-label">Page Creator</label>
+                            <div class="controls" style="margin-bottom: 8px;">
+                                @Html.TextBoxFor(model => model.ManagerName, new { @Value = Session["UserName"], @class = "input-xlarge", @id = "txtmanagerName", @style = "width: 265px;", @readonly = "readonly", @placeholder = "Manager Name" })
+                                <input type="hidden" id="hid_VendorClientType" />
+                            </div>
+                        </div>
+
+                        <div class="control-group" style="margin-top: 20px;">
+                            <label class="control-label">Contract with<sup style="color: red; font-size: 10px;"> *</sup></label>
+                            <div class="controls">
+                                <input type="text" class="input-large" id="txtVendorClientName" placeholder="Contract With" value="@Model.ContractWithName" onkeypress="checkval(this.id)" />
+                                @* @Html.HiddenFor(model => model.ContractWithId, new { id = "hid_VendorClientId" })*@
+                                <input type="hidden" id="hid_VendorClientId" />
+
+                                @Html.TextBoxFor(model => model.ContractWithId, new { @style = "display:none;" })
+                                @Html.TextBoxFor(model => model.ContractorCompanyId, new { @style = "display:none;" })
+                                @Html.TextBoxFor(model => model.Role, new { @style = "display:none;" })
+
+                                <input type="button" class="btn btn-primary" value="Add" id="btnAddVendorClient" title="Add New Vendor/Client" style="margin-top: -10px;" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+                <div style="float: left; width: 100%;">
+                    <label id="servicelbl"></label>
+                </div>
+                <div class="MessageSection-Box" id="ServicesList" style="float: left; border: 1px solid #e1e1e1; width: 86%; display: none; margin-bottom: 15px;">
+                </div>
+
+                <div class="leftCol">
+                    <div class="control-group">
+                        <label class="control-label">Executed By<sup style="color: red; font-size: 10px;"> *</sup></label>
+                        <div class="controls">
+                            <input type="text" class="input-large" style="width: 285px;" id="txtexecutedby" placeholder="Executed By" value="@Model.ExecutedByName" onkeypress="checkval(this.id)" />
+                        </div>
+                        @Html.TextBoxFor(model => model.ExecutedById, new { @id = "hid_executeId", @style = "display:none", onkeypress = "checkval(this.id)" })
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Expiration Date<sup style="color: red; font-size: 10px;"> *</sup></label>
+                        <div class="controls">
+                            <div class='datetimepicker input-append'>
+                                @Html.TextBoxFor(model => model.ExpirationDate, new { @class = "input-xlarge", @Value = Model.ExpirationDate != null ? Model.ExpirationDate.Value.ToShortDateString() : "", @id = "Expirationdate", @style = "width: 286px;", @placeholder = "Expiration Date", onchange = "checkval(this.id)" })
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Expiration Reminder<sup style="color: red; font-size: 10px;"> *</sup></label>
+                        <div class="controls">
+                            @Html.DropDownListFor(model => model.ExpirationDateReminder, FillReminderList, "Select", new { @class = "input-xlarge", @Value = "", @id = "ddlExpirationReminder", @style = "width:300px", onchange = "checkval(this.id)" })
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="leftCol2">
+                    <div class="control-group">
+                        <label class="control-label">Execution Date</label>
+                        <div class="controls">
+                            <div class='datetimepicker input-append'>
+                                @Html.TextBoxFor(model => model.ExecutedDate, new { @class = "input-xlarge", @Value = Model.ExecutedDate != null ? Model.ExecutedDate.Value.ToShortDateString() : "", @id = "Executiondate", @style = "width: 269px;", @placeholder = "Execution Date" })
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Contract Date</label>
+                        <div class="controls">
+                            <div class='datetimepicker input-append'>
+                                @Html.TextBoxFor(model => model.ContractDate, new { @class = "input-xlarge", @Value = Model.ContractDate != null ? Model.ContractDate.Value.ToShortDateString() : "", @id = "Contractdate", @style = "width: 269px;", @placeholder = "Contract Date" })
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="control-group" style="width: 100%; float: left;">
+                    <div style="width: 100%;">
+                        <b>General Comments</b>
+                    </div>
+                    <div style="width: 100%; float: left;" id="div_comments">
+                        <div style="float: left; width: 100%" id="div_SaveComment">
+                            <div class="fullCol">
+                                @Html.Raw(HttpUtility.HtmlDecode(Model.GeneralComments))
+
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.GeneralComments))
+                            {
+                            }
+                            else
+                            {
+                                <table id="tbl_Comment" style="width: 90%; margin-bottom: 10px">
+                                    <tbody></tbody>
+                                </table>
+                            }
+
+                        </div>
+                        <input type="hidden" id="Hid_Comment" name="GeneralComments" />
+                        @Html.TextArea("TextFields", new { @id = "TextFields", @style = "float:left;width:89%;", @class = "mceNoEditor", @placeholder = "Input Comment.." })
+
+                        <a style="font-style: italic; cursor: pointer; float: left; width: 10%;" id="LnkAddComment">add comment</a>
+
+                        @*<textarea id="TextFields" style="display: none; width: 615px; height: 180px;" placeholder="Input Comment.."></textarea>
+                            <table id="TblAddComments"></table>*@
+
+                    </div>
+                </div>
+                <div style="width: 100%; margin-bottom: 10px; float: left;">
+                    <a id="ShowAddEvents" style="cursor: pointer">▼</a><b>Add SLA</b>
+                </div>
+                <div id="div_event1" class="control-group" style="width: 100%; display: none; float: left;">
+                    <div id="divAddedEvents" style="width: 100%;">
+                    </div>
+
+                    <div style="width: 100%; float: left;">
+
+                        <div style="float: left; width: 33%;">
+                            Assigned To<br />
+                            @if (Model.titleDetails != null)
+                            {
+                                @Html.DropDownList("ddlTitle", new SelectList(Model.titleDetails, "id", "titleName"), "-- Select --")
+                            }
+                            <br />
+                            <a id="CollTitleBox" style="text-decoration: none; display: none;">▼ Show Titles</a>
+                            <div id="TitleBox" class="Title-Outer-Box" style="display: none;">
+                            </div>
+
+
+                            @*@Html.TextBoxFor(model => model.EventTitle, new { @class = "input-large", @id = "txtEventTitle", @maxlength = "50", @placeholder = "Event Title" })*@
+                        </div>
+                        <div style="float: left; width: 33%;">
+                            Paragraph<br />
+                            @Html.TextBoxFor(model => model.Paragraph, new { @class = "input-large", @id = "txtParagraph", @maxlength = "3", @placeholder = "Paragraph" })
+                        </div>
+                        <div style="float: left; width: 33%;">
+                            Section<br />
+                            @Html.TextBoxFor(model => model.Section, new { @class = "input-large", @id = "txtSection", @maxlength = "2", @placeholder = "Section" })
+                        </div>
+
+                    </div>
+
+                    <div style="width: 100%; float: left;">
+                        <div style="float: left; width: 33%;">
+                            Sub Section<br />
+                            @Html.TextBoxFor(model => model.SubSection, new { @class = "input-large", @id = "txtSubSection", @maxlength = "3", @placeholder = "Sub Section" })
+                        </div>
+                        <div style="float: left; width: 33%;">
+                            Event Date<br />
+                            @Html.TextBoxFor(model => model.EventDate, new { @class = "input-large", @Value = "", @id = "txtEventDate", @placeholder = "Event Date" })
+
+                        </div>
+                        <div style="float: left; width: 33%;">
+                            Reminder based off event date<br />
+                            @Html.DropDownListFor(model => model.EventDateReminder, FillReminderList, "Select", new { @class = "input-xlarge", @id = "ddlRemiderEventDate", @style = "width:222px", })
+
+                        </div>
+                    </div>
+                    <div style="width: 100%; float: left;">
+                        Notes<br />
+                        <div style="float: left; width: 100%" id="div_notes">
+                            <div class="fullCol">
+                                @Html.Raw(HttpUtility.HtmlDecode(Model.Notes))
+
+                            </div>
+                            @if (Model.Notes != null)
+                            {
+                            }
+                            else
+                            {
+                                <table id="tbl_notes" style="display: none; width: 90%; margin-bottom: 10px">
+                                    <tbody></tbody>
+                                </table>
+                            }
+
+                        </div>
+
+
+                        @Html.TextArea("Notes", new { @id = "Notes", @style = "float:left;width:89%;", @class = "mceNoEditor", @placeholder = "Notes.." })
+
+
+                        <a style="font-style: italic; cursor: pointer; float: left; width: 10%; margin-top: -10px;" id="LnkAddNotes">add note</a>
+
+                    </div>
+                    <a style="font-style: italic; cursor: pointer; float: left; width: 15%; margin-top: 10px" id="LnkAddEvents">add sla</a>
+                </div>
+
+            </div>
+            <input type="hidden" value="@Request["id"]" name="TblId" />
+            <div class="control-group" style="float: left; width: 100%;">
+                <label class="control-label"></label>
+                <div class="controls" style="margin-right: 9%; float: right;">
+                    @if (string.IsNullOrEmpty(Convert.ToString(Request["id"])))
+                    {
+                        <input type="hidden" name="IsCompleted" value="false" />
+                        <button type="submit" id="btnsave" class="btn btn-primary">Save</button>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="IsCompleted" value="true" />
+                        <button type="submit" id="btnMarkAsComplete" class="btn btn-primary">Mark As Complete</button>
+                        @*<button id="btnsave" class="btn btn-primary">Update</button>*@
+                    }
+                    @* <button id="btnMarkAsComplete" class="btn btn-primary">Mark As Complete</button>*@
+
+
+                </div>
+            </div>
+            <div style="float: left; width: 100%; color: green" id="lblsucessmsg">@TempData["SuccessMsg"]</div>
+        </div>
+    </div>
+
+}
+<input type="hidden" id="SLAUserIds" />
+<div class="trans" id="nametrans"></div>
+<div class="popup" id="namepopup" style="left: 20%;">
+    <div class="Reply-MessageBox" style="display: block; overflow-y: auto;">
+
+        <div class="tittle-MessageBox">
+            <span>ADD NON-MEMBER (VENDOR/CLIENT OR SUB CLIENT)</span><a>
+                <img id="btnnamelose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" />
+            </a>
+        </div>
+        <div class="MessageSection-Box">
+            <div class='control-group w100'>
+                <div class="halfwidth1">Relationship <sup style="color: red; font-size: 10px;">*</sup></div>
+                <div class='halfrest'>
+                    @* @Html.TextBoxFor(model => model.EmailId, new { @placeholder = "Email Id", @class = "input-xlarge-txt", @title = "", @maxlength = "100", onkeypress = "checkval(this.id)" })
+                        <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>*@
+                    <select style="width: 395px;" id="ddl_flow" onchange="checkval(this.id)">
+                        <option value="0">--Select--</option>
+                        <option value="2">Vendor</option>
+                        <option value="1">Client</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group w100">
+                <div class="halfwidth1">Company Name <sup style="color: red; font-size: 10px;">*</sup></div>
+                <div class="halfrest">
+
+                    @Html.TextBoxFor(model => model.BusinessName, new { @placeholder = "Business Name", @class = "input-xlarge-txt", @title = "", @maxlength = "100", onkeydown = "checkval(this.id)" })
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Address</div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.StreetNumber, new { maxlength = 6, @class = "input-xlarge", @placeholder = "Number", @style = "Width:133px" })
+                    @Html.TextBoxFor(model => model.Direction, new { maxlength = 2, @class = "input-xlarge", @placeholder = "Direction", @style = "Width:100px" })
+                    @Html.TextBoxFor(model => model.StreetName, new { maxlength = 50, @class = "input-xlarge", @placeholder = "Street Name", @style = "Width:111px" })
+                    <br />
+                    @Html.TextBoxFor(model => model.CityName, new { @class = "input-xlarge", @placeholder = "City Name", maxlength = 50, @style = "Width:131px" })
+                    @Html.DropDownListFor(model => model.StateId, FillStateList(), "Select State", new { @class = "input-xlarge", @id = "StateAdd", @style = "width:117px" })
+                    @Html.TextBoxFor(model => model.ZipCode, new { maxlength = 5, @class = "input-xlarge", @placeholder = "Zip Code", @style = "Width:110px" })
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Contact Person <sup style="color: red; font-size: 10px;">*</sup></div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.FName, new { maxlength = 50, @class = "input-xlarge", @placeholder = "First Name", @style = "width:133px", onkeydown = "checkval(this.id)" })
+                    @Html.TextBoxFor(model => model.MName, new { maxlength = 1, @class = "input-xlarge", @placeholder = "MI", @style = "width:100px" })
+                    @Html.TextBoxFor(model => model.LName, new { maxlength = 50, @class = "input-xlarge", @placeholder = "Last Name", @style = "width:111px", onkeydown = "checkval(this.id)" })
+                    <label id="ContactPersonErrorMsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+
+            <div class='control-group w100'>
+                <div class="halfwidth1">Office Phone</div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.OfficePhone, new { @placeholder = "Office phone", @class = "input-xlarge-txt", @title = "", @maxlength = "14" })
+                    <label id="phoneerrormsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+
+            <div class='control-group w100'>
+                <div class="halfwidth1">Mobile Phone</div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.DirectPhone, new { @placeholder = "Mobile phone", @class = "input-xlarge-txt", @title = "", @maxlength = "14" })
+                    <label id="cellnoerrormsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Email<sup style="color: red; font-size: 10px;">*</sup></div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.EmailId, new { @placeholder = "Email Id", @class = "input-xlarge-txt", @title = "", @maxlength = "100", onkeypress = "checkval(this.id)" })
+                    <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="Bottom-ButtonControl" style="float: right; width: 100%; margin-right: 9px;">
+            <button type="submit" id="btnnamedone" class="btn btn-primary" title="Save">Save</button>
+            <div id="btnnamecancel" class="btnred" title="Cancel">Cancel</div>
+        </div>
+        <div style="float: left; width: 100%; display: none; color: red;" id="divPopMsg"></div>
+
+    </div>
+    @* @using (Html.BeginForm("Updatemyprofile", "CompanyDashBoard", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return checkvalidation();" }))
+        {
+
+        }*@
+</div>
+
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        ShowHideTabs('contract');
+        jQuery(function ($) {
+
+            var myDate = new Date();
+            var prettyDate = (myDate.getMonth() + 1) + '/' + myDate.getDate() + '/' +
+                    myDate.getFullYear();
+            $('#Commentdate').datepicker();
+            $('#Executiondate').datepicker();
+            $('#Contractdate').datepicker();
+            $('#Expirationdate').datepicker();
+            $('#txtEventDate').datepicker();
+
+        })
+        setTimeout(function () {
+            $('#lblsucessmsg').html('');
+
+        }, 2500);
+        if ('@Request["id"]' != null) {
+            $('#Notes').html('');
+            GetContractDoc();
+            BindContractEvent();
+            SetHiddenFileds();
+            GetServices();
+        }
+    });
+    function SetHiddenFileds() {
+        var theText = $('#Role').val();
+        $("#ddl_flow option").each(function () {
+            if ($(this).text() == theText) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        var res = ($('#ContractWithId').val() + ":" + $('#ContractorCompanyId').val());
+        $('#hid_VendorClientId').val(res)
+        $('#hid_VendorClientType').val(theText);
+    }
+    function GetContractDoc() {
+        $.ajax({
+            url: '@Url.Content("~/Contract/GetContrcatDoc")',
+            data: { 'contrcatId': parseInt('@Request["id"]') },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (data) {
+                var str = '';
+                $.each(data, function (i, item) {
+                    str += '<a id="docfile_' + data[i].docId + '" name="FilePathStr" href="' + data[i].files + '" target="_blank" title="' + data[i].filetype + '" style="cursor:pointer;margin-left:6px;" >' + data[i].filetype + '</a>' +
+                                                               '<input type="hidden" id="hid_docfile_' + data[i].docId + '" name="FilePathStr" value="' + data[i].files + '" /><img id="' + data[i].docId + '" src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" ' +
+                    ' title="remove document" onclick="deletedoc(' + data[i].docId + ')">';
+                })
+                $('#docfiles').html(str);
+            }
+        });
+    }
+    function BindContractEvent() {
+        $.ajax({
+            url: '@Url.Content("~/Contract/GetContractEventsListAsPerId")',
+            data: { 'id': parseInt('@Request["id"]') },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (data) {
+                debugger;
+                var tblCount = $('#divAddedEvents').find('.event-list-table').length;
+                var str = '';
+                // var notesText = '';
+                $.each(data, function (i, item) {
+                    var EventDate = '';
+
+                    if (data[i].EventDate != null) {
+                        EventDate = new Date(parseInt(data[i].EventDate.substr(6)));
+                        EventDate = dateFormat(new Date(EventDate), 'mm/dd/yyyy')
+                    }
+                    str += ' <table class="event-list-table" id="tblEvents_' + i + '"><tr><td> Title </td> <td>' + data[i].EventTitle + ' <textarea id="eventtitle_' + i + '" name="EventList[' + i + '].EventTitle" style="display:none;">' + data[i].EventTitle + '</textarea>' +
+'</td><td>Paragraph</td><td><input type="text" name="EventList[' + i + '].Paragraphs" value="' + data[i].Paragraphs + '" class="disabpled-input" />' +
+'</td></tr><tr> <td> Section</td><td><input type="text" name="EventList[' + i + '].Sections" value="' + data[i].Sections + '" class="disabpled-input" />' +
+'</td><td>Sub Section</td><td><input type="text" name="EventList[' + i + '].SubSections" value="' + data[i].SubSections + '" class="disabpled-input" />' +
+'</td></tr><tr><td> Event Date</td><td><input type="text" name="EventList[' + i + '].EventDate" value="' + EventDate + '" class="disabpled-input" />' +
+'</td><td>Reminder based off event date</td><td><input type="text" name="EventList[' + i + '].EventDateReminder" value="' + data[i].EventDateReminder + '" class="disabpled-input" />' +
+'</td></tr><tr><td colspan="4"><textarea id="notes_' + i + '" name="EventList[' + i + '].Notes" style="display:none;">' + data[i].Notes + '</textarea><table><tbody>' + data[i].Notes + '</tbody></table><input type="hidden" id="SLAUserIds_' + i + '" name="EventList[' + i + '].AssignedUserIds" value="' + data[i].AssignedUserIds + '" /><input type="hidden" name="EventList[' + i + '].ContractEventId" value="' + data[i].ContractEventId + '"/></td></tr> </table>';
+                    //notesText = data[i].Notes;
+                })
+                $('#divAddedEvents').append(str);
+                // alert(notesText);
+                // $("#notes_" + tblCount + "").val('<table><tbody>' + notesText + '</tbody></table>');
+            }
+        });
+    }
+    $('#LnkAddEvents').click(function () {
+
+        var tblCount = $('#divAddedEvents').find('.event-list-table').length;
+        var title = AssignTitle();
+        var paragraph = $('#txtParagraph').val();
+        var section = $('#txtSection').val();
+        var subSection = $('#txtSubSection').val();
+        var EventDate = $('#txtEventDate').val();
+        var EventReminderDate = $('#ddlRemiderEventDate').val();
+        var notes = $('#tbl_notes tbody').html();
+
+        var str = ' <table class="event-list-table" id="tblEvents_' + tblCount + '"><tr><td> Title </td> <td>' + title + '<input type="text" id="EventTitle_' + tblCount + '" name="EventList[' + tblCount + '].EventTitle" class="disabpled-input" style="display:none;" />' +
+'</td><td>Paragraph</td><td><input type="text" name="EventList[' + tblCount + '].Paragraphs" value="' + paragraph + '" class="disabpled-input" />' +
+'</td></tr><tr> <td> Section</td><td><input type="text" name="EventList[' + tblCount + '].Sections" value="' + section + '" class="disabpled-input" />' +
+'</td><td>Sub Section</td><td><input type="text" name="EventList[' + tblCount + '].SubSections" value="' + subSection + '" class="disabpled-input" />' +
+'</td></tr><tr><td> Event Date</td><td><input type="text" name="EventList[' + tblCount + '].EventDate" value="' + EventDate + '" class="disabpled-input" />' +
+'</td><td>Reminder based off event date</td><td><input type="text" name="EventList[' + tblCount + '].EventDateReminder" value="' + EventReminderDate + '" class="disabpled-input" />' +
+'</td></tr><tr><td colspan="4"><input type="text" id="notes_' + tblCount + '" name="EventList[' + tblCount + '].Notes" style="display:none;"  /><table><tbody>' + notes + '</tbody></table><input type="hidden" id="SLAUserIds_' + tblCount + '" name="EventList[' + tblCount + '].AssignedUserIds" /><input type="hidden" name="EventList[' + tblCount + '].ContractEventId" value="0"/></td></tr> </table>';
+
+        $('#divAddedEvents').append(str);
+        $("#notes_" + tblCount + "").val('<table><tbody>' + notes + '</tbody></table>');
+        $("#EventTitle_" + tblCount + "").val(title);
+        // alert("VALUE " + $('#SLAUserIds').val());
+        $('#SLAUserIds_' + tblCount + '').val($('#SLAUserIds').val());
+        ResetEvents();
+    })
+    function AssignTitle() {
+        var slaUserId = '';
+        var str = '<table class="title-box">';
+        var title = '';
+        $('#TitleBox div').each(function () {
+            if ($(this).find('input[type=checkbox]').prop('checked') == true) {
+                title = $(this).find('span').html().split('  ')[0];
+                if (!(str.indexOf(title) === -1)) {
+                    str += '<tr><td>&nbsp;</td><td>' + $(this).find('span').html().split('  ')[1] + '</td></tr>';
+                } else {
+                    str += '<tr><td><b>' + $(this).find('span').html().split('  ')[0] + '</b></td><td>' + $(this).find('span').html().split('  ')[1] + '</td></tr>';
+                }
+                if (slaUserId == '') {
+                    slaUserId = $(this).find('input[type=checkbox]').val();
+                } else {
+                    slaUserId = slaUserId + "," + $(this).find('input[type=checkbox]').val();
+                }
+            }
+
+        });
+        str += "</table>"
+        $('#SLAUserIds').val(slaUserId);
+        return str;
+    }
+
+    function ResetEvents() {
+        $('#txtEventTitle').val('');
+        $('#txtParagraph').val('');
+        $('#txtSection').val('');
+        $('#txtSubSection').val('');
+        $('#txtEventDate').val('');
+        $('#ddlRemiderEventDate').val('');
+        $('#Notes').val('');
+        $('#tbl_notes tbody').empty();
+        $('#TitleBox').empty();
+        $('#TitleBox').hide();
+        $('#CollTitleBox').hide();
+        $('#ddlTitle').val("");
+        $('#SLAUserIds').val('');
+
+    }
+    $('#TextFields').focus(function () {
+        $('#TextFields').val("@Session["UserName"]  @System.DateTime.Now : ");
+    });
+    $('#Notes').focus(function () {
+        $('#Notes').val("@Session["UserName"]  @System.DateTime.Now : ");
+    });
+    $("#ShowAddEvents").click(function () {
+        if ($('#ShowAddEvents').html() == "▼") {
+            $('#ShowAddEvents').text("▲");
+            $('#div_event1').show();
+
+        }
+        else if ($('#ShowAddEvents').html() == "▲") {
+            $('#ShowAddEvents').text("▼");
+            $('#div_event1').hide();
+
+
+        }
+
+    })
+    function SaveValidate() {
+        debugger;
+        var result1 = result2 = result3 = result4 = result5 = result6 = true;
+        if ($('#hid_ownerId').val().trim() == "0" || $('#hid_ownerId').val().trim() == "") {
+            $('#txtowner').addClass('errorClass');
+            result1 = false;
+        }
+        if ($('#hid_VendorClientId').val().trim() == "0" || ($('#hid_VendorClientId').val().trim() == "")) {
+            $('#txtVendorClientName').addClass('errorClass');
+            result2 = false;
+        }
+        if ($('#hid_executeId').val().trim() == "0" || $('#hid_executeId').val().trim() == "") {
+            $('#txtexecutedby').addClass('errorClass');
+            result3 = false;
+        }
+        if ($('#Expirationdate').val().trim() == "") {
+            $('#Expirationdate').addClass('errorClass');
+            result4 = false;
+        }
+        if ($('#ddlExpirationReminder').val().trim() == "") {
+            $('#ddlExpirationReminder').addClass('errorClass');
+            result5 = false;
+        }
+        if ($('#ServicesList :checkbox').length > 0) {
+            if ($('#ServicesList :checkbox:checked').length < 0) {
+                $('#ServicesList').addClass('errorClass');
+                result6 = true;
+            }
+        } else if ($('#ServicesList :checkbox').length <= 0) {
+            debugger;
+            result6 = false;
+            // $('#ServicesList').addClass('errorClass');
+            $('#ServicesList').html("<div style='color:red'>Contractor have no service !</div>");
+            $('#ServicesList').show();
+        }
+
+        var aa = (result1 && result2 && result3 && result4 && result5 && result6);
+        return aa;
+
+    }
+    $(function () { $("#namepopup").draggable({ containment: "window" }); });
+    function checkvalidation() {
+
+        var fnameval = true;
+        var lnameval = true;
+        var businessval = true;
+        var emailidval = true;
+        var officephnval = true;
+        var directphnval = true;
+        var flowval = true;
+
+        if ($('#FName').val().trim() == '') {
+            $('#FName').addClass("errorClass");
+            fnameval = false;
+        }
+        if ($('#BusinessName').val().trim() == '') {
+            $('#BusinessName').addClass("errorClass");
+            businessval = false;
+        }
+
+
+        if ($('#LName').val().trim() == '') {
+            $('#LName').addClass("errorClass");
+            lnameval = false;
+        }
+
+        if ($('#EmailId').val().trim() != '') {
+            if (!validateEmail($('#EmailId').val())) {
+                $('#EmailId').addClass('errorClass');
+                $('#emailerrormsg').html("Enter correct email id");
+                emailidval = false;
+            }
+        }
+
+        if ($('#EmailId').val().trim() == '') {
+            $('#EmailId').addClass('errorClass');
+            emailidval = false;
+        }
+
+        if ($('#OfficePhone').val().trim() != '') {
+            // alert(validatePhone($('#OfficePhone').val()));
+            if (!validatePhone($('#OfficePhone').val())) {
+                $('#OfficePhone').addClass("errorClass");
+                $('#phoneerrormsg').html("Enter correct phone number");
+                officephnval = false;
+            }
+        }
+
+        if ($('#DirectPhone').val().trim() != '') {
+            if (!validatePhone($('#DirectPhone').val())) {
+                $('#DirectPhone').addClass("errorClass");
+                $('#cellnoerrormsg').html("Enter correct phone number");
+                directphnval = false;
+            }
+        }
+        if ($('#ddl_flow').val() == '0') {
+            $('#ddl_flow').addClass('errorClass');
+            flowval = false;
+        }
+
+
+        if (fnameval && emailidval && officephnval && directphnval && lnameval && flowval && businessval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+    function validatePhone(phone) {
+        var s = false;
+
+        var filter = /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/;
+        if (filter.test(phone)) {
+            s = true;
+        }
+        else {
+            s = false;
+        }
+
+        return s;
+
+    }
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    $('#btnnamedone').click(function () {
+        if (checkvalidation()) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/Contract/SaveNonMembers/")',
+                data: JSON.stringify({
+                    EmailId: $('#EmailId').val(),
+                    FName: $('#FName').val(),
+                    MName: $('#MName').val(),
+                    LName: $('#LName').val(),
+                    CompanyName: $('#BusinessName').val(),
+                    StreetNumber: $('#StreetNumber').val(),
+                    Direction: $('#Direction').val(),
+                    StreetName: $('#StreetName').val(),
+                    CityName: $('#CityName').val(),
+                    StateId: $('#StateId').val(),
+                    ZipCode: $('#ZipCode').val(),
+                    OfficePhone: $('#OfficePhone').val(),
+                    DirectPhone: $('#DirectPhone').val(),
+                    FlowId: $('#ddl_flow').val(),
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if (result > 0) {
+                        $('#txtVendorClientName').val($('#FName').val() + ' ' + $('#MName').val() + ' ' + $('#LName').val());
+                        $('#hid_VendorClientId').val(result);
+                        $('#txtVendorClientName').css('border', '');
+                        $("#ContractWithId").val(result);
+                        //bindservicelistOfVendor('@Convert.ToString(Session["CompanyId"])');
+                        $('#hid_VendorClientType').val('Vendor');
+                        $('#Role').val($("#ddl_flow option:selected").text());
+                        // $("#txtVendorClientName").change();
+                        GetServices();
+                        $('#nametrans').slideUp('fast');
+                        $('#namepopup').slideUp('fast');
+                    } else {
+                        $('#divPopMsg').html('User exists as staff in another company');
+                        $('#divPopMsg').show();
+                    }
+                }
+            })
+        }
+    })
+    function RemoveTinymce() {
+        if (tinymce.editors.length > 0) {
+            for (i = 0; i < tinymce.editors.length; i++) {
+                tinyMCE.editors[i].remove();
+            }
+        }
+    }
+    $('#doc_0').click(function () {
+        $('#docfileName_0').html('');
+    });
+    $(function () {
+
+        $('#doc_0').fileupload({
+
+            url: '@Url.Content("~/Contract/upload")',
+            dataType: "json",
+            limitConcurrentUploads: 1,
+            sequentialUploads: true,
+            progressInterval: 100,
+            maxChunkSize: 10000,
+            add: function (e, data) {
+                $('#btnpublishdoc').click(function () {
+                    data.submit();
+
+                });
+            },
+            done: function (e, data) {
+                $('#doccircle').progressCircle({
+                    nPercent: 100,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+
+                setTimeout(function () {
+                    //added document name
+                    var fileurl = '@Model.hostURL@Model.uploadedcontentpath/' + $('#docfile').val() + '';
+
+                    var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+                    $('#pdfdiv').attr('src', url1);
+
+                    $('#loaddiv').hide();
+                    $('#btnpublish').show();
+                    $('#pdfdiv').show();
+                    $('#doccircle').progressCircle({
+                        nPercent: 0,
+                        showPercentText: true,
+                        circleSize: 300,
+                        thickness: 3
+                    });
+
+                }, 1000);
+
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#doccircle').progressCircle({
+                    nPercent: progress,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+                $('#progressfile').css('width', progress + '%');
+            },
+            progress: function (e, data) {
+
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#doccircle').progressCircle({
+                    nPercent: progress,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+
+            },
+
+        });
+    });
+    function readdocURL(input, id) {
+
+
+        if (setdocfilename(input)) {
+            ResetDoc();
+
+
+            $('#docfile').val('');
+            var fileNames = $("input[id='" + input.id + "']").val().split('/').pop().split('\\').pop();
+            $('#docfile').val(fileNames);
+            var isexist = false;
+            var count = $('#docfiles div').length;
+
+            if (count >= 1) {
+                var status = "0";
+                $("#docfiles div").each(function (index) {
+
+                    var id = "docfile_" + index;
+
+                    if ($('#' + id).html() == $('#docfile').val()) {
+
+                        isexist = true;
+                        return;
+                    }
+                })
+            }
+
+            if (!isexist) {
+                $('body').css("overflow-y", "hidden");
+                //  alert('for check');
+
+                var width = 0;
+                var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                var poistion = parseInt(scrollTop) + 10
+
+                $('#previewdocinner').css("top", poistion);
+                $('#previewdocinner').fadeIn('slow');
+                $('#previewdocouter').fadeIn('slow');
+
+                $('#docUpload').html('we are Uploading your document for contract');
+                setTimeout(function () {
+
+                    $('#btnpublishdoc').click();
+
+                    //        // $('#loading').html('');
+                }, 1000);
+            }
+            else {
+                $('#docfileName_0').html("same name file allowed");
+            }
+        }
+    }
+
+    $('#btnpublish').click(function () {
+        $('body').css("overflow-y", "auto");
+        var count = $('#docfiles div').length;
+
+        if (count >= 1) {
+            var status = "0";
+            $("#docfiles div").each(function (index) {
+
+                var id = "docfile_" + index;
+
+                if ($('#' + id).html() == $('#docfile').val()) {
+
+                    status = "1";
+                    return;
+                }
+
+            });
+
+            if (status != 1) {
+                var fileurl = '@Model.hostURL@Model.uploadedcontentpath/' + $('#docfile').val() + '';
+
+                var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+
+                $('#docfiles').append('<div style="border-radius: 5px 5px 5px 5px; width:auto;height:auto;float:left;"><a id="docfile_' + count + '" href="' + url1 + '" target="_blank" name="FilePathStr" title=' + $('#docfile').val() + ' style="cursor:pointer;margin-left:6px;" >' + $('#docfile').val() + '</a><img id=' + count + ' src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" title="remove document" onclick="deletedoc(' + count + ')">' +
+                    ' <input type="hidden" id="hid_docfile_' + count + '" name="FilePathStr" value="' + url1 + '" />' +
+                    '<input type="hidden" id="doccontentid_' + count + '" value="0" /></div>');
+            }
+        }
+        else {
+            var fileurl = '@Model.hostURL@Model.uploadedcontentpath/' + $('#docfile').val() + '';
+
+            var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+            $('#docfiles').append('<div style="border-radius: 5px 5px 5px 5px;  width:auto;height:auto;float:left;"><a id="docfile_' + count + '" href="' + url1 + '" target="_blank" name="FilePathStr" title=' + $('#docfile').val() + ' style="cursor:pointer;margin-left:6px;" >' + $('#docfile').val() + '</a><img id=' + count + ' src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" title="remove document" onclick="deletedoc(' + count + ')">' +
+                 ' <input type="hidden" id="hid_docfile_' + count + '" name="FilePathStr" value="' + url1 + '" />' +
+                '<input type="hidden" id="doccontentid_' + count + '" value="0" /></div>');
+        }
+        CloseOpenPopup("previewdocinner", "previewdocouter");
+
+    });
+
+    function deletedoc(id) {
+
+        //$("#docfiles div").each(function (index) {
+        //    alert(index);
+        //    if (index == id) {
+        var filename = $('#docfile_' + id + '');
+        var filenamevalue = filename.html();
+
+        var imgname = $('#' + id + '');
+        var fileidvalue = $('#doccontentid_' + id + '');
+        var fileid = fileidvalue.val();
+
+        //Remove form database
+        $.ajax({
+            url: '@Url.Content("~/Contract/DeleteDocVideo")',
+            data: { name: filenamevalue, id: parseInt(id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                filename.remove();
+                imgname.remove();
+                fileidvalue.remove();
+                $(this).remove();
+
+            }
+        });
+
+
+        //    }
+        //});
+    }
+    $("#btnnamelose").click(function () {
+        $('#nametrans').slideUp('fast');
+        $('#namepopup').slideUp('fast');
+    });
+    $("#btnnamecancel").click(function () {
+        $('#nametrans').slideUp('fast');
+        $('#namepopup').slideUp('fast');
+    });
+    $("#btnAddVendorClient").click(function () {
+        var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-####" }];
+        $('#OfficePhone').inputmask({
+            mask: phones,
+            greedy: false,
+            definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+        });
+        $('#DirectPhone').inputmask({
+            mask: phones,
+            greedy: false,
+            definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+        });
+        $('#nametrans').slideDown('fast');
+        $('#namepopup').slideDown('fast');
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 200;
+        $('#namepopup').css("top", poistion);
+    });
+
+    $("#txtVendorClientName").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/Contract/GetVendorClient")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term },
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return { label: item.FName, value: item.Id + ":" + item.CompanyId, title: item.UserType };
+                    }))
+
+                }
+            })
+        },
+        select: function (event, ui) {
+            $('#txtVendorClientName').val(ui.item.label);
+            $('#hid_VendorClientId').val(ui.item.value);
+            $("#ContractWithId").val(ui.item.value.split(':')[0]);
+            $("#ContractorCompanyId").val(ui.item.value.split(':')[1]);
+            $('#hid_VendorClientType').val(ui.item.title);
+            $('#Role').val(ui.item.title);
+
+            GetServices();
+            return false;
+        }, minLength: 1,
+        messages: {
+            noResults: "f", results: "df"
+        }
+
+    });
+
+    // $("#txtVendorClientName").change(function () {
+
+    //  alert(12);
+    function GetServices() {
+        debugger;
+        if ($('#hid_VendorClientType').val().trim() != "") {
+
+            var CompanyId = $('#hid_VendorClientId').val().split(':')[1];
+            if (CompanyId == null || CompanyId === '') { CompanyId = $('#hid_VendorClientId').val().split(':')[0]; }
+            $('#servicelbl').html("Service Provided:<sup style='color: red; font-size: 10px;'> *</sup>");
+            if ($('#hid_VendorClientType').val() == "Vendor") {
+                CompanyId = '@Session["CompanyId"]';
+                $('#servicelbl').html("Service Received:<sup style='color: red; font-size: 10px;'> *</sup>");
+
+            }
+
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/GetICClientService")',
+                data: { 'companyId': CompanyId, 'type': 0 },
+                cache: false,
+                type: "GET",
+                datatype: 'json',
+                success: function (data) {
+                    debugger;
+                    alert(JSON.stringify(data) + '::' + JSON.stringify(data.serviceList));
+                    if (data != null && data.serviceList.length > 0) {
+                        $('#ServicesList').empty();
+                        $('#ServicesList').append('<div id=' + CompanyId + ' class="maindiv"><div>' +
+                                    '<div id="selectall">' +
+                          '<input type="checkbox" id="chkserviceall_' + CompanyId + '" class="chkserviceall" style=" margin-right: 6px; margin-top: -2px;" autocomplete="off" name="service_' + CompanyId + '" value="All" onchange="selectchkboxes(this.id,1)" /> Select All' +
+                          '</div></div><hr style="margin:10px" /><div style="width: 833px;height: auto;">' +
+                           '<table style="margin-left: 1px;" id="tblservice_' + CompanyId + '"></table></div></div>');
+                        //set service status [all,select/dna]
+                        if (data.ServiceStatus == 0) {
+                            $('#chkserviceselected_' + CompanyId).prop("checked", true);
+                        }
+                        else if (data.ServiceStatus == 1) {
+                            $('#chkserviceall_' + CompanyId).prop("checked", true);
+                        }
+                        else if (data.ServiceStatus == 2) {
+                            $('#chkservicedna_' + CompanyId).prop("checked", true);
+                        }
+
+                        var totallength = data.serviceList.length;
+                        var totle1 = totallength / 5;
+                        //  alert(totle1);
+                        var exactll = totle1.toString().split('.');
+                        var count = totle1;// parseInt(exactll);
+                        var count1 = 1;
+                        var count2 = count;
+                        var loopvar = 0;
+                        var count3 = 0;
+                        var ii = 1;
+                        var rows = '';
+                        rows = '<tr>'
+                        while (count > 0) {
+                            $('#ServicesList').show();
+                            // alert('enter' + count);
+                            loopvar = count3 * 5;
+                            ii = count1 * 5;
+                            rows = rows + '<td style="vertical-align: top; width:auto;">';
+                            $.each(data.serviceList, function (i, item) {
+                                //  alert('come' + ii + "  " + loopvar);
+                                if (i == loopvar) {
+                                    // alert('come' + loopvar);
+                                    if (loopvar != ii) {
+                                        // alert('enter' + ii);
+                                        if (data.ServiceStatus == 1 || data.ServiceStatus == 2) {
+                                            rows = rows + ' <div style="width:100%; display:table; padding:5px 0;"><div style=" display: table-cell; width:10px; padding-right:5px;">' +
+                                              '<input type="checkbox" name="SelectedServiceList" id="chk_' + CompanyId + '_' + i + '" style="margin-top:-1px" class="chk" disabled="true" autocomplete="off" value="' + item.id + '"   />' +
+                                              '</div><div style=" display: table-cell; text-align:left; font-size:12px;"><div class="dynamic-word-div">' + item.serviceName +
+                                            '<br/></div></div></div>';
+                                        }
+                                        else {
+                                            rows = rows + ' <div style="width:100%; display:table; padding:5px 0;"><div style=" display: table-cell; width:10px; padding-right:5px;">' +
+                                              '<input type="checkbox"  name="SelectedServiceList" id="chk_' + CompanyId + '_' + i + '" style="margin-top:-1px" class="chk" autocomplete="off" value="' + item.id + '"   />' +
+                                              '</div><div style=" display: table-cell; text-align:left; font-size:12px;"><div class="dynamic-word-div">' + item.serviceName +
+                                            '<br/></div></div></div>';
+                                        }
+
+                                        loopvar = loopvar + 1;
+                                    }
+                                    else {
+                                        count3 = count3 + 1;
+                                        rows = rows + '</td>';
+                                        return false;
+                                    }
+                                }
+                            })
+
+                            count1 = count1 + 1;
+                            count = count - 1;
+                        }
+
+                        rows = rows + '</tr>';
+                        $('#tblservice_' + CompanyId + '').append(rows);
+                        var count = 0;
+
+                        //set the checked service as per contract
+                        $('.chk').each(function () {
+
+                            if ($(this).val() == '@Model.ServiceId') {
+
+                                $(this).prop("checked", true);
+                                $('#selectall').hide();
+                            }
+                            else if ('@Model.ServiceId' == 0) {
+
+                                $('#selectall').show();
+
+                            }
+                            else {
+                                $(this).prop("disabled", true);
+                            }
+                            count = count + 1;
+
+                        })
+                        if ($('.chk').length == count) {
+                            $('.chkserviceall').prop("checked", true);
+                        }
+
+                    }
+                    else {
+                        $('#ServicesList div').each(function () {
+                            $(this).hide();
+                        })
+                        $('#ServicesList').append('<div id=' + CompanyId + ' class="noservicediv">No Service</div>');
+                        $('#' + CompanyId).show();
+                        $('#ServicesList').html("<div style='color:red'>Contractor have no service !</div>");
+                        $('#ServicesList').show();
+
+                    }
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(textStatus + '::' + errorThrown);
+
+                }
+            });
+
+        }
+    }
+    // })
+
+    $("#txtowner").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/Contract/GetInternalStaff")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.fname + ' ' + item.lname, value: item.Id };
+                    }))
+
+                }
+            })
+        },
+        select: function (event, ui) {
+            $('#txtowner').val(ui.item.label);
+            $('#hid_ownerId').val(ui.item.value);
+            return false;
+        }, minLength: 1,
+        messages: {
+            noResults: "", results: ""
+        }
+
+    });
+    $("#txtexecutedby").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/Contract/GetInternalStaff")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.fname + ' ' + item.lname, value: item.Id };
+                    }))
+
+                }
+            })
+        },
+        select: function (event, ui) {
+            $('#txtexecutedby').val(ui.item.label);
+            $('#hid_executeId').val(ui.item.value);
+            $('#txtexecutedby').css('border', '');
+            return false;
+        }, minLength: 1,
+        messages: {
+            noResults: "", results: ""
+        }
+
+    });
+    $("#ShowTextFields").click(function () {
+        if ($('#ShowTextFields').html() == "▼") {
+            $('#ShowTextFields').text("▲");
+            $('#TextFields').show();
+            $('#LnkAddComment').show();
+            $('#TblAddComments').show();
+            $('#div_comments').show();
+
+
+        }
+        else if ($('#ShowTextFields').html() == "▲") {
+            $('#ShowTextFields').text("▼");
+            $('#TextFields').hide();
+            $('#LnkAddComment').hide();
+            $('#TblAddComments').hide();
+            $('#div_comments').hide();
+
+        }
+
+    })
+
+    $("#LnkAddComment").click(function () {
+        if ($('#TextFields').val().trim() != "") {
+            $('#tbl_Comment').show();
+            var str1 = '<table id="tbl_Comment" style="width: 90%; margin-bottom: 10px"><tbody>';
+            var str2 = '</tbody></table>';
+            //var str = '<tr><td style="border:1px solid #e1e1e1;padding:10px 10px;"> @Session["UserName"] @System.DateTime.Now </br> ' + $('#TextFields').val() + '</td></tr>';
+            var str = '<tr><td style="border:1px solid #e1e1e1;padding:5px 5px;">' + $('#TextFields').val() + '</td></tr><tr><td></td></tr>';
+            //if ($('table').length > 0) {
+
+            $('#tbl_Comment tbody').append(str);
+            //} else {
+            //    var res = str1 + str + str2;
+            // $('#tbl_Comment tbody').append(res);
+            //}
+
+            $('#TextFields').val('');
+            $('#Hid_Comment').val($('#div_SaveComment').html());
+            // $('#TextFields').val("@Session["UserName"]  @System.DateTime.Now : ");
+        }
+
+    })
+
+    $("#LnkAddNotes").click(function () {
+        if ($('#Notes').val().trim() != "") {
+            $('#tbl_notes').show();
+            var str = '<tr><td style="border:1px solid #e1e1e1;padding:5px 5px;"> ' + $('#Notes').val() + '</td></tr>';
+            $('#tbl_notes tbody').append(str);
+            $('#Notes').val('');
+            //$('#hid_Notes').val($('#div_notes').html());
+
+        }
+
+    })
+
+    //validate comments
+    function validatelinks() {
+        var CommentStatus = true;
+        var PersonNameStatus = true;
+        var CommentDateStatus = true;
+        $('#TblAddComments tr').each(function (index) {
+
+            var Comment = $(this).find('#TxtComment_' + index);
+            var PersonName = $(this).find('#TxtPersonName_' + index);
+            var CommentDate = $(this).find('#Commentdate_' + index);
+            if (Comment.val().trim() == null || Comment.val().trim() == "") {
+                Comment.addClass('errorClass');
+                CommentStatus = false;
+            }
+            if (PersonName.val().trim() != null || PersonName.val().trim() != "") {
+                PersonName.addClass('errorClass');
+                PersonNameStatus = false;
+            }
+            if (CommentDate.val().trim() != null || CommentDate.val().trim() != "") {
+                CommentDate.addClass('errorClass');
+                CommentDateStatus = false;
+            }
+
+        });
+        if (CommentStatus && CommentDateStatus && PersonNameStatus) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function selectchkboxes(id, type) {
+        // alert('enterrere'+type);
+        var companyid = id.split('_')[1];
+        if (type == 1) {
+            // alert(56);
+            $("#" + companyid + " .chk").each(function () {
+                $(this).prop("checked", true);
+                // $(this).attr("disabled", true);
+            })
+        }
+        if (type == 2) {
+            $("#" + companyid + " .chk").each(function () {
+                $(this).prop("checked", false);
+                //  $(this).attr("disabled", true);
+            })
+        }
+        if (type == 0) {
+            // alert('jj')
+            $("#" + companyid + " .chk").each(function () {
+                $(this).prop("checked", false);
+                // $(this).attr("disabled", false);
+                bindservicelist(companyid);
+            })
+        }
+    }
+    function bindservicelist(companyid) {
+        //   alert('come');
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetICClientService")',
+            data: { 'companyId': '', 'type': 1 },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (data) {
+                $('#clientserviceslist #' + companyid + ' input[type="checkbox"]').each(function () {
+                    var serviceid = $(this);
+                    $.each(data.serviceList, function (i, item) {
+                        if (serviceid.val() == item.id) {
+                            serviceid.prop("checked", true);
+                            return false;
+                        }
+                    })
+                })
+            }
+        });
+    }
+
+    function bindservicelistOfVendor(companyid) {
+        alert('come');
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetICClientService")',
+            data: { 'companyId': companyid, 'type': 0 },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (data) {
+                $('#ServicesList #' + companyid + ' input[type="checkbox"]').each(function () {
+                    var serviceid = $(this);
+                    $.each(data.serviceList, function (i, item) {
+                        if (serviceid.val() == item.id) {
+                            serviceid.prop("checked", true);
+                            return false;
+                        }
+                    })
+                })
+            }
+        });
+    }
+
+    function checkval(id) {
+        if ($('#' + id).val().trim() != '') {
+            //  alert('inside if');
+            $('#' + id).removeClass("errorClass");
+            $('#phoneerrormsg').html('');
+            $('#cellnoerrormsg').html('');
+            $('#emailerrormsg').html('');
+        }
+
+    }
+    $('#ddlTitle').change(function () {
+        if ($("#ddlTitle").val() != "") {
+            $.ajax({
+                url: '@Url.Content("~/Contract/GetInternalStaff")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: $("#ddlTitle option:selected").text() },
+                success: function (data) {
+                    if (data.length > 0) {
+                        $('#Hid_EventTitle').val('');
+                        var str = '';
+                        var divcount = $('#TitleBox div').length;
+                        $.map(data, function (item) {
+                            str += '<div ><input type="checkbox" class="MarginT" checked="checked" value="' + item.Id + '"/><span class="MarginL">' + item.title + '  ' + item.fname + '</span>' +
+                                '</div>';
+                            divcount = divcount + 1;
+                        });
+                        $('#TitleBox').append(str);
+
+                        $('#TitleBox').show();
+                        $('#CollTitleBox').show();
+                        $('#CollTitleBox').html('▼ Show Titles');
+                    }
+                    else {
+                        if ($('#TitleBox').html().trim() == "") {
+                            $('#TitleBox').show();
+                            str = "No staff in " + $("#ddlTitle option:selected").text();
+                            $('#TitleBox').append(str);
+                            setTimeout(function () {
+                                $('#TitleBox').hide();
+                                $('#TitleBox').empty();
+                            }, 1500);
+                        }
+                    }
+                }
+            })
+        }
+        else {
+            $('#TitleBox').hide();
+            $('#TitleBox').empty();
+            $('#CollTitleBox').hide();
+            $('#CollTitleBox').html('▼ Show Titles');
+        }
+    })
+    $('#CollTitleBox').click(function () {
+        if ($(this).html() == '▼ Show Titles') {
+            $(this).html('▲ Hide Titles');
+            $('#TitleBox').hide();
+        }
+        else if ($(this).html() == '▲ Hide Titles') {
+            $(this).html('▼ Show Titles');
+            $('#TitleBox').show();
+
+        }
+    })
+
+</script>

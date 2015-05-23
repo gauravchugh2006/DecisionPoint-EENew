@@ -1,0 +1,250 @@
+﻿
+@model DecisionPoint.Models.UserDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "ICClient List";
+    //Grid for Dispaly vendor details
+
+    WebGrid grdvendor = new WebGrid(ajaxUpdateContainerId: "messagegrid", rowsPerPage: Model.RowperPage);
+    if (Model.CurrentClientList != null)
+    {
+        if (TempData["isCurrent"].ToString() == "1")
+        {
+            grdvendor.Bind(Model.CurrentClientList, autoSortAndPage: true, rowCount: Model.PageSize);
+        }
+    }
+    WebGrid grdvendorPost = new WebGrid(ajaxUpdateContainerId: "Pastvendorgrid", rowsPerPage: Model.RowperPage);
+    if (Model.PastClientList != null)
+    {
+        if (TempData["isCurrent"].ToString() == "0")
+        {
+            grdvendorPost.Bind(Model.PastClientList, autoSortAndPage: true, rowCount: Model.PageSize);
+        }
+    }
+   
+}
+
+<div id='companies'>
+    <div class='heading'>
+        <div class='row'>
+            <h3>Client List</h3>
+            <div style="float: right">
+                @if (TempData["isCurrent"].ToString() == "1")
+                {
+                    <input type="radio" class="currentstaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" checked /><b>Current Client</b> 
+                   
+                }
+                else
+                {
+                    <input type="radio" class="currentstaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" /><b>Current Client</b> 
+                }
+                @if (TempData["isCurrent"].ToString() == "0")
+                {
+                    <input type="radio" class="paststaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" checked /><b>Past Client</b>    
+                }
+                else
+                {
+                    <input type="radio" class="paststaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" /><b>Past Client</b>    
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+@functions {
+    public static string PostVendorSorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+
+<div id='currentclient' style="padding-top: 20px;">
+    @if (TempData["isCurrent"].ToString() == "1")
+    {
+        if (Model.CurrentClientList != null)
+        {
+            
+        @grdvendor.GetHtml(htmlAttributes: new { id = "messagegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+    columns: new[] {
+        
+  grdvendor.Column(columnName:"vendor",header : Sorter("vendor", "Client", grdvendor)),
+  grdvendor.Column(columnName:"contact",header: Sorter("contact", "Contact", grdvendor)),
+  grdvendor.Column(columnName:"emailId",header:Sorter("emailId", "Email", grdvendor)),
+  grdvendor.Column(columnName:"phone",header:Sorter("phone", "Phone", grdvendor),
+   format:@<text>
+          
+            
+                @if (item.phone != null && item.phone.Trim() != string.Empty)
+                {
+                   
+               <span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+                }
+            
+
+            </text>),
+  grdvendor.Column(header: "Remove",format: @<text>
+        <a id="removecstaff" title="Remove the IC Client" onclick="showremovepopup('@item.DocFTblId')" style="cursor: pointer;margin-left: 19px;">
+            <img src="../../Content/images/delete.png" /></a>
+        </text>, canSort: false),
+    })
+           
+        }
+    }
+</div>
+
+<div id='Pastclient' style="padding-top: 20px;">
+    @if (TempData["isCurrent"].ToString() == "0")
+    {
+        if (Model.PastClientList != null)
+        {
+            
+        @grdvendorPost.GetHtml(htmlAttributes: new { id = "Pastvendorgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+    columns: new[] {        
+  grdvendorPost.Column(columnName:"vendor",header : PostVendorSorter("vendor", "Client", grdvendorPost)),
+  grdvendorPost.Column(columnName:"contact",header: PostVendorSorter("contact", "Contact", grdvendorPost)),
+  grdvendorPost.Column(columnName:"emailId",header:PostVendorSorter("emailId", "Email", grdvendorPost)),
+  grdvendorPost.Column(columnName:"phone",header:PostVendorSorter("phone", "Phone", grdvendorPost),
+   format:@<text>
+          
+            
+                @if (item.phone != null && item.phone.Trim() != string.Empty)
+                {
+                   
+               <span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+                }
+            
+
+            </text>),
+  grdvendorPost.Column(header: "Reactive",format: @<text>
+        <a id="reactivestaff" title="Reactive the IC Client" onclick="Reactivestaff('@item.DocFTblId')"  style="cursor: pointer;">Reactive
+        </a>
+        </text>, canSort: false),
+
+    })
+           
+        }
+    }
+</div>
+
+<input type="hidden" id="reactivestaffid"/>
+<input type="hidden" id="removestaffid"/>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('icclient');
+
+       // alert(1);
+        if ('@TempData["isCurrent"].ToString()' == "1") {
+            $('#Pastclient').hide();
+            $('#currentclient').show();
+            $('.currentstaffrdo').prop('checked', true);
+            $('.paststaffrdo').prop('checked', false);
+        }
+        else {
+            $('#Pastclient').show();
+            $('#currentclient').hide();
+            $('.paststaffrdo').prop('checked', true);
+            $('.currentstaffrdo').prop('checked', false);
+        }
+    });
+
+    $('.currentstaffrdo').change(function () {
+        if ($('.currentstaffrdo').is(':checked')) {           
+            getcurrenticclient(1);
+
+        } else {
+            $('#Pastclient').show();
+            $('#currentclient').hide();
+        }
+    });
+    $('.paststaffrdo').change(function () {       
+        if ($('.paststaffrdo').is(':checked')) {
+            getpasticclient(1);
+
+        } else {
+            $('#Pastclient').hide();
+            $('#currentclient').show();
+        }
+    });
+
+    function Reactivestaff(Id) {
+        //alert(Id);
+        var url = '@Url.Content("~/CompanyDashBoard/ReactiveVendor")';
+        $.post(url, { id: parseInt(Id) }, function (result) {
+            getpasticclient(getpageid("Pastvendorgrid"));
+            });
+       
+
+    }
+
+
+
+    function showremovepopup(Id) {      
+       
+        var url = '@Url.Content("~/CompanyDashBoard/RemoveVendor")';
+        $.post(url, { id: parseInt(Id) }, function (result) {
+            getcurrenticclient(getpageid("messagegrid"));
+                });
+    }
+
+ 
+    function getpasticclient(pageid) {
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/ICClientList/?page=")"+pageid,
+            data: { id: 0 },
+              cache: false,
+              type: "GET",
+              datatype: 'json',
+              success: function (result) {
+                  $('#Pastclient').html($(result).find('#Pastclient').html().trim());
+                  $('#Pastclient').show();
+                  $('#currentclient').hide();
+              }
+        });
+
+       
+    }
+    function getcurrenticclient(pageid) {
+       
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/ICClientList/?page=")" + pageid,
+            data: { id: 1 },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (result) {
+                $('#currentclient').html($(result).find('#currentclient').html().trim());
+                $('#Pastclient').hide();
+                $('#currentclient').show();
+            }
+        });
+
+
+    }
+
+</script>
+
+

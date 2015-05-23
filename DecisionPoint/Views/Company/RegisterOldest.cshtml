@@ -1,0 +1,121 @@
+﻿@model DecisionPoint.Models.UserRegister
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("register", "company", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+<div id="content">
+    <div class="container">
+        <br>
+        <div id="company-setup">
+            <h3>Company Account Set Up</h3>
+@*            <ul class="nav nav-pills">
+                <li class="active">Step 1: Profile Set Up</li>
+                <li>Step 2: Staff Set Up</li>
+                <li>Step 3: Payment</li>
+            </ul>*@
+            <hr>
+            <form class="form-horizontal">
+                <div class="control-group">
+                    <div class="controls">
+                        <h4>Company Profile</h4>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Business Name</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.BusinessName, new { @class = "input-xlarge", @placeholder = "Business Name" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Email</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.Email, new { @class = "input-xlarge", @placeholder = "Email" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Confirm Email</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.ConfirmEmail, new { @class = "input-xlarge", @placeholder = "Confirm Email" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Upload Company Logo</label>
+                    <div class="controls">
+                        <input class="input-xlarge" type="file">
+                    </div>
+                </div>
+                    <div class="control-group">
+                        <label class="control-label">Office Phone</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.OfficePhone, new { @class = "input-xlarge", @placeholder = "Office Phone" })
+                        </div>
+                    </div>
+                   <div class="control-group">
+                    <label class="control-label">Security Question</label>
+                       <div class="controls">
+                            Your first pet’s name? <br />  @Html.TextBoxFor(model => model.SecurityAnswer1, new { @class = "input-xlarge", @placeholder = "Pet’s name" })                     
+                       </div>
+                       <div class="controls"><br />
+                                     
+                                Your favorite food?  <br />   @Html.TextBoxFor(model => model.SecurityAnswer2, new { @class = "input-xlarge", @placeholder = "Favorite food" })
+                       </div>
+                       <div class="controls"><br />
+                                Your favorite place? <br />      @Html.TextBoxFor(model => model.SecurityAnswer3, new { @class = "input-xlarge", @placeholder = "Favorite place" })
+                      </div>
+                </div>
+                    <div class="control-group">
+                        <label class="control-label">Address</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.BusinessAddress, new { @class = "input-xlarge", @placeholder = "Address" })
+                        </div>
+                    </div>
+@*                    <div class="control-group">
+                        <label class="control-label">Direction </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Direction, new { @class = "input-xlarge", @placeholder = "Direction" })
+                        </div>
+                    </div>*@
+                    <div class="control-group">
+                        <label class="control-label">Street Name</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Direction, new { @class = "input-xlarge", @placeholder = "Direction" }) @Html.TextBoxFor(model => model.StreetName, new { @class = "input-xlarge", @placeholder = "Street Name" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">State</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.StateId, new { @class = "input-xlarge", @placeholder = "State" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">City</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.StreetName, new { @class = "input-xlarge", @placeholder = "City" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Zip Code</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.ZipCode, new { @class = "input-xlarge", @placeholder = "Zip Code" })
+                        </div>
+                    </div>
+                <div class="control-group">
+                    <label class="control-label">Fax</label>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.fax, new { @class = "input-xlarge", @placeholder = "Fax" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                         <button class='btn btn-primary' type='submit'>Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+}
+

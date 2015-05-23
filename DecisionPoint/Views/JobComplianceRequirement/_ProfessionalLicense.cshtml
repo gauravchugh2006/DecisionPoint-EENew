@@ -1,0 +1,324 @@
+﻿@using DecisionPointBAL.Implementation
+@model DecisionPoint.Models.JobComplianceRequirementModel
+@{
+    string reqById = string.Empty;
+    string profLicType = string.Empty;
+}
+<div class="row-fluid">
+    <div class="span12 mt20">
+        <h4>Professional License</h4>
+
+    </div>
+    <div class="span12" style="margin-left: 0; border: 1px solid rgb(225, 225, 225); padding: 9px;">
+        <div class="span12" style="margin-left: 0;">
+            <div class="span5"><b>Attributes</b></div>
+            <div class="span4"><b>Acknowledgements</b></div>
+            <div class="span3"></div>
+        </div>
+        <div class="span12" style="margin-left: 0;">
+            <div class="span5">
+                <div class="span12">
+                    <script>
+                        var t = '@ViewBag.IsJCRForStaff';
+                        alert('@ViewBag.IsJCRForStaff' + '::' + String(t));
+
+                    </script>
+                    <table>
+                        <tr id="trValidateLicenseType">
+                            <td>
+                                <label class="control-label">License Type<sup style="color: red; font-size: 10px;">*</sup></label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <select id="profLicenseType">
+                                    <option value="0">-- Select --</option>
+                                    <option value="1">Real Estate</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><td id="tdError"></td> </tr>
+                        <tr>
+                            <td>
+                                <label class="control-label">License Number</label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <input type="text" disabled="disabled" placeholder="License Number" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="control-label">State</label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                @Html.DropDownList("ddState", new SelectList(Model.StateDetails, "StateId", "SateName"), "-- Select --", new { @style = "width:220px;", @disabled = "disabled" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="control-label">Expiration Date</label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <div class="controls">
+                                    <div class='datetimepicker input-append'>
+                                        <input type="text" id="licExpirationDate" disabled="disabled" placeholder="Expiration Date" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @* <tr>
+                                <td colspan="3">
+                                    <label class="checkbox">
+                                        <input type="checkbox" checked="checked" />
+                                        Verification Required</label></td>
+                               <td>&nbsp;</td>
+                                <td>
+                                   <select id="source">
+                                        <option value="0">-- Select --</option>
+                                        <option value="1">Sterling</option>
+                                        <option value="2">Other</option>
+                                    </select>
+                                </td>
+                            </tr>*@
+                    </table>
+
+                </div>
+            </div>
+            <div class="span4">
+                <div class='control-group w100'>
+                    <div class='MarginBottom3'>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <table id="licenseAckTbl" class="w100"></table>
+                                <a id="licenseAck" style="cursor: pointer; margin-left: 24px; font-size: 12px;" onclick="AddMoreAck(this.id)">Add</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="span3">
+                <div class='control-group w100'>
+
+                    <div class="MarginBottom3">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Upload<sup style="color: red; font-size: 10px;">*</sup></label>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <input type="text" disabled="disabled" placeholder="Title" class="w90" id="profLicenseTitle" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="span12" style="margin-left: 0;">
+            <div id="dvProfLicenseSource" class="span6">
+                <label class="radio">
+                    <input type="radio" name="profLicVer" id="isSelfRep" class="profClass" />Professional License (Self Report)
+                </label>
+                <label class="radio">
+                    <input type="radio" id="isVerReq" name="profLicVer" class="profClass" />Professional License (Verified)
+                </label>
+            </div>
+            <div class="span6">
+                <input type="button" id="profLicenseCancel" class="btn btn-primary pull-right" value="Cancel" onclick="ResetRecord(1, 0)" style="margin-right: 4px; display: none;" />
+                <input type="button" id="profLicenseSave" class="btn btn-primary pull-right" title="Save" value="Save" style="margin-right: 4px;" />
+            </div>
+        </div>
+    </div>
+    <div class="span12" style="margin-left: 0;" id="profLicDetailDiv">
+        <div class="span12" style="margin-top: 10px;">
+            <label class="radio pull-right" style="margin-left: 10px;"><input type="radio" onclick="ShowCurrentOrPastDetails(1, false)" name="currentpastProfLic" id="pastProflic">Past</label>
+            <label class="radio pull-right"><input type="radio" onclick="ShowCurrentOrPastDetails(1, true)" name="currentpastProfLic" id="currentProfLic" checked="checked">Current</label>
+        </div>
+        <table class="table table-hover" id="currentProflicDetails">
+            <thead>
+                <tr>
+                    <th>Reqiured By</th>
+                    <th>License Type</th>
+                    <th>IC Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ProfLicMasterList.Where(x => x.IsActive))
+                {
+
+                    if (reqById == item.RequiredByCompanyId)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(profLicType))
+                                {
+                                    if (!profLicType.Equals(item.LicenseType))
+                                    {
+                                        @item.LicenseType
+                                    }
+                                }
+                            </td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                <a>
+                                    <img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.LicInsId',1)" />
+                                </a><a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetProfLiceForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.LicenseType','@item.LicInsId','@Session["CompanyId"]','@item.Source')" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item.ReqCompanyName</td>
+                            <td>@item.LicenseType</td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                <a>
+                                    <img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.LicInsId',1)" />
+                                </a><a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetProfLiceForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.LicenseType','@item.LicInsId','@Session["CompanyId"]','@item.Source')" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    reqById = item.RequiredByCompanyId;
+                    profLicType = item.LicenseType;
+                }
+            </tbody>
+        </table>
+        @{reqById = string.Empty; profLicType = string.Empty;}
+        <table class="table table-hover" id="pastProflicDetails" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Reqiured By</th>
+                    <th>License Type</th>
+                    <th>IC Type1</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ProfLicMasterList.Where(x => !x.IsActive))
+                {
+
+                    if (reqById == item.RequiredByCompanyId)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(profLicType))
+                                {
+                                    if (!profLicType.Equals(item.LicenseType))
+                                    {
+                                        @item.LicenseType
+                                    }
+                                }
+                            </td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                @*<a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetProfLiceForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.LicenseType','@item.LicInsId','@Session["CompanyId"]','@item.Source')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.LicInsId',1)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item.ReqCompanyName</td>
+                            <td>@item.LicenseType</td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                @*<a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetProfLiceForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.LicenseType','@item.LicInsId','@Session["CompanyId"]','@item.Source')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.LicInsId',1)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    reqById = item.RequiredByCompanyId;
+                    profLicType = item.LicenseType;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<input type="hidden" id="hidProfLicId" />
+<script>
+    var ROOT = '@Url.Content("~/")';
+    $('#profLicenseSave').click(function () {
+        if (IsValidProfLicenseProperties()) {
+            SaveProfeLicenseDetails(ROOT, '@Session["UserId"]', '@Session["CompanyId"]');
+        }
+    });
+    $('#profLicenseType').change(function () {
+        var insuranceType = $('select[id="profLicenseType"]');
+        if ($("#profLicenseType").val() != 0) {
+            insuranceType.removeClass('errorClass');
+            insuranceType.removeAttr("title");
+            $('#profLicenseTitle').val($("#profLicenseType option:selected").text());
+        }
+        else {
+            $('#profLicenseTitle').val("");
+        }
+    });
+    function ActiveOrDeactivate(operationType, tblId) {
+        ActiveOrDeactivateJCR(operationType, ROOT, 1, tblId);
+    }
+    // function Validate professional license properties on save click
+    function IsValidProfLicenseProperties() {
+        var res = false;
+        var insuranceType = $('select[id="profLicenseType"]');
+
+        if (insuranceType.val() === 0 || insuranceType.val() === "0") {
+            insuranceType.addClass('errorClass');
+            insuranceType.attr("title", "Please select license type");
+            res = false;
+            //AddErrorMessage('Please input upload title');
+        } else {
+            insuranceType.removeClass('errorClass');
+            insuranceType.removeAttr("title");
+            res = true;
+        }
+
+        // validate professional license source
+        $('#errMsgProfLicenseSource').remove();
+        if ($('.profClass:checked').length === 0) {
+            debugger;
+            if (ERRORMESSAGE != null) {
+                msg = String(ERRORMESSAGE) + ' professional license source';
+                var errLabel = '<label id="errMsgProfLicenseSource" style="color: red;">' + msg + '</label>';
+                $(errLabel).appendTo('#dvProfLicenseSource');
+            }
+            res = false;
+        } else {
+            $('#errMsgProfLicenseSource').remove();
+            res = true;
+        }
+        return res;
+    }
+    // function to handle professional license source radio button
+    $('.profClass').click(function () {
+        if ($('.profClass:checked').length != 0) {
+            $('#errMsgProfLicenseSource').remove();
+        }
+    });
+    function AddErrorMessage(msg) {
+        msg = msg.replace("*", "");
+        var errLabel = '<label id="errMsgLicenseType" style="color: red;">' + msg + '</label>';
+        var colspan = $('#trValidateLicenseType').children('td').length;
+        var tdError = $('#tdError').attr('colspan', parseInt(colspan));
+        $('#tdError').children().remove();
+        $(errLabel).appendTo('#tdError');
+
+    }
+</script>

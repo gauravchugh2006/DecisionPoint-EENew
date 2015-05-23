@@ -1,0 +1,61 @@
+﻿
+ .table {
+    margin-bottom: 20px;
+    width: 101%;
+}
+ table {
+    background-color: transparent;
+    border-spacing: 0;
+    max-width: 101%;
+}
+    .header
+    {
+        width:200px;
+    }
+    .table th, .table td {
+    border-top: 1px solid #DDDDDD;
+    /*line-height: 15px;*/
+    padding: 1px !important;
+    padding-top:3px !important;
+    text-align: left;
+    vertical-align: top;
+    /*height:45PX !IMPORTANT;*/
+}
+    #history:hover
+    {
+        background:none !important;
+    }
+    .textalign
+    {
+        text-align:center !important;
+    }
+      .setwidth
+      {
+         background-color:#F2F2F2;
+      }
+    .grid-width400
+    {
+        width: 150px;
+    }
+
+    .grid-width300
+    {
+        width: 150px;
+    }
+
+    .grid-width100
+    {
+        width: 80px;
+    }
+     .grid-width120
+    {
+        width: 120px;
+    }
+    .grid-width100px
+    {
+        width: 100px;
+    }
+     .grid-width61px
+    {
+        width: 61px;
+    }

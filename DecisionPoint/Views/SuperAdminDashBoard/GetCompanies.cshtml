@@ -1,0 +1,75 @@
+﻿@model DecisionPoint.Models.SuperAdminDashBoard
+
+@{
+    ViewBag.Title = "GetCompanies";
+    Layout = "~/Views/Shared/_SuperAdminLayout.cshtml";
+
+    WebGrid grdvendor = new WebGrid(ajaxUpdateContainerId: "messagegrid");
+    grdvendor.Bind(Model.companies, autoSortAndPage: true, rowCount: Model.pagesize);
+}
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+<h2>Client List</h2>
+<div style="float: right; margin-top: -33px; margin-right: 64px;">
+    <span style="margin-right: 5px;">
+        @if (Model.Active != null)
+        {
+            <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b>Current  </b>
+        }
+        else
+        {
+            <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b>Current  </b>
+        }
+    </span>
+    <span>
+        @if (Model.InActive != null)
+        {
+            <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b> Past </b>
+        }
+        else
+        {
+            <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b> Past </b>
+        }
+    </span>
+</div>
+<div>
+    <div>
+
+        @if (Model.companies != null)
+        {
+            if (Model.companies.Count() > 0)
+            {
+            @grdvendor.GetHtml(htmlAttributes: new { id = "messagegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+    columns: new[] {        
+  grdvendor.Column(columnName:"CompanyID",header : Sorter("CompanyID", "CompanyID", grdvendor),style:"grid-width250"),  
+         grdvendor.Column("BusinessName", "Business Name",format:@<text>
+            <a id="BusinessID" href="#" style="cursor: pointer">@(item.BusinessName)</a>
+            </text>),
+         grdvendor.Column(columnName:"ContactName",header: Sorter("ContactName", "Contact Name",grdvendor)),
+         grdvendor.Column(columnName:"Address",header: Sorter("Phone", "Address",grdvendor)),
+         grdvendor.Column("", format: @<text>
+            <button class="btn btn-mini btn-info" onclick="showconfirmationdiv('@item.CompanyID','document')"  id="(int)@item.CompanyID">Fee</button>
+            <a title="Remove the staff" onclick="showremovepopup('@item.CompanyID')" style="cursor: pointer; margin-left: 19px;">
+                <img src="../../Content/images/delete.png" /></a>
+            </text>, canSort: false,style:"webgridcol1"),    
+        })
+            }
+            else
+            {
+            <div>
+                <b>There is No Company!</b>
+            </div>
+            }
+        }
+    </div>
+</div>

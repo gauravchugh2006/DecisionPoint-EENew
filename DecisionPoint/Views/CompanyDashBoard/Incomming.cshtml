@@ -1,0 +1,467 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    ViewBag.Title = "Incomming";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grdincomming = new WebGrid(ajaxUpdateContainerId: "incommingrid", rowsPerPage: Model.RowperPage);
+    if (Model.DocumentsDetails != null)
+    {
+        grdincomming.Bind(Model.DocumentsDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", System.Globalization.CultureInfo.InvariantCulture);
+}
+<style>
+    .zindexclass
+    {
+        z-index: 99 !important;
+    }
+
+    #documentgrid
+    {
+        margin-left: -5px;
+    }
+</style>
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<div class='heading'>
+    <div class='row'>
+        <h3>Inbox</h3>
+    </div>
+</div>
+
+
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+          grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+
+<div id='incodocuments'>
+    @if (Model.DocumentsDetails != null)
+    {
+                            
+        @grdincomming.GetHtml(htmlAttributes: new { id = "documentgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+
+ grdincomming.Column(columnName:"effectiveDate",header : Sorter("effectiveDate", "Effective Date", grdincomming), format: 
+ @<text>
+        @if (item.effectiveDate != null && item.effectiveDate!=defaultdate)
+        {
+<span>  @string.Format("{0:MM/dd/yyyy}",
+             item.effectiveDate)</span>
+        }</text>
+ 
+ ,style:"webgridcol1"),
+     grdincomming.Column(columnName:"docSeqno",header : Sorter("docSeqno", "Comm #", grdincomming),canSort: true, format: @<text><span>@item.policyNo</span></text>,style:"webgridcol1"),
+    grdincomming.Column(columnName:"DocTitle",header :Sorter("DocTitle", "Title", grdincomming), format:@<text>
+        <a id="documenttitle" href="@Url.Action("ViewDocument", "UserDashboard", new {id=item.DocId,tbid=item.tableId }, null)" target="_blank">@item.DocTitle</a>
+
+
+        </text> ,style:"webgridcol1"),
+         grdincomming.Column("hourofcredit", header: Sorter("hourofcredit", "CE", grdincomming),
+      format:@<text>
+
+        <div>@item.hourofcredit</div>
+
+        </text>,style:"grid-width100"),
+        grdincomming.Column("reference",header: Sorter("reference", "Category", grdincomming), style:"webgridcol1"),
+        grdincomming.Column(columnName:"reqDocType",header :Sorter("reqDocType", "Sub Category", grdincomming),format:  @<text><span>@item.reqDocType</span></text>,style:"webgridcol1"),
+    
+    grdincomming.Column(columnName:"DocFrom",header: Sorter("DocFrom", "From", grdincomming),format:  @<text><a id="lnkfrom" onclick="showCompanyprofile('@item.deliveredUserId','@item.CompanyId')" style="cursor:pointer;"> @(item.DocFrom) </a></text>,style:"webgridcol1"),
+grdincomming.Column("", format: @<text>
+        <a class="btn btn-mini btn-info"  onclick="showspecificrule('@item.effectiveDate','@item.Duedate','@item.reference','@item.retake','@item.DocId','@item.DocTitle','@item.reqDocType','@item.versionno','@item.Group')">Next</a>
+        <button class="btn btn-mini btnminired" onclick="showconfirmationdiv('@item.tableId','2')"   id="(int)@item.DocId">Withdraw</button></text>, canSort: false,style:"webgridcol1"),
+}) 
+    }
+</div>
+
+<div class="profiletrans" id="specialruleouter"></div>
+<div class="popup" id="specialruleinner" style="display: none; left: 30%; top: 10px;">
+    <div class="profile-popup" style="height:auto; width: 450px;">
+        <div class="tittle-MessageBox">
+            <span>Reqiured Information Before forwarding</span><a href="#">
+                <img id="btnclosespecificrule" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box">
+            <div class='control-group'>
+                <label class='control-label'>Group<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class='controls'>
+                    <div class='controls'>
+                        @Html.DropDownList("ddgroup",new SelectList(Model.GroupDetails, "id", "categoryName", "select"), "-- Select --", new { @style = "width:365px;" })
+                        <label style="color: red;" id="groupval"></label>
+                    </div>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label'>Category<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class='controls'>
+                    <div class='controls'>
+                        @Html.DropDownList("ddReference", new SelectList(Model.ReferenceDetails, "id", "referenceName"), "-- Select --",new { @style = "width:365px;" })
+                        <label style="color: red;" id="referenceval"></label>
+                    </div>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label'>Sub Category<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class='controls'>
+                    @Html.DropDownList("ddCategory", new SelectList(Model.CategoryDetails, "id", "categoryName"), "-- Select --",new { @style = "width:365px;" })
+                    <label style="color: red;" id="doctypeval"></label>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label'>Due Date</label>
+                <div class='controls'>
+                    <div class='datetimepicker input-append'>
+
+                        <input data-format='MM/dd/yyyy' id="expirationdate" type='text' class="input-xlarge" style="width: 353px;" placeholder="Due Date" />
+
+                    </div>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label'>Effective Date</label>
+                <div class='controls'>
+                    <div class='datetimepicker input-append'>
+
+                        <input id="effectivedate" type='text' class="input-xlarge" style="width: 353px;" placeholder="Effective Date" />
+
+                    </div>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label'>Retake</label>
+                <div class='controls'>
+                    <select class="input-xlarge" style="width: 372px;" id="retak" disabled="disabled">
+                        <option selected="selected">DNA</option>
+                        <option>6 months</option>
+                        <option>12 months</option>
+                        <option>18 months</option>
+                        <option>24 months</option>
+                    </select>
+
+                </div>
+            </div>
+
+            <a id="viewrecipients" style="cursor: pointer;" class="control-label" target="_blank">View</a>
+
+
+
+            <input type="hidden" id="incomingdocid" />
+            <input type="hidden" id="incomingdoctitle" />
+            <input type="hidden" id="incomingverno" />
+
+            <input type="hidden" id="incomingintro" />
+
+        </div>
+        <div class="Bottom-ButtonControl" style="padding-right: 22px;">
+            <button type="button" id="btnsavespecificrule" class="btn btn-primary" title="save" style="margin-right: 43px;">Save</button>
+            <div id="btnpublishdocument" class="btn btn-primary" title="Publish" style="display: none;">Publish</div>
+            <label id="validatemandatory" style="color:green; margin-right: 39px;"></label>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var datefield = document.createElement("input")
+    datefield.setAttribute("type", "date")
+
+
+
+
+    $(document).ready(function () {
+        ShowHideTabs('inbox');
+        
+    })
+    function showspecificrule(effectiveDate, Duedate, reference, retake, docId, doctitle, doctype, versionno,group) {
+        ResetDetails();
+        $('#incomingdocid').val(docId);
+        $('#incomingdoctitle').val(doctitle);
+        $('#incomingverno').val(versionno);
+
+        $("#ddReference option").each(function () {
+            if ($(this).text() == reference) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        $("#ddCategory option").each(function () {
+           
+            if ($(this).text() == doctype) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        $("#ddgroup option").each(function () {
+           
+            if ($(this).text() == group) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+       
+       
+
+        if (Duedate != '' && Duedate != "1/1/1900 12:00:00 AM") {
+            $('#expirationdate').val(formattedDate(Duedate));
+            $("#expirationdate").attr('readonly', 'readonly');
+        }
+        else {
+           
+            $("#expirationdate").removeAttr('readonly');
+            jQuery(function ($) {
+
+                var myDate = new Date();
+                var prettyDate = (myDate.getMonth() + 1) + '/' + myDate.getDate() + '/' +
+                        myDate.getFullYear();
+              $('#expirationdate').datepicker();
+                $('#expirationdate').val(prettyDate);
+                $('#ui-datepicker-div').addClass("zindexclass");
+            })
+            $('#expirationdate').val('');
+        }
+        if (effectiveDate != '' && effectiveDate != "1/1/1900 12:00:00 AM") {
+            $('#effectivedate').val(formattedDate(effectiveDate));
+            $("#effectivedate").attr('readonly', 'readonly');
+        }
+        else {
+           $("#effectivedate").removeAttr('readonly');
+            jQuery(function ($) {
+
+                var myDate = new Date();
+                var prettyDate = (myDate.getMonth() + 1) + '/' + myDate.getDate() + '/' +
+                        myDate.getFullYear();
+                $('#effectivedate').datepicker();
+                $('#effectivedate').val(prettyDate);
+               $('#ui-datepicker-div').addClass("zindexclass");
+            })
+            $('#effectivedate').val('');
+        }
+
+      
+        $("#retak option").each(function () {
+            if ($(this).text() == retake) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        $('#specialruleouter').fadeIn('slow');
+        $('#specialruleinner').fadeIn('slow');
+        window.scroll(0, 0);
+    }
+    $('#btnclosespecificrule').click(function () {
+        $('#specialruleouter').fadeOut('slow');
+        $('#specialruleinner').fadeOut('slow');
+    });
+    function formattedDate(date) {
+        var d = new Date(date || Date.now()),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [month, day, year].join('/');
+    }
+    var RequHire = false;
+    if ($('#newhirereq').is(":checked")) {
+        RequHire = true;
+    }
+    //check validation of reference
+    $("#ddReference").change(function () {
+        //Reference
+        if ($("#ddReference option:selected").text() != '-- Select --') {
+            $('#ddReference').removeClass('errorClass');
+            $('#referenceval').html('');
+            $('#validatemandatory').html("");
+        }
+        FetchSubCategory();
+    })
+//check validation of doc type
+$("#ddCategory").change(function () {
+    //Doc Type
+    if ($("#ddCategory option:selected").text() == '-- Select --') {
+        $('#ddCategory').addClass('errorClass');
+
+    } else {
+        $('#ddCategory').removeClass('errorClass');
+        $('#doctypeval').html('');
+        $('#validatemandatory').html("");
+    }
+})
+$("#ddgroup").change(function () {
+    FetchCategory();
+})
+function FetchCategory() {
+    var source = "";
+    if ($("#ddgroup option:selected").text() != '-- Select --') {
+        $('#ddgroup').removeClass("errorClass");
+        $('#groupval').html('');
+        $('#validatemandatory').html("");
+        source = $('#ddgroup :selected').text();
+    }
+    else {
+        source = "All";
+    }
+    $.ajax({
+        url: '@Url.Content("~/CompanyDashBoard/getCategoryOnbasisOfGroup/")',
+                cache: false,
+                data: { 'group': source },
+                type: "GET",
+                success: function (result) {
+                    //$('#doctype').html('');
+                    //$('#doctype').prepend('<option disabled="disabled">-- Select --</option>');
+                    $('#ddReference').html('');
+                    $('#ddReference').prepend('<option >-- Select --</option>');
+                    for (var i = 0; i < result.length; i++) {
+                        $('#ddReference').append('<option>' + result[i].referenceName + '</option>')
+                    }
+                    $("#ddReference option").each(function () {
+                        if ($(this).text() == "-- Select --") {
+                            $(this).attr('selected', 'selected');
+                        }
+                    });
+
+                }
+            });
+
+
+
+}
+    function FetchSubCategory() {
+        var value = "";
+        var source = "";
+        if ($("#ddReference option:selected").text() != '-- Select --') {
+            source = $('#ddReference :selected').text();
+        }
+
+        var group = "";
+        if ($("#ddgroup option:selected").text() != '-- Select --') {
+            group = $('#ddgroup :selected').text();
+        }
+        if (source.trim() == "" && group.trim() == "") {
+            value = "All";
+        }
+        else {
+            value = source + "$" + group;
+        }
+
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/getSubCategoryOnbasisOfCategory/")',
+                data: { 'id': value },
+                cache: false,
+                type: "GET",
+                success: function (result) {
+                    $('#ddCategory').html('');
+                    $('#ddCategory').prepend('<option >-- Select --</option>');
+                    for (var i = 0; i < result.length; i++) {
+                        $('#ddCategory').append('<option>' + result[i].categoryName + '</option>')
+                    }
+                    $("#ddCategory option").each(function () {
+                        if ($(this).text() == "-- Select --") {
+                            $(this).attr('selected', 'selected');
+                        }
+                    });
+                }
+            });
+        }
+function checkReqFields() {
+    var valref = true;
+    var valdoctype = true;
+
+    //Reference
+    if ($("#ddReference option:selected").text().trim() == '-- Select --') {
+        $('#ddReference').addClass('errorClass');
+        $('#referenceval').html('Please select category');
+        valref = false;
+    } else {
+        $('#ddReference').removeClass('errorClass');
+        $('#referenceval').html('');
+    }
+    //Group
+    if ($("#ddgroup option:selected").text().trim() == '-- Select --') {
+        $('#ddgroup').addClass('errorClass');
+        $('#groupval').html('Please select group');
+        valref = false;
+    } else {
+        $('#ddgroup').removeClass('errorClass');
+        $('#groupval').html('');
+    }
+    //Doc type
+    if ($("#ddCategory option:selected").text().trim() == '-- Select --') {
+        $('#ddCategory').addClass('errorClass');
+        $('#doctypeval').html('Please select sub category');
+        valdoctype = false;
+    } else {
+        $('#ddCategory').removeClass('errorClass');
+        $('#doctypeval').html('');
+    }
+    if (valref && valdoctype) {
+        return true;
+    }
+    else {
+        $('#validatemandatory').html("Fileds with * marks are mandatory");
+        return false;
+    }
+}
+$('#btnsavespecificrule').click(function () {
+    savedoc();
+
+});
+function savedoc() {
+    if (checkReqFields()) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/CompanyDashBoard/SaveCommunication")',
+            data: JSON.stringify({
+                DocTitle: $('#incomingdoctitle').val(),
+                DocType: $('#ddCategory :selected').text(),
+                DueDate: $('#expirationdate').val(),
+                Reference: $('#ddReference :selected').text(),
+                RequHire: RequHire,
+                retake: $('#retak :selected').text(),
+                EffectiveDate: $('#effectivedate').val(),
+                type: "incomingupdate",
+                Docid: parseInt($('#incomingdocid').val()),
+                Group: $('#ddgroup :selected').text(),
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                $('#validatemandatory').html("Save sucessfully");
+               // window.location.reload();
+            }
+        });
+        $('#btnclosespecificrule').click();
+        return true;
+    }
+}
+    function ResetDetails() {
+        //category
+        $('#ddCategory').removeClass('errorClass');
+        $('#ddgroup').removeClass('errorClass');
+        $('#groupval').html('');
+        $('#doctypeval').html('');
+        $('#validatemandatory').html("");
+        //reference
+        $('#ddReference').removeClass('errorClass');
+        $('#referenceval').html('');
+    }
+    $('#btnpublishdocument').click(function () {
+        window.location.href = "../../CompanyDashBoard/Communication/" + $('#incomingdocid').val() + "";
+        $('#btnclosespecificrule').click();
+    });
+
+    $('#viewrecipients').click(function () {
+        if (savedoc()) {
+            var docId = $('#incomingdocid').val();
+            $(this).attr("target", "_blank");
+          
+            $(this).attr("href", '@Url.Content("~/CompanyDashBoard/CommunicationRecipient?id=")' + docId + "&type=IN")
+        }
+
+    })
+
+</script>
+

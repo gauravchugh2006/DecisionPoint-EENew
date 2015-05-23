@@ -1,0 +1,700 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@using DecisionPointCAL
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "Vendors List";
+    //Grid for Dispaly vendor details
+
+    WebGrid grdvendor = new WebGrid(ajaxUpdateContainerId: "messagegrid1", rowsPerPage: Model.rowperpage);
+    if (Model.CurrentvendorsList != null)
+    {
+        if (TempData["isCurrent"].ToString() == "1")
+        {
+            grdvendor.Bind(Model.CurrentvendorsList, autoSortAndPage: true, rowCount: Model.pagesize);
+        }
+
+    }
+
+    WebGrid grdvendorPost = new WebGrid(ajaxUpdateContainerId: "Pastvendorgrid1", rowsPerPage: Model.rowperpage);
+    if (Model.PastvendorsList != null)
+    {
+        if (TempData["isCurrent"].ToString() == "0")
+        {
+            grdvendorPost.Bind(Model.PastvendorsList, autoSortAndPage: true, rowCount: Model.pagesize);
+        }
+    }
+}
+
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<script src="~/Scripts/jquery.maskedinput.js"></script>
+<style>
+    .webgridcol1 {
+        width: 130px !important;
+    }
+
+    .webgridcol4 {
+        width: 150px;
+    }
+
+    #ui-id-1 {
+        height: 300px;
+        overflow-y: auto;
+    }
+</style>
+<div id='companies'>
+    <div class='heading'>
+        <div class='row'>
+            <h3>Vendor List</h3>
+            <div style="float: right">
+                @if (TempData["isCurrent"].ToString() == "1")
+                {
+                    <input type="radio" class="currentstaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" checked /><b>Current vendor</b> 
+                   
+                }
+                else
+                {
+                    <input type="radio" class="currentstaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" /><b>Current vendor</b> 
+                }
+                @if (TempData["isCurrent"].ToString() == "0")
+                {
+                    <input type="radio" class="paststaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" checked /><b>Past vendor</b>    
+                }
+                else
+                {
+                    <input type="radio" class="paststaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" /><b>Past vendor</b>    
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+@functions {
+    public static string PostVendorSorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+<div class="filter-bar">
+    <strong>Filter List By:</strong>
+    <div class="dropdown">
+
+        <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+            <b id="recordtypedd">Status</b>
+            <b class="caret"></b>
+        </a>
+        <ul role="menu" class="dropdown-menu">
+            <li onclick="filterrecord('All')">
+                <a>
+                    <label style="font-weight: normal" id="allmsg" class="checkbox">
+                        @DecisionPointR.All
+                    </label>
+                </a>
+            </li>
+            <li onclick="filterrecord('Pending')">
+                <a>
+                    <label style="font-weight: normal" class="checkbox" id="IReceived">
+                        @DecisionPointR.Pending
+                    </label>
+                </a>
+            </li>
+            <li onclick="filterrecord('Member')">
+                <a>
+                    <label style="font-weight: normal" class="checkbox">
+                        @DecisionPointR.Member
+                    </label>
+                </a>
+            </li>
+            <li onclick="filterrecord('Non-Member')">
+                <a>
+                    <label style="font-weight: normal" class="checkbox" id="OPending">
+                        @DecisionPointR.NonMember
+                    </label>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+<div style="float: right; margin-bottom: 20px;">
+
+    <div class='input-append' style="margin-right: -2px; float: left;">
+
+        <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+        <button class='btn btn-primary' type='button' id="btngo" onclick="SearchVendors(0)" style="height: 28px;">Go</button>
+
+    </div>
+    <div style="float: right; margin-left: 5px; float: left;">
+        <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="SearchVendors(1)" style="display: none; height: 28px;">View All</button>
+    </div>
+
+</div>
+
+@*Vendor*@
+
+<div id='vendor' style="padding-top: 20px;">
+    @if (TempData["isCurrent"].ToString() == "1")
+    {
+        if (Model.CurrentvendorsList != null)
+        {
+
+            var gridColumns = new List<WebGridColumn>();
+            gridColumns.Add(grdvendor.Column(header: "Status", format: @<text>
+        <input type="hidden" value="@item.Id" id="Id" />
+        @if (item.Id != 0)
+        {
+            if (item.IsNonMember)
+            {
+<span style="color:red;">@DecisionPointR.NonMember</span>
+            }
+            else
+            {
+                if (!item.invitationStatus)
+                {
+<span style="color:red;">@DecisionPointR.Pending<br /></span>
+                    if (item.LastInviteMailDate != null)
+                    {
+<span>@string.Format("{0:MM/dd/yyyy}", item.LastInviteMailDate)</span>
+                    }
+                }
+                else
+                {
+<span style="color:red;">@DecisionPointR.Member</span>
+                }
+            }
+        }
+
+        </text>, canSort: false));
+            gridColumns.Add(grdvendor.Column(columnName: "vendor", header: Sorter("vendor", "Vendor", grdvendor)));
+            gridColumns.Add(grdvendor.Column(columnName: "contact", header: Sorter("contact", "Contact", grdvendor)));
+            gridColumns.Add(grdvendorPost.Column(columnName: "DocFlow", header: PostVendorSorter("DocFlow", "Flow", grdvendorPost)));
+
+            gridColumns.Add(grdvendor.Column(columnName: "phone", header: Sorter("phone", "Phone", grdvendor),
+          format:@<text>
+
+
+        @if (item.phone != null && item.phone.Trim() != string.Empty)
+        {
+                   
+<span style="width: 100px; display: block;">  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+        }
+
+
+        </text>
+));
+
+
+            gridColumns.Add(grdvendor.Column(header: "", format: @<text>
+        @if (item.Id != 0)
+        {
+            if (item.IsNonMember)
+            {
+<a title="Send invite" href="@Url.Content("~/CompanyDashboard/InviteVendorManual?id=" + item.Id + "")" class="btn btn-mini btn-info" style="cursor:pointer;width:38px;">Invite                
+            </a>
+            }
+            else
+            {
+                if (!item.invitationStatus)
+                {
+
+<a title="Resend invitation mail" onclick="resendMail('@item.Id')" class="btn btn-mini btn-info" style="cursor:pointer;">Resend                
+            </a> 
+                }
+            }
+        } </text>, canSort: false));
+
+            gridColumns.Add(grdvendor.Column(header: "Remove", format: @<text>
+        @if (item.Id != 0)
+        {<a id="removecstaff" title="Remove the staff" onclick="showremovepopup('@item.Id')" style="cursor: pointer;  margin-left: 19px;">
+            <img src="../../Content/images/delete.png" /></a>}
+        </text>, canSort: false));
+            gridColumns.Add(grdvendor.Column(header: "Edit", format: @<text>
+        @if (item.Id != 0)
+        {<a id="editvendor" title="Edit Flow Of Vendor" onclick="EditVendorFlow('@item.vendor','@item.FirstName','@item.LastName','@item.emailId','@item.phone','@item.DocFlow','@item.DocFTblId','@item.invitationStatus','@item.Id')" style="cursor: pointer; margin-left: 5px;">
+            <img src="../../Content/images/edit.png" />
+        </a>}
+        </text>, canSort: false));
+        @grdvendor.GetHtml(htmlAttributes: new { id = "messagegrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: grdvendor.Columns(gridColumns.ToArray())) 
+      
+        }
+    }
+</div>
+
+<div id='Pastvendor' style="padding-top: 20px;">
+    @if (TempData["isCurrent"].ToString() == "0")
+    {
+        if (Model.PastvendorsList != null)
+        {
+            
+        @grdvendorPost.GetHtml(htmlAttributes: new { id = "Pastvendorgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+    columns: new[] { 
+         grdvendor.Column(header: "Status", format: @<text>
+        <input type="hidden" value="@item.Id" id="Id" />
+        @if (item.Id!=0){
+     if (item.IsNonMember)
+        {
+<span style="color:red;">@DecisionPointR.NonMember</span>
+        }
+     else
+     {
+         if (!item.invitationStatus)
+         {
+<span style="color:red;">@DecisionPointR.Pending<br /></span>
+             if (item.LastInviteMailDate != null)
+             {
+<span>@string.Format("{0:MM/dd/yyyy}", item.LastInviteMailDate)</span>
+             }
+         }
+         else{
+<span style="color:red;">@DecisionPointR.Member</span>
+         }
+     }
+    }
+        </text>, canSort: false),       
+  grdvendorPost.Column(columnName:"vendor",header : PostVendorSorter("vendor", "Vendor", grdvendorPost)),
+  grdvendorPost.Column(columnName:"contact",header: PostVendorSorter("contact", "Contact", grdvendorPost)),
+  grdvendorPost.Column(columnName:"DocFlow",header: PostVendorSorter("DocFlow", "Flow", grdvendorPost)),
+ 
+  grdvendorPost.Column(columnName:"phone",header:PostVendorSorter("phone", "Phone", grdvendorPost),
+    format:@<text>
+
+
+        @if (item.phone != null && item.phone.Trim() != string.Empty)
+                {
+                   
+<span >  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+                }
+
+
+        </text>
+  ),
+  grdvendorPost.Column(header: "Reactive",format: @<text>
+        @if (item.Id!=0){
+<a id="reactivestaff" title="Reactive the staff" onclick="Reactivestaff('@item.Id')"  style="cursor: pointer;">Reactive
+        </a>
+     }
+        </text>, canSort: false),
+
+    })
+           
+        }
+    }
+</div>
+
+@*Edit  Popup*@
+<div class="profiletrans" id="EditCsv"></div>
+<div class="popup" id="popupCSV" style="width: auto; height: auto; top: 200px; margin-left: 161px;">
+    <div class="profile-popup" style="display: block; width: auto; height: auto;">
+        <div class="tittle-MessageBox">
+            <span>Edit Flow</span><a>
+                <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box" style="width: auto; height: auto;">
+
+            <table class="MessageSection-Box" style="width: auto; height: auto;">
+                <tr>
+                    <td>Company Name</td>
+                    <td></td>
+                    <td>
+                        <input id="CompanyName" name="CompanyName" type="text" maxlength="50" disabled="disabled"></td>
+
+                </tr>
+                <tr>
+                    <td>First Name</td>
+                    <td></td>
+                    <td>
+                        <input id="Contact" name="Contact" type="text" maxlength="50" disabled="disabled"></td>
+
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td></td>
+                    <td>
+                        <input id="LastName" name="LastName" type="text" maxlength="20" disabled="disabled"></td>
+
+                </tr>
+                <tr>
+                    <td>Phone </td>
+                    <td></td>
+                    <td>
+                        <input id="Phone" name="Phone" type="text" maxlength="14" title="" disabled="disabled">
+                        <label id="phoneerrormsg" style="color: red; font-size: 12px;"></label>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Email Id </td>
+                    <td></td>
+                    <td>
+                        <input id="emailid" name="Phone" type="text" maxlength="50" title="" disabled="disabled">
+                        <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Flow</td>
+                    <td></td>
+                    <td>
+                        @Html.DropDownList("ddFlow", new SelectList(Model.flowDetails, "flowId", "flowName"))</td>
+
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+
+                        <input type="button" id="btnSubmit" value="Submit" class="btn btn-small btn-info butmargin" style="margin-left: 270px;" />
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+
+
+    </div>
+
+</div>
+<input type="hidden" id="reactivestaffid" />
+<input type="hidden" id="removestaffid" />
+<input type="hidden" value="0" id="typeforedit" />
+<input type="hidden" id="Hid_VendorStatus" value="1" />
+<input type="hidden" value="0" id="userId" />
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        SetColStyle('messagegrid');
+
+    });
+
+    function SetColStyle(Id) {
+        $("#" + Id + " tbody tr").each(function (index) {
+            var Id = $(this).find('#Id').val();
+            if (Id == 0) {
+                $(this).addClass("setwidth");
+
+            }
+        });
+    }
+
+    function resendMail(Id) {
+        $('#dvSaveMsg').text('Please Wait..');
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ResendMailToUser/")',
+            data: { 'userId': parseInt(Id), 'type': 'vendor' },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+                    $('#dvSaveMsg').text('Invitation Resend Success..!!');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+                } else {
+
+                    $('#dvSaveMsg').text('Something ent Wrong, Please try again.');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                    }, 1000);
+                }
+
+            }
+        });
+    }
+    $('.currentstaffrdo').change(function () {
+        if ($('.currentstaffrdo').is(':checked')) {
+            $('#Hid_VendorStatus').val(1);
+            filterrecord("All");
+
+
+        } else {
+            $('#Pastvendor').show();
+            $('#vendor').hide();
+        }
+    });
+    $('.paststaffrdo').change(function () {
+        if ($('.paststaffrdo').is(':checked')) {
+            filterrecord("All");
+            $('#Hid_VendorStatus').val(0);
+
+        } else {
+            $('#Pastvendor').hide();
+            $('#vendor').show();
+        }
+    });
+
+    function Reactivestaff(Id) {
+        // alert(1);
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/ReactiveVendor/")",
+        data: { 'id': parseInt(Id) },
+        cache: false,
+        type: "POST",
+        success: function (result) {
+            if (result > 0) {
+
+                filterrecord("All");
+
+            }
+
+        }
+    });
+
+}
+
+
+
+function showremovepopup(Id) {
+
+    //alert(1);
+    $.ajax({
+        url: "@Url.Content("~/CompanyDashBoard/RemoveVendor/")",
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+
+                    filterrecord("All");
+
+
+                }
+
+            }
+        });
+
+
+    }
+
+
+    function EditVendorFlow(companyname, firstName, lastName, email, phone, docflow, docFtblId, invitationStatus, userId) {
+        var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-####" }];
+        $('#CompanyName').val(companyname);
+        $('#Contact').val(firstName);
+        $('#LastName').val(lastName);
+        $('#Phone').val(phone);
+        $('#Phone').inputmask({
+            mask: phones,
+            greedy: false,
+            definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+        });
+        if (invitationStatus) {
+            $('#emailid').prop("disabled", true);
+            $('#CompanyName').prop("disabled", true);
+            $('#Contact').prop("disabled", true);
+            $('#LastName').prop("disabled", true);
+            $('#Phone').prop("disabled", true);
+        }
+        else {
+            $('#emailid').prop("disabled", false);
+            $('#CompanyName').prop("disabled", false);
+            $('#Contact').prop("disabled", false);
+            $('#LastName').prop("disabled", false);
+            $('#Phone').prop("disabled", false);
+        }
+        $('#emailid').val(email);
+
+        $('#typeforedit').val(docFtblId);
+        $('#userId').val(userId);
+
+        var flowvalue = docflow;
+        $("#ddFlow option").each(function () {
+            if ($(this).text() == flowvalue) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        $('#emailerrormsg').html("");
+        $('#phoneerrormsg').html("");
+
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#popupCSV').css("top", poistion);
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+    }
+    $('#btnClosePopup').click(function () {
+        // alert(1);
+        $('#EditCsv').hide();
+        $('#popupCSV').hide();
+    })
+    //Edit Flow
+    $('#btnSubmit').click(function () {
+        if ($('#emailid').val().trim() != "") {
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashboard/CheckUserEmailExistence/")',
+            cache: false,
+            type: 'POST',
+            data: { emailId: $('#emailid').val(), userId: $('#userId').val(), userType: 'Company' },
+            async: true,
+            success: function (data) {
+                if (data != "Not Found") {
+                    $('#emailid').addClass("errorClass");
+                    $('#emailerrormsg').html("Email id already exist in system.");
+                } else {
+                    $('#emailid').removeClass("errorClass");
+                    $('#emailerrormsg').html("");
+                    EditClientVendorFromManageScr(ROOT);
+                }
+
+            },
+            error: function (data) {
+                return false;
+            }
+        });
+        }
+        else {
+            EditClientVendorFromManageScr(ROOT);
+        }
+    })
+
+
+
+
+    //Filteration in webgrid using in drop down
+    function filterrecord(filtervalue) {
+        if (filtervalue == "All") {
+            $('#recordtypedd').html("Status");
+        }
+        else if (filtervalue == "Pending") {
+            $('#recordtypedd').html(filtervalue);
+        }
+        else if (filtervalue == "Non-Member") {
+            $('#recordtypedd').html(filtervalue);
+        }
+        else if (filtervalue == "Member") {
+            $('#recordtypedd').html(filtervalue);
+        }
+        var inviteType = 1;
+        var pageid = getpageid("messagegrid");
+        if ($('.paststaffrdo').is(':checked')) {
+            inviteType = 0;
+            pageid = getpageid("Pastvendorgrid");
+        }
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/Vendors/?page=")" + pageid,
+                cache: false,
+                data: { 'id': parseInt(inviteType), 'type': filtervalue },
+                datatype: 'json',
+                type: "GET",
+                success: function (result) {
+                    if (inviteType == 1) {
+                        $('#vendor').html($(result).find('#vendor').html().trim());
+                        $('#Pastvendor').hide();
+                        $('#vendor').show();
+                        SetColStyle('messagegrid');
+
+
+                    }
+                    else if (inviteType == 0) {
+                        $('#Pastvendor').html($(result).find('#Pastvendor').html().trim());
+                        $('#Pastvendor').show();
+                        $('#vendor').hide();
+                        SetColStyle('Pastvendorgrid');
+
+                    }
+
+
+                }
+            });
+
+        }
+        function SearchVendors(type) {
+            //0 call when user click on go button
+            if (type == 0) {
+                filterrecord($('#txtserach').val());
+                $('#btnviewallCompany').show();
+            }
+                //1 call when user click on view all button
+            else if (type == 1) {
+                filterrecord("All");
+                $('#btnviewallCompany').hide();
+                $('#txtserach').val('');
+            }
+        }
+
+        $("#txtserach").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '@Url.Content("~/CompanyDashBoard/SerachInVendors")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term + ":" + 1, type: $('#Hid_VendorStatus').val() },
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return { label: item, value: item };
+                    }))
+
+                }
+            })
+        }
+
+    });
+
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function validatePhone(phone) {
+        var s = false;
+
+        var filter = /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/;
+        if (filter.test(phone)) {
+            s = true;
+        }
+        else {
+            s = false;
+        }
+
+        return s;
+
+    }
+
+</script>
+

@@ -1,0 +1,122 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    ViewBag.Title = "GlobalReqiurement";
+    WebGrid grdreqdoc = new WebGrid(rowsPerPage: 10);
+    if (Model.ReqiuredDocumentsDetails != null){
+        grdreqdoc.Bind(Model.ReqiuredDocumentsDetails, autoSortAndPage: true, rowCount: 10);}
+
+    WebGrid grdSpecreqdoc = new WebGrid(rowsPerPage: 10);
+    if (Model.SpecificDocumentsDetails != null){
+        grdSpecreqdoc.Bind(Model.SpecificDocumentsDetails, autoSortAndPage: true, rowCount: 10);}
+}
+
+    <style>
+        .width33per {
+            width:30%;
+        }
+        .width27per {
+            width:27%;
+        }
+    </style>      
+                @if (Model.ReqiuredDocumentsDetails != null && Model.ReqiuredDocumentsDetails.Count() > 0)
+                {
+                    <h5>Global Reqiurment</h5>
+                               
+                    @grdreqdoc.GetHtml(htmlAttributes: new { id = "reqdocgridgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+
+
+grdreqdoc.Column(header:"Title",
+  format:@<text>
+                    <a onclick="getGridData('@item.reqiuredDocId','0',-1)" title="Click to complete the reqiurement" style="cursor: pointer;">@item.reqiuredDoctName</a>
+                    </text>,style:"grid-width300"),
+grdreqdoc.Column(header:"Expiration Date",
+  format:@<text>
+                    @if (item.expirationDate!=null)
+                {
+<span> @string.Format("{0:MM/dd/yyyy}",
+             item.expirationDate)</span>
+                }
+                    </text>,style:"grid-width3009"),
+grdreqdoc.Column(header:"Status",
+  format:@<text>
+                    @if(item.IsCompleted==0)
+                {
+<span>In Progress</span>
+                }
+                    @if(item.IsCompleted==1)
+                {
+<img src="~/Content/images/check-in.png" height="25" style="padding-left:inherit" width="25" alt="Status" title="Completed" />
+
+                }
+                    @if(item.IsCompleted==2)
+                {
+<span>Incomplete</span>
+
+                }
+                    </text>),
+
+    })
+           
+                }
+     
+      
+        
+                @if (Model.SpecificDocumentsDetails != null && Model.SpecificDocumentsDetails.Count() > 0)
+                {
+                    <h5>Specific Reqiurment</h5>
+                               
+                    @grdSpecreqdoc.GetHtml(htmlAttributes: new { id = "reqSpecgridgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+
+
+grdSpecreqdoc.Column(header:"Title",
+  format:@<text>
+                    <a onclick="getGridData('@item.reqiuredDocId','1',-1)" title="Click to complete the reqiurement" style="cursor: pointer;">@item.reqiuredDoctName</a>
+                    </text>,style:"width33per"),
+grdSpecreqdoc.Column(header:"Expiration Date",
+  format:@<text>
+                    @if (item.expirationDate!=null)
+                {
+<span> @string.Format("{0:MM/dd/yyyy}",
+             item.expirationDate)</span>
+                }
+                    </text>,style:"width33per"),
+                    grdSpecreqdoc.Column(header:"Services",
+  format:@<text>
+                    <span>@item.ServiceName</span>
+                    </text>,style:"width27per"),
+grdSpecreqdoc.Column(header:"Status",
+  format:@<text>
+                    @if(item.IsCompleted==0)
+                {
+<span>In Progress</span>
+                }
+                    @if(item.IsCompleted==1)
+                {
+<img src="~/Content/images/check-in.png" height="25" style="padding-left:inherit" width="25" alt="Status" title="Completed" />
+
+                }
+                    @if(item.IsCompleted==2)
+                {
+<span>Incomplete</span>
+                }
+                    </text>,style:"grid-width150"),
+                    
+
+    })
+           
+                }
+      

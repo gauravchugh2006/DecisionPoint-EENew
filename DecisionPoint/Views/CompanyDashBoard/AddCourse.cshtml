@@ -1,0 +1,382 @@
+﻿@{
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    ViewBag.Title = "AddCourse";
+}
+
+<script src="~/Scripts/fckeditor/fckeditor.js"></script>
+
+<div id='content'>
+    <div class='container'>
+        <div class='content-box'>
+            <br />
+            <div id='new-document'>
+
+                <div class='tabbable'>
+
+                    <ul class='nav nav-tabs' id='my_tabs'>
+                        <li class='active'>
+                            <a data-toggle='tab' href='#step-1'>STEP 1: Document Content</a>
+                        </li>
+                        <li>
+                            <a data-toggle='tab' href='#'>STEP 2: Select Recipients</a>
+                        </li>
+                    </ul>
+                    <div class='tab-content'>
+                        <div class='tab-pane fade in active' id='step-1'>
+                            <h4>Step 1: Set Up Content</h4>
+                            <div class='row tabbable my_pills'>
+                                <div class='span3'>
+                                    <h5>Select Communication Type</h5>
+                                    <ul class='nav nav-pills nav-stacked' id='my_pills' style="margin-bottom: 0px;">
+                                        <li class='active' id="adddocli">
+                                            @* Document*@
+                                            @Html.ActionLink("Document", "Communication", "CompanyDashBoard")
+
+                                        </li>
+                                        <li id="addmsgli">
+
+                                            @Html.ActionLink("Message", "AddMessage", "CompanyDashBoard")
+
+                                        </li>
+                                        <li id="addcourseli">
+
+                                            @Html.ActionLink("Course", "AddCourse", "CompanyDashBoard")
+
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class='span9'>
+                                    <div class='tab-content'>
+                                        <div class='tab-pane fade in active' id='doc'>
+                                            <form>
+
+                                               <div class='control-group'>
+                                                    <label class='control-label'>Title</label>
+                                                    <div class='controls'>
+                                                        <input type="text" value="" class="input-xlarge" style="width:353px;">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class='control-group'>
+                                                    <label class='control-label'>Due Date</label>
+                                                    <div class='controls'>
+                                                        <div class='datetimepicker input-append'>
+                                                            @*@Html.TextBoxFor(model => model.DocDueDate, new { @class = "input-xlarge" })*@
+                                                            <input data-format='MM/dd/yyyy' style="width:327px;" type='text' />
+                                                           <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar" class="icon-calendar"></i>
+        </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="editor-field">
+
+                                                    <label class='control-label'>
+                                                        <a id="lnkinstintro" style="cursor: pointer">▼</a>
+                                                        Instructions/Introduction</label>
+                                                    <div id="insintrobox" style="display: none;">
+                                                        <script type="text/javascript">
+                                                            var oFCKeditor = new FCKeditor('fckEdtr');
+                                                            oFCKeditor.BasePath = "../Scripts/fckeditor/";
+                                                            oFCKeditor.ToolbarSet = 'Default';
+                                                            oFCKeditor.Create();
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <h5>Content</h5>
+                                                <div class='control-group'>
+                                                    <label class='control-label'>Add Document File</label>
+
+                                                    <div>
+                                                        <div class='controls'>
+                                                            <input class='input-xlarge' type='file' value='' />
+                                                           <div style="margin-left:206px; margin-top:-30px;"> <input class='input-medium' placeholder='Label (Title)' type='text' />           </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class='control-group'>
+                                                    <label class='control-label'>Add Embedded Video</label>
+
+                                                    <div>
+                                                        <div class='controls'>
+                                                            <input class='input-xlarge' type='file' value='' />
+                                                            <div style="margin-left:206px; margin-top:-30px;"> <input class='input-medium' placeholder='Label (Title)' type='text' />           </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <br />
+                                                <div class='control-group'>
+                                                    <label class='control-label'>Add Scrom Content</label>
+                                                    <div>
+                                                        <div class='controls'>
+                                                            <input class='input-xlarge' type='file' value='' />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <br />
+                                                 <div id="DocLinkLabelDiv" class='control-group'>
+                                                            <h5>Links</h5>
+                                                            <table id="tblDocLinks">
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class="w360" placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input class="w360" placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                       <input class="w360" placeholder='http://' type='text' />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <a id="DocLinkLabelAdd" style="cursor:pointer">add another link</a>
+
+                                                            <br />
+                                                        </div>
+
+
+                                              <div class='control-group'>
+                                                    <label class='checkbox'>
+                                                        <input type="checkbox" id="checkBoxIncludeAssessment" />Include Assessment
+                                                                @*@Html.CheckBoxFor(model => model.DocIncludeAssement, new { id = "checkBoxIncludeAssessment" }) Include Assessment?*@
+                                                    </label>
+                                                    <div id='Include-assessment-form' style="display: none;" class="w80">
+                                                        <br />
+                                                        <div class='controls'>
+                                                            <table id="tblCourseQuestions" class="w80">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div style="background-color: #EFEFDE !important;">
+                                                                            <div class="w80">
+                                                                                <div class="w50"><h5>Question</h5></div>
+                                                                                <div class="fr">
+                                                                                    <div class="w300">
+                                                                                        <div class="pdr5">
+                                                                                            <input type="checkbox" />
+                                                                                        </div>
+                                                                                        <div class="ln30">Shuffle Answer</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="w80">
+                                                                                <form>
+                                                                                    <script type="text/javascript">
+                                                                                        var oFCKeditor = new FCKeditor('fckEdtr');
+                                                                                        oFCKeditor.BasePath = "../Scripts/fckeditor/";
+                                                                                        oFCKeditor.ToolbarSet = 'Default';
+                                                                                        oFCKeditor.Create();
+                                                                                    </script>
+                                                                                </form>
+                                                                            </div>
+                                                                            <div class="w80">
+                                                                                <div class="upleftcol">
+                                                                                    <div class='control-group'>
+                                                                                        <label class='control-label'>Set Difficulty</label>
+                                                                                        <div class='controls'>
+                                                                                            <select class="input-xlarge">
+                                                                                                <option>Easy</option>
+                                                                                                <option>Medium</option>
+                                                                                                <option>Hard</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="uprightcol">
+                                                                                    <div class='control-group'>
+                                                                                        <label class='control-label'>Max Answer Time</label>
+                                                                                        <div class="controls">
+                                                                                            <div class="control-group">
+                                                                                                <input type="text" value="" class="input-xlarge">
+                                                                                                <spaan>
+                                                                                                (Sec)</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="w80">
+                                                                            <h5>Answers : (No Answer)</h5>
+                                                                        </div>
+                                                                        <br />
+                                                                        <div style="background-color: #EFEFDE !important;">
+                                                                            <div class="w80">
+                                                                                <div class="w50"><h5>Add Answer</h5></div>
+                                                                                <div class="fr">
+                                                                                    <div class="w300">
+                                                                                        <div class="pdr5">
+                                                                                            <input type="checkbox" />
+                                                                                        </div>
+                                                                                        <div class="ln30">Correct</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="w80">
+                                                                                <form>
+                                                                                    <script type="text/javascript">
+                                                                                        var oFCKeditor = new FCKeditor('fckEdtr');
+                                                                                        oFCKeditor.BasePath = "../Scripts/fckeditor/";
+                                                                                        oFCKeditor.ToolbarSet = 'Default';
+                                                                                        oFCKeditor.Create();
+                                                                                    </script>
+                                                                                </form>
+                                                                            </div>
+                                                                            <div class="w80">
+                                                                                <div style="width:45%; float:left;">
+                                                                                    <h5>Comments</h5>
+                                                                                    <textarea style="width: 90%; height: 60px; float:left"></textarea>
+                                                                                    </div>
+                                                                            <div  style="width:50%; float:right">
+                                                                                <h5>Score</h5>
+                                                                                <div >
+                                                                                    <div class="upleftcol">
+                                                                                        If correct +<br />
+                                                                                       <input type="text" class="input-small">
+                                                                                    </div>
+                                                                                    <div class="uprightcol">
+                                                                                        If wrong - <br />
+                        <input type="text" class="input-small">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                                
+                                                                                
+                                                                            </div>
+                                                                            <div class="w80">
+                                                                                <div style="float:right;">
+                                                                                <a role="button" href="#" class="btn btn-small btn-info">Add </a>
+                                                                                <a role="button" href="#" class="btn btn-small btn-info">Close </a>
+                                                                                    </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+
+                                                                </tr>
+
+                                                            </table>
+                                                             </div>
+                                                    </div>
+                                                           
+                                                         
+                                                    <br />
+                                                     <div class='small'><a id="link-Add-another-question" href="#">Add another question</a>
+
+                                                         <h5>Allow to Forward & Reqiured E-Signature</h5>
+
+                                                     </div>
+                                                    </div> 
+
+                                                <div class='control-group'>
+                                                    <div class="row">
+                                                        <div class="span6">
+                                                            <label style="font-weight: normal" class="checkbox">
+                                                                <input type="checkbox">I have read and understood this document
+                                                            </label>
+                                                        </div>
+                                                        <div class="span6">
+                                                            <label style="font-weight: normal" class="checkbox">
+                                                                <input type="checkbox">I have read and understood this document
+                                                            </label>
+                                                            <table id="tbreqaction">
+                                                                <tr>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                    <a id="lnkreqaction" style="cursor: pointer;">Add another required action</a>
+                                                </div>
+                                                <hr>
+                                                <div class="row fr">
+                                                    <a href="/company-setup-2.html" class="btn btn-primary">Save Changes</a>
+                                                    <a href="/company-setup-2.html" class="btn btn-primary">Cancel</a>
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#adddocli').removeClass("active");
+        $('#addmsgli').removeClass("active");
+        $('#addcourseli').addClass("active");
+
+        $("#lnkreqaction").click(function () {
+            $('#tbreqaction tr:last').after('<tr><td><input type="checkbox" style="margin-top: -9px;" /> ' +
+            '<input class="input-xlarge" placeholder="Add Reqiured Action..." type="text" /></td></tr>');
+        })
+        $("#checkBoxIncludeAssessment").change(function () {
+            var isChecked = $(this).is(':checked');
+            $('#Include-assessment-form').toggle(isChecked);
+        })
+        //$("#checkBoxCourseIncludeAssement").change(function () {
+        //    var isChecked = $(this).is(':checked');
+        //    $('#Course-assessment-form').toggle(isChecked);
+        //})
+        $("#DocLinkLabelAdd").click(function () {
+            $('#tblDocLinks tr:last').after('<tr><td><input class="w360" placeholder="http://" type="text" /></td></tr>');
+        })
+        //$("#messageLinkLabelAdd").click(function () {
+        //    $('#tblmessageLinks tr:last').after('<tr><td><input class="input-medium" placeholder="Link Label" type="text" /> ' +
+        //    '<input class="input-large" placeholder="http://" type="text" /></td></tr>');
+        //})
+        //$("#CourseLinkLabelAdd").click(function () {
+        //    $('#tblCourseLinks tr:last').after('<tr><td><input class="input-medium" placeholder="Link Label" type="text" /> ' +
+        //    '<input class="input-large" placeholder="http://" type="text" /></td></tr>');
+        //})
+
+        $("#link-Add-another-question").click(function () {
+
+            $('#tblQuestions tr:last').after('<tr><td><span>Question 2:</span></td><td><select style="width: 150px">' +
+            '<option>Question Type</option><option>True/False</option><option>Multiple Choice</option></select>' +
+            '</td><td><input class="input-xlarge" placeholder="Text of the questions" type="text" value="" /></td></tr>');
+        })
+        //$("#link-Add-another-Course-question").click(function () {
+
+        //    $('#tblCourseQuestions tr:last').after('<tr><td><span>Question 2:</span></td><td><select style="width: 150px">' +
+        //    '<option>Question Type</option><option>True/False</option><option>Multiple Choice</option></select>' +
+        //    '</td><td><input class="input-xlarge" placeholder="Text of the questions" type="text" value="" /></td></tr>');
+        //})
+        //Add reqiured Action
+
+        $("#lnkinstintro").click(function () {
+            if ($('#lnkinstintro').html() == "▼") {
+                $('#lnkinstintro').text("▲");
+                $('#insintrobox').show();
+            }
+            else if ($('#lnkinstintro').html() == "▲") {
+                $('#lnkinstintro').text("▼");
+                $('#insintrobox').hide();
+            }
+
+        })
+    });
+</script>
+

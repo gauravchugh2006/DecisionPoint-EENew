@@ -1,0 +1,513 @@
+﻿@model DecisionPoint.Models.ServiceTranslationModel
+@{
+    string coverageareatype = string.Empty;
+    if (Request["Type"] == "IC")
+    {
+        Layout = "~/Views/Shared/_ICSetUpLayoutPage.cshtml";
+        coverageareatype = "IC";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    }
+    ViewBag.Title = "Service Translation Table";
+   
+}
+@Styles.Render("~/Content/css/Dashboardcss")
+@Scripts.Render("~/bundles/dashboard")
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="~/Scripts/new.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap.min.css" />
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<link href="~/Content/css/UserDashboard/style.css" rel="stylesheet" />
+<link href="~/Content/css/UserDashboard/common.css" rel="stylesheet" />
+<link href="~/Content/css/UserDashboard/megamenu.css" rel="stylesheet" />
+
+<style type="text/css">
+    #sortable, #draggable
+    {
+        list-style-type: none;
+        margin: 0;
+        padding: 0 0 2.5em;
+        margin-right: 10px;
+    }
+
+        #sortable li
+        {
+            margin: 0 5px 5px 5px;
+            padding: 5px;
+            font-size: 14px;
+            width: 95%;
+           
+        }
+
+        #draggable li
+        {
+            margin: 0 5px 5px 5px;
+            padding: 5px;
+            font-size: 14px;
+            width: 90%;
+            background-color: #ffffff;
+        }
+
+    .marker
+    {
+        background: none repeat scroll 0 0 #DDDDDD;
+        border-bottom: 1px solid #BBBBBB;
+        border-top: 1px solid #BBBBBB;
+        display: block;
+        height: auto;
+        width: 100%;
+        text-align: center;
+        vertical-align: middle;
+        color: #666;
+        font-size: 18px;
+        font-style: italic;
+    }
+
+    #outerDiv
+    {
+       
+        float: left;
+        left: 60px;
+       
+        width: 95%;
+    }
+
+   
+
+    #sortable
+    {
+        width: 100%;
+        padding: 10px;
+       
+        height: auto;
+    }
+
+    #draggable
+    {
+        float: left;       
+        width: 100%;
+    }
+
+    .big
+    {
+        height: auto;
+    }
+
+    .color-silver
+    {
+        background: #edf2f3 !important;
+        border-radius: 5px;
+    }
+
+    .child-right
+    {
+        padding: 10px 0 !important;
+        width: auto;
+        background: #f6f8f8;
+        border-radius: 5px;
+    }
+
+    .parent-txt, .child-txt
+    {
+       
+        font-size: 1.3em;
+        color: #210210;
+        font-weight: bold;
+        line-height: 30px;
+       
+        width: auto;
+    }
+
+    .drag-style
+    {
+        color: #B6B6B4 !important;
+        font-style: italic;
+    }
+
+    #outer-child
+    {
+        height: 410px;
+        float: left;
+        overflow-y: auto;
+       
+    }
+
+    .instructions
+    {
+        color: #210210;
+        font-size: 1.3em;
+        font-weight: bold;
+        line-height: 30px;
+        float: left;
+        width: 28%;
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+
+        .instructions ul li
+        {
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+</style>
+
+<script type="text/javascript">
+
+   
+    var aa = "";
+    $(function () {
+      
+        $("#draggable li").draggable({
+            helper: "clone",
+            cursor: "move",
+            revert: "invalid",
+            revertDuration: 500,
+            connectToSortable: "#sortable",
+            start: function () {
+                var split = $(this).attr("id").split("_")[1];
+                $('#hd_drag').val(split);
+                
+            },
+        });
+
+        $("#sortable").sortable({
+            revert: true,
+            start: function () {
+             },
+            receive: function (event, ui) {
+                var parentId = $('ul#sortable').children("#" + aa).prev().attr('id').split('_')[0];
+                if (!$("#sortable").find("#" + parentId + "_Child_" + aa).length) {
+                    $('#' + aa).attr("id", "" + parentId + "_Child_" + aa + "");
+                }
+                else {
+                    $('#' + aa).remove();
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                    var poistion = parseInt(scrollTop) + 100
+                    $('#divManualInviteInner').css("top", poistion);
+                    $('#dvSaveMsg').text('Already exist');
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                      }, 1000);
+                }
+            },
+            placeholder: "marker",
+            axis: "y"
+        }).droppable({
+            activeClass: "ui-state-default",
+            hoverClass: "ui-state-hover",
+            drop: function (event, ui) {
+                aa = $('#hd_drag').val();
+               
+                   $('#Child_' + aa).attr("class", "ui-state-default big ui-draggable drag-style");
+                   $(ui.draggable).attr("id", aa);
+                   $(ui.draggable).attr("class", "ui-state-default big ui-draggable "+aa+"");
+                    $(ui.draggable).css("width", "86%");
+                    $(ui.draggable).css("margin-left", "10%");
+                    $(ui.draggable).find("img").css("display", "block");
+                    $(ui.draggable).css("background", "#ffffff");
+                
+            }
+        });
+
+
+    });
+
+    $(document).ready(function () {
+
+        getHeightOfUL();
+        $(document).on('click', '.icon-minus',
+        function () {
+            var id = $(this).parent().attr("id");
+            $(this).parent().remove();
+            id = id.split('_')[2];
+            if (($('#sortable .' + id + "").length) == 0) {
+                //your code here               
+                $('#Child_' + id).attr("class", "ui-state-default big ui-draggable");
+            }
+
+        });
+
+
+    });
+    function getHeightOfUL() {
+        var childul = $('#draggable').height();
+        var parentul = $('#sortable').height();
+        if (parseFloat(childul) > parseFloat(parentul)) {
+            $('#divBtn').css('margin-top', parseFloat(childul) + 30);
+        } else {
+            $('#divBtn').css('margin-top', parseFloat(parentul) + 30);
+
+        }
+       
+    }
+    function close_window() {
+        var win = window.open("", "_self");
+
+        win.close();
+      
+        close();
+       
+    }
+    function Refresh() {
+        window.location.reload();
+    }
+
+</script>
+
+ 
+@using (Html.BeginForm("SetServiceTranslation", "CompanyDashboard", FormMethod.Post, new { id = "SubmitForm", @class = "form-horizontal" }))
+{
+    <div style="width: 100%;">
+        <div class="instructions">
+            Instructions
+            <div style="background: #F6F8F8; padding: 1%; border-radius: 10px; box-shadow: 5px 5px 5px #cccccc;">
+                <ul>
+                    <li>The column on the left is the list of services your client offers. The list on the right is the list of services that you have created.  Match your services to client by dragging and dropping the service directly below the correlating service of your client.</li>
+                    <li>Once you use one of your services, the letters will turn grey to indicate you have used that service. You may use any of your services more than once if appropriate.</li>
+                </ul>
+            </div>
+        </div>
+        <div id="colleft" style="width: 30%; float: left; font-size: 12px !important; font-family: verdana;">
+            <div>
+                <label class="parent-txt">@Model.companyName</label>
+                <input type="hidden" value="@Model.pCompanyId" id="PCompanyId"/>
+            </div>
+            <input type="hidden" value="" id="hd_drag" />
+            <div id="outerDiv" style="background: none repeat scroll 0 0 #F6F8F8;">
+                <div id="innerDiv" style="float: left; width: 94%;">
+                      @{int index = 1;}
+                        @if (Model.ParentServiceList != null)
+                        {
+                            if (Model.ParentServiceList.Count() > 0)
+                            {
+                    <ul id="sortable" class="connectedSortable">
+                      
+
+                                @foreach (var item in Model.ParentServiceList)
+                                {
+                            <li id="@("Parent" + index + "_" + item.id)" class="ui-state-default big ui-draggable" style="display: list-item; background:#96DBF5;">@item.serviceName </li>
+                                    if (Model.MappdedServiceList != null && Model.MappdedServiceList.Count() > 0)
+                                    {
+                                        foreach (var mapservices in Model.MappdedServiceList)
+                                        {
+
+                                            if (item.id == mapservices.ParentserviceId)
+                                            {
+                                             
+                            <li id="@("Parent" + index + "_Child_" + mapservices.ChildserviceId)" class="ui-state-default big ui-draggable" style="margin-left:10%;width:86%; background:#fff;"><span>@mapservices.Childservicename</span>
+                                <img class="icon-minus" title="Remove" style="float: right; margin-top: 4px; cursor: pointer; display: block;" src="../Content/images/cross-button.png">
+                            </li>
+                                            }
+                                        }
+                                    }
+
+                                    index++;
+                                }
+                        </ul>
+                        }
+                          else
+                            {
+                            <ul>
+                            <li class="ui-state-default big ui-draggable" style="display: list-item; background: #96DBF5;">No Services</li> </ul>
+                            }
+                        }
+                        else
+                        {
+                            <ul>
+                            <li class="ui-state-default big ui-draggable" style="display: list-item; background: #96DBF5;">No Services</li> </ul>
+                        }
+                </div>
+            </div>
+        </div>
+        <div id="collright" style="width: 38%; float: right;">
+            <div>
+                <label class="child-txt">@Session["BusinessName"].ToString() </label>
+            </div>
+            <div style="float: left; width: 100%;" id="outer-child">
+                <ul id="draggable" class="connectedSortable child-right">
+                    @{bool chkstatus = false;}
+                    @if (Model.ChildServiceList != null)
+                    {
+                        if (Model.ChildServiceList.Count() > 0)
+                        {
+                            if (Model.MappdedServiceList != null && Model.MappdedServiceList.Count() > 0)
+                            {
+                                foreach (var items in Model.ChildServiceList)
+                                {
+                                    chkstatus = false;
+                                    foreach (var mapservices in Model.MappdedServiceList)
+                                    {
+
+                                        if (mapservices.ChildserviceId == items.id)
+                                        {
+                        <li id="Child_@items.id" class="ui-state-default big ui-draggable drag-style"><span>@items.serviceName</span>
+                            <img class="icon-minus" title="Remove" style="float: right; margin-top: 4px; cursor: pointer; display: none;" src="../Content/images/cross-button.png">
+                        </li>
+                                            chkstatus = true;
+                                            break;
+                                        }
+
+                                    }
+                                    if (!chkstatus)
+                                    {
+                                          <li id="Child_@items.id" class="ui-state-default big"><span>@items.serviceName</span>
+                            <img class="icon-minus" title="Remove" style="float: right; margin-top: 4px; cursor: pointer; display: none;" src="../Content/images/cross-button.png">
+                        </li>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var items in Model.ChildServiceList)
+                                {
+                                
+                        <li id="Child_@items.id" class="ui-state-default big"><span>@items.serviceName</span>
+                            <img class="icon-minus" title="Remove" style="float: right; margin-top: 4px; cursor: pointer; display: none;" src="../Content/images/cross-button.png">
+                        </li>
+                                }
+                            }
+                        }
+                        else
+                        {
+                        <li class="ui-state-default big">No Services</li>
+                        }
+                    }
+
+                </ul>
+                <div id="divBtn" style="float: left; width: auto; margin-bottom: 10px;margin-top:10px !important;margin-left:4px;">
+            <a id="btnSave" class="btn btn-primary" style="float: left;">Mark As Complete</a>
+            <a onclick="Refresh()" id="btnReset" class="btn btn-primary" style="float: left; margin: 3px; display: none;">Reset</a>
+        </div>
+            </div>
+             <hr />
+            <div style="clear:both;"></div>
+        
+        </div>
+        
+       
+    </div>  
+       
+    <div style="clear: both; width: 100%;"></div>
+@* Saved Pop up *@
+    <div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+    <div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+        <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+            <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+            
+
+
+        </div>
+
+    </div>
+}
+
+
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/dashboard")
+@Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    $('#btnSave').click(function () {
+
+
+       
+        // get parent and child service mapped ids {id : colleft}
+        var CService = "";
+        var PService = "";
+        $("#colleft ul li").each(function (index) {
+           
+            if ($(this).find("img").length > 0) {
+
+               
+                if (CService == "") { CService = $(this).attr("id"); }
+                else { CService = CService + ',' + $(this).attr("id") };
+            }
+            else {
+               
+                if (PService == "") { PService = $(this).attr("id"); }
+                else { PService = PService + ',' + $(this).attr("id"); }
+            }
+        })
+      
+        var PSarray = [];
+        PSarray = PService.split(',');
+        var CSarray = [];
+        CSarray = CService.split(',');
+        var FPS = "";
+        var FCS = "";
+        $.each(PSarray, function (key, value) {
+           
+            var pid = value.split('_')[0];
+            var pidvale = value.split('_')[1];
+           
+            $.each(CSarray, function (key1, value1) {
+                var cid = value1.split('_')[0];
+               
+                if (pid == cid) {
+
+                    if (FCS == "") {
+                        FCS = value1.split('_')[2]
+                    }
+                    else { FCS = FCS + "," + value1.split('_')[2] }
+                }
+              
+
+            });
+
+            if (FPS == "") {
+                if (FCS != "") {
+                    FPS = pidvale + ":" + FCS
+                }
+            }
+            else {
+                if (FCS != "") {
+                    FPS = FPS + "*" + pidvale + ":" + FCS
+                }
+            };
+            
+            FCS = "";
+        });
+      
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/SaveServiceTranslation/")',
+            data: { 'parentCompanyId': $('#PCompanyId').val(), 'mappedServices': FPS },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                $('#divManualInviteOuter').show();
+                $('#divManualInviteInner').show();
+                var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                var poistion = parseInt(scrollTop) + 100
+                $('#divManualInviteInner').css("top", poistion);
+                $('#dvSaveMsg').text('Saved sucessfully');
+                setTimeout(function () {
+                    $('#divManualInviteOuter').fadeOut('slow');
+                    $('#divManualInviteInner').fadeOut('slow');
+                    window.opener.document.location.reload(true);
+                    window.open("", "_top", "", "true ");
+                    window.close();
+                }, 1000);
+
+            }
+        });
+
+    })
+    $('#backdashboard').click(function () {
+
+        window.opener.document.location.reload(true);
+        window.open("", "_top", "", "true ");
+        window.close();
+
+
+    })
+
+</script>

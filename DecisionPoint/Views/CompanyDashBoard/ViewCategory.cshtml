@@ -1,0 +1,532 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    if (Request["Type"] == "V")
+    {
+        Layout = "~/Views/Shared/_VendorSetUpProfileLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    }
+    ViewBag.Title = "ViewReference";
+    WebGrid grdreference = new WebGrid(ajaxUpdateContainerId: "titlegrid", rowsPerPage: Model.rowperpage);
+    if (Model.lstBind != null)
+    {
+        grdreference.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+<style>
+    .errorClass {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div class='heading'>
+    <div class=''>
+        <h3>Manage Sub Category</h3>
+    </div>
+</div>
+<div>
+
+    <br />
+    <div class="w100">
+        <div style="width:5%;float:left;margin-top:5px;"> <span ">Group</span>
+        </div>
+        <div style="width:20%;float:left;"><span>
+            <select id="ddgroup" style="width: 180px;">
+                <option selected="selected" value="0">All</option>
+                @foreach (var reference in Model.groupDetails)
+                {
+                    <option value="@reference.id">@reference.categoryName</option>
+                }
+            </select>
+
+        </span></div>
+        <div style="width:7%;float:left;margin-top:5px;"> <span >Category</span>
+       </div>
+        <div style="width:20%;float:left;"> <span >
+            <select id="ddReference" style="width: 180px;">
+                <option selected="selected" value="0">All</option>
+                @foreach (var reference in Model.referenceDetails)
+                {
+                    <option value="@reference.id">@reference.referenceName</option>
+                }
+            </select>
+
+        </span></div>
+        <div style="width:14%;float:left;margin-top:5px;"> <span >Sub Category Name</span>
+        </div>
+        <div style="width:18%;float:left;">
+            <input type="text" id="txtreference" placeholder="Sub Category Name" style="height: 20px; width: 155px;" maxlength="50" onkeypress="ValidateTextBox(this.id,event)"></div>
+        <div style="width:15%;float:left;">
+            <span><a id="btnsavereference" class="btn btn-small btn-info butmargin"  title="Save Sub Category">Create</a></span>
+            <span><a id="btndisable" class="btn btn-small btn-info butmargin-left1" style="visibility: hidden; " title="Enable/Disable Sub Category">Disable</a></span>
+        </div>
+       
+        
+       
+       
+
+        <input type="hidden" id="referenceid" value="0" />
+        <input type="hidden" id="isactivestatus" value="disable" />
+
+
+        
+        <span style="display: none"><a id="btnreset" class="btn btn-small btn-info butmargin-left1" title="Reset">
+            <img src="~/Content/images/reset.png" style="height: 17px;" /></a></span>
+
+
+        
+    </div>
+    <div class="w100">
+        <div id="divrefmsg" style="font-size: 12px; padding-bottom: 10px; color: green; padding-left: 47px;"></div>
+    </div>
+    <div class="w100" style="margin-top: 15px;">
+        <div id="referencediv">
+            @if (Model.lstBind != null)
+            {
+  
+                               
+                @grdreference.GetHtml(htmlAttributes: new { id = "titlegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+        
+         grdreference.Column(columnName:"Col1",header: Sorter("Col1", "Sub Category Name", grdreference), format:@<text>
+                @if(item.Col1Status)
+                        {
+<a id="title1B" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID','@item.Col1Source','@item.Col1GroupName')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="title1G" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID','@item.Col1Source','@item.Col1GroupName')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@(item.Col1) </a>
+                        }
+                </text>,
+                            style:"grid-width181"),
+    grdreference.Column(columnName:"Col2",header: Sorter("Col2", "", grdreference), format:@<text>
+
+                @if(item.Col2Status)
+                        {
+<a id="title2B" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID','@item.Col2Source','@item.Col2GroupName')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="title2G" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID','@item.Col2Source','@item.Col2GroupName')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col2) </a>
+                        }
+
+
+                </text>,style:"grid-width181"),
+              grdreference.Column(columnName:"Col3",header: Sorter("Col3", "", grdreference), format:@<text>
+
+                @if(item.Col3Status)
+                        {
+<a id="title3B" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID','@item.Col3Source','@item.Col3GroupName')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+  
+                        }
+                        else
+                        {
+<a id="title3G" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID','@item.Col3Source','@item.Col3GroupName')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col3) </a>
+                        }
+
+                </text>,style:"grid-width181"),
+ 
+  
+    })
+            }
+
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        $('#divmsg').html('');
+        //set all value
+        //$("#ddReference option").eq(0).before($("<option></option>").val("0").text("All"));
+        //$("#ddgroup option").eq(0).before($("<option></option>").val("0").text("All"));
+
+    });
+
+
+
+    //Add new title name
+    $('#btnsavereference').click(function () {
+
+        var chkstatus = false;
+        var reference = $('#txtreference').val().trim();
+        //Source
+        var sourceId = "0";
+        if ($("select#ddReference")[0].selectedIndex > 0) {
+            sourceId = $('#ddReference :selected').val();
+        }
+        //Group
+        var groupId = "0";
+        if ($("select#ddgroup")[0].selectedIndex > 0) {
+            groupId = $('#ddgroup :selected').val();
+        }
+
+        if (Setvalidatetion()) {
+
+            var status = $('#btnsavereference').html();
+            if (status == "Save") {
+                status = "Edit";
+            }
+            else if (status == "Create") {
+                status = "Save";
+            }
+            var referenceId = $('#referenceid').val();
+
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/AddCategory/")',
+                type: "POST",
+                cache: false,
+                data: JSON.stringify({
+                    category: reference,
+                    status: status,
+                    categoryId: parseInt(referenceId),
+                    sourceId: parseInt(sourceId),
+                    groupId: parseInt(groupId)
+
+                }),
+                contentType: 'application/json; charset=utf-8',
+                //data: { 'category': reference, 'status': status, 'categoryId': parseInt(referenceId), 'sourceId': parseInt(sourceId) },
+            })
+           .success(function (result) {
+               if (result >= 0) {
+                   if (status == "Edit") {
+                       $('#divrefmsg').html("Sub Category Update Sucessfully");
+                   }
+                   else if (status == "Save") {
+                       $('#divrefmsg').html("Sub Category Saved Sucessfully");
+                   }
+                   setTimeout(function () {
+                       // window.location.reload();
+                       FetchDetail(1);
+                       Reset();
+
+
+                   }, 1000);
+
+
+               }
+               else if (result == -1) {
+                   $('#divrefmsg').html("Sub Category Name alreay exist");
+                   setTimeout(function () {
+                       // window.location.reload();
+                       FetchDetail(getpageid("titlegrid"));
+                       Reset();
+
+
+                   }, 1000);
+
+               }
+           })
+           .error(function (xhr, status) {
+
+           })
+
+
+        }
+
+
+    });
+    function Setvalidatetion() {
+        var groupval = true;
+        var categoryval = true;
+        var subcateval = true;
+
+        if ($('#txtreference').val().trim() == "") {
+            $('#txtreference').addClass("errorClass");
+            subcateval = false;
+        }
+        if ($("#ddReference option:selected").text() == 'All' || $("#ddReference option:selected").val() == "0") {
+            $('#ddReference').addClass("errorClass");
+            categoryval = false;
+        }
+
+        if ($("#ddgroup option:selected").text() == 'All' || $("#ddgroup option:selected").val() == "0") {
+            $('#ddgroup').addClass("errorClass");
+            groupval = false;
+        }
+
+        if (groupval && categoryval && subcateval) {
+
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+    
+
+    $('#txtreference').on("paste", function (e) {
+        e.preventDefault();
+    });
+
+    $('#ddReference').change(function () {
+        if ($("#ddReference option:selected").text() != 'All') {
+            $('#ddReference').removeClass('errorClass');
+        }
+        FetchDetail(1);
+        ////Reference
+        //if ($("#ddReference option:selected").text() != '-- Select --') {
+        //    $('#ddReference').removeClass('errorClass');
+
+        //    var source = $('#ddReference :selected').text();
+        //    FetchDetail()
+        //}
+
+    })
+    $('#ddgroup').change(function () {
+        if ($("#ddgroup option:selected").text() != 'All') {
+            $('#ddgroup').removeClass('errorClass');
+        }
+        FetchDetail(1);
+
+
+    })
+
+    //disable any title
+    $('#btndisable').click(function () {
+        var reference = $('#txtreference').val().trim();
+        if (reference != "") {
+            $('#txtreference').removeClass("errorClass");
+            var referenceid = $('#referenceid').val();
+            var isActive = $('#isactivestatus').val();
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/DisaEnaCategory")',
+                    cache: false,
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    data: { 'categoryid': parseInt(referenceid), 'isActive': isActive },
+                })
+          .success(function (result) {
+              $('#divrefmsg').html("Status change sucessfully");
+              setTimeout(function () {
+
+                  FetchDetail(getpageid("titlegrid"));
+                  Reset();
+
+              }, 1000);
+
+          })
+          .error(function (xhr, status) {
+              //  alert(status);
+          })
+            } else {
+                $('#txtreference').addClass("errorClass");
+            }
+        });
+        //Edit title any title
+        function EditTitle(title, isActive, titleId, Source, Group) {
+            //  alert(Source);
+            if (isActive != '') {
+                $('#btndisable').show();
+                $('#isactivestatus').val("disable");
+                $('#btndisable').html('Disable');
+
+
+            }
+            else {
+                $('#btndisable').show();
+                $('#btndisable').html('Enable');
+                $('#isactivestatus').val("enable");
+            }
+
+            $('#referenceid').val(titleId);
+            $('#txtreference').val(title);
+            $('#btndisable').css("visibility", "visible")
+            $('#btnsavereference').html("Save");
+            var chkgstatus = false;
+            var chkcstatus = false;
+            $("#ddReference option").each(function () {
+                if ($(this).text().trim().toLowerCase() == Source.trim().toLowerCase()) {
+                    chkcstatus = true;
+                    $(this).attr('selected', 'selected');
+                }
+            });
+
+            //Group
+            $("#ddgroup option").each(function () {
+                if ($(this).text().trim().toLowerCase() == Group.trim().toLowerCase()) {
+                    chkgstatus = true;
+                    $(this).attr('selected', 'selected');
+                }
+            });
+            if (!chkcstatus && !chkgstatus) {
+                $('#divrefmsg').html("Please enable group and category of this subcategory first.");
+                setTimeout(function () {
+
+
+                    Reset();
+                }, 4000);
+            }
+            else if (!chkcstatus) {
+                $('#divrefmsg').html("Please enable category of this subcategory first.");
+                setTimeout(function () {
+
+
+                    Reset();
+
+                }, 4000);
+            }
+            else if (!chkgstatus) {
+                $('#divrefmsg').html("Please enable group of this subcategory first.");
+                setTimeout(function () {
+
+
+                    Reset();
+
+                }, 4000);
+            }
+            FetchDetail(getpageid("titlegrid"));
+        }
+        //reset function
+        function Reset() {
+            $('#txtreference').val('');
+            $('#btndisable').hide();
+
+            $('#divrefmsg').html('');
+
+            $('#btnsavereference').html('Create');
+            $('#referenceid').val('0');
+            $('#txtreference').removeClass("errorClass");
+            $('#isactivestatus').val('disable');
+            //$("#ddReference option:first-child").attr('selected', 'selected');
+            // $("#ddReference").val("All");
+            //$("#ddReference option").each(function () {
+            //    $(this).removeAttr('selected');
+
+            //});
+            //$("#ddReference option").each(function () {
+            //    if ($(this).text() == "All") {
+            //       // alert('get');
+            //        $(this).attr('selected', 'selected');
+            //    }
+            //});
+        }
+
+        //disbale and enalble on check box click
+        function DisEnable(referenceId, isActive) {
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/DisaEnaCategory")',
+                cache: false,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'categoryId': parseInt(referenceId), 'isActive': isActive },
+            })
+        .success(function (result) {
+            FetchDetail(getpageid("titlegrid"));
+            Reset();
+
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+           }
+
+           function FetchDetail(pageid) {
+               var value = "";
+               var source = "";
+               if ($("#ddReference option:selected").text() != 'All') {
+                   source = $('#ddReference :selected').text();
+               }
+
+               var group = "";
+               if ($("#ddgroup option:selected").text() != 'All') {
+                   group = $('#ddgroup :selected').text();
+               }
+               if (source.trim() == "" && group.trim() == "") {
+                   value = "All";
+               }
+               else {
+                   value = source + "$" + group;
+               }
+
+               $.ajax({
+                   url: '@Url.Content("~/CompanyDashBoard/ViewCategory/?page=")' + pageid,
+                data: { 'id': value },
+                cache: false,
+                type: "GET",
+                success: function (result) {
+                    $('#referencediv').html($(result).find('#referencediv').html().trim());
+                }
+            });
+        //$("#ddReference option").each(function () {
+        //    if ($(this).text() == "All") {
+        //$(this).attr('selected', 'selected');
+        //    }
+        //});
+
+        //$("#ddgroup option").each(function () {
+        //    if ($(this).text()== "All") {
+        //        $(this).attr('selected', 'selected');
+        //    }
+        //});
+    }
+    $('#ddgroup').change(function () {
+        // Reset();
+        FetchCategory();
+
+    })
+    function FetchCategory() {
+        var source = "";
+        if ($("#ddgroup option:selected").text() != 'All') {
+            $('#ddgroup').removeClass("errorClass");
+            source = $('#ddgroup :selected').text();
+        }
+        else {
+            source = "All";
+        }
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/getCategoryOnbasisOfGroup/")',
+            cache: false,
+            data: { 'group': source },
+            type: "GET",
+            success: function (result) {
+
+                $('#ddReference').html('');
+                $('#ddReference').prepend('<option>All</option>');
+
+                for (var i = 0; i < result.length; i++) {
+                    $('#ddReference').append('<option value=' + result[i].id + '>' + result[i].referenceName + '</option>')
+                }
+                $("#ddReference option").each(function () {
+                    if ($(this).text() == "All") {
+                        $(this).attr('selected', 'selected');
+                    }
+                });
+                setTimeout(function () {
+                    FetchDetail(1);
+                }, 500);
+                //$("#ddReference option").eq(1).before($("<option></option>").val("0").text("All"));
+            }
+        });
+
+
+
+    }
+</script>

@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "ICSterlingReviewResult";
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    string icReviewResult = Model.ICReviewResult;
+}
+
+
+<div class="row-fluid">
+    <div class="span12" style="padding-right: 26px; margin-bottom: 10px;">
+        <a class="btn btn-primary pull-right" id="btnClose">Close</a>
+    </div>
+    <div class="span12" style="width: 96%; border: 1px solid rgb(225, 225, 225);">
+        <iframe id="sterlingResultIFrame" style="border: none;" class="span12" scrolling="yes" height="1000px"></iframe>
+    </div>
+</div>
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 215px; left: 50%; top:50%;margin-left:-107px;margin-top:-38px; z-index: 1000;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 76px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3);border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+        <div style="clear: both;">
+          </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.container').removeClass("container");
+        $('#footer').empty();
+        
+        $('#sterlingResultIFrame').attr("src", "@icReviewResult");
+    });
+ 
+    $('#btnClose').click(function () {
+        window.opener.document.location.reload(true);
+        window.open("", "_top", "", "true ");
+        window.close();
+    });
+
+</script>
+

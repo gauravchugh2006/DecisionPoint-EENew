@@ -1,0 +1,389 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    if (Request["Type"] == "V")
+    {
+        Layout = "~/Views/Shared/_VendorSetUpProfileLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    }
+        ViewBag.Title = "ViewReference";
+        WebGrid grdreference = new WebGrid(ajaxUpdateContainerId: "titlegrid", rowsPerPage: Model.rowperpage);
+        if (Model.lstBind != null)
+        {
+            grdreference.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+        }
+    }
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+<style>
+     .row{
+    margin-left:0px !important;
+    }
+      .errorClass
+    {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div class='heading'>
+        <div class='row'>
+      <h3>Manage Category</h3>
+        </div>
+ </div>
+            <div >
+               
+                <br />
+                    <div class="w100">
+                        <div style="width:6%;float:left;margin-top:9px;"><span >Group</span></div>
+                        <div style="width:25%;float:left;margin-top:5px;"><span >
+            <select id="ddReference">
+                <option  selected="selected" value="0" >All</option>
+                @foreach (var reference in Model.groupDetails)
+                {
+                    <option value="@reference.id">@reference.categoryName</option>
+                }
+            </select>
+
+        </span></div>
+                        <div style="width:12%;float:left;margin-top:9px;"><span>Category Name</span></div>
+                        <div style="width:25%;float:left;margin-top:5px;">
+                            <input type="text" id="txtreference" placeholder="Category Name" style="height: 20px;" maxlength="50" onkeypress="ValidateTextBox(this.id,event)"></div>
+                        <div style="width:30%;float:left;margin-top:5px;">
+                            <span><a id="btnsavereference" class="btn btn-small btn-info butmargin" title="Save Category">Create</a></span>
+<span><a id="btndisable" href="#" class="btn btn-small btn-info butmargin-left1" style="visibility: hidden; " title="Enable/Disable Category">Disable</a></span>
+                        </div>
+        
+        
+           
+        
+        
+       
+
+        <input type="hidden" id="referenceid" value="0" />
+        <input type="hidden" id="isactivestatus" value="disable" />
+
+
+        
+        <span style="display: none"><a id="btnreset" class="btn btn-small btn-info butmargin-left1" title="Reset">
+            <img src="~/Content/images/reset.png" style="height: 17px;" /></a></span>
+
+
+        
+    </div>
+
+
+               
+                  <div class="w100">
+                   <div id="divrefmsg" style="font-size: 12px; padding-bottom: 10px; color:green;padding-left:47px;"></div>
+                </div>
+                <div class="w100" style="margin-top:15px;">
+                    <div id="referencediv">
+                        @if (Model.lstBind!=null)
+                        {
+  
+                               
+                            @grdreference.GetHtml(htmlAttributes: new { id = "titlegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+        
+         grdreference.Column(columnName:"Col1",header: Sorter("Col1", "Category", grdreference), format:@<text>
+                @if(item.Col1Status)
+                        {
+<a id="title1B" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID','@item.Col1GroupName')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="title1G" onclick="EditTitle('@item.Col1','@item.Col1Status','@item.Col1ID','@item.Col1GroupName')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@(item.Col1) </a>
+                        }
+                </text>,
+                            style:"grid-width181"),
+    grdreference.Column(columnName:"Col2",header: Sorter("Col2", "", grdreference), format:@<text>
+
+                @if(item.Col2Status)
+                        {
+<a id="title2B" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID','@item.Col2GroupName')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="title2G" onclick="EditTitle('@item.Col2','@item.Col2Status','@item.Col2ID','@item.Col2GroupName')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col2) </a>
+                        }
+        
+          
+                </text>,style:"grid-width181"),
+              grdreference.Column(columnName:"Col3",header: Sorter("Col3", "", grdreference), format:@<text>
+
+                @if(item.Col3Status)
+                        {
+<a id="title3B" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID','@item.Col3GroupName')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+  
+                        }
+                        else
+                        {
+<a id="title3G" onclick="EditTitle('@item.Col3','@item.Col3Status','@item.Col3ID','@item.Col3GroupName')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col3) </a>
+                        }
+     
+                </text>,style:"grid-width181"),
+ 
+  
+    })
+                        }
+                       
+                    </div>
+
+                </div>
+            </div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        $('#divmsg').html('');
+        //$("#ddReference option").eq(0).before($("<option></option>").val("0").text("All"));
+    });
+
+
+   
+    //Add new title name
+    $('#btnsavereference').click(function () {
+        
+        var reference = $('#txtreference').val().trim();
+        //Source
+        var groupId = "0";
+        if ($("select#ddReference")[0].selectedIndex > 0) {
+            groupId = $('#ddReference :selected').val();
+        }
+        if (validateRef()) {
+         
+            
+                var status = $('#btnsavereference').html();
+                if (status == "Save") {
+                    status = "Edit";
+                }
+                else if (status == "Create") {
+                    status = "Save";
+                }
+                var referenceId = $('#referenceid').val();
+
+                $.ajax({
+                    url: '@Url.Content("~/CompanyDashBoard/AddReference/")',
+                    cache: false,
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    data: { 'reference': reference, 'status': status, 'referenceId': parseInt(referenceId), 'groupId': groupId },
+                })
+              .success(function (result) {
+                  if (result >=0) {
+                      if (status == "Edit") {
+                          $('#divrefmsg').html("Category Update Sucessfully");
+                      }
+                      else if (status == "Save") {
+                          $('#divrefmsg').html("Category Saved Sucessfully");
+                      }
+                      setTimeout(function () {
+                         
+                          FetchDetail(1);
+                          Reset();
+                          
+
+                      }, 1000);
+                     
+
+
+                  }
+                  else if (result == -1) {
+                      
+                      $('#divrefmsg').html("Category Name alreay exist");
+                      setTimeout(function () {
+                          
+                          FetchDetail(getpageid("titlegrid"));
+                          Reset();
+                          
+
+                      }, 1000);
+                     
+                  }
+              })
+              .error(function (xhr, status) {
+                  alert(status);
+              })
+           
+        }
+       
+    });
+    function validateRef() {
+      
+        var refval = true;
+        var ddrefval = true;
+        if ($('#txtreference').val().trim() == "") {
+            $('#txtreference').addClass("errorClass");
+            refval = false;
+        }
+        if ($("select#ddReference")[0].selectedIndex <= 0) {
+            $('#ddReference').addClass("errorClass");
+            ddrefval=false;
+        }
+        if (refval && ddrefval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+   
+
+    $('#txtreference').on("paste", function (e) {
+        e.preventDefault();
+    });
+    $('#ddReference').change(function () {
+        FetchDetail(1)
+
+    })
+  
+    //disable any title
+    $('#btndisable').click(function () {
+        var reference = $('#txtreference').val().trim();
+        if (reference != "") {
+            $('#txtreference').removeClass("errorClass");
+            var referenceid = $('#referenceid').val();
+            var isActive = $('#isactivestatus').val();
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/DisaEnaReference")',
+                cache: false,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'referenceid': parseInt(referenceid), 'isActive': isActive },
+            })
+          .success(function (result) {
+              $('#divrefmsg').html("Status change sucessfully");
+              setTimeout(function () {
+                 
+                  FetchDetail(getpageid("titlegrid"));
+                  Reset();
+
+              }, 1000);
+
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+        } else {
+            $('#txtreference').addClass("errorClass");
+        }
+    });
+    //Edit title any title
+    function EditTitle(title, isActive, titleId,group) {      
+        if (isActive != '') {           
+            
+            $('#btndisable').show();
+            $('#isactivestatus').val("disable");
+            $('#btndisable').html('Disable');
+
+
+        }
+        else {            
+            $('#btndisable').show();
+            $('#btndisable').html('Enable');
+            $('#isactivestatus').val("enable");
+        }
+
+        $('#referenceid').val(titleId);
+        $('#txtreference').val(title);
+        $('#btndisable').css("visibility", "visible")
+        $('#btnsavereference').html("Save");
+        var chkstatus = false;
+       
+        $("#ddReference option").each(function () {
+            if ($(this).text().trim().toLowerCase() == group.trim().toLowerCase()) {
+                chkstatus = true;
+                $(this).attr('selected', 'selected');
+            }
+        });
+        if (!chkstatus) {
+            $('#divrefmsg').html("Please enable group of this category first.");
+            setTimeout(function () {
+                Reset();
+
+            }, 4000);
+        }
+        FetchDetail(getpageid("titlegrid"));
+    }
+    //reset function
+
+    
+    function Reset(){
+        $('#txtreference').val('');
+        $('#btndisable').hide();
+
+        $('#divrefmsg').html('');
+
+        $('#btnsavereference').html('Create');
+        $('#referenceid').val('0');
+        $('#txtreference').removeClass("errorClass");
+        $('#isactivestatus').val('disable');
+    }
+    
+    //disbale and enalble on check box click
+    function DisEnable(referenceId, isActive) {
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/DisaEnaReference")',
+            cache:false,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            data: { 'referenceId': parseInt(referenceId), 'isActive': isActive },
+        })
+        .success(function (result) {
+            FetchDetail(getpageid("titlegrid"));
+            Reset();
+           
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+    }
+
+    function FetchDetail(pageid) {
+        var source = "";
+        if ($("#ddReference option:selected").text() != 'All') {
+            $('#ddReference').removeClass("errorClass");
+            source = $('#ddReference :selected').text();
+        }
+        else {
+            source = "All";
+        }
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ViewReference/?page=")'+pageid,
+            cache: false,
+            data: { 'id': source  },
+              type: "GET",
+              success: function (result) {
+                  
+                  $('#referencediv').html($(result).find('#referencediv').html().trim());
+                  
+              }
+        });
+
+     
+       
+    }
+</script>

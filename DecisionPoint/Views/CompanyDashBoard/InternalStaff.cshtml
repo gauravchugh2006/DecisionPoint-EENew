@@ -1,0 +1,709 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "InternalStaff";
+    //Grid for Dispaly Messages details
+    WebGrid grdactivestaff = new WebGrid(ajaxUpdateContainerId: "activestaffgrid1", rowsPerPage: Model.rowperpage);
+    WebGrid grdinactivestaff = new WebGrid(ajaxUpdateContainerId: "inactivestaffgrid1", rowsPerPage: Model.rowperpage);
+
+    if (Model.activeStaffdetails != null)
+    {
+        grdactivestaff.Bind(Model.activeStaffdetails, autoSortAndPage: true, rowCount: Model.pagesize);
+
+    }
+    if (Model.inactiveStaffdetails != null)
+    {
+        grdinactivestaff.Bind(Model.inactiveStaffdetails, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+    
+}
+
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<script src="~/Scripts/jquery.maskedinput.js"></script>
+
+<style>
+    .errorclass {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+
+    #ui-id-1 {
+        height: 300px;
+        overflow-y: auto;
+    }
+</style>
+<div class='heading'>
+    <div class='row'>
+        <h3>Staff List</h3>
+    </div>
+</div>
+<div id='users'>
+
+    <div style="float: right; margin-right: 9px;">
+        <div style="float: right; margin-bottom: 20px;">
+            <span style="margin-right: 5px;">
+                @if (Model.activeStaffdetails != null)
+                {
+                    <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b>Current Staff </b>
+                }
+                else
+                {
+                    <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b>Current Staff </b>
+                }
+            </span>
+            <span>
+                @if (Model.inactiveStaffdetails != null)
+                {
+                    <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b> Past Staff</b>
+                }
+                else
+                {
+                    <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b> Past Staff</b>
+                }
+            </span>
+        </div>
+        <div style="margin-bottom: 20px; clear: both;">
+
+            <div class='input-append' style="margin-right: -2px; float:left;">
+
+                <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+                <button class='btn btn-primary' type='button' id="btngo" onclick="SearchStaffs(0)" style="height: 28px;">Go</button>
+
+            </div>
+            <div style="float: right; margin-left: 5px; float:left;">
+                <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="SearchStaffs(1)" style="display: none; height: 28px;">View All</button>
+            </div>
+
+        </div>
+    </div>
+    @*funtion used for sorting in webgrid*@
+    @functions {
+        public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+    @functions {
+        public static string inactiveSorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+
+    @*Internal Staff*@
+    <div id='currentstaff' style="padding-top: 20px; display: block;">
+        @if (Model.activeStaffdetails != null)
+        {
+            var gridColumns = new List<WebGridColumn>();
+            gridColumns.Add(grdactivestaff.Column(header: "", format: @<text>
+            <input type="hidden" class="UserId" value="@item.Id" />
+            @if (item.Id != 0)
+    {
+            if (!item.invitationStatus)
+            {
+<span style="color:red;">Pending <br /></span>
+                if (item.LastInviteMailDate != null)
+                {
+<span>@string.Format("{0:MM/dd/yyyy}", item.LastInviteMailDate)</span>
+                }
+            }
+        }
+
+            </text>, canSort: false));
+
+            gridColumns.Add(grdactivestaff.Column(columnName: "fname", header: Sorter("fname", "Name",
+           grdactivestaff),
+           format:@<text>
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event,'','@item.UserType')" style="cursor:pointer;">
+                @item.fname  @item.lname
+
+            </a>
+            </text>
+));
+
+
+            gridColumns.Add(grdactivestaff.Column(columnName: "title", header: Sorter("title", "Title", grdactivestaff)));
+
+
+
+            gridColumns.Add(grdactivestaff.Column(columnName: "emailId", header: Sorter("emailId", "Email", grdactivestaff), style: "width150px"));
+            gridColumns.Add(grdactivestaff.Column(columnName: "phone", header: Sorter("phone", "Phone", grdactivestaff),
+           format:@<text>
+
+
+            @if (item.phone != null && item.phone.Trim() != string.Empty)
+            {
+                   
+<span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+            }
+
+
+            </text>));
+
+            gridColumns.Add(grdactivestaff.Column(header: "", format: @<text>
+         @if (item.Id != 0)
+    {
+            if (!item.invitationStatus)
+            {
+<a title="Resend invitation mail" onclick="resendMail('@item.Id')" class="btn btn-mini btn-info" style="cursor:pointer;">Resend                
+            </a>
+            }
+         }
+            </text>, canSort: false));
+            gridColumns.Add(grdactivestaff.Column(header: "Remove", format: @<text>
+         @if (item.Id != 0)
+    {
+            <a title="Remove the staff" onclick="showremovepopup('@item.Id','@item.UserType')" style="cursor: pointer; margin-left: 19px;">
+                <img src="../../Content/images/delete.png" /></a>
+         }
+            </text>, canSort: false));
+            gridColumns.Add(grdactivestaff.Column(header: "Edit", format: @<text>
+         @if (item.Id != 0)
+    {
+            <a title="Edit the staff" onclick="showeditpopup('@item.Id','@item.fname','@item.lname','@item.emailId','@item.phone','@item.role','@item.title','@item.permission','@item.UserType','@item.invitationStatus')" style="cursor:pointer;">
+                <img src="../../Content/images/edit.png" style="margin-left: 5px;" />
+            </a>
+         }
+            </text>, canSort: false));
+
+            @grdactivestaff.GetHtml(htmlAttributes: new { id = "activestaffgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: grdactivestaff.Columns(gridColumns.ToArray())) 
+           
+        }
+    </div>
+
+    <div id='paststaff' style="padding-top: 20px; display: none;">
+        @if (Model.inactiveStaffdetails != null)
+        {
+           
+                               
+            @grdinactivestaff.GetHtml(htmlAttributes: new { id = "inactivestaffgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+grdinactivestaff.Column(header : "",
+format: @<text>
+            <input type="hidden" class="UserId" value="@item.Id" />
+         @if (item.Id != 0)
+    {
+            if (!item.invitationStatus)
+            {
+<span style="color:red;">Pending <br /></span>
+                if (item.LastInviteMailDate != null)
+                {
+<span>@string.Format("{0:MM/dd/yyyy}", item.LastInviteMailDate)</span>
+                }
+            }
+        }
+
+            </text>, canSort: false),
+grdinactivestaff.Column(columnName:"fname",header : inactiveSorter("fname", "Name", 
+grdinactivestaff),
+format:@<text>
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event,':0','')"  style="cursor:pointer;">
+                @item.fname  @item.lname
+
+            </a>
+            </text>),
+
+grdinactivestaff.Column(columnName:"title",header: inactiveSorter("title", "Title", grdinactivestaff)),
+
+grdinactivestaff.Column(columnName:"phone",header:"Phone",
+format:@<text>
+
+
+            @if (item.phone != null && item.phone.Trim() != string.Empty)
+                {
+                   
+<span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+                }
+
+
+            </text>
+), 
+grdinactivestaff.Column(columnName:"emailId",header:inactiveSorter("emailId", "Email", grdinactivestaff)),
+
+grdinactivestaff.Column(header: "Reactive",format: @<text> @if (item.Id != 0)
+    {
+            <a title="Reactive the staff" onclick="Reactivestaff('@item.Id')" style="cursor: pointer;">Reactive
+            </a>
+}
+            </text>, canSort: false),
+    })
+           
+        }
+    </div>
+    <input type="hidden" id="reactivestaffid" />
+    <input type="hidden" id="removestaffid" />
+    <input type="hidden" id="editstaffid" />
+    <input type="hidden" id="userType" />
+    <input type="hidden" id="companyId" />
+    <input type="hidden" id="Hid_InviteStatus" value="0" />
+    @*Edit  Popup*@
+    <div class="profiletrans" id="EditCsv"></div>
+    <div class="popup" id="popupCSV" style="width: auto; height: auto; top: 200px; margin-left: 161px;">
+        <div class="profile-popup" style="display: block; width: auto; height: auto;">
+            <div class="tittle-MessageBox">
+                <span>Edit Staff</span><a>
+                    <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+            </div>
+            <div class="MessageSection-Box" style="width: auto; height: auto;">
+
+                <table class="MessageSection-Box" style="width: auto; height: auto;">
+                    <tr>
+                        <td class="td-align-textbox">First Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                        <td></td>
+                        <td>
+                            <input id="FName" name="FName" type="text" maxlength="50" class="input-txt-width"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Last Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                        <td></td>
+                        <td>
+                            <input id="LName" name="LName" type="text" maxlength="50" class="input-txt-width"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Phone </td>
+                        <td></td>
+                        <td>
+                            <input id="Phone" name="Phone" type="text" maxlength="14" title="" onkeydown="Allowonlynumericvalue(this.id)">
+                            <label id="phoneerrormsg" style="color: red; font-size: 12px;"></label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Email <sup style="color: red; font-size: 10px;">*</sup></td>
+                        <td></td>
+                        <td>
+                            <input id="Email" name="Email" type="email" title="" maxlength="50">
+                            <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Title</td>
+                        <td></td>
+                        <td>
+                            @if (Model.titleDetails != null)
+                            {
+                                @Html.DropDownList("ddlTitle", new SelectList(Model.titleDetails, "id", "titleName"))
+                            }
+                        </td>
+
+                    </tr>
+                    @* <tr>
+                        <td class="td-align-textbox">Role</td>
+                        <td></td>
+                        <td>
+                             @if (Model.roleDetails != null)
+                        {
+                            @Html.DropDownList("ddlRole", new SelectList(Model.roleDetails, "RoleId", "RoleName"))
+                             }
+                        </td>
+                             
+                    </tr>
+                    <tr>
+                        <td class="td-align-textbox">Permission</td>
+                        <td></td>
+                        <td>
+                            @if (Model.permissionDetails != null)
+                            {
+                                @Html.DropDownList("ddlPermission", new SelectList(Model.permissionDetails, "permissionId", "permissionName"))
+                            }
+                        </td>
+
+                    </tr>*@
+                    <tr>
+                        <td colspan="3">
+
+                            <input type="button" id="btnSubmit" value="Submit" class="btn btn-small btn-info butmargin" style="margin-left: 235px;" />
+                        </td>
+                    </tr>
+
+                </table>
+
+
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        //var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-####" }];
+        //$('#Phone').inputmask({
+        //    mask: phones,
+        //    greedy: false,
+        //    definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+        //});
+        ShowHideTabs('administration');
+        SetColStyle('activestaffgrid');
+        if ($('#currentstaffrdo').is(':checked')) {
+            $('#paststaff').hide();
+            $('#currentstaff').show();
+        }
+        else {
+            $('#paststaff').show();
+            $('#currentstaff').hide();
+        }
+    });
+    function SetColStyle(Id) {
+        $("#" + Id + " tbody tr").each(function (index) {
+            var Id = $(this).find('.UserId').val();
+            if (Id == 0) {
+                $(this).addClass("setwidth");
+
+            }
+        });
+    }
+   $("#txtserach").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/SerachInStaffs")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term, type: $('#Hid_InviteStatus').val() },
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return { label: item, value: item };
+                    }))
+                }
+            })
+        }
+
+    });
+    function resendMail(Id) {
+        $('#dvSaveMsg').text('Please Wait..');
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ResendMailToUser/")',
+            data: { 'userId': parseInt(Id), 'type': 'staff' },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+                    $('#dvSaveMsg').text('Invitation Resend Success..!!');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+                } else {
+
+                    $('#dvSaveMsg').text('Something Sent Wrong, Please try again.');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                    }, 1000);
+                }
+
+            }
+        });
+    }
+
+    function jumptoprofilepage(id, e, type, usertype) {
+
+        if (usertype != "Company") {
+            if (id == '@Session["UserId"]') {
+                ShowMsg('This is your own profile');
+            } else {
+                if (e.which == 1 && !e.ctrlKey && !e.shiftKey) {
+                    $('.' + id).attr("href", '@Url.Content("~/CompanyDashBoard/UserDashboard?userID=")' + id + "&parentform='ms" + type + "'");
+                    var target = e.target;
+                    e.preventDefault();
+                    target.click();
+
+                }
+            }
+        }
+        else {
+            ShowMsg('you can not visit this user this is the main admin');
+
+        }
+    }
+    function ShowMsg(Msg) {
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = parseInt(scrollTop) + 100
+        $('#divManualInviteInner').css("top", poistion);
+        $('#dvSaveMsg').text(Msg);
+        setTimeout(function () {
+            $('#divManualInviteOuter').fadeOut('slow');
+            $('#divManualInviteInner').fadeOut('slow');
+        }, 2500);
+    }
+    $('#currentstaffrdo').change(function () {
+        if ($('#currentstaffrdo').is(':checked')) {
+            $('#Hid_InviteStatus').val(0);
+            GetStaffDetails("All");
+
+
+        } else {
+            $('#paststaff').show();
+            $('#currentstaff').hide();
+        }
+
+    });
+    $('#paststaffrdo').change(function () {
+        if ($('#paststaffrdo').is(':checked')) {
+            $('#Hid_InviteStatus').val(1);
+            GetStaffDetails("All");
+
+
+        } else {
+            $('#paststaff').hide();
+            $('#currentstaff').show();
+        }
+
+
+    });
+
+
+
+    function Reset() {
+        $('#FName').removeClass("errorClass");
+        $('#LName').removeClass("errorClass");
+        $('#Email').removeClass("errorclass");
+        $('#emailerrormsg').html("");
+        $('#Phone').removeClass("errorclass");
+        $('#phoneerrormsg').html("");
+    }
+
+
+
+    function Reactivestaff(Id) {
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/Reactivetaff/")',
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+                    GetStaffDetails("All");
+                } else {
+
+                    $('#dvSaveMsg').text('you can not reactive, this Staff is Working in other company');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                    }, 1000);
+                }
+
+            }
+        });
+    }
+
+    function showremovepopup(Id, usertype) {
+        if (usertype != "Company") {
+            if (Id == '@Session["UserId"]') {
+                ShowMsg('you can not remove your own profile.');
+            } else {
+                $.ajax({
+                    url: '@Url.Content("~/CompanyDashBoard/Removetaff/")',
+                    data: { 'id': parseInt(Id) },
+                    cache: false,
+                    type: "POST",
+                    success: function (result) {
+                        GetStaffDetails("All");
+                    }
+                });
+            }
+        }
+        else {
+            ShowMsg('you can not remove main admin profile.');
+        }
+    }
+
+    $('#btnSubmit').click(function () {
+      
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashboard/CheckUserEmailExistence/")',
+                cache: false,
+                type: 'POST',
+                data: { emailId: $('#Email').val(), userId: $('#editstaffid').val(),userType:'staff' },
+                async: true,
+                success: function (data) {
+                    if (data != "Not Found") {
+                        $('#Email').addClass("errorClass");
+                        $('#emailerrormsg').html("Email id already exist in system.");
+                    } else {
+                        $('#Email').removeClass("errorClass");
+                        $('#emailerrormsg').html("");
+                        SaveUserDetailsFromMnaScrForStaffAndIC(ROOT,0);
+                    }
+
+                },
+                error: function (data) {
+                    return false;
+                }
+            });
+    });
+
+    function showeditpopup(Id, fname, lname, emailid, phone, role, title, permission, usertype, invitationStatus) {
+
+        if (usertype != "Company") {
+            if (Id == '@Session["UserId"]') {
+                ShowMsg('you can edit your own profile from my profile section.');
+            } else {
+                var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-####" }];
+                $('#Phone').inputmask({
+                    mask: phones,
+                    greedy: false,
+                    definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+                });
+                $('#userType').val(usertype);
+                $('#companyId').val(permission);
+                ShowEditPopUpForStaffAndICOnManaScr(Id, fname, lname, emailid, phone, role, title, permission, usertype, invitationStatus);
+            }
+        }
+        else {
+            ShowMsg('you can not edit the main admin.');
+
+        }
+    }
+
+    $('#btnClosePopup').click(function () {
+        $('#EditCsv').hide();
+        $('#popupCSV').hide();
+        Reset();
+    })
+    $('#FName').keypress(function () {
+        if ($('#FName').val().trim() != '') {
+            $('#FName').removeClass("errorClass");
+        }
+    })
+    $('#LName').keypress(function () {
+        if ($('#LName').val().trim() != '') {
+            $('#LName').removeClass("errorClass");
+        }
+    })
+    $('#Email').keypress(function () {
+
+        if ($('#Email').val().trim() != '') {
+            $('#Email').removeClass("errorClass");
+            $('#emailerrormsg').html("");
+        }
+    })
+    $('#Phone').keypress(function () {
+        if ($('#Phone').val().trim() != '') {
+            $('#Phone').removeClass("errorClass");
+            $('#phoneerrormsg').html("");
+        }
+    })
+
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function validatePhone(phone) {
+        var s = false;
+
+        var filter = /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/;
+        if (filter.test(phone)) {
+            s = true;
+        }
+        else {
+            s = false;
+        }
+
+        return s;
+
+    }
+
+    function GetStaffDetails(filterType) {
+        var staffType = 0;
+        var pageid = getpageid("activestaffgrid");
+        if ($('#paststaffrdo').is(':checked')) {
+            staffType = 1;
+            pageid = getpageid("inactivestaffgrid");
+        }
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/InternalStaff/?page=")' + pageid,
+        data: { 'id': staffType, 'type': filterType },
+        cache: false,
+        type: "GET",
+        success: function (result) {
+            if (staffType == 0) {
+                $('#currentstaff').html($(result).find('#currentstaff').html().trim());
+
+                $('#currentstaffrdo').prop('checked', true);
+                $('#paststaff').hide();
+                $('#currentstaff').show();
+                SetColStyle('activestaffgrid');
+            }
+            else if (staffType == 1) {
+                $('#paststaff').html($(result).find('#paststaff').html().trim());
+
+                $('#paststaffrdo').prop('checked', true);
+                $('#paststaff').show();
+                $('#currentstaff').hide();
+                SetColStyle('inactivestaffgrid');
+            }
+        }
+    });
+}
+function SearchStaffs(type) {
+    //0 for search particular staff
+    if (type == 0) {
+        GetStaffDetails($('#txtserach').val());
+        $('#btnviewallCompany').show();
+    }
+        //1 for view all staffs
+    else if (type == 1) {
+        GetStaffDetails("All");
+        $('#btnviewallCompany').hide();
+        $('#txtserach').val('');
+    }
+}
+</script>

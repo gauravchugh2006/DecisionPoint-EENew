@@ -1,0 +1,646 @@
+﻿@model DecisionPoint.Models.PackagePaymentModel
+@using DecisionPointCAL.Common;
+@using DecisionPointCAL;
+<div id="PacakgePayment" style="margin-top: 50px;">
+
+    @{
+       
+        ViewBag.Title = "PackagePayment";
+        Layout = "~/Views/Shared/_ICSetUpLayoutPage.cshtml";
+        string Res = string.Empty;
+        string type = string.Empty;
+        type = Request["type"];
+        Res = Request["Res"];
+        
+    }
+    @functions {
+        /// <summary>
+        /// Used for make the list of states for fill in drop down list
+        /// </summary>
+        /// <returns>IEnumerable<SelectListItem></returns>a
+        private IEnumerable<SelectListItem> FillStateListAsPerIdVal()
+        {
+            return new SelectList(Model.StateList, "DriverLicenseCost", "SateName");
+        }
+    }
+    <link href="~/Content/css/Dashboard/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <div class="row-fluid" style="margin-bottom: 12px;">
+        @* @if (Res.Equals(Shared.One))
+        {
+            <h2 class="package-p-heading">@Model.InviteeCompanyName</h2>
+        }
+        else
+        {
+            <h2 class="package-p-heading">@Model.InviteeCompanyName</h2>
+        }*@
+        <h2 class="package-p-heading">Select Your Package(s)</h2>
+        @foreach (var item in Model.BackgroundPkgList.Where(x => (x.PacakgeType == 0 || x.PacakgeType == 1)).Select(x => new { x.SterlingPkgName, x.PacakgeCost, x.Id, x.Description, x.BackgroundTitle }).Distinct())
+        {
+            if (!item.SterlingPkgName.Contains("Driver License") && !item.SterlingPkgName.Contains("Professional License") && !item.SterlingPkgName.Contains("Insurance"))
+            {
+                
+            <div class="span12 top-mar">
+                <div class="span4">
+                    @{double packageCost = item.PacakgeCost; bool chkBoxChecked = false;}
+                    @if (item.SterlingPkgName.Contains("Basic"))
+                    {
+                        if (Res.Equals("3"))
+                        {
+                            packageCost = 0;
+                            chkBoxChecked = true;
+                        }
+                    }
+                    @if (Model.IsPurchase)
+                    {
+                        if (Model.BackgroundList.Select(x => x.SterlingPkgId).Contains(item.Id))
+                        {
+                        <span class="bol-fon">
+                            <input type="radio" id="@item.Id" class="chkBGCheck MarginT" name="sterlinPkg" value="@packageCost" onchange="SetPackageIds('@item.Id',0)" title="@item.SterlingPkgName" checked="checked" disabled="disabled" />
+                            <span>@item.BackgroundTitle</span>
+                        </span>
+                        }
+                        else
+                        {
+                        <span class="bol-fon">
+                            <input type="radio" id="@item.Id" class="chkBGCheck MarginT" name="sterlinPkg" value="@packageCost" onchange="SetPackageIds('@item.Id',0)" checked="@chkBoxChecked" title="@item.SterlingPkgName" disabled="disabled" />
+                            <span>@item.BackgroundTitle</span>
+                        </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="bol-fon">
+                            <input type="radio" id="@item.Id" class="chkBGCheck MarginT" name="sterlinPkg" value="@packageCost" title="@item.SterlingPkgName" checked="@chkBoxChecked" onchange="SetPackageIds('@item.Id',0)" />
+                            <span>@item.BackgroundTitle</span>
+                        </span>
+                    }
+                    @* @foreach (var itemContent in Model.BackgroundPkgList.Where(x => (x.PacakgeType == 0 || x.PacakgeType == 1) && x.Id == item.Id).Select(x => new { x.Content }).Distinct())
+                    {
+                        if (!string.IsNullOrEmpty(itemContent.Content))
+                        {
+                        <div class="span12" style="margin-left: 0;">
+                            <div class="span12 fon-sty2">
+                                <span>
+                                    @itemContent.Content
+                                </span>
+                            </div>
+
+                        </div>
+                        }
+                    }*@
+
+                </div>
+                <div class="span5 fon-sty wepay">
+                    <span>@item.Description
+                    </span>
+                </div>
+                <div class="span3 text-right wepay" style="float: right;">
+                    @if (item.SterlingPkgName.Contains("Basic") || item.SterlingPkgName.Contains("Premium") || item.SterlingPkgName.Contains("Standard"))
+                    {
+                        if (item.SterlingPkgName.Contains("Basic"))
+                        {
+                        <span style="position: relative; margin-right: 15px;">$29.50
+                            <div class="delte-price">
+                                <img src="../../Content/images/DeleteRed.png" alt="delete icon" />
+                            </div>
+                        </span>
+                        }
+                        else if (item.SterlingPkgName.Contains("Standard"))
+                        {
+                        <span style="position: relative; margin-right: 15px;">$54.50
+
+                            <div class="delte-price">
+                                <img src="../../Content/images/DeleteRed.png" alt="delete icon" />
+                            </div>
+                        </span>
+                        }
+                        else if (item.SterlingPkgName.Contains("Premium"))
+                        {
+                        <span style="position: relative; margin-right: 15px;">$99.50
+                            <div class="delte-price">
+                                <img src="../../Content/images/DeleteRed.png" alt="delete icon" />
+                            </div>
+                        </span>
+                        }
+                        if (item.SterlingPkgName.Contains("Premium"))
+                        {
+                        <span id="disFieldStaffFee2" style="color: rgb(1, 102, 166); position: relative; font-weight: bold;" class="top-mar2 bol-fon2">Now $@item.PacakgeCost.ToString("F")
+                            <div style="height: 32px; right: -23px; top: -30px; position: absolute; width: 122px; z-index: -1;">
+                                <img src="../../Content/images/Circle.png" alt="delete icon" style="margin-left: 3px;" />
+                            </div>
+
+                            <img alt="delete icon" src="../../Content/images/bestvalue.png" style="margin-left: 47px; margin-right: -24px; margin-top: 25px; max-width: 90%;">
+                        </span>
+                        }
+                        else
+                        {
+                        <span id="disFieldStaffFee2" style="color: rgb(1, 102, 166); font-weight: bold;" class="top-mar2 bol-fon2">Now $@packageCost.ToString("F")
+                           <br /> <img alt="delete icon" src="../../Content/images/Line.png" style="max-width: 36%; margin-top: -17px;">
+                        </span>
+                        }
+                    }
+                    else
+                    {
+                        <span id="disFieldStaffFee2"  class="bol-fon2">$@item.PacakgeCost.ToString("F")</span>
+                    }
+                </div>
+
+
+            </div> 
+                    
+               
+            }
+        }
+        @foreach (var item in Model.BackgroundPkgList.Where(x => (x.PacakgeType == 0 || x.PacakgeType == 1) && (x.SterlingPkgName == "Driver License" || x.SterlingPkgName == "Professional License" || x.SterlingPkgName.Contains("Insurance"))))
+        {
+            <div class="span12 top-mar" style="margin-left: 0;">
+                <div class="span4">
+                    @{int indexType = 1;
+                      string sterlingPkgName = string.Empty;
+                    }
+                    @if (item.SterlingPkgName.Contains("Professional License") || item.SterlingPkgName.Contains("Insurance"))
+                    {
+                        indexType = 0;
+                        sterlingPkgName = item.SterlingPkgName;
+                    }
+                    else
+                    {
+                        sterlingPkgName = "Drivers License";
+                    }
+                    @if (Model.IsPurchase)
+                    {
+                        if (Model.BackgroundList.Select(x => x.SterlingPkgId).Contains(item.Id))
+                        {
+                        <span class="bol-fon">
+                            <input type="checkbox" id="@item.Id" class="chkBGCheck MarginT" value="@item.PacakgeCost" onchange="SetPackageIds('@item.Id',@indexType)" title="@item.SterlingPkgName" checked="checked" disabled="disabled" />
+                            <span>@sterlingPkgName</span>
+                        </span>
+                        }
+                        else
+                        {
+                        <span class="bol-fon">
+                            <input type="checkbox" id="@item.Id" class="chkBGCheck MarginT" value="@item.PacakgeCost" onchange="SetPackageIds('@item.Id',@indexType)" title="@item.SterlingPkgName" disabled="disabled" />
+                            <span>@sterlingPkgName</span>
+                        </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="bol-fon">
+                            <input type="checkbox" id="@item.Id" class="chkBGCheck MarginT" value="@item.PacakgeCost" title="@item.SterlingPkgName" onchange="SetPackageIds('@item.Id',@indexType)" />
+                            <span>@sterlingPkgName</span>
+                        </span>
+                    }
+
+
+                </div>
+                <div class="span5 fon-sty wepay">
+                    <span>@item.Description
+                    </span>
+                </div>
+                <div class="span3 text-right wepay">
+                    @if (item.SterlingPkgName.Contains("Driver License"))
+                    {
+                        <label class="top-mar2 bol-fon2">$@item.PacakgeCost.ToString("F")</label>
+                    }
+
+                    else
+                    {
+                        <label id="disPackCost" class="bol-fon2">$@item.PacakgeCost.ToString("F")</label>
+                    }
+                </div>
+            </div>
+                    if (item.SterlingPkgName == "Driver License")
+                    {
+            <div class="span12 wepay" style="float: left; font-size: 9px; line-height: 11px; margin-left: 0;">
+                <div class="filter-bar-new span8">
+                    <div class="dropdown">
+                        <a href="#" data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn" style="width: 276px; text-align: left">
+                            <b class="ddtype">States</b>
+                            <b class="caret pull-right"></b>
+                        </a>
+
+                        <ul role="menu" class="dropdown-menu" style="width: 300px; height: 146px; overflow: auto;">
+                            @foreach (var state in Model.StateList)
+                            {
+                                <li>
+
+                                    <div class="span8 arr">
+                                        <span>
+                                            @if (Model.BackgroundList.Select(x => x.StateAbbre).Contains(state.Abbrebiation))
+                                            {
+                                                <input type="radio" style="margin-top: -2px;" class="driverLicStates" title="@state.SateName:@state.DriverLicenseCost" onchange="showcost('@state.DriverLicenseCost','@state.SateName','@state.Abbrebiation')" id="@state.Abbrebiation" disabled="disabled" name="Stname" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input type="radio" style="margin-top: -2px;" class="driverLicStates" title="@state.SateName:@state.DriverLicenseCost" onchange="showcost('@state.DriverLicenseCost','@state.SateName','@state.Abbrebiation')" id="@state.Abbrebiation" disabled="disabled" name="Stname" />
+                                            }
+                                            @state.SateName</span>
+                                    </div>
+                                    <div class="span3 pull-right"><span>$@state.DriverLicenseCost.Value.ToString("F")</span></div>
+
+
+
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="span4">
+                    <label class="stateFee bol-fon2"></label>
+                </div>
+            </div>
+                    }
+        }
+    </div>
+    <div class="row-fluid wepay" id="purchasePkgList" style="display: none;">
+        <h2 class="package-p-heading">Purchased Package List</h2>
+        <div>
+            <table width="100%" cellpadding="5" cellspacing="5" border="1" style="margin-top: 20px;" id="packageList"></table>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<hr />
+<div id="packagePayment">
+    @using (Html.BeginForm("PackagePayment", "Company", FormMethod.Post, new { @class = "form-horizontal", autocomplete = "off", id = "myform" }))
+    { 
+
+    
+
+
+        <a class="btn btn-primary" id="btnNext" style="float: right; margin: 5px 0 5px 5px;" value="Next" onclick="CheckValidation()">Next</a>
+        
+        <a class="btn btn-primary" href="/Company/LisenceAggrement?Type=@type&amp;Res=@Res" style="float: right; margin: 5px;">Back</a>
+        <label style="color: red;" id="valMsg"></label>
+        @Html.HiddenFor(model => model.PackageIds, new { @id = "BgCheckPkgId", @value = "0" })
+        @Html.HiddenFor(model => model.RedirectType)
+        @Html.HiddenFor(model => model.PayType)
+        @Html.HiddenFor(model => model.IsPurchase)
+        @Html.HiddenFor(model => model.PackageAmount, new { @id = "Hid_PackageAmount" })
+        @Html.HiddenFor(model => model.StateAbbre)
+    }
+</div>
+<div class="confirmationdivmain" id="waitPopupOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="waitPopupInner" style="display: none; width: 255px; top: 50%; left: 50%; margin-left: -125px; margin-top: -30px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvMsg"></div>
+
+    </div>
+</div>
+<form method="post" id="paymentForm"  action="@Model.PaymentGetwayActionUrl">
+    <input type="hidden" name="cmd" value="_xclick">
+    <input type="hidden" name="business" value="@Model.PayPalAccount">
+    <input type="hidden" name="item_name" value="IC Registration">
+    <input type="hidden" name="item_number" value="1">
+    <input type="hidden" id="payAmount" name="amount">
+    <input type="hidden" name="currency_code" value="USD">
+    <input type="hidden" name="notify_url" value="@Model.RootUrl/Company/PayPalResponse">
+    <input type="hidden" name="return" value="@Model.RootUrl/Company/Welcome">
+    <input id="btnPay" style="float: right; height: 37px; margin-right: -8px; margin-top: -34px; display: none;" type="image" src="~/Content/images/submit.png" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+    <input type="hidden" name="custom" value="@Session["CompanyId"],@Session["UserId"],@Session["BusinessName"],@Session["InviteeCompany"],@Session["Emailid"]" />
+</form>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        // Hide the loader at page load
+        $("#waitPopupOuter").hide();
+        $("#waitPopupInner").hide();
+
+        // Attach click handler to the submit button:
+
+
+        // Handle the form submit event, and make the Ajax request:
+        $("#myform").on("submit", function (event) {
+            event.preventDefault();
+
+            // Show the loader
+
+            $('#dvMsg').text('Please Wait..');
+
+            $("#waitPopupOuter").show();
+            $("#waitPopupInner").show();
+            var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            var poistion = scrollTop + 100;
+            $('#waitPopupInner').css("top", poistion);
+            var url = $(this).attr("action");
+            var formData = $(this).serialize();
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                success: function (resp) {
+                    $("#waitPopupOuter").hide();
+                    $("#waitPopupInner").hide();
+                    //alert(resp.PayType);
+                    if (resp != null) {
+                        if (resp.PayType == '@Shared.Fail') {
+                            window.location.href = "@Url.Content("~/Login/Login")";
+                        }
+                        else if (resp.PayType == 1) {
+                            window.location.href = "@Url.Content("~/Company/Welcome")";
+                        }
+                        else {
+
+                            if (resp.IsPayment) {
+
+                                window.location.href = "@Url.Content("~/Company/Welcome")";
+                            } else {
+                                if ($('#Hid_PackageAmount').val() == 0) {
+                                    window.location.href = "@Url.Content("~/Company/Welcome")";
+                                } else {
+                                    $('#paymentForm').submit();
+                                }
+                            }
+                           
+                        }
+                    }
+                    else {
+                        window.location.href = "@Url.Content("~/Login/Error?errorMsg=")" + '@DecisionPointR.PageErrorMsg';
+                    }
+                }
+            })
+        });
+        SetCustomValueForPayPal();
+    });
+    $('#btnNext').click(function () {
+        if (CheckValidation()) {
+            $('#myform').submit();
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var totalCost = 0;
+        var costVal = 0;
+        $('.chkBGCheck').each(function () {
+            if ($(this).prop("checked")) {
+                costVal = $(this).val();
+
+                totalCost = totalCost + parseFloat(costVal);
+                SetPurchasePkgList($(this).parent().find('span').html(), $(this).val());
+            }
+        });
+        if ($('#packageList').html().trim() != "") {
+            $('#purchasePkgList').show();
+            $('#packageList').append('<tr><td width="65%">&nbsp;</td><td class="text-right" width="15%" style="text-align:left;">Total</td><td class="text-right" id="totalAmt">$0.00</td></tr>');
+        }
+
+        $('.driverLicStates').each(function () {
+            if ($(this).prop("checked")) {
+                var stateCost = $(this).attr('title').split(':')[1];
+                var stateName = $(this).attr('title').split(':')[0];
+                var stateAbbre = $(this).attr('id');
+                $('.stateFee').html('+<br/>$' + parseFloat(stateCost).toFixed(2));
+                $('.ddtype').html(stateName);
+                $('#stateName').html(' (' + stateName + ')');
+                $('#StateAbbre').val(stateAbbre);
+                $('.chkBGCheck').each(function () {
+                    if ($(this).prop("checked")) {
+                        costVal = $(this).val();
+                        if (!($(this).attr('title').indexOf('Driver') === -1)) {
+                            $(this).val(parseFloat(costVal) + parseFloat(stateCost));
+                            totalCost = parseFloat(totalCost) + parseFloat(stateCost);
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+        ShowTotalAmt(totalCost);
+
+        CheckICWePayOrNot();
+        SetPurPackageIds();
+    });
+    $('#StateId').change(function () {
+
+        $('#cost').html('$' + $(this).val());
+    });
+    function showcost(cost, stateName, stateAbbre) {
+
+        var totalCost = 0;
+        var costVal = 0;
+        $('.chkBGCheck').each(function () {
+            if ($(this).prop("checked")) {
+                costVal = $(this).val();
+                if (!($(this).attr('title').indexOf('Driver') === -1)) {
+                    //alert(costVal);
+                    //alert(cost);
+                    costVal = 10;
+                    $(this).val((parseFloat(costVal) + parseFloat(cost)));
+                    costVal = (parseFloat(costVal) + parseFloat(cost)).toFixed(2);
+                    $('.disDrCost').html('$' + (parseFloat(costVal)).toFixed(2));
+                }
+
+                // alert(costVal);
+                totalCost = totalCost + parseFloat(costVal);
+                // SetPurchasePkgList($(this).parent().find('span').html(), $(this).attr('id'));
+            }
+
+        });
+        // alert(totalCost);
+        ShowTotalAmt(totalCost);
+        $('#valMsg').html('');
+
+        $('.stateFee').html('+<br/>$' + parseFloat(cost).toFixed(2));
+        $('.ddtype').html(stateName);
+        $('#stateName').html(' (' + stateName + ')');
+        $('#StateAbbre').val(stateAbbre);
+    }
+
+    function SetPackageIds(Id, type) {
+        $('#valMsg').html('');
+        // alert(type);
+        if (type == 1) {
+            if ($('#' + Id).prop("checked")) {
+                $('.driverLicStates').each(function () {
+                    $(this).removeAttr("disabled");
+                });
+            }
+            else {
+                $('.chkBGCheck').each(function () {
+                    if ($(this).prop("checked")) {
+                        if (!($(this).attr('title').indexOf('Driver') === -1)) {
+
+                            $(this).val(10);
+                        }
+                    }
+                    else {
+                        if (!($(this).attr('title').indexOf('Driver') === -1)) {
+                            $(this).val(10);
+                        }
+                    }
+                });
+                //$('.disDrCost').html('$10.00');
+                $('.ddtype').html('States');
+                $('#stateName').html('');
+                $('.stateFee').html('');
+                $('.driverLicStates').each(function () {
+                    $(this).attr("disabled", "disabled");
+                    $(this).prop("checked", false);
+                });
+            }
+        }
+        var totalCost = 0;
+        var Cost = 0;
+        $('#BgCheckPkgId').val(0);
+        if (Id == 3)//static id for premium package from [DP_BGCheckPackageMaster]
+        {
+            $('#4').prop("checked", false);
+            $('#4').prop("disabled", true); //static id for professional license package from [DP_BGCheckPackageMaster]
+        }
+        else if (type != 1) {
+            $('#4').removeAttr("disabled");//static id for professional license package from [DP_BGCheckPackageMaster]
+        }
+        $('#packageList').empty();
+        //$('#packageList').append('<table border="1">');
+        $('.chkBGCheck').each(function () {
+            if ($(this).prop("checked")) {
+                if ($('#BgCheckPkgId').val() == 0) {
+                    $('#BgCheckPkgId').val($(this).attr('id'));
+                } else {
+                    $('#BgCheckPkgId').val($(this).attr('id') + "," + $('#BgCheckPkgId').val());
+                }
+                Cost = $(this).val();
+
+                // alert($(this).val());
+
+
+                totalCost = totalCost + parseFloat(Cost);
+                SetPurchasePkgList($(this).parent().find('span').html(), $(this).val());
+            }
+        });
+        $('#purchasePkgList').show();
+        $('#packageList').append('<tr><td width="65%">&nbsp;</td><td class="text-right" width="15%" style="text-align:left;">Total</td><td class="text-right" id="totalAmt">$142</td></tr>');
+        if ($('#packageList tbody tr').length == 1) {
+            $('#packageList').empty();
+            $('#purchasePkgList').hide();
+        }
+        // $('#packageList').append('</table>');
+        // alert(totalCost);
+        ShowTotalAmt(totalCost);
+    }
+
+    function SetPurchasePkgList(PackageName, PackageCost) {
+
+        //alert(PackageCost);
+        if (!(PackageName.indexOf('Driver') === -1)) {
+            var stateName = '';
+            $('.driverLicStates').each(function () {
+                if ($(this).prop("checked")) {
+                    stateName = $(this).attr('title').split(':')[0];
+                    return false;
+                }
+            });
+
+            $('#packageList').append('<tr><td colspan="2">' + PackageName + '<span id="stateName"></span></td><td width="15%" class="text-right"><span class="disDrCost">' + parseFloat(PackageCost).toFixed(2) + '</span></td></tr>');
+
+            $('#stateName').html(' (' + stateName + ')');
+
+        }
+        else {
+            $('#packageList').append('<tr><td colspan="2">' + PackageName + '</td><td width="15%" class="text-right">' + parseFloat(PackageCost).toFixed(2) + '</td></tr>');
+        }
+
+    }
+    function CheckValidation() {
+
+        var isAnyPackageSelected = false;
+        var chkStateCheck = false;
+        $('.chkBGCheck').each(function () {
+            if ($(this).prop("checked")) {
+                // alert(0);
+                isAnyPackageSelected = true;
+                if (!($(this).attr('title').indexOf('Driver') === -1)) {
+
+                    $('.driverLicStates').each(function () {
+                        if (($(this).prop("checked"))) {
+                            chkStateCheck = true;
+                        }
+                    });
+                }
+                else {
+                    chkStateCheck = true;
+                }
+            }
+        });
+        if (!isAnyPackageSelected) {
+            $('#valMsg').html('Please select any pacakge.');
+        }
+        if (isAnyPackageSelected) {
+            $('#valMsg').html('');
+            //$('#packagePayment form').submit();
+        }
+        if (!chkStateCheck) {
+            $('#valMsg').html('Please select any state for driver license.');
+        }
+        if (chkStateCheck) {
+            $('#valMsg').html('');
+        }
+        if (isAnyPackageSelected && chkStateCheck) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    function CheckICWePayOrNot() {
+        var chkWePay = '@Res';
+        //alert(chkWePay);
+        if (chkWePay == 1) {
+            $('.chkBGCheck').each(function () {
+                if (!($(this).attr('title').indexOf('Nationwide Criminal') === -1)) {
+                    $(this).prop("checked", true);
+                }
+                else {
+                    $(this).attr("disabled", "disabled");
+                }
+            });
+            $('.wepay').hide();
+
+        }
+        else {
+            if ($('#packageList').html().trim() != "") {
+                $('.wepay').show();
+            }
+
+        }
+    }
+    function SetPurPackageIds() {
+        $('.chkBGCheck').each(function () {
+            if ($(this).prop("checked")) {
+                if ($('#BgCheckPkgId').val() == 0) {
+                    $('#BgCheckPkgId').val($(this).attr('id'));
+                } else {
+                    $('#BgCheckPkgId').val($(this).attr('id') + "," + $('#BgCheckPkgId').val());
+                }
+            }
+        });
+    }
+    function SetCustomValueForPayPal() {
+        var customFiledValue = $('input[name=custom]').val();
+        $('input[name=custom]').val(customFiledValue + ',1' + 0 + ',' + 0 + ',' + 0 + ',' + 'IC Registration');
+    }
+    function ShowTotalAmt(totalAmt) {
+        var basicAmt = 0;
+        $('.chkBGCheck').each(function () {
+            if ($(this).prop("checked")) {
+                if (!($(this).attr('title').indexOf('Basic') === -1)) {
+                    basicAmt = $(this).val();
+                }
+            }
+        });
+        if ('@Res' == 3) {
+            totalAmt = totalAmt - basicAmt;
+        }
+        $('#totalAmt').html('$' + totalAmt.toFixed(2));
+        $('#Hid_PackageAmount').val(totalAmt);
+        $('#payAmount').val(totalAmt);
+    }
+</script>

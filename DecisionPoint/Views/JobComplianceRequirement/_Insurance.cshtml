@@ -1,0 +1,312 @@
+﻿@model DecisionPoint.Models.JobComplianceRequirementModel
+@{
+    string reqById = string.Empty;
+    string insType = string.Empty;
+}
+<div class="row-fluid">
+    <div class="span12 mt20">
+        <h4>Insurance</h4>
+
+    </div>
+
+    <div class="span12" style="margin-left: 0; border: 1px solid rgb(225, 225, 225); padding: 9px;">
+        <div class="span12" style="margin-left: 0;">
+            <div class="span5"><b>Attributes</b></div>
+            <div class="span4"><b>Acknowledgements</b></div>
+            <div class="span3"></div>
+        </div>
+        <div class="span12" style="margin-left: 0;">
+            <div class="span5">
+                <div class="span12">
+                    <table>
+                        <tr id="trValidateInsuranceType">
+                            <td>
+                                <label class="control-label">Insurance Type<sup style="color: red; font-size: 10px;">*</sup></label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <select id="insuranceType">
+                                    <option value="0">-- Select --</option>
+                                    <option>E&O</option>
+                                    <option>Liability</option>
+                                    <option>D&O</option>
+                                    <option>Workmans Comp</option>
+                                </select>
+                            </td>
+
+                        </tr>
+                        <tr><td id="tdError" colspan="3"><label id="errMsginsuranceType" style="color: red;"></label></td> </tr>
+                        <tr>
+                            <td>
+                                <label class="control-label">Policy Number</label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <input type="text" disabled="disabled" placeholder="Policy Number" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="control-label">Expiration Date</label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <div class="controls">
+                                    <div class='datetimepicker input-append'>
+                                        <input type="text" id="insExpirationDate" placeholder="Expiration Date" disabled="disabled" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="control-label">Company Name</label>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <input type="text" disabled="disabled" placeholder="Company Name" />
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+            </div>
+            <div class="span4">
+                <div class='control-group w100'>
+
+                    <div class='MarginBottom3'>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <table id="insuranceAckTbl" class="w100"></table>
+                                <a id="insuranceAck" style="cursor: pointer; margin-left: 24px; font-size: 12px;" onclick="AddMoreAck(this.id)">Add</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="span3">
+                <div class='control-group w100'>
+                    <div class="MarginBottom3">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Upload<sup style="color: red; font-size: 10px;">*</sup></label>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <input type="text" disabled="disabled" placeholder="Title" id="insuranceTitleTxt" class="w90" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span12" style="margin-left: 0;">
+            <div id="dvInsuranceVerificationType" class="span6">
+                <label class="radio">
+                    <input type="radio" name="insVerification" id="selfRepDeclIns" class="insVer" value="Self Report–Declaration Page" />Insurance Verification (Self Report–Declaration Page)
+                </label>
+                <label class="radio">
+                    <input type="radio" name="insVerification" id="selfRepProfIns" class="insVer" value="Self Report–Proof of Insurance" />Insurance Verification (Self Report–Proof of Insurance)
+                </label>
+                <label class="radio" id="labelselfRepAddIns" style="display:none;">
+                    <input type="radio" name="insVerification" id="selfRepAddIns" class="insVer" value="Additionally Insured" />Additionally Insured
+                </label>
+                <label class="radio" style="display:none;">
+                    <input type="radio" name="insVerification" id="verifiedIns" class="insVer" value="Verified" />Insurance Verification(Verified)
+                </label>
+            </div>
+            <div class="span6">
+                <input type="button" id="insCancel" class="btn btn-primary pull-right" value="Cancel" onclick="ResetRecord(2, 0)" style="margin-right:4px;display:none;" />
+                <input type="button" id="insuranceSave" class="btn btn-primary pull-right" title="Save" value="Save" style="margin-right:4px;" />
+            </div>
+        </div>
+    </div>
+    <div class="span12" style="margin-left: 0;" id="insDetailDiv">
+        <div class="span12" style="margin-top: 10px;">
+            <label class="radio pull-right" style="margin-left: 10px;"><input type="radio" onclick="ShowCurrentOrPastDetails(2, false)" name="currentpastIns" id="pastIns">Past</label>
+            <label class="radio pull-right"><input type="radio" onclick="ShowCurrentOrPastDetails(2, true)" name="currentpastIns" id="currentIns" checked="checked">Current</label>
+        </div>
+        <table class="table table-hover" id="currentInsDetails">
+            <thead>
+                <tr>
+                    <th>Reqiured By</th>
+                    <th>Insurance Type</th>
+                    <th>IC Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.InsuranceMasterList.Where(x => x.IsActive))
+                {
+
+                    if (reqById == item.RequiredByCompanyId)
+                    {
+                        <tr>
+                            <td></td>
+
+                            <td>
+                                @if (!string.IsNullOrEmpty(insType))
+                                {
+                                    if (!insType.Equals(item.InsuranceType))
+                                    {
+                                        @item.InsuranceType
+                                    }
+                                }
+                            </td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                <a>
+                                    <img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.LicInsId',2)" />
+                                </a><a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetInsForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.InsuranceType','@item.LicInsId','@Session["CompanyId"]','@item.InsuranceVerType')" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item.ReqCompanyName</td>
+                            <td>@item.InsuranceType</td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                <a>
+                                    <img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.LicInsId',2)" />
+                                </a><a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetInsForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.InsuranceType','@item.LicInsId','@Session["CompanyId"]','@item.InsuranceVerType')" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    reqById = item.RequiredByCompanyId;
+                    insType = item.InsuranceType;
+                }
+            </tbody>
+        </table>
+        @{reqById = string.Empty; insType = string.Empty;}
+        <table class="table table-hover" id="pastInsDetails" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Reqiured By</th>
+                    <th>Insurance Type</th>
+                    <th>IC Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.InsuranceMasterList.Where(x => !x.IsActive))
+                {
+
+                    if (reqById == item.RequiredByCompanyId)
+                    {
+                        <tr>
+                            <td></td>
+
+                            <td>
+                                @if (!string.IsNullOrEmpty(insType))
+                                {
+                                    if (!insType.Equals(item.InsuranceType))
+                                    {
+                                        @item.InsuranceType
+                                    }
+                                }
+                            </td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                @*<a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetInsForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.InsuranceType','@item.LicInsId','@Session["CompanyId"]')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.LicInsId',2)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item.ReqCompanyName</td>
+                            <td>@item.InsuranceType</td>
+                            <td>@item.VendorType</td>
+                            <td>
+                                @*<a>
+                                    <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetInsForEdit('@item.RequiredByCompanyId','@item.VendorTypeId','@item.InsuranceType','@item.LicInsId','@Session["CompanyId"]')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.LicInsId',2)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    reqById = item.RequiredByCompanyId;
+                    insType = item.InsuranceType;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<input type="hidden" id="hidInsId" />
+<script>
+    
+    var ROOT = '@Url.Content("~/")';
+    $('#insuranceSave').click(function () {
+        if (IsValidInsuranceProperties()) {
+            SaveInsuranceDetails(ROOT, '@Session["UserId"]', '@Session["CompanyId"]');
+        }
+    });
+
+    //default document load
+    $(document).ready(function () {
+        //alert($('input[name="rad_JCRfor"]:checked').val());
+    });
+    // function to validate Insurance properties
+    function IsValidInsuranceProperties() {
+        var res = false;
+        var insuranceType = $('select[id="insuranceType"]');
+
+        if (insuranceType.val() === 0 || insuranceType.val() === "0") {
+            insuranceType.addClass('errorClass');
+            insuranceType.attr("title", "Please select insurance type");
+            res = false;
+            //AddErrorMessage('Please input upload title');
+        } else {
+            insuranceType.removeClass('errorClass');
+            insuranceType.removeAttr("title");
+            res = true;
+        }
+        // validate insurance verification type
+        if ($('.insVer:checked').length === 0) {
+            debugger;
+            if (ERRORMESSAGE != null) {
+                msg = String(ERRORMESSAGE) + ' insurance verification type';
+                var errLabel = '<label id="errMsgInsurVerificationType" style="color: red;">' + msg + '</label>';
+                $(errLabel).appendTo('#dvInsuranceVerificationType');
+            }
+            res = false;
+        } else {
+            $('#errMsgInsurVerificationType').remove();
+            res = true;
+        }
+
+        return res;
+    }
+
+    $('.insVer').click(function () {
+        if ($('.insVer:checked').length != 0) {
+            $('#errMsgInsurVerificationType').remove();
+        }
+    });
+
+    $('#insuranceType').change(function () {
+        if ($("#insuranceType").val() != 0) {
+            $("#insuranceType").removeClass('errorClass');
+            $("#insuranceType").removeAttr("title");
+            $('#insuranceTitleTxt').val($("#insuranceType option:selected").text());
+        }
+        else {
+            $('#insuranceTitleTxt').val("");
+        }
+    });
+    function ActiveOrDeactivate(operationType, tblId) {
+        ActiveOrDeactivateJCR(operationType, ROOT, 2, tblId);
+    }
+</script>

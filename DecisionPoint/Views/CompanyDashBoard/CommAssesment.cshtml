@@ -1,0 +1,398 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    ViewBag.Title = "CommAssesment";
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+}
+@Styles.Render("~/Styles/base")
+
+<link href="~/Content/css/UserDashboard/jquery.fileupload-ui-noscript.css" rel="stylesheet" />
+<link href="~/Content/css/UserDashboard/jquery.fileupload-ui.css" rel="stylesheet" />
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<script src="~/Scripts/Upload/jquery.iframe-transport.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload-ui.js"></script>
+
+<script src="~/Scripts/Upload/bootstrap.js"></script>
+<style type="text/css">
+    ol.a
+    {
+        list-style-type: lower-alpha;
+        float: left;
+        width: 90%;
+        margin: 0 0 10px 40px;
+    }
+
+    p
+    {
+        display: inline;
+    }
+</style>
+
+<h3>Assesments</h3>
+<div id='Include-assessment-form' style="display: none;" class="w80">
+                                                   
+                                                    <br />
+                                                    @{int ques = 1; int ans = 1; int correctans = 0;}
+                                                    @if (Model.assesmentDetails != null)
+                                                    {
+                                                        if (Model.assesmentDetails.Count > 0)
+                                                        {
+                                                        <div class="w80" style="display: block;" id="divquestions">
+
+                                                            @foreach (var assess in Model.assesmentDetails)
+                                                            {
+                                                                ans = 1;
+                                                                <div style="clear: both; width: 100%;"></div>
+                                                                <span id="bullet_@ques" style="float: left; width: auto; font-weight: bold;">
+                                                                    @ques. </span>
+                                                                <span id="span_@ques" style="float: left; width: auto; max-width: 90%; font-weight: bold;">
+                                                               @Html.Raw(assess.Question)
+                                                             @*  @HttpUtility.HtmlDecode(assess.Question); 
+                                                                     *@
+                                                                </span>
+                                                                <a href="#" onclick="EditQuestionAnswer(this.id)" id="edtQust_@ques" style="float: left; width: auto; margin-left: 10px;">Edit</a> 
+                                                                if (Model.ansDetails != null)
+                                                                {
+                                                                    if (Model.ansDetails.Count > 0)
+                                                                    {
+                                                                         <ol value="@ques" class="a" id="ol_@ques">
+                                                                        @foreach (var assessans in Model.ansDetails)
+                                                                        {
+                                                                            if(assess.AssesmentId==assessans.QuestionId)
+                                                                            {
+                                                                            if (assessans.IsCorrect)
+                                                                            {
+                                                                   
+                                                                   <li id="li_@ques@ans">
+                                                                     @assessans.Answer
+                                                                       </li>
+                                                                               // correctans ==(Convert.ToInt32(ans) - 1);
+                                                               
+                                                                            }
+                                                                            else
+                                                                            {
+                                                               
+                                                                    <li id="li_@ques@ans">
+                                                                    @assessans.Answer
+                                                                    </li>
+                                                              
+                                                                            }
+                                                                            ans++;
+                                                                        }
+                                                                        }
+                                                                             </ol>
+                                                                 <input type="hidden" value="@("0"+ (ans-1))" id="hd_@ques" />
+                                                                    }
+                                                                }
+                                                                ques++;
+                                                            }
+                                                        </div>
+                                                        }
+                                                        else
+                                                        {
+                                                        <div class="w80" style="display: block;" id="divquestions"></div>
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="w80" style="display: block;" id="divquestions"></div>
+                                                    }
+
+
+
+                                                    <hr>
+                                                    <div style="float: left; margin-top: 3px;">
+                                                        <div role="button" id="btnclose_0" class="btn btn-small btn-info" style="display: none;">Save Changes </div>
+                                                        <div role="button" id="link-Add-another-question" class="btn btn-small btn-info" style="display: none;">Add New Question </div>
+
+
+                                                    </div>
+                                                   
+                                                </div>
+<div style="float: left; width: 100%;">
+                    <div id="divAssesement" style="float: left; width: 100%;">
+                        <table id="tblAssessment_0" style="width: 100%">
+                            <tr id="trQuestion_00">
+                                <td>
+                                    <div >
+                                        <div class="w80">
+                                            <div class="w50">
+                                                <h5>Question</h5>
+                                            </div>
+
+                                        </div>
+                                        <div class="w80">
+                                            <textarea id="fckques_00" name="fckquest"></textarea>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr id="trAnswer_00">
+                                <td>
+                                    <div class="w80">
+                                        <div class="w50">
+                                            <h5>Answer</h5>
+                                        </div>
+
+                                    </div>
+                                    <div class="w80">
+                                        <label style="font-family: Helvetica,Arial,sans-serif; float: left;">
+                                            <input type="radio" id="rdbans_00" checked="checked" name="fckques_00" title="Correct Answer" style="vertical-align: text-bottom;" />&nbsp;Correct Answer</label>
+                                    </div>
+                                    <div class="w80">
+                                        <textarea id="fckans_00" name="fckquest"></textarea>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr id="trAnswer_01">
+                                <td>
+                                    <div class="w80">
+                                        <div class="w50">
+                                            <h5>Answer</h5>
+                                        </div>
+
+                                    </div>
+                                    <div class="w80">
+                                        <label style="font-family: Helvetica,Arial,sans-serif; float: left;">
+                                            <input type="radio" id="rdbans_01" name="fckques_00" title="Correct Answer" style="vertical-align: text-bottom;" />&nbsp;Correct Answer</label>
+                                    </div>
+                                    <div class="w80">
+                                        <textarea id="fckans_01" name="fckquest"></textarea>
+                                        <input type="hidden" id="hidQuestion" value="" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="float: right;">
+                                        <div role="button" id="btnaddans_00" onclick="addanswer(this.id)" class="btn btn-small btn-info" title="Add another answer">Add Answer</div>
+                                        <div role="button" id="btnsave_00" onclick="savequesans(this.id)" class="btn btn-small btn-info" title="Save Q & A">Save</div>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <label style="color: red; font-family: Verdana; font-size: 12px; margin-top: -10px;" id="divAlertMsg"></label>
+                        <input type="hidden" id="docId" />
+                        
+                    </div>
+
+                </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        AddEditor('textarea');
+       // window.onbeforeunload = null;
+    });
+    function AddEditor(id) {
+        tinymce.init({
+            selector: id, browser_spellcheck: true,
+            plugins: [
+                    "advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "table contextmenu directionality emoticons template textcolor paste fullpage textcolor "
+            ],
+
+            toolbar1: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect | inserttime preview | forecolor backcolor",
+            toolbar2: "cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | undo redo |table | hr removeformat | subscript superscript | charmap | fullscreen | ltr rtl | visualchars visualblocks nonbreaking template | link unlink anchor image",
+
+
+            menubar: false,
+            toolbar_items_size: 'small',
+
+            style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+            ],
+
+            templates: [
+                    { title: 'Test template 1', content: 'Test 1' },
+                    { title: 'Test template 2', content: 'Test 2' }
+            ]
+
+        });
+    }
+
+    function ResetQuestionPoup() {
+        //var fckEditor = FCKeditorAPI.GetInstance('fckques_00');
+        //fckEditor.EditorDocument.body.innerHTML = '';
+        var tinymce_editor_id = 'fckques_00';
+        tinymce.get(tinymce_editor_id).setContent('');
+        //  $('#fckques_00').val('');
+        var trcount = $('#tblAssessment_0  tr').length;
+        for (var i = 0; i < trcount - 2; i++) {
+            var tinymce_editor_ids = 'fckans_0' + i;
+            tinymce.get(tinymce_editor_ids).setContent('');
+            // $('#fckans_0' + i).val('');
+            //var fckEditor = FCKeditorAPI.GetInstance('fckans_0' + i);
+            //fckEditor.EditorDocument.body.innerHTML = '';
+            if (i > 1) {
+                $("#trAnswer_0" + i).remove();
+            }
+            $('#divAlertMsg').html('');
+        }
+
+    }
+
+    function hideAlert() {
+        //$("#divAlertOuter").hide();
+        //$("#divAlertInner").hide();
+        $('#divAlertMsg').html('');
+    }
+
+    //edit Q & A
+    function EditQuestionAnswer(id) {
+
+        var split = id.split('_')[1];
+        $('#hidQuestion').val(split);
+        var olcount = $('#ol_' + split).length;
+        var question = $('#span_' + split).html();
+        $('#AssessmentOuter').fadeIn('slow');
+        $('#Assessmentpopup').fadeIn('slow');
+        window.scroll(5, 5);
+        $('#fckques_00').val(question);
+        var tinymce_editor_id = 'fckques_00';
+        tinymce.get(tinymce_editor_id).setContent(question);
+        //var fckEditor = FCKeditorAPI.GetInstance('fckques_00');
+        //fckEditor.EditorDocument.body.innerHTML = question;
+        //var liCount = $('#ol_' + split + ' li').length;
+        var listItems = $('#ol_' + split + ' li');
+        listItems.each(function (idx, li) {
+            var product = $(li);
+            var isCorrect = $('#hd_' + split).val();
+            // alert(isCorrect+','+split);
+            if (idx > 1) {
+                addanswer('btnaddans_00');
+            }
+            var tinymce_editor_ids = 'fckans_0' + idx;
+            tinymce.get(tinymce_editor_ids).setContent(product.html());
+            // $('#fckans_0' + idx).val(product.html());
+            //var fckEditor = FCKeditorAPI.GetInstance('fckans_0' + idx);
+            //if (fckEditor != undefined) {
+            //    fckEditor.EditorDocument.body.innerHTML = product.html();
+            //} else {
+            //    setTimeout(function () {
+            //        var fckEditor1 = FCKeditorAPI.GetInstance('fckans_0' + idx);
+            //        fckEditor1.EditorDocument.body.innerHTML = product.html();
+            //    }, 1500);
+            //}
+            if (isCorrect != 0) {
+                $('#rdbans_' + isCorrect).prop("checked", "checked");
+            }
+        });
+
+    }
+    //Save Q & A
+    function savequesans(id) {
+        if (validateAddQust() == true) {
+            var isCorrect = $('#tblAssessment_0 :radio:checked').attr('id');
+            var res = isCorrect.split("_")[1];
+            //res = res.substring(0, res.length - 1);
+            var ids = res;
+            if ($('#hidQuestion').val() != '') {
+                //var oEditor = FCKeditorAPI.GetInstance('fckques_00');
+                //var fckQuestion = oEditor.GetHTML();
+                var fckQuestion = tinymce.get('fckques_00').getContent();
+                var trcount = $('#tblAssessment_0  tr').length;
+                var olcount = $('#hidQuestion').val();
+                var html2 = '';
+                for (var i = 0; i < trcount - 2; i++) {
+                    //var oEditor = FCKeditorAPI.GetInstance('fckans_0' + i);
+                    //var fckanswer = oEditor.GetHTML();
+                    var fckanswer = tinymce.get('fckans_0' + i).getContent();
+                    //if (i == ids) {
+                    //    html2 = html2 + '<li value="' + ids + '" id="li_' + olcount + i + '">' + fckanswer + '</li> ';
+                    //} else {
+                    html2 = html2 + '<li id="li_' + olcount + i + '">' + fckanswer + '</li>';
+                    //}
+                }
+
+                $('#span_' + olcount).replaceWith('<span id="span_' + olcount + '" style="float:left;max-width:90%; width:auto;font-weight:bold;">' + fckQuestion + '</span>');
+                $('#edtQust_' + olcount).replaceWith('<a href="#" onclick="EditQuestionAnswer(this.id)" id="edtQust_' + olcount + '" style="float:left;width:auto;margin-left:10px;" >Edit</a>');
+                $('#ol_' + olcount).replaceWith('<ol class="a" value="' + ids + '" id="ol_' + olcount + '">' + html2 + '</ol>');
+                $('#hd_' + olcount + '').replaceWith('<input type="hidden" value="' + ids + '" id="hd_' + olcount + '" />');
+                $('#hidQuestion').val('');
+            } else {
+                //var oEditor = FCKeditorAPI.GetInstance('fckques_00');
+                //var fckQuestion = oEditor.GetHTML();
+                var fckQuestion = tinymce.get('fckques_00').getContent();
+                var trcount = $('#tblAssessment_0  tr').length;
+                var olcount = $('#divquestions  ol').length;
+                olcount = parseInt(olcount) + 1;
+                var html2 = '';
+                for (var i = 0; i < trcount - 2; i++) {
+                    //var oEditor = FCKeditorAPI.GetInstance('fckans_0' + i);
+                    //var fckanswer = oEditor.GetHTML();
+                    var fckanswer = tinymce.get('fckans_0' + i).getContent();
+                    //if (i == ids) {
+                    //    html2 = html2 + '<li value="' + ids + '" id="li_' + olcount + i + '">' + fckanswer + '</li>';
+                    //} else {
+                    html2 = html2 + '<li id="li_' + olcount + i + '">' + fckanswer + '</li>';
+                    //}
+                    //// html2 = html2 + '<li id="li_' + olcount + i + '">' + fckanswer + '</li>';
+                }
+                var html1 = '<div style="clear:both;width:100%;"></div><span id="bullet_' + olcount + '" style="float:left;width:auto;font-weight:bold;">' + olcount + '.</span> <span id="span_' + olcount + '" style="float:left; width:auto;max-width:90%;font-weight:bold;"> ' + fckQuestion + '</span><a href="#" onclick="EditQuestionAnswer(this.id)" id="edtQust_' + olcount + '" style="float:left;width:auto;margin-left:10px;" >Edit</a> <ol value="' + ids + '" class="a" id="ol_' + olcount + '">' + html2 + '</ol><input type="hidden" value="' + ids + '" id="hd_' + olcount + '" />';
+                $('#divquestions').append(html1);
+
+            }
+
+            ResetQuestionPoup();
+            $('#AssessmentOuter').fadeOut('slow');
+            $('#Assessmentpopup').fadeOut('slow');
+        } else {
+            $("#divAlertMsg").text("Fill All Question and Answers.");
+        }
+        //$('#questions').css("display", "block");
+    }
+
+    //validate add new question
+    function validateAddQust() {
+        var result = true;
+        $('#tblAssessment_0 tr').find('textarea').each(function () {
+            //var oEditor = FCKeditorAPI.GetInstance(this.id);
+            //var pageValue = oEditor.GetHTML();
+            var pageValue = tinymce.get(this.id).getContent();
+            //alert(pageValue);
+            if (pageValue == '') {
+                result = false;
+                return result;
+            }
+
+        });
+        return result;
+    }
+
+    //Add new answer
+    function addanswer(id) {
+        var id = id;
+        var res = id.split("_")[1];
+        res = res.substring(0, res.length - 1);
+        var ids = res;
+        var trcount = $('#tblAssessment_' + ids + ' tr').length;
+        var insertAt = trcount;
+        trcount = parseInt(trcount) - 2;
+        var html = '<tr id="trAnswer_' + ids + trcount + '"><td><div class="w80"><div class="w50"><h5>Answer</h5></div></div>' +
+            '<div class="w80"><label style="font-family: Helvetica,Arial,sans-serif;float:left;">' +
+        '<input type="radio" id="rdbans_' + ids + trcount + '" name="fckques_' + ids + '0' + '" title="Correct Answer" style="vertical-align:text-bottom;" />' +
+        '&nbsp;Correct Answer</label>' +
+            '</div><div class="w80"><textarea id="fckans_' + ids + trcount + '" name="fckquest"></textarea></div></td></tr>';
+        if (trcount < 5) {
+            $('#tblAssessment_' + ids + ' > tbody > tr').eq(insertAt - 2).after(html);
+            // fck("fckans_" + ids + trcount);
+        } else {
+            // $("#divAlertOuter").show();
+            //$("#divAlertInner").show();
+            $("#divAlertMsg").html("Only 5 Answers can be added to a Question.");
+        }
+        // tinymce.init({ selector: '#fckans_' + ids + trcount });
+        AddEditor('#fckans_' + ids + trcount);
+    }
+  </script>

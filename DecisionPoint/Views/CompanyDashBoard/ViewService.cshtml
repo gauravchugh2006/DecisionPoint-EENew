@@ -1,0 +1,903 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@using DecisionPointCAL.Common; 
+@{
+    ViewBag.Title = "AddService";
+    if (Request["type"] == "IC")
+    {
+        Layout = "~/Views/Shared/_ICSetUpLayoutPage.cshtml";
+    }
+    else if (Request["Type"] == "V")
+    {
+        Layout = "~/Views/Shared/_VendorSetUpProfileLayout.cshtml";
+    }
+    else if (Request["Type"] == "SIC")
+    {
+        Layout = "~/Views/Shared/_StaffICSetupProfileLayout.cshtml";
+    }
+    else if (Request["Type"] == "ICD" || Request["Type"] == "CD" || Request["Type"] == "SPS")
+    {
+        Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    }
+    bool serviceStatus1 = false;
+    bool serviceStatus2 = false;
+    bool serviceStatus3 = false;
+    if (Model.ServiceStatus.Equals(0))
+    {
+        serviceStatus1 = true;
+    }
+    else if (Model.ServiceStatus.Equals(1))
+    {
+        serviceStatus2 = true;
+    }
+    else if (Model.ServiceStatus.Equals(2))
+    {
+        serviceStatus3 = true;
+    }
+    WebGrid grdService = new WebGrid(ajaxUpdateContainerId: "Servicegrid", rowsPerPage: Model.rowperpage);
+    if (Model.lstBind != null)
+    {
+        grdService.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+<style>
+    .row {
+        margin-left: 0px !important;
+    }
+
+    .errorClass {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+
+    #Servicegrid {
+        margin-left: -5px;
+    }
+</style>
+
+
+<div class='heading'>
+    <div class='row'>
+        <h3>Manage Services List</h3>
+    </div>
+</div>
+@if (Request["Type"] == "SIC" || Request["Type"] == "SPS")
+{
+    <div style="line-height: 2px !important;">
+
+        <div class="MessageSection-Box" id="servicelist" style="border: 1px solid #E1E1E1; box-shadow: 1px 1px 1px #E1E1E1; padding: 10px 20px 0;">
+            @if (Model.serviceList != null)
+            {
+                if (Model.serviceList.Count() > 0)
+                {
+                <input type="hidden" value="@Model.serviceList.Count()" id="hid_ServiceCount" />
+                <div style="margin-left: -8px;">
+                    <div style="padding-left: 5px;">
+                        <input type="radio" id="chkserviceselected" class="chkserviceselected" style="margin-top: -1px; margin-right: 5px;" name="service" autocomplete="off" value="Selected" checked="@serviceStatus1" />Select
+          <input type="radio" id="chkserviceall" class="chkserviceall" style="margin-left: 20px; margin-right: 6px; margin-top: -2px;" autocomplete="off" name="service" value="All" checked="@serviceStatus2" />All
+          <input type="radio" id="chkservicedna" class="chkservicedna" style="margin-left: 20px; margin-right: 6px; margin-top: -2px;" name="service" autocomplete="off" value="DNA" checked="@serviceStatus3" />DNA
+                    </div>
+                </div>
+                <hr />
+                <div style="width: 833px; overflow-x: auto; overflow-y: hidden; height: auto;">
+                    <table style="margin-left: 1px;" id="tblservice">
+                        <tr>
+
+                            @{int count = 0; }
+                            @{float ii = Model.serviceList.Count(); }
+                            @{
+                              int k = 0;
+                              float totle1 = ii / 5f;
+                              if (ii == 1)
+                              {
+                                  totle1 = 1.0f;
+                              }
+                            }
+
+                            @while (count < totle1)
+                            {
+                                count++;
+                                <td style="vertical-align: top;">
+                                    @{var j = 0; int jj = 0; int index = 0;}
+                                    @foreach (var item in Model.serviceList)
+                                    {
+                                        if (jj < k)
+                                        {
+                                            jj++;
+                                            continue;
+                                        }
+                                        else
+                                        {
+
+                                            if (j != 5)
+                                            {
+                                                if (Model.userserviceDetails.Contains(item.serviceName))
+                                                {
+                                        <div style="width: 100%; display: table;">
+                                            <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                @if (serviceStatus2)
+                                                {
+                                                    <input type="checkbox" id="chk_@index" style="margin-top:-1px" class="chk" autocomplete="off" value=" @item.id" checked ="checked" disabled="disabled"/>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" id="chk_@index" style="margin-top:-1px" class="chk" autocomplete="off" value=" @item.id" checked="checked" />
+                                                }
+                                            </div>
+                                            <div style="display: table-cell; text-align: left;">
+                                                <div class="dynamic-word-div">@item.serviceName<br />
+                                                </div>
+                                            </div>
+                                        </div>
+                                                }
+                                                else
+                                                {
+                                                    
+                                        <div style="width: 100%; display: table;">
+                                            <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                @if (serviceStatus3)
+                                                {
+                                                    <input type="checkbox" id="chk_@index" style="margin-top:-1px" class="chk" autocomplete="off" value=" @item.id" disabled="disabled"/>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" id="chk_@index" style="margin-top:-1px" class="chk" autocomplete="off" value=" @item.id"/>
+                                                }
+                                            </div>
+                                            <div style="display: table-cell; text-align: left;">
+                                                <div class="dynamic-word-div">@item.serviceName<br />
+                                                </div>
+                                            </div>
+                                        </div>
+                                                }
+                                                j++;
+                                            }
+                                            else { k = k + 5; break; }
+                                        }
+                                        index++;
+                                    }
+
+                                </td> 
+                            }
+
+                        </tr>
+                    </table>
+                </div>
+                }
+                else
+                {
+                <input type="hidden" value="0" id="hid_ServiceCount" />
+                <div>
+                    <div style="padding-top: 21px;">Please ask your admin to create services for the company.</div>
+                </div>
+                }
+            }
+            else
+            {
+                <input type="hidden" value="0" id="hid_ServiceCount" />
+                <div>
+                    <div style="padding-top: 21px;">Please ask your admin to create services for the company.</div>
+                </div>
+            }
+            <div class="Bottom-ButtonControl" style="text-align: right;">
+                <label style="color: green;" id="savedmsg"></label>
+
+                <button id="btnservicedone" class="btn btn-primary" title="Update" style="margin-left: -9px">
+                    @if (Request["Type"] == "SPS")
+                    {
+                        <span>Complete</span>}
+                    else
+                    {<span>Save</span>}</button>&nbsp;
+                                <button id="btnservicecancel" class="btnred" title="Cancel" style="display: none;">Cancel</button>
+                @if(Request["Type"] != "SIC"){
+                <a id="btnICClose" style="cursor: pointer;" class="btn btn-primary">Close</a>
+                }
+            </div>
+        </div>
+
+    </div>
+
+}
+else if (Request["type"] == "IC" || Request["type"] == "ICD")
+{
+    <div style="line-height: 2px !important;">
+        <table id="tbl_clientddl">
+            <tr>
+                <td><span style="margin-top: 2px;">Clients</span></td>
+                <td></td>
+                <td>
+                    @Html.DropDownList("ddlClient", new SelectList(Model.CurrentvendorsList, "companyId", "Vendor"), "-- Select --")
+                </td>
+
+            </tr>
+        </table>
+        <div class="MessageSection-Box" id="clientserviceslist" style="padding: 10px 20px 0;">
+        </div>
+        @if (Request["type"] == "ICD")
+        {
+            <div style="float: right;">
+                @if (object.Equals(Session["parentUserId"], null) || object.Equals(Session["UserType"], Shared.Company) || object.Equals(Session["UserType"], Shared.Individual))
+            {
+                <a id="btncomplete" style="cursor: pointer;" class="btn btn-primary">Complete</a>
+                }
+                 <a id="btnICClose" style="cursor: pointer;" class="btn btn-primary">Close</a>
+            </div>
+            
+        }
+
+
+    </div>
+}
+else
+{
+    <div style="line-height: 2px !important;">
+
+        <div>
+            <span style="margin-top: 14px; margin-right: 20px; float: left; width: 100px;">Service Name</span><span>
+                <input type="text" id="txtService" placeholder="Service Name" maxlength="50" onkeypress="ValidateTextBox(this.id,event)">
+                <input type="hidden" id="serviceid" value="0" />
+                <input type="hidden" id="isactivestatus" value="disable" />
+            </span>
+
+            <span><a id="btnsaveservice" class="btn btn-primary butmargin" style="margin-top: -5px;" title="Save Service">Create</a></span>
+            <span style="display: none"><a id="btnreset" class="btn btn-small btn-info butmargin-left1" title="Reset">
+                <img src="~/Content/images/reset.png" style="height: 17px;" /></a></span>
+
+
+            <span><a id="btndisable" class="btn btn-primary butmargin-left1" style="visibility: hidden; margin-top: -8px;" title="Enable/Disable Service">Disable</a></span>
+        </div>
+        <div class="w100">
+            <div id="divservicemsg" style="font-size: 12px; padding-bottom: 10px; color: green; padding-left: 118px;"></div>
+        </div>
+
+        <div id="Servicesdiv">
+
+
+            <br />
+            @if (Model.lstBind != null)
+            {   
+                               
+                @grdService.GetHtml(htmlAttributes: new { id = "Servicegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+       
+    grdService.Column(columnName:"Col1",header: Sorter("Col1", "Service Name", grdService), format:@<text>
+                @if(item.Col1Status)
+                        {
+<a id="service1B" onclick="EditService('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="service1G" onclick="EditService('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@(item.Col1) </a>
+                        }
+                </text>,
+                            style:"grid-width181"),
+    grdService.Column(columnName:"Col2",header: Sorter("Col2", "", grdService), format:@<text>
+
+                @if(item.Col2Status)
+                        {
+<a id="service2B" onclick="EditService('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="service2G" onclick="EditService('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col2) </a>
+                        }
+
+
+                </text>,style:"grid-width181"),
+              grdService.Column(columnName:"Col3",header: Sorter("Col3", "", grdService), format:@<text>
+
+                @if(item.Col3Status)
+                        {
+<a id="service3B" onclick="EditService('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+                         
+                        }
+                        else
+                        {
+<a id="service3G" onclick="EditService('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col3) </a>
+                        }
+
+                </text>,style:"grid-width181"),
+          
+  
+    })
+            }
+
+
+        </div>
+
+
+    </div>
+   
+}
+
+
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 277px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvPopUpMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+
+    </div>
+
+</div>
+@* Saved Pop up End *@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        if ('@Request["Res"]' == "1" || '@Request["Res"]' == "2") {
+            $('#tbl_clientddl').hide();
+            $('#ddlClient').prop('selectedIndex', 1);
+            $('#ddlClient').change();
+            $('#btncomplete').hide();
+        }
+        $('#divmsg').html('');
+        if ($('#tblservice').length) {
+            var count = $('#tblservice td').length;
+            if (count == 1) {
+                $('#tblservice').css("width", "auto");
+                $('#tblservice td').css("width", "10%");
+            }
+            else {
+                var width = parseInt(count) * 154;
+                $('#tblservice').css("width", width);
+            }
+        }
+    });
+    $('#btnsaveservice').click(function () {
+
+        var service = $('#txtService').val().trim();
+        if (service != '') {
+
+            var status = $('#btnsaveservice').html();
+            if (status == "Save") {
+                status = "Edit";
+            }
+            else if (status == "Create") {
+                status = "Save";
+            }
+            var serviceId = $('#serviceid').val();
+
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/AddService")',
+                cache: false,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'service': service, 'status': status, 'serviceid': parseInt(serviceId) },
+            })
+      .success(function (result) {
+
+          if (result > 0) {
+              if (status == "Edit") {
+                  $('#divservicemsg').html("Service Update Sucessfully");
+              }
+              else if (status == "Save") {
+                  $('#divservicemsg').html("Service Saved Sucessfully");
+              }
+              setTimeout(function () {
+
+                  FetchDetail(1);
+                  Reset();
+
+
+              }, 1000);
+
+
+          }
+          else if (result == -1) {
+              $('#divservicemsg').html("Service Name alreay exist");
+              setTimeout(function () {
+
+                  FetchDetail(getpageid("Servicegrid"));
+                  Reset();
+
+
+              }, 1000);
+
+
+          }
+      })
+      .error(function (xhr, status) {
+
+      })
+
+        }
+        else {
+            $('#txtService').addClass("errorClass");
+
+        }
+    });
+
+
+    function save(type) {
+        var serviceType = 0;
+        var obj = '';
+        var serviceId = '';
+        if ($('#chkservicedna').is(':checked')) {
+            serviceType = 2;
+        }
+        else if ($('#chkserviceall').is(':checked')) {
+            serviceType = 1;
+        }
+
+        $(".chk:checked").each(function () {
+            serviceId = $(this).val();
+            if (obj == '') {
+                obj = serviceId;
+            }
+            else {
+                obj = obj + "," + serviceId;
+            }
+
+        });
+
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/Updatemyprofileservices/")",
+            data: { 'serviceId': obj, 'type': parseInt(serviceType) },
+            cache: false,
+            type: "POST",
+            datatype: 'json',
+            success: function (result) {
+                if (result > 0) {
+                    if (type.trim() == "Complete") {
+                        window.opener.document.location.reload(true);
+                        window.open("", "_top", "", "true ");
+                        window.close();
+
+                    }
+                    else {
+                        window.location.reload();
+                    }
+
+                    setTimeout(function () {
+                        $('#savedmsg').html('Saved sucessfully');
+                    })
+                }
+
+            }
+        });
+
+
+    }
+
+    $('#btnICClose').click(function () {
+        window.opener.document.location.reload(true);
+        window.open("", "_top", "", "true ");
+        window.close();
+    });
+
+    //disable any Service
+    $('#btndisable').click(function () {
+        var service = $('#txtService').val().trim();
+        if (service != '') {
+            $('#txtService').removeClass("errorClass");
+            var serviceId = $('#serviceid').val();
+            var isActive = $('#isactivestatus').val();
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/DisaEnaService")',
+                cache: false,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'serviceId': parseInt(serviceId), 'isActive': isActive },
+            })
+              .success(function (result) {
+                  $('#divservicemsg').html("Status change sucessfully");
+                  setTimeout(function () {
+                      FetchDetail(getpageid("Servicegrid"));
+                      Reset();
+
+
+                  }, 1000);
+
+
+              })
+              .error(function (xhr, status) {
+                  alert(status);
+              })
+        } else {
+            $('#txtService').addClass("errorClass");
+        }
+    });
+
+
+    $('#txtService').on("paste", function (e) {
+        e.preventDefault();
+    });
+    function EditService(service, isActive, serviceid) {
+        if (isActive != '') {
+
+            $('#btndisable').show();
+            $('#isactivestatus').val("disable");
+            $('#btndisable').html('Disable');
+
+
+        }
+        else {
+            $('#btndisable').show();
+            $('#btndisable').html('Enable');
+            $('#isactivestatus').val("enable");
+        }
+
+        $('#serviceid').val(serviceid);
+        $('#txtService').val(service);
+        $('#btndisable').css("visibility", "visible")
+        $('#btnsaveservice').html("Save");
+
+    }
+
+    function Reset() {
+        $('#txtService').val("");
+        $('#btndisable').hide();
+        $('#divservicemsg').html('');
+
+        $('#btnsaveservice').html('Create');
+        $('#serviceid').val('0');
+
+        $('#isactivestatus').val('disable');
+        $('#txtService').removeClass("errorClass");
+    }
+
+    //disbale and enalble on check box click
+    function DisEnable(serviceId, isActive) {
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/DisaEnaService")',
+            cache: false,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            data: { 'serviceId': parseInt(serviceId), 'isActive': isActive },
+        })
+        .success(function (result) {
+            FetchDetail(getpageid("Servicegrid"));
+            Reset();
+
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+          }
+
+          function FetchDetail(pageid) {
+              $.ajax({
+                  url: '@Url.Content("~/CompanyDashBoard/ViewService/?page=")' + pageid,
+                  cache: false,
+                  type: "GET",
+                  success: function (result) {
+
+                      $('#Servicesdiv').html($(result).find('#Servicesdiv').html().trim());
+
+                  }
+              });
+
+
+
+    }
+
+
+
+    $("#btnservicedone").click(function () {
+
+        save($(this).find('span').html());
+
+    });
+
+    $('#chkserviceselected').change(function () {
+
+        if ($("#chkserviceselected").is(':checked')) {
+
+
+            $("#tblservice tr td span").each(function (index) {
+                var chkstatus = false;
+                var checkedclient = $(this).html().trim();
+                $('#chk_' + index + '').prop('checked', true)
+                $('#chk_' + index + '').attr("disabled", false);
+
+            });
+            $(".chk").each(function () {
+                $(this).prop('checked', false)
+                $(this).attr("disabled", false);
+
+            });
+        }
+
+    });
+
+    $('#chkserviceall').change(function () {
+
+        if ($("#chkserviceall").is(':checked')) {
+            $('#chkservicedna').prop('checked', false);
+            $(".chk").each(function () {
+                $(this).attr("disabled", true);
+                $(this).prop('checked', true);
+
+            });
+        }
+
+    });
+
+    $('#chkservicedna').change(function () {
+        if ($("#chkservicedna").is(':checked')) {
+            $(".chk").each(function () {
+                $(this).prop('checked', false);
+                $(this).attr("disabled", true);
+            });
+        }
+
+    });
+
+    //get service list of client
+    $('#ddlClient').change(function () {
+        if ($("#ddlClient option:selected").text() != '-- Select --') {
+            var chksexist = false;
+            var CompanyId = $('#ddlClient').val();
+
+
+            var divid = '';
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/GetICClientService")',
+                data: { 'companyId': CompanyId, 'type': 0 },
+                cache: false,
+                type: "GET",
+                datatype: 'json',
+                success: function (data) {
+                    if (data != null) {
+                        $('#clientserviceslist div').each(function () {
+                            divid = $(this).attr("id");
+                            if (divid == CompanyId) {
+                                chksexist = true;
+                            }
+                            $("#" + divid).hide();
+                        })
+                        if (chksexist) {
+                            $('#' + CompanyId).show();
+                        }
+                        else {
+                            $('#clientserviceslist').append('<div id=' + CompanyId + ' class="maindiv"><div style="margin-left: -8px;">' +
+                                        '<div style="padding-left: 5px;"><input type="radio" id="chkserviceselected_' + CompanyId + '" class="chkserviceselected" style="margin-top: -1px; margin-right: 5px;" name="service_' + CompanyId + '" autocomplete="off" value="Select" onchange="selectchkboxes(this.id,0)"/>Select' +
+                              '<input type="radio" id="chkserviceall_' + CompanyId + '" class="chkserviceall" style="margin-left: 20px; margin-right: 6px; margin-top: -2px;" autocomplete="off" name="service_' + CompanyId + '" value="All" onchange="selectchkboxes(this.id,1)" />All' +
+                              '<input type="radio" id="chkservicedna_' + CompanyId + '" class="chkservicedna" style="margin-left: 20px; margin-right: 6px; margin-top: -2px;" name="service_' + CompanyId + '" autocomplete="off" value="DNA" onchange="selectchkboxes(this.id,2)"/>DNA</div></div><hr /><div style="width: 833px;height: auto;">' +
+                               '<table style="margin-left: 1px;" id="tblservice_' + CompanyId + '"></table></div></div>');
+                            //set service status [all,select/dna]
+                            if (data.ServiceStatus == 0) {
+                                $('#chkserviceselected_' + CompanyId).prop("checked", true);
+                            }
+                            else if (data.ServiceStatus == 1) {
+                                $('#chkserviceall_' + CompanyId).prop("checked", true);
+                            }
+                            else if (data.ServiceStatus == 2) {
+                                $('#chkservicedna_' + CompanyId).prop("checked", true);
+                            }
+
+                            var totallength = data.serviceList.length;
+                            var totle1 = totallength / 5;
+                            //  alert(totle1);
+                            var exactll = totle1.toString().split('.');
+                            var count = totle1;// parseInt(exactll);
+                            var count1 = 1;
+                            var count2 = count;
+                            var loopvar = 0;
+                            var count3 = 0;
+                            var ii = 1;
+                            var rows = '';
+                            rows = '<tr>'
+                            while (count > 0) {
+                                // alert('enter' + count);
+                                loopvar = count3 * 5;
+                                ii = count1 * 5;
+                                rows = rows + '<td style="vertical-align: top; width:auto;">';
+                                $.each(data.serviceList, function (i, item) {
+                                    //  alert('come' + ii + "  " + loopvar);
+                                    if (i == loopvar) {
+                                        // alert('come' + loopvar);
+                                        if (loopvar != ii) {
+                                            // alert('enter' + ii);
+                                            if (data.ServiceStatus == 1 || data.ServiceStatus == 2) {
+                                                rows = rows + ' <div style="width:100%; display:table; padding:5px 0;"><div style=" display: table-cell; width:10px; padding-right:5px;">' +
+                                                  '<input type="checkbox" id="chk_' + CompanyId + '_' + i + '" style="margin-top:-1px" class="chk" disabled="true" autocomplete="off" value="' + item.id + '"   />' +
+                                                  '</div><div style=" display: table-cell; text-align:left; font-size:12px;"><div class="dynamic-word-div">' + item.serviceName +
+                                                '<br/></div></div></div>';
+                                            }
+                                            else {
+                                                rows = rows + ' <div style="width:100%; display:table; padding:5px 0;"><div style=" display: table-cell; width:10px; padding-right:5px;">' +
+                                                  '<input type="checkbox" id="chk_' + CompanyId + '_' + i + '" style="margin-top:-1px" class="chk" autocomplete="off" value="' + item.id + '"   />' +
+                                                  '</div><div style=" display: table-cell; text-align:left; font-size:12px;"><div class="dynamic-word-div">' + item.serviceName +
+                                                '<br/></div></div></div>';
+                                            }
+
+                                            loopvar = loopvar + 1;
+                                        }
+                                        else {
+                                            count3 = count3 + 1;
+                                            rows = rows + '</td>';
+                                            return false;
+                                        }
+                                    }
+                                })
+                                //if (count1 == count2) {
+                                //    // alert('commmmm');
+                                //    // return false;
+                                //}
+                                count1 = count1 + 1;
+                                count = count - 1;
+                            }
+
+                            rows = rows + '</tr>';
+                            //  alert(rows);
+                            $('#tblservice_' + CompanyId + '').append(rows);
+                            var counttbllength = $('#tblservice_' + CompanyId + ' td').length;
+                            if (counttbllength == 1) {
+                                $('#tblservice_' + CompanyId + '').css("width", "auto");
+                                $('#tblservice_' + CompanyId + ' td').css("width", "10%");
+                            }
+                            else {
+                                var width = parseInt(counttbllength) * 154;
+                                $('#tblservice_' + CompanyId + '').css("width", width);
+
+                            }
+                            $('#tblservice_' + CompanyId + '').css("padding-left", "17px");
+                            //bindservicelist(result);
+                            $('#' + CompanyId).show();
+                            bindservicelist(CompanyId);
+                        }
+                    }
+                    else {
+                        $('#clientserviceslist div').each(function () {
+                            $(this).hide();
+                        })
+                        $('#clientserviceslist').append('<div id=' + CompanyId + ' class="noservicediv">No Service</div>');
+                        $('#' + CompanyId).show();
+                    }
+
+
+                }
+            });
+            }
+            else {
+                $('#clientserviceslist div').each(function () {
+                    divid = $(this).attr("id");
+                    $("#" + divid).hide();
+                })
+            }
+    })
+        function selectchkboxes(id, type) {
+            // alert('enterrere'+type);
+            var companyid = id.split('_')[1];
+            if (type == 1) {
+                // alert(56);
+                $("#" + companyid + " .chk").each(function () {
+                    $(this).prop("checked", true);
+                    $(this).attr("disabled", true);
+                })
+            }
+            if (type == 2) {
+                $("#" + companyid + " .chk").each(function () {
+                    $(this).prop("checked", false);
+                    $(this).attr("disabled", true);
+                })
+            }
+            if (type == 0) {
+                // alert('jj')
+                $("#" + companyid + " .chk").each(function () {
+                    $(this).prop("checked", false);
+                    $(this).attr("disabled", false);
+                    bindservicelist(companyid);
+                })
+            }
+        }
+        function bindservicelist(companyid) {
+            //   alert('come');
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/GetICClientService")',
+                data: { 'companyId': '', 'type': 1 },
+                cache: false,
+                type: "GET",
+                datatype: 'json',
+                success: function (data) {
+                    $('#clientserviceslist #' + companyid + ' input[type="checkbox"]').each(function () {
+                        var serviceid = $(this);
+                        $.each(data.serviceList, function (i, item) {
+                            if (serviceid.val() == item.id) {
+                                serviceid.prop("checked", true);
+                                return false;
+                            }
+                        })
+                    })
+                }
+            });
+        }
+
+        $('#btncomplete').click(function () {
+            SaveIcServices();
+        })
+
+        function SaveIcServices() {
+            var serviceType = 0;
+            var collection = '';
+            var obj = '';
+            var CompanyId = '';
+            $('#clientserviceslist .maindiv').each(function () {
+                serviceType = 0;
+                obj = '';
+                CompanyId = $(this).attr("id");
+                if ($('#chkservicedna_' + CompanyId).is(':checked')) {
+                    serviceType = 2;
+                }
+                else if ($('#chkserviceall_' + CompanyId).is(':checked')) {
+                    serviceType = 1;
+                }
+                $("#" + CompanyId + " .chk:checked").each(function () {
+                    if (obj == '') {
+                        obj = $(this).val();
+                    }
+                    else {
+                        obj = obj + "," + $(this).val();
+                    }
+                })
+                if (collection == '') {
+                    collection = CompanyId + '$' + serviceType + "*" + obj;
+                }
+                else {
+                    collection = collection + ":" + CompanyId + '$' + serviceType + "*" + obj;
+                }
+            })
+
+
+
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/SaveICServices")',
+                data: { 'serviceids': collection },
+                cache: false,
+                type: "POST",
+                datatype: 'json',
+                success: function (data) {
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.opener.document.location.reload(true);
+                        window.open("", "_top", "", "true ");
+                        window.close();
+                    }, 1000);
+
+
+                },
+                beforeSend: function (jqXHR, obj) {
+
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                    var poistion = scrollTop + 100;
+                    $('#divManualInviteInner').css("top", poistion);
+                    $('#dvPopUpMsg').text('Please wait...');
+
+                },
+            });
+        }
+</script>

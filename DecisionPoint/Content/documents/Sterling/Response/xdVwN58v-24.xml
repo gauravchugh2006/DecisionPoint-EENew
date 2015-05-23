@@ -1,0 +1,90 @@
+<BackgroundReports xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" dpuserId="24" xsi:schemaLocation="http://ns.hr-xml.org/2006-02-28 http://ns.hr-xml.org/2_4/HR-XML-2_4/Screening/US/BackgroundReports.xsd" userId="DecisionPointtp" account="DecisionPoint" password="DecisionPointtp456">
+  <BackgroundReportPackage xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sish="http://schemas.st.com/data/v1/SterlingHeader" xmlns:oa="http://www.openapplications.org/oagis/9" type="Professional License">
+    <ProcessingInformation>
+      <AccessCredential type="UserName">DPINT</AccessCredential>
+      <AccessCredential type="Password">password456@</AccessCredential>
+      <AccessCredential type="Account">DP</AccessCredential>
+      <ScopeOfWork>
+        <Text>https://qasecure.sterlingdirect.com/sys/OneClick.aspx?METHOD=BGCHECK_PRTREPORT&amp;CUSTID=RZ7wc8VLrStUfKx8GukA1A%3d%3d&amp;BGORDERID=Y8Gar9ArfcUaJ7qMwWrozA%3d%3d</Text>
+      </ScopeOfWork>
+    </ProcessingInformation>
+    <ProviderReferenceId>
+      <IdValue>2762425</IdValue>
+    </ProviderReferenceId>
+    <ClientReferenceId>
+      <IdValue>xdVwN58v-24</IdValue>
+    </ClientReferenceId>
+    <ScreeningsSummary>
+      <Organization>
+        <OrganizationName />
+        <OrganizationId>
+          <IdValue />
+        </OrganizationId>
+      </Organization>
+      <PersonalData type="Current">
+        <PersonName>
+          <GivenName>ffgfhhfh</GivenName>
+          <MiddleName />
+          <FamilyName primary="true">hfhhff</FamilyName>
+          <FamilyName primary="false" />
+        </PersonName>
+        <PostalAddress>
+          <CountryCode>USA</CountryCode>
+          <PostalCode>34343</PostalCode>
+          <Region>AK</Region>
+          <Municipality>sdfssdf</Municipality>
+          <DeliveryAddress>
+            <AddressLine>rtdtddfsd</AddressLine>
+            <Unit />
+          </DeliveryAddress>
+        </PostalAddress>
+        <ContactMethod>
+          <Telephone>
+            <FormattedNumber>2343355554</FormattedNumber>
+          </Telephone>
+          <InternetEmailAddress>comp09@yopmail.com</InternetEmailAddress>
+        </ContactMethod>
+        <DemographicDetail>
+          <GovernmentId issuingAuthority="SSN" countryCode="US">232332323</GovernmentId>
+          <GovernmentId issuingAuthority="DMV" countryCode="US" jurisdiction="">A124-4578-457</GovernmentId>
+          <DateOfBirth>1922-04-04</DateOfBirth>
+        </DemographicDetail>
+      </PersonalData>
+    </ScreeningsSummary>
+    <ScreeningStatus>
+      <OrderStatus>Completed</OrderStatus>
+      <Score>Consider</Score>
+      <DateOrderReceived>2015-04-09T10:30:00</DateOrderReceived>
+      <AdditionalItems qualifier="DateOrderClosed">
+        <Text>2015-04-09T11:18:00</Text>
+      </AdditionalItems>
+      <AdditionalItems qualifier="x:stsDateOrderSubmitted">
+        <Text>2015-04-09T10:46:12</Text>
+      </AdditionalItems>
+    </ScreeningStatus>
+    <Screenings>
+      <Screening type="license" qualifier="professional">
+        <ClientReferenceId>
+          <IdValue>11874962</IdValue>
+        </ClientReferenceId>
+        <ScreeningStatus>
+          <OrderStatus>Complete</OrderStatus>
+          <ResultStatus>Consider</ResultStatus>
+        </ScreeningStatus>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>4/9/2015 10:47:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Open Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningHistory>
+          <HistoryTimeStamp>
+            <StringDate>4/9/2015 11:18:00 AM</StringDate>
+          </HistoryTimeStamp>
+          <HistoryDescription>Close Date</HistoryDescription>
+        </ScreeningHistory>
+        <ScreeningResults mediaType="txt" resultType="report" type="results" />
+      </Screening>
+    </Screenings>
+  </BackgroundReportPackage>
+</BackgroundReports>

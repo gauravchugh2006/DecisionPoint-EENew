@@ -1,0 +1,441 @@
+﻿@model DecisionPoint.Models.ContractModel
+@{
+    ViewBag.Title = "Contract List";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid contractList = new WebGrid(ajaxUpdateContainerId: "CurrentContractGrid", rowsPerPage: Model.RowperPage);
+    WebGrid pastContractList = new WebGrid(ajaxUpdateContainerId: "pastContractList", rowsPerPage: Model.RowperPage);
+
+    if (Model.ContractList != null)
+    {
+        contractList.Bind(Model.ContractList, autoSortAndPage: true, rowCount: Model.PageSize);
+
+    }
+    
+    if (Model.PastContractList != null)
+    {
+        pastContractList.Bind(Model.PastContractList, autoSortAndPage: true, rowCount: Model.PageSize);
+
+    }
+}
+@functions {
+    /// <summary>
+    /// Used for make the list of states for fill in drop down list
+    /// </summary>
+    /// <returns>IEnumerable<SelectListItem></returns>
+    private IEnumerable<SelectListItem> FillStateList()
+    {
+        return new SelectList(Model.StateList, "StateId", "SateName");
+    }
+}
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+<h2>Contract List</h2>
+<div class="filter-bar">
+    <strong>Filter By :</strong>
+    <div class="dropdown">
+        <a href="#" data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn btn-info">
+            <b class="ddtype">Type</b>
+            <b class="caret"></b>
+        </a>
+
+        <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+            <li>
+                <a onclick="filtercontractlist(0)">
+                    <label style="font-weight: normal" id="alltype" class="checkbox">
+                        All
+                    </label>
+                </a>
+                <a onclick="filtercontractlist(2)">
+                    <label style="font-weight: normal" id="allbeetype" class="checkbox">
+                        Executed
+                    </label>
+                </a>
+                <a onclick="filtercontractlist(3)">
+                    <label style="font-weight: normal" id="allbctype" class="checkbox">
+                        Expired
+                    </label>
+                </a>
+                <a onclick="filtercontractlist(1)">
+                    <label style="font-weight: normal" id="allbetype" class="checkbox">
+                        Staging
+                    </label>
+                </a>
+               <a onclick="filtercontractlist(4)">
+                    <label style="font-weight: normal" id="allbatype" class="checkbox">
+                        Alert
+                    </label>
+                </a>
+                 
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class='documents'>
+    <div class='heading'>
+        <div class='row'>
+            <div style="padding-left: 40px; float:right;">
+                <form class='search'>
+                    <div class='input-append' style="margin-right: -2px; float:left;">
+
+                        <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+                        <button class='btn btn-primary' type='button' id="btngo" onclick="SearchContract(0)" style="height: 28px;">Go</button>
+
+                    </div>
+                    <div style="float: right;margin-left: 5px; float:left;">
+                        <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="SearchContract(1)" style="display: none; height: 28px;">View All</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br />
+</div>
+
+<div style="float: right; margin-top: -33px; margin-right: 10px;">
+    <span style="margin-right: 5px;">
+        <input type="radio" class="currentstaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" checked /><b>Current </b>
+
+        <input type="radio" class="paststaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" /><b>Past </b>
+
+    </span>
+</div>
+
+<div id="contarctDiv">
+    @if (Model.ContractList != null)
+    {
+        var gridColumns = new List<WebGridColumn>();
+        gridColumns.Add(contractList.Column(header: "", format: @<text>
+        <span>@item.Status            
+        </span></text>, canSort: false));
+        gridColumns.Add(contractList.Column(header: "Reference No.", format: @<text>
+        <span style="color: #008ACE;">  @item.RefrenceNo
+        </span></text>, canSort: false));
+
+        gridColumns.Add(contractList.Column(columnName: "BusinessName", header: Sorter("BusinessName", "Company Name",
+       contractList), format: @<text>
+        @*<a style="cursor:pointer;" onclick="ShowCompanyInfo('@item.BusinessName','@item.FName','@item.MName','@item.LName','@item.StreetName','@item.StreetNumber','@item.Direction','@item.CityName','@item.StateId','@item.ZipCode','@item.OfficePhone','@item.DirectPhone','@item.EmailId','@item.Role')">@item.BusinessName</a>*@ 
+    <a style="cursor:pointer;" href='@Url.Content("~/Contract/View?id=")@item.Id' >@item.BusinessName</a>
+    </text>));
+        gridColumns.Add(contractList.Column(columnName: "Role", header: Sorter("Role", "Role", contractList)));
+
+        gridColumns.Add(contractList.Column(columnName: "EventDate", header: Sorter("EventDate", "Next Event", contractList), format:
+        @<text>
+        @if (item.EventDate != null)
+        {
+            @item.EventDate.ToShortDateString()
+        }
+        </text>
+));
+
+        gridColumns.Add(contractList.Column(columnName: "ContractDate", header: Sorter("ContractDate", "Start Date", contractList)
+            , format:
+        @<text>
+        @if (item.ContractDate != null)
+        {
+            @item.ContractDate.ToShortDateString()
+        }
+        </text>));
+
+        gridColumns.Add(contractList.Column(columnName: "ExpirationDate", header: Sorter("ExpirationDate", "Expiration Date", contractList), format:
+        @<text>
+        @if (item.ExpirationDate != null)
+        {
+            @item.ExpirationDate.ToShortDateString()
+        }
+        </text>));
+        gridColumns.Add(contractList.Column(columnName: "ServiceName", header: Sorter("ServiceName", "Service", contractList)));
+
+        gridColumns.Add(contractList.Column(header: "Remove", format: @<text>
+        <button class="btn btn-mini btn-info" onclick="DeleteContract('@item.Id')">Archive</button>
+        </text>, canSort: false));
+            
+        @contractList.GetHtml(htmlAttributes: new { id = "CurrentContractGrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: contractList.Columns(gridColumns.ToArray())) 
+           
+    }
+</div>
+
+<div id="pastContarctDiv" style="display:none;">
+    @if (Model.PastContractList != null)
+    {
+        var gridColumns = new List<WebGridColumn>();
+        gridColumns.Add(pastContractList.Column(header: "Reference No.", format: @<text>
+        <span style="color: #008ACE;">14-@item.Id
+            <br />
+        </span></text>, canSort: false));
+
+        gridColumns.Add(pastContractList.Column(columnName: "BusinessName", header: Sorter("BusinessName", "Company Name",
+       contractList), format: @<text>
+        <a style="cursor:pointer;" onclick="ShowCompanyInfo('@item.BusinessName','@item.FName','@item.MName','@item.LName','@item.StreetName','@item.StreetNumber','@item.Direction','@item.CityName','@item.StateId','@item.ZipCode','@item.OfficePhone','@item.DirectPhone','@item.EmailId','@item.Role')">@item.BusinessName</a> </text>));
+        gridColumns.Add(pastContractList.Column(columnName: "Role", header: Sorter("Role", "Role", contractList)));
+
+        gridColumns.Add(pastContractList.Column(columnName: "EventDate", header: Sorter("EventDate", "Next Event", contractList), format:
+        @<text>
+        @if (item.EventDate != null)
+        {
+            @item.EventDate.ToShortDateString()
+        }
+        </text>
+));
+
+        gridColumns.Add(pastContractList.Column(columnName: "ContractDate", header: Sorter("ContractDate", "Start Date", contractList)
+            , format:
+        @<text>
+        @if (item.ContractDate != null)
+        {
+            @item.ContractDate.ToShortDateString()
+        }
+        </text>));
+
+        gridColumns.Add(pastContractList.Column(columnName: "ExpirationDate", header: Sorter("ExpirationDate", "Expiration Date", contractList), format:
+        @<text>
+        @if (item.ExpirationDate != null)
+        {
+            @item.ExpirationDate.ToShortDateString()
+        }
+        </text>));
+        gridColumns.Add(pastContractList.Column(columnName: "ServiceName", header: Sorter("ServiceName", "Service", contractList)));
+
+        gridColumns.Add(pastContractList.Column(header: "Reactive", format: @<text>
+        <button class="btn btn-mini btn-info" onclick="ReactiveContract('@item.Id')">Reactive</button>
+        </text>, canSort: false));
+            
+        @pastContractList.GetHtml(htmlAttributes: new { id = "pastContractGrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: pastContractList.Columns(gridColumns.ToArray())) 
+           
+    }
+</div>
+
+<div class="trans" id="nametrans"></div>
+<div class="popup" id="namepopup" style="left: 20%;">
+    <div class="Reply-MessageBox" style="display: block; overflow-y: auto;">
+
+        <div class="tittle-MessageBox">
+            <span>ADD VENDOR/CLIENT</span><a>
+                <img id="btnnamelose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box">
+            <div class="control-group w100">
+                <div class="halfwidth1">Company Name </div>
+                <div class="halfrest">
+
+                    @Html.TextBoxFor(model => model.BusinessName, new { @placeholder = "Business Name", @class = "input-xlarge-txt", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Address</div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.StreetNumber, new { @class = "input-xlarge", @placeholder = "Number", @style = "Width:133px", @readonly = "readonly" })
+                    @Html.TextBoxFor(model => model.Direction, new { @readonly = "readonly", @class = "input-xlarge", @placeholder = "Direction", @style = "Width:100px" })
+                    @Html.TextBoxFor(model => model.StreetName, new { @readonly = "readonly", @class = "input-xlarge", @placeholder = "Street Name", @style = "Width:111px" })
+                    <br />
+                    @Html.TextBoxFor(model => model.CityName, new { @class = "input-xlarge", @placeholder = "City Name", @readonly = "readonly", @style = "Width:131px" })
+                    @Html.DropDownListFor(model => model.StateId, FillStateList(), "Select State", new { @readonly = "readonly", @class = "input-xlarge", @id = "StateAdd", @style = "width:117px" })
+                    @Html.TextBoxFor(model => model.ZipCode, new { @readonly = "readonly", @class = "input-xlarge", @placeholder = "Zip Code", @style = "Width:110px" })
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Contact Person </div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.FName, new { @readonly = "readonly", @class = "input-xlarge", @placeholder = "First Name", @style = "width:133px" })
+                    @Html.TextBoxFor(model => model.MName, new { @readonly = "readonly", @class = "input-xlarge", @placeholder = "MI", @style = "width:100px" })
+                    @Html.TextBoxFor(model => model.LName, new { @readonly = "readonly", @class = "input-xlarge", @placeholder = "Last Name", @style = "width:111px" })
+                    <label id="ContactPersonErrorMsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+
+            <div class='control-group w100'>
+                <div class="halfwidth1">Office Phone</div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.OfficePhone, new { @placeholder = "Office phone", @class = "input-xlarge-txt", @readonly = "readonly" })
+
+
+                </div>
+            </div>
+
+            <div class='control-group w100'>
+                <div class="halfwidth1">Mobile Phone</div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.DirectPhone, new { @placeholder = "Cell phone", @class = "input-xlarge-txt", @readonly = "readonly" })
+
+
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Email </div>
+                <div class='halfrest'>
+                    @Html.TextBoxFor(model => model.EmailId, new { @placeholder = "Email Id", @class = "input-xlarge-txt", @readonly = "readonly" })
+                    <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>
+
+                </div>
+            </div>
+            <div class='control-group w100'>
+                <div class="halfwidth1">Relation Ship </div>
+                <div class='halfrest'>
+                    @* @Html.TextBoxFor(model => model.EmailId, new { @placeholder = "Email Id", @class = "input-xlarge-txt", @title = "", @maxlength = "100", onkeypress = "checkval(this.id)" })
+                    <label id="emailerrormsg" style="color: red; font-size: 12px;"></label>*@
+                    <select style="width: 395px;" id="ddl_flow" disabled="disabled">
+                        <option value="0">--Select--</option>
+                        <option value="2">Vendor</option>
+                        <option value="1">Client</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    @* @using (Html.BeginForm("Updatemyprofile", "CompanyDashBoard", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return checkvalidation();" }))
+    {
+       
+    }*@
+</div>
+<script>
+    $(document).ready(function () {
+        ShowHideTabs('contract');
+      
+    });
+
+    $("#txtserach").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/Contract/SerachInContract")',
+                    cache: false,
+                    type: "POST",
+                    dataType: "json",
+                    data: { term: request.term,type:0 },
+                    success: function (data) {
+                       
+                        response($.map(data, function (item) {
+                            return { label: item.BusinessName, value: item.BusinessName };
+                        }))
+
+                    }
+                })
+            }
+
+    });
+
+    $('.currentstaffrdo').change(function () {
+        $('#contarctDiv').show();
+        $('#pastContarctDiv').hide();
+    });
+    $('.paststaffrdo').change(function () {
+        $('#contarctDiv').hide();
+        $('#pastContarctDiv').show();
+    });
+    function DeleteContract(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/Contract/DeleteContract/")',
+            data: { contractId: parseInt(id) },
+            success: function (result) {
+                window.location.reload();
+
+            }
+        })
+    }
+    function ReactiveContract(id) {
+     
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/Contract/ReactiveContract/")',
+            data: { contractId: parseInt(id) },
+            success: function (result) {
+                window.location.reload();
+
+            }
+         })
+    }
+    function ShowCompanyInfo(businessName, fName, mName, lName, streetName, streetNumber, direction, cityName, stateId, zipCode, officePhone, directPhone, emailId, role) {
+
+        $('#BusinessName').val(businessName);
+        $('#FName').val(fName);
+        $('#MName').val(mName);
+        $('#LName').val(lName);
+        $('#StreetName').val(streetName);
+        $('#StreetNumber').val(streetNumber);
+        $('#Direction').val(direction);
+        $('#CityName').val(cityName);
+        $('#StateId').val(stateId);
+        $('#ZipCode').val(zipCode);
+        $('#OfficePhone').val(officePhone);
+        $('#DirectPhone').val(directPhone);
+        $('#EmailId').val(emailId);
+        var roleId = 0;
+        if (role == "Client") {
+            roleId = 1;
+        }
+        else if (role == "Vendor") {
+            roleId = 2;
+        }
+        $('#ddl_flow').val(roleId);
+        $('#nametrans').slideDown('fast');
+        $('#namepopup').slideDown('fast');
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 200;
+        $('#namepopup').css("top", poistion);
+
+    }
+    $("#btnnamelose").click(function () {
+        $('#nametrans').slideUp('fast');
+        $('#namepopup').slideUp('fast');
+    });
+
+    function filtercontractlist(btype) {
+        if (btype == 0) {
+            $('.ddtype').html('All');
+        } else if (btype == 1) { $('.ddtype').html('Staging'); }
+        else if (btype == 2) { $('.ddtype').html('Executed'); }
+        else if (btype == 3) { $('.ddtype').html('Expired'); }
+        GetContractList(1,0,$('.ddtype').html());
+       
+    }
+    function GetContractList(pageid,type,filterOn) {
+
+
+        $.ajax({
+            url: "@Url.Content("~/Contract/ContractList/?page=")" + pageid,
+            data: { 'id': filterOn.trim(), type: type },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+                $('#pastContractGrid').html($(result).find('#pastContractGrid').html().trim());
+                $('#CurrentContractGrid').html($(result).find('#CurrentContractGrid').html().trim());
+                
+
+            }
+        });
+    }
+    function SearchContract(type) {
+        //0 for search partcular record
+        if (type == 0) {
+            GetContractList(1, 1, $('#txtserach').val());
+            $('#btnviewallCompany').show();
+            $('#txtserach').val('');
+        }
+        else if (type == 1) {
+            GetContractList(1, 1, 'All');
+            $('#btnviewallCompany').hide();
+        }
+        //1 for view all record
+    }
+
+</script>

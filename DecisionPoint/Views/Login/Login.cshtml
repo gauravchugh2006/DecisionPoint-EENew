@@ -1,0 +1,223 @@
+﻿@model DecisionPoint.Models.UserLogin
+@{
+    Layout = null;
+    ViewBag.Title = "Login";
+    HtmlHelper.ClientValidationEnabled = true;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=8, IE=9, IE=10" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Login</title>
+
+   
+
+    @Styles.Render("~/Content/css/Logincss")
+    @Styles.Render("~/Content/css/bootcss")
+     @Scripts.Render("~/bundles/jquery") 
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+      
+        function CheckValidation() {
+            if ($("#Emailid").val() == '') {
+                $("#errormsg").css("display", "none");
+                $("#EmailRequired").show();
+                if ($("#Password").val() == '') {
+                    $("#PaswdRequired").show();
+                    $("#errormsg").css("display", "none");
+                }
+                else if ($("#Password").text != '') {
+                    $("#PaswdRequired").hide();
+                }
+                return false;
+            }
+            if ($("#Password").val() == '') {
+                $("#PaswdRequired").show();
+                $("#errormsg").css("display", "none");
+                if ($("#Emailid").val() != '') {
+                    $("#EmailRequired").hide();
+                }
+                return false;
+            }
+            else if ($("#Password").text != '') {
+                $("#PaswdRequired").hide();
+                return true;
+            }
+            else if ($("#Emailid").val() != '') {
+
+                $("#EmailRequired").hide();
+
+            }
+
+        }
+
+
+        function UserNameKeyDown() {
+            if ($("#Emailid").val() == '') {
+                $("#EmailRequired").show();
+            } else {
+                $("#EmailRequired").hide();
+            }
+        }
+
+        function clearErrorMessage() {           
+            if ($('#errormsg').is(':visible')) {
+                $('#errormsg').hide();
+            } else {
+            }
+        }
+        //$(document).ready(function () {
+            $('#Emailid').keypress(function () {
+               
+            })
+       // })
+    </script>
+    <style type="text/css">
+        .input-validation-error
+        {
+            border: solid 1px red !important;
+        }
+        p
+        {
+       margin: 0;
+    padding: 0;
+    display:inline;
+        }
+    </style>
+</head>
+@using (Html.BeginForm("Login", "Login", FormMethod.Post, new { id = "SubmitForm", Url = "Login/Login" }))
+{ 
+ 
+        <div id='header'>
+            <div class='navbar navbar-static-top'>
+                <div class='navbar-inner'>
+                    <div class='container'>
+                        <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+                            <span class='icon-bar'></span>
+                            <span class='icon-bar'></span>
+                            <span class='icon-bar'></span>
+                        </a>
+                        <div class='brand'>
+                            <img src="~/Content/images/logo-ee.png" />
+                        </div>
+                        <div class='container nav-collapse'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id='content'>
+            <div class='container'>
+                <div id='login'>
+                    <div class='center-box'>
+                        <h2>
+                            <i class='iconic-user'></i>
+                            Log In
+                        </h2>
+                        @*<div class="row-fluid">
+                            <div class="span8"><h2>
+                            <i class='iconic-user'></i>
+                            Log In
+                        </h2></div>
+                            <div class="span4"><img src="/Content/images/DPonitLogo.jpg"></div>
+                        </div>*@
+                        
+                        <hr />
+                        <div class='row'>
+                            <div class='span4'>
+
+                                <span style="color: green">@TempData["RegisterMessage"] </span>
+                                <div class='control-group'>
+                                    <label class='control-label'>User Name</label>
+                                    <div class='controls'>
+                                        @Html.TextBoxFor(model => model.Emailid, new { @placeholder = "User Name", @class = "input-xlarge",onkeypress="clearErrorMessage()" })
+                                        <span style="color: red">@Html.ValidationMessageFor(model => model.Emailid)</span>
+                                        <span id="EmailRequired" style="color: red; display: none;">@DecisionPointCAL.DecisionPointR.EmailRequired</span>
+                                        <span id="Emailincorrect" style="color: red; display: none;">@DecisionPointCAL.DecisionPointR.CorrectEmailId</span>
+
+                                    </div>
+                                </div>
+                                <div class='control-group'>
+                                    <label class='control-label'>Password</label>
+                                    <div class='controls'>
+                                        @Html.PasswordFor(model => model.Password, new { value = Model.Password, @placeholder = "Password", @class = "input-xlarge",onkeypress="clearErrorMessage()" })
+                                        <span style="color: red">@Html.ValidationMessageFor(model => model.Password)</span>
+                                        <span id="PaswdRequired" style="color: red; display: none">@DecisionPointCAL.DecisionPointR.RequirePassword</span>
+                                    </div>
+                                </div>
+                                <div class='control-group'>
+                                    <div class='controls'>
+                                        <div class='checkbox'>
+                                            @Html.CheckBoxFor(model => model.RememberMe, new { @id = "remember_me" })
+                                            Remember me
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <p>
+                                    <button class="btn btn-primary" id="btnlogin" name="command" value="Login" onclick="return CheckValidation()">LOGIN</button>
+
+                                </p>
+                                <br />
+
+                                @Html.ActionLink("Forgot Password?", "ForgetPassword", "Login")
+                                @if(!string.IsNullOrEmpty(Convert.ToString(ViewBag.ErrorMessage)))
+                                {
+                                <div id="errormsg" style="color: red; display: block;">@ViewBag.ErrorMessage</div>
+                                }
+
+                            </div>
+                            <div class='span4'>
+                                <div class='announcement' style="height: 250px; overflow-y: auto;width:300px; overflow-x:auto;">
+                                    <h4>Announcements</h4>
+                                    @if (Model.Announcement != null)
+                                    {
+                                        foreach (var item in Model.Announcement)
+                                        {
+                                            if (item.IsActive)
+                                            {
+                                        
+                                          if (item.ReleaseDate!=null)
+                                            {
+                                              
+                                              <span  style="float:left;width:100%;">
+                                                  @string.Format("{0:MM/dd/yyyy}", item.ReleaseDate)&nbsp;&nbsp;&nbsp;@Html.Raw(item.Announcement)
+                                              </span>
+                                        <br />
+                                              
+                                            }
+                                            
+
+                                       
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id='footer'>
+            <div class='container'>
+                <div class='row'>
+                    <div class='span6'>
+                    </div>
+                    <div class='span6'>
+                       <div class="text-right pull-right" style="margin-right: 19%;">
+                            Copyright @System.DateTime.Now.Year &sdot; All rights reserved
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    
+}
+</html>

@@ -1,0 +1,253 @@
+﻿@{
+    ViewBag.Title = "BulkInvitation";
+}
+
+@Styles.Render("~/Content/css/UserDashboard")
+@Scripts.Render("~/bundles/dashboard")
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap.min.css" />
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap-datetimepicker.min.css" />
+<style>
+ .w100{
+                width:100%;
+                float:left;
+                
+                }
+                
+.w200 {width:80px;float:left;margin-right:20px;margin-top:5px;}
+.w50 {width:100px;}
+.butmargin{margin:2px 0 5px 10px;}
+.butmargin-left1{margin:-2px 0px 1px 0px;}
+.grid-width100
+{
+    width:100px;
+}
+.grid-width181
+{
+    width:181px;
+}
+.iconcontainer{width:70%;overflow:hidden;margin:1% auto;}
+.individual{
+                width:202px;
+                height:202px;
+                float:left;
+                text-align:center;
+                cursor:pointer;
+                position:relative;
+                 box-shadow: 2px 2px 2px 2px #E1E1E1;
+     
+                  border:1px solid #e1e1e1;
+                }
+                
+.bulk{
+                width:202px;
+                height:202px;
+                float:right;
+                text-align:center;
+                box-shadow: 2px 2px 2px 2px #E1E1E1;
+               border:1px solid #e1e1e1;
+                }
+
+#download{
+                background:url(../../images/download.png) no-repeat;
+                width:28px;
+                height:32px;
+                float:right;
+                width:175px;
+                padding-left:32px;
+                line-height:30px;
+                text-decoration:underline;
+                }
+.autodetect{margin-left:10px;margin-top:10px;display:inline;background:red;}
+.forlabel{float:left;}
+.fl{float:left;}
+
+
+label {
+    font-weight: normal;
+                    vertical-align: baseline;
+}
+label {
+    
+    margin-bottom: 5px;
+                margin-left:15px;
+}
+label, input, button, select, textarea {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 23px;
+                float:left;
+}
+.manualinput{width:50px;margin-left:10px;}
+.considerfirstrow{margin-left:166px; float:left;display:block;float:left;}
+.mt20{margin-top:15px;}
+.mr10 {margin-right:10px;float:left;}
+.w250 {width:100px;float:left;margin-top:5px;}
+.wcol1{width:14%; float:left;}
+.wcol2{width:220px; float:left;}
+.wcol3{width:30%; float:left;}
+.mt5px{margin-top:5px;}
+.wcol4{width:14%; float:left;}
+.wcol5{width:220px; float:left;}
+.wcol6{width:30%; float:left;}
+.w206{width:206px;}
+.selectheading{
+                background:#eee;
+                text-align:center;
+                border:1px solid #ccc; 
+                 border-radius: 3px 3px 3px 3px;
+                padding:5px 0px;}
+.clear{clear:both;}
+.multiselectable {display:block; overflow: hidden; width:60%;padding-right:20px;margin-bottom:10px; }
+.multiselectable select, .multiselectable div { width: 216px; float:left; }
+.multiselectable div * { display: block; margin: 0 auto; }
+.multiselectable div { display: inline; overflow:hidden; }
+.multiselectable .m-selectable-controls { margin-top: 4em; width: 70px; }
+.multiselectable .m-selectable-controls button { margin-top: 2em; margin-left:.5em;}
+
+a.bulk-invitaion
+{
+    background:  url("../../images/bulk.jpg") repeat-x scroll left;
+     display: block;
+   height: 150px;
+     text-indent: -9999px; /* hides the link text */
+}
+a.manual-invitaion
+{
+    background:  url("../../images/manual.jpg") repeat-x scroll left;
+     display: block;
+   height: 150px;
+    text-indent: -9999px; /* hides the link text */
+}
+
+</style>
+
+ <div id='content'>
+      <div class='container'>
+        <div class='content-box'>
+          <div class='row'>
+            <div class='span7'><img alt="Logo" src="images/logo.png"/></div>
+            <div class='span5 text-right'>
+              <h2>Upload Staff or Vendors</h2>
+            </div>
+          </div>
+         	<div class="w100"><h4>Import users from CSV</h4>          
+            </div>
+            
+            <div class="w100"><input type="text" placeholder="CVS File (Max 3MB)">          
+            
+            <div style="float:left;">
+            <a role="button" href="#"  class="btn btn-small btn-info butmargin">Choose File </a> 
+            <a role="button" href="#"  class="btn btn-small btn-info butmargin">Upload </a> 
+            
+            
+             </div>
+            <div id="download"><a href="#">Download sample CSV file</a></div>
+          </div>
+          <div class="fl">Choose Seperators (<b>;</b> or <b>,</b>)</div>
+          <div class="forlabel" alignment="center">
+          <label><input type="radio" id="" name="" value="" class=" mr10" style="margin-right:7px;"/> Auto-detect</label>
+          <label><input type="radio" id="" name="" value="" class=" mr10" style="margin-right:7px;"/> (.)</label>
+          <label><input type="radio" id="" name="" value="" class=" mr10" style="margin-right:7px;" /> (;)</label>
+          <label><input type="radio" id="" name="" value="" class="mr10" style="margin-right:7px;"/> Manual</label>
+          <input type="text" class="manualinput" />
+          
+          </div>
+          
+          <div class="w100"><label style="margin-left:0px;"><input type="checkbox" id="" name="" value="" style="margin-right:7px;" /> Consider first row as header</label></div>
+          
+          
+         
+          
+          
+          <div class="w100"><div class='tabbable'>
+            <div class='tab-content'>
+            <div class="cnt_txt">List of User Data</div>
+                <div class='tab-pane fade in active' id='messages'>
+                  <table class='table table-bordered'>
+                    <thead>
+                    <tr>
+                        <td>
+                        <select>
+                        <option>#</option>
+						</select>
+                        </td>
+                        <td>
+                        <select>
+                        <option>USERNAME</option>
+						</select>
+                        </td>
+                        <td>
+                        <select>
+                        <option>FIRSTNAME</option>
+						</select>
+                        </td>
+                        <td>
+                        <select>
+                        <option>LASTNAME</option>
+						</select>
+                        </td>
+                        <td>
+                        <select>
+                        <option>EMAIL</option>
+						</select>
+                        </td>
+                        <td>
+                        <select>
+                        <option>PASSWORD</option>
+						</select>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <th>#</th>
+                        <th>USERNAME</th>
+                        <th>FIRSTNAME</th>
+                        <th>LASTNAME</th>
+                        <th>EMAIL</th>
+                        <th>PASSWORD</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>
+                          <a href='#'>Merry smith</a>
+                        </td>
+                        <td>Merry</td>
+                        <td>Smith</td>
+                        <td>merrysmith@gmail.com</td>
+                        <td>******</td>
+                      </tr>
+                        <tr>
+                        <td>2</td>
+                        <td>
+                          <a href='#'>Merry smith</a>
+                        </td>
+                        <td>Merry</td>
+                        <td>Smith</td>
+                        <td>merrysmith@gmail.com</td>
+                        <td>******</td>
+                      </tr>
+                        <tr>
+                        <td>3</td>
+                        <td>
+                          <a href='#'>Merry smith</a>
+                        </td>
+                        <td>Merry</td>
+                        <td>Smith</td>
+                        <td>merrysmith@gmail.com</td>
+                        <td>******</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <button type="submit" class="btn btn-small btn-info butmargin">Send Invite</button>
+      </div>
+    </div></div>
+    
+    </div>
+          
+        </div>
+      </div> 
+  
+          

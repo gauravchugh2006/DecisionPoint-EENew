@@ -1,0 +1,272 @@
+﻿@model DecisionPoint.Models.ContractModel
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+@using System.Globalization;
+@using System;
+@{string emptyText = " ";}
+@Styles.Render("~/Styles/base")
+<style>
+    .sections {
+        width: 97%;
+        height: auto;
+        border: 1px solid #CCCCCC;
+        background-color: #ffffff;
+        margin-bottom: 5px;
+        overflow: hidden;
+        padding: 15px;
+    }
+
+    .leftCol {
+        float: left;
+        width: 24%;
+        min-width: 24%;
+    }
+  
+    .fullCol {
+        float: left;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    input.disabpled-input {
+        background: none;
+        border: 0;
+        cursor: default;
+        box-shadow: none;
+        pointer-events: none;
+    }
+
+    .event-list-table {
+        width: 90%;
+        margin: 0 0 10px 0;
+        padding: 0;
+        border: 1px solid #eee;
+        background: #fafafa;
+    }
+
+        .event-list-table td {
+            padding: 6px 5px 3px 10px;
+            text-align: left;
+            border-bottom: solid 1px #e1e1e1;
+            vertical-align:text-top;
+        }
+          .title-box td {
+        border-bottom: none;
+    }
+</style>
+<link href="~/Content/css/Dashboard/circle.css" rel="stylesheet" />
+<script src="~/Scripts/DashBoard/MyProfile.js"></script>
+
+<div id='content' style="margin-top: 0px;">
+    <div class='container'>
+        <div class='content-box'>
+            <h5>View Contract</h5>
+            <div class="pull-right">
+                <a class="btn btn-default" href="@Url.Content("~/Contract/Create?id=" + Request["id"] + "")" id="btnEditContract">Edit</a>
+                 <a class="btn btn-default" id="btnViewContract">View Contract</a>
+            </div>
+            <div class="clearfix" style="margin-bottom: 3px;"></div>
+
+            <div class="sections">
+                <label class='control-label'><b>Contract With</b></label>
+                <div class="fullCol">
+                    <div class="leftCol">
+                        <label class='control-label'><b>Client</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.BusinessName, Model.BusinessName == null ? emptyText : Model.BusinessName, new { @class = "control-label" })</div>
+                    <div class="leftCol">
+                        <label class='control-label'><b>Contact Name</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.FName, Model.FName + emptyText + Model.LName, new { @class = "control-label" })</div>
+                </div>
+
+                <div class="fullCol">
+                    <div class="leftCol">
+                        <label class='control-label'><b>Address</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.AddressLine1, Model.AddressLine1 == null ? emptyText : Model.AddressLine1, new { @class = "control-label" })</div>
+                    <div class="leftCol">
+                        <label class='control-label'><b>Phone</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.OfficePhone, Model.OfficePhone == null ? emptyText : Model.OfficePhone, new { @class = "control-label" })</div>
+                </div>
+                <div class="fullCol">
+                    @* <div class="leftCol">
+                        <label class='control-label'><b>Mobile</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.OfficePhone, Model.OfficePhone == null ? emptyText : Model.OfficePhone, new { @class = "control-label" })</div>
+                *@
+                    <div class="leftCol">
+                        <label class='control-label'><b>Email</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.EmailId, Model.EmailId == null ? emptyText : Model.EmailId, new { @class = "control-label" })</div>
+
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="sections">
+                <label class='control-label'><b>General Information</b></label>
+
+                <div class="fullCol">
+                    <div class="leftCol">
+                        <label class='control-label'><b>Title</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.Title, Model.Title == null ? emptyText : Model.Title, new { @class = "control-label" })</div>
+                    <div class="leftCol">
+                        <label class='control-label'><b>Page Creator</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ManagerName, Model.ManagerName, new { @class = "control-label" })</div>
+                </div>
+
+                <div class="fullCol">
+                    <div class="leftCol">
+                        <label class='control-label'><b>Owner Name</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.OwnerName, Model.OwnerName, new { @class = "control-label" })</div>
+                    <div class="leftCol">
+                        <label class='control-label'><b>Contract with</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ContractWithName, Model.ContractWithName, new { @class = "control-label" })</div>
+                </div>
+
+                <div class="fullCol">
+                    <div class="leftCol">
+                        <label class='control-label'><b>Executed By</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ExecutedByName, Model.ExecutedByName, new { @class = "control-label" })</div>
+                    <div class="leftCol">
+                        <label class='control-label'><b>Execution Date</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ExecutedDate, Model.ExecutedDate == null ? emptyText : Model.ExecutedDate.Value.ToShortDateString(), new { @class = "control-label" })</div>
+                </div>
+
+                <div class="fullCol">
+                    <div class="leftCol">
+                        <label class='control-label'><b>Expiration Date</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ExpirationDate, Model.ExpirationDate == null ? emptyText : Model.ExpirationDate.Value.ToShortDateString(), new { @class = "control-label" })</div>
+                    <div class="leftCol">
+                        <label class='control-label'><b>Contract Date</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ContractDate, Model.ContractDate == null ? emptyText : Model.ContractDate.Value.ToShortDateString(), new { @class = "control-label" })</div>
+                </div>
+
+                <div class="fullCol">
+                    <div class="leftCol">
+                        <label class='control-label'><b>Expiration Reminder</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ExpirationDateReminder, Convert.ToString(Model.ExpirationDateReminder, CultureInfo.InvariantCulture), new { @class = "control-label" })</div>
+                    <div class="leftCol">
+                        <label class='control-label'><b>Services</b></label>
+                    </div>
+                    <div class="leftCol">@Html.LabelFor(model => model.ServiceName, Model.ServiceName, new { @class = "control-label" })</div>
+
+                </div>
+
+                <div class="fullCol">
+                    <div class="fullCol">
+                        <label class='control-label'><b>General Comments</b></label>
+                    </div>
+                    <div class="fullCol">@Html.Raw(HttpUtility.HtmlDecode(Model.GeneralComments))
+
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="sections">
+                <label class='control-label'><b>SLA's</b></label>
+                <div id="divAddedEvents" style="width: 100%;">
+                </div>
+               
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="profiletrans" id="DocFilesouter"></div>
+            @*Company profile Popup*@
+            <div class="popup" id="DocFilesinner" style="left: 25%; top: 25%;">
+                <div class="profile-popup" style="display: block; width: 626px;">
+                    <div class="tittle-MessageBox">
+                        <span>Contracts</span><a>
+                            <img  src="~/Content/images/Close-Icon-mail.png" onclick="CloseDocFilesPopup()" width="19" height="19" alt="" border="0" /></a>
+                    </div>
+                    <div class="MessageSection-Box">
+                        <div  id="docfiles">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('contract');
+        if ('@Request["id"]' != null) {
+            BindContractEvent();
+        }
+    });
+    function BindContractEvent() {
+        $.ajax({
+            url: '@Url.Content("~/Contract/GetContractEventsListAsPerId")',
+            data: { 'id': parseInt('@Request["id"]') },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (data) {
+                var tblCount = $('#divAddedEvents').find('.event-list-table').length;
+                var str = '';
+                $.each(data, function (i, item) {
+                    var EventDate = '';
+                    if (data[i].EventDate != null) {
+                        EventDate = new Date(parseInt(data[i].EventDate.substr(6)));
+                        EventDate = dateFormat(new Date(EventDate), 'mm/dd/yyyy')
+                    }
+                    str += ' <table class="event-list-table" id="tblEvents_' + tblCount + '"><tr><td> Title </td> <td> '+data[i].EventTitle +
+'</td><td>Paragraph</td><td><input type="text" name="EventList[' + tblCount + '].Paragraphs" value="' + data[i].Paragraphs + '" class="disabpled-input" />' +
+'</td></tr><tr> <td> Section</td><td><input type="text" name="EventList[' + tblCount + '].Sections" value="' + data[i].Sections + '" class="disabpled-input" />' +
+'</td><td>Sub Section</td><td><input type="text" name="EventList[' + tblCount + '].SubSections" value="' + data[i].SubSections + '" class="disabpled-input" />' +
+'</td></tr><tr><td> Event Date</td><td><input type="text" name="EventList[' + tblCount + '].EventDate" value="' + EventDate + '" class="disabpled-input" />' +
+'</td><td>Reminder based off event date</td><td><input type="text" name="EventList[' + tblCount + '].EventDateReminder" value="' + data[i].EventDateReminder + '" class="disabpled-input" />' +
+'</td></tr><tr><td colspan="4"><input type="text" id="notes_0" name="EventList[' + tblCount + '].Notes" style="display:none;"  /><table><tbody>' + data[i].Notes + '</tbody></table></td></tr> </table>';
+                    $("#notes_" + tblCount + "").val('<table><tbody>' + data[i].Notes + '</tbody></table>');
+                })
+                $('#divAddedEvents').append(str);
+                
+            }
+        });
+    }
+    $('#btnViewContract').click(function () {
+        GetContractDoc();
+    })
+    function GetContractDoc() {
+        $.ajax({
+            url: '@Url.Content("~/Contract/GetContrcatDoc")',
+            data: { 'contrcatId': parseInt('@Request["id"]') },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (data) {
+                var str = '';
+                if (data.length > 0) {
+                    $.each(data, function (i, item) {
+                        str += '<b>'+(parseInt(i)+1)+'.</b><a id="docfile_' + data[i].docId + '" name="FilePathStr" href="' + data[i].files + '" target="_blank" title="' + data[i].filetype + '" style="cursor:pointer;margin-left:6px;" >' + data[i].filetype + '</a><br/>'
+                    })
+                    $('#docfiles').html(str);
+                } else {
+                    $('#docfiles').html("No Documents");
+                }
+                $('#DocFilesouter').slideDown("fast");
+                $('#DocFilesinner').slideDown("fast");
+            }
+        });
+    }
+    function CloseDocFilesPopup() {
+        $('#DocFilesouter').slideUp("fast");
+        $('#DocFilesinner').slideUp("fast");
+    }
+</script>

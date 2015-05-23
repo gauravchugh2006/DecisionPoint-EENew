@@ -1,0 +1,937 @@
+﻿@model DecisionPoint.Models.InviteVendorBulk
+@{
+    ViewBag.Title = "Bulk Invitation";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+
+
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grdCSV = new WebGrid();
+    if (Model.LstVendorCsv != null)
+    {
+        
+            grdCSV = new WebGrid(ajaxUpdateContainerId: "grdCSV", rowsPerPage: Model.rowperpage, canPage: false);
+            grdCSV.Bind(Model.LstVendorCsv, autoSortAndPage: false, rowCount: Model.pagesize);
+        
+    }
+    string titlename = string.Empty;
+    if (Model.IsVendorApply)
+    {
+        titlename = "Vendor";
+    }
+    if (Model.IsClientApply)
+    {
+        if (!string.IsNullOrEmpty(titlename))
+        {
+            titlename = titlename + "/Client";
+        }
+        else
+        {
+            titlename = "Client";
+        }
+    }
+}
+
+
+
+@Scripts.Render("~/bundles/modernizr")
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<style>
+    .w20
+    {
+        margin-right: 50px;
+        float: left;
+        margin-bottom: 10px;
+        line-height: 26px;
+    }
+
+    .pdr5
+    {
+        padding-right: 5px;
+        float: left;
+        padding-top: 3px;
+    }
+
+    .w100
+    {
+        width: 100%;
+        float: left;
+    }
+
+    .w200
+    {
+        width: 80px;
+        float: left;
+        margin-right: 20px;
+        margin-top: 5px;
+    }
+
+    .w50
+    {
+        width: 100px;
+    }
+    
+   
+    .butmargin
+    {
+        margin: 2px 0 5px 10px;
+    }
+
+    .butmargin-left1
+    {
+        margin: -2px 0px 1px 0px;
+    }
+
+    .grid-width100
+    {
+        width: 100px;
+    }
+
+    .grid-width181
+    {
+        width: 181px;
+    }
+
+    .iconcontainer
+    {
+        width: 70%;
+        overflow: hidden;
+        margin: 1% auto;
+    }
+
+    .individual
+    {
+        width: 202px;
+        height: 202px;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+        box-shadow: 2px 2px 2px 2px #E1E1E1;
+        border: 1px solid #e1e1e1;
+    }
+
+    .bulk
+    {
+        width: 202px;
+        height: 202px;
+        float: right;
+        text-align: center;
+        box-shadow: 2px 2px 2px 2px #E1E1E1;
+        border: 1px solid #e1e1e1;
+    }
+
+    #download
+    {
+        background: url(../Content/images/download.png) no-repeat;
+        width: 28px;
+        height: 32px;
+        float: right;
+        width: 175px;
+        padding-left: 32px;
+        line-height: 30px;
+        text-decoration: underline;
+    }
+
+    .autodetect
+    {
+        margin-left: 10px;
+        margin-top: 10px;
+        display: inline;
+        background: red;
+    }
+
+    .forlabel
+    {
+        float: left;
+    }
+
+    .fl
+    {
+        float: left;
+    }
+
+
+    label
+    {
+        font-weight: normal;
+        vertical-align: baseline;
+    }
+
+    label
+    {
+        margin-bottom: 5px;
+        margin-left: 15px;
+    }
+
+    label, input, button, select, textarea
+    {
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 23px;
+        float: left;
+    }
+
+    .manualinput
+    {
+        width: 50px;
+        margin-left: 10px;
+    }
+
+    .considerfirstrow
+    {
+        margin-left: 166px;
+        float: left;
+        display: block;
+        float: left;
+    }
+
+    .mt20
+    {
+        margin-top: 15px;
+    }
+
+    .mr10
+    {
+        margin-right: 10px;
+        float: left;
+    }
+
+    .w250
+    {
+        width: 100px;
+        float: left;
+        margin-top: 5px;
+    }
+
+    .wcol1
+    {
+        width: 14%;
+        float: left;
+    }
+
+    .wcol2
+    {
+        width: 220px;
+        float: left;
+    }
+
+    .wcol3
+    {
+        width: 30%;
+        float: left;
+    }
+
+    .mt5px
+    {
+        margin-top: 5px;
+    }
+
+    .wcol4
+    {
+        width: 14%;
+        float: left;
+    }
+
+    .wcol5
+    {
+        width: 220px;
+        float: left;
+    }
+
+    .wcol6
+    {
+        width: 30%;
+        float: left;
+    }
+
+    .w206
+    {
+        width: 206px;
+    }
+
+    .selectheading
+    {
+        background: #eee;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 3px 3px 3px 3px;
+        padding: 5px 0px;
+    }
+
+    .clear
+    {
+        clear: both;
+    }
+
+    .multiselectable
+    {
+        display: block;
+        overflow: hidden;
+        width: 60%;
+        padding-right: 20px;
+        margin-bottom: 10px;
+    }
+
+        .multiselectable select, .multiselectable div
+        {
+            width: 216px;
+            float: left;
+        }
+
+            .multiselectable div *
+            {
+                display: block;
+                margin: 0 auto;
+            }
+
+        .multiselectable div
+        {
+            display: inline;
+            overflow: hidden;
+        }
+
+        .multiselectable .m-selectable-controls
+        {
+            margin-top: 4em;
+            width: 70px;
+        }
+
+            .multiselectable .m-selectable-controls button
+            {
+                margin-top: 2em;
+                margin-left: .5em;
+            }
+
+    a.bulk-invitaion
+    {
+        background: url("../../images/bulk.jpg") repeat-x scroll left;
+        display: block;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+    a.manual-invitaion
+    {
+        background: url("../../images/manual.jpg") repeat-x scroll left;
+        display: block;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+</style>
+
+<div class='heading'>
+        <div class='row'>
+            <h3>Bulk @titlename Upload</h3>
+        </div>
+    </div>
+
+<div>
+
+    <div class='content-box'>
+   
+
+        <div class='row' style="padding-top: 5px;">
+            @using (Html.BeginForm("VendorBulkCSvUpload", "CompanyDashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+          
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" id="txtcsvs" style="margin-top: 3px;height:19px;" placeholder="Upload Vendor CSV/Excel" />
+                        <label class="btn btn-small btn-info butmargin" style="height: 25px; color: #fff; width: 80px;">
+                            <p style="padding-top: 2px;">Browse</p>
+                            @Html.TextBoxFor(m => m.File, new { @name = "attachment", @id = "txtcsv", type = "file", @style = "opacity:0; margin-top:-33px;width:80px;" })
+                        </label>
+                        <input type="submit" value="Upload File" class="btn btn-small btn-info butmargin" style="height: 30px; width: 100px;" id="btnUploadZip" />
+                       @* <div id="download" style="width: 245px;">
+                            @Html.ActionLink("Download Template Vendor with ID", "DownloadVendorInviteSample", "CompanyDashboard", new { Format = "vendorwithid" }, null)
+                            
+                        </div>*@
+                        <div id="download" style="width: 245px;">
+                            @Html.ActionLink("Download Template", "DownloadVendorInviteSample", "CompanyDashboard", new { Format = "vendorwithoutid" }, null)
+
+
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div style="clear: both"></div>
+                <div class="control-group" style="display: none">
+                    <div class="controls">
+                    </div>
+                </div>
+
+                <div class="control-group" style="display:none;">
+                    <div class="controls">
+                        <label style="margin-left: 0px;cursor:auto;">
+                            
+                            Consider first row as header</label>
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+               
+                <div id="divtitle">
+                    @if (Model.LstVendorCsv != null)
+                    {
+                        if (Model.LstVendorCsv.Count > 0)
+                        {
+                           
+                            
+                            
+                    
+                                                   
+                        @grdCSV.GetHtml(htmlAttributes: new { id = "grdCSV" }, exclusions: new[] { "ID" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+ columns: grdCSV.Columns(
+
+ grdCSV.Column("No", "No"),
+ grdCSV.Column("companyName", "Company Name "),
+
+            grdCSV.Column("FlowValue", "Relationship",
+             format: (item) =>
+               {
+                   var css = @"class=""overdue""";
+                   if (string.IsNullOrWhiteSpace(@item.FlowValue))
+                   {
+                       return Html.Raw("<span " + css + ">" + "--------" + "</span>");
+                   }
+                   else
+                   {
+                       return Html.Raw("<span>" + @item.FlowValue + "</span>");
+                   }
+               }
+             ),
+             grdCSV.Column("DocFlowValue", "Flow",
+             
+              format: (item) =>
+               {
+                   var css = @"class=""overdue""";
+                   if (string.IsNullOrWhiteSpace(@item.DocFlowValue))
+                   {
+                       return Html.Raw("<span " + css + ">" + "--------" + "</span>");
+                   }
+                   else
+                   {
+                       return Html.Raw("<span>" + @item.DocFlowValue + "</span>");
+                   }
+               }),
+             grdCSV.Column("FName", "First Name"),
+             grdCSV.Column("LName", "Last Name"),
+
+
+                  grdCSV.Column("EmailId", "Email"),
+            grdCSV.Column(header: "Remove",
+  format: @<text> <a id="btnDelete" style="cursor: pointer;" onclick="FunDelete(this.id,@item.No)">
+      <img src="../Content/images/delete.png" /></a> </text>, canSort: false),
+
+
+            grdCSV.Column(header: "Edit",
+ format: @<text> <a id="messagetitle" onclick="showpopupInbox('@item.CompanyName','@item.FlowId','@item.FName','@item.LName','@item.EmailId','@item.No','@item.DocFlowId','@item.VTID')" style="cursor:pointer;">
+     <img src="../Content/images/edit.png" />
+ </a></text>, canSort: false)
+
+
+
+
+
+
+     )) 
+                    
+
+                        <button id="btnSendInvite" type="button" class="btn btn-small btn-info butmargin" style="float: right; margin-right: 17px;">Send Invite</button>
+                        <label id="finalvalmsg" style="color:red;margin-right:-93px;float:right;margin-top:26px;"></label>
+                       
+
+                        }
+                        else
+                        {
+                       <div>
+                           @if (ViewBag.Error == null)
+                           {
+                                 <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                    <div style="margin-left: 195px;">Please Upload CSV File</div>
+                                </div>
+                           }
+                           else
+                           {
+                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                    <div style="margin-left: 195px;">@ViewBag.Error</div>
+                                </div>
+                           }
+
+                        </div>
+                        }
+                    }
+                    else
+                    {
+                        <div>
+                           @if (ViewBag.Error == null)
+                           {
+                                 <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                    <div style="margin-left: 195px;">Please Upload CSV File</div>
+                                </div>
+                           }
+                           else
+                           {
+                                <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px; width: 642px; margin-left: 0px;">
+                                    <div style="margin-left: 195px;">@ViewBag.Error</div>
+                                </div>
+                           }
+
+                        </div>
+                    }
+                </div>
+                 @Html.HiddenFor(model => model.CsvFileName, new { id="lblCSVFileName",Value=Model.CsvFileName})    
+                
+            }
+        </div>
+    </div>
+
+</div>
+@*Edit  Popup*@
+<div class="profiletrans" id="EditCsv"></div>
+<div class="popup" id="popupCSV" style="width: auto; height: auto; top: 200px; margin-left: 161px;">
+    <div class="profile-popup" style="display: block; width: auto; height: auto;">
+        <div class="tittle-MessageBox">
+            <span>Edit Vendor</span><a >
+                <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+        </div>
+        <div class="MessageSection-Box" style="width: auto; height: auto;">
+
+            <table class="MessageSection-Box" style="width: auto; height: auto;">
+                <tr>
+                    <td>Company Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+
+                        <input id="CName" name="CName" type="text" maxlength="50"></td>
+
+                </tr>
+                @* <tr>
+                    <td>Vendor Type</td>
+                    <td></td>
+                    <td>
+                         @if (Model.CompanyVendorTypeDetails != null)
+                        {
+                       @Html.DropDownList("ddVendorType", new SelectList(Model.CompanyVendorTypeDetails, "VendorTypeId", "VendorTypeName"), new { @name = "ddVendorType", @style = "width:220px" })
+                         }
+                    </td>
+
+                </tr>*@
+                <tr>
+                    <td>Relationship</td>
+                    <td></td>
+                    <td>
+                        @if (Model.flowDetails != null)
+                        {
+                            @Html.DropDownList("ddlFlow", new SelectList(Model.flowDetails, "flowId", "flowName"),"-- Select --")
+                        }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Flow</td>
+                    <td></td>
+                    <td>
+                        @if (Model.DocflowDetails != null)
+                        {
+                            @Html.DropDownList("ddldocFlow", new SelectList(Model.DocflowDetails, "flowId", "flowName"),"-- Select --")
+                        }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>First Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="FName" name="LName" type="text" maxlength="50" style="width:205px;"></td>
+
+                </tr>
+                <tr>
+                    <td>Last Name<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="LName" name="LName" type="text" maxlength="50" style="width:205px;"></td>
+
+                </tr>
+                <tr>
+                    <td>Email<sup style="color: red; font-size: 10px;">*</sup></td>
+                    <td></td>
+                    <td>
+                        <input id="Email" name="Email" type="email" maxlength="100">
+                        <label id="emailidval" style="color:red;margin-left:-220px; margin-top:26px;""></label>
+                    </td>
+
+                </tr>
+
+
+
+                <tr>
+                    <td colspan="3">
+
+                        <input id="No" type="hidden" />
+                        <input type="button" id="btnSubmit" value="Submit" class="btn btn-small btn-info butmargin" style="margin-left: 269px;" />
+                        
+                    </td>
+                </tr>
+
+            </table>
+
+
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+@*Edit  Popup End *@
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 255px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+    
+    </div>
+
+</div>
+@* Saved Pop up End *@
+<input type="hidden" id="tempVal" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        var $radios = $('input:radio[id=rdSelectByZip]');
+        if ($radios.is(':checked') === false) {
+            $radios.filter('[id=rdSelectByZip]').prop('checked', true);
+        }
+
+        $('#btnSendInvite').focus();
+
+    })
+    $('input[id="txtcsv"]').change(function () {
+        var filename = $(this).val();
+        filename = filename.replace("C:\\fakepath\\", "");
+        $('#txtcsvs').val(filename);
+
+    });
+
+        @* Pop up jquery  *@
+
+
+    function showpopupInbox(CName, FlowId, FName, LName, Email, No,docflowid,VTID) {
+
+        $('#CName').val(CName);
+        $('#FName').val(FName);
+        $('#LName').val(LName);
+        $('#Email').val(Email);
+        //$("#ddVendorType").val(VId);
+
+        $("#ddlFlow").val(FlowId);
+        $("#ddldocFlow").val(docflowid);
+      
+        $('#No').val(No);
+
+
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+
+    }
+
+    $('#btnClosePopup').click(function () {
+        $('#EditCsv').hide();
+        $('#popupCSV').hide();
+       
+    })
+
+    //getting value of Row .. which should be update
+    $('#grdCSV tbody tr').click(function () {
+        var $tr = $(this).closest('tr');
+        var myRow = $tr.index();
+        $('#tempVal').val(parseInt(myRow) + 1);
+    });
+
+    $('#btnSubmit').click(function () {
+       if (validatebulkVendor()) {
+          
+            var CName = $('#CName').val();
+            var FName = $('#FName').val();
+            var LName = $('#LName').val();
+            var Email = $('#Email').val();
+          //  var VID = $("#ddVendorType").val();
+           // var VType = $("#ddVendorType").find('option:selected').text();
+            var FlowID = $("#ddlFlow").val();
+            var FlowText = $('#ddlFlow').find('option:selected').text();
+            var DocFlowID = $("#ddldocFlow").val();
+            var DocFlowText = $('#ddldocFlow').find('option:selected').text();
+
+            var No = $('#No').val();
+            var row = $('#tempVal').val();
+       
+           // var url = "?No=" + No + "&FName=" + FName + "&LName=" + LName + "&CName=" + CName + "&Email=" + Email + "&FlowID=" + FlowID + "&FlowText" + FlowText;
+          
+            $.ajax({
+                type: "POST",
+                UpdateTargetId: 'divtitle',
+                
+                url: '@Url.Content("~/CompanyDashBoard/VendorUpdateItem")',
+
+                data: JSON.stringify({
+                    "No": No,
+                    "FName": FName,
+                    "LName": LName,
+                    "CName": CName,
+                    "Email": Email,
+                    "FlowID": FlowID,
+                    "FlowText": FlowText,
+                    "DocFlowID": DocFlowID,
+                    "DocFlowText": DocFlowText,
+                    "CsvFileName": $('#lblCSVFileName').val()
+                   // "VTID": VID,
+                   // "VType": VType
+
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+
+                    $('#EditCsv').hide();
+                    $('#popupCSV').hide();
+                
+                    
+             
+             $('#grdCSV').html($(data).find('#grdCSV').html().trim())
+             validateemailid();
+
+
+                }
+            });
+        }
+    });
+
+
+        @* Pop up jquery  End *@
+
+
+    $('#rdSelectByZip').change(function () {
+        if ($('#rdSelectByZip').is(':checked')) {
+            window.location.href = "InviteVendorBulk";
+        }
+    })
+    $('#rdSelectByAddress').change(function () {
+
+        if ($('#rdSelectByAddress').is(':checked')) {
+            window.location.href = "InviteVendorManual";
+        }
+    })
+
+    // Delete Method....
+ function FunDelete(rowId, No) {
+
+      $.ajax({
+            type: "POST",
+            url:'@Url.Content("~/CompanyDashBoard/VendorDeleteItem")',
+          data: { 'id': No,'csvFileName': $('#lblCSVFileName').val() },
+
+            success: function (data) {
+                $('#grdCSV').html($(data).find('#grdCSV').html().trim())
+
+            }
+
+        });
+    }
+
+ function validateemailid() {
+     var chkstatus = true;
+     $('#grdCSV tr').each(function (index) {
+         if (index != 0) {
+            // alert($(this).find("td").eq(6).html());
+             if (!validateEmail($(this).find("td").eq(6).html())) {
+                 $(this).find("td").eq(6).addClass("errorClass");
+                 $(this).find("td").eq(6).attr("title", "Please input correct emailid");
+                 chkstatus = false;
+             }
+         }
+     })
+     if (!chkstatus) {
+         $('#finalvalmsg').html("Please fill correct record");
+         return false;
+     }
+     else {
+         $('#finalvalmsg').html("");
+         return true;
+     }
+ }
+ $('#btnSendInvite').click(function () {
+     if (validateemailid()) {
+         var orgText = $('document').text();
+         $.ajax({
+             type: "POST",
+             url: '@Url.Content("~/CompanyDashBoard/VendorBulkSaveItem")',
+             cache: false,
+             data: { 'CsvFileName': $('#lblCSVFileName').val() },
+             contentType: 'application/json; charset=utf-8',
+             success: function (data) {
+
+
+
+                 $('#divManualInviteOuter').show();
+                 $('#divManualInviteInner').show();
+                 $('#dvSaveMsg').text('Invitation sent sucessfully');
+                 setTimeout(function () {
+                     $('#divManualInviteOuter').fadeOut('slow');
+                     $('#divManualInviteInner').fadeOut('slow');
+                     window.onbeforeunload = null;
+                     window.location.href = '@Url.Content("~/CompanyDashBoard/InviteVendorBulk")';
+                 }, 1000);
+
+             },
+             beforeSend: function (jqXHR, obj) {
+
+                 $('#divManualInviteOuter').show();
+                 $('#divManualInviteInner').show();
+                 $('#dvSaveMsg').text('Please wait...');
+
+             },
+             error: function (data) {
+
+
+                 $('#divManualInviteOuter').show();
+                 $('#divManualInviteInner').show();
+                 $('#dvMsg').text('Error in input details : Invitation not sent sucessfully');
+                 setTimeout(function () {
+                     $('#divManualInviteOuter').fadeOut('slow');
+                     $('#divManualInviteInner').fadeOut('slow');
+                     window.onbeforeunload = null;
+                     window.location.href = '@Url.Content("~/CompanyDashBoard/InviteVendorBulk")';
+                 }, 1000);
+
+             }
+
+         });
+
+     }
+
+    });
+
+    $('#FName').keypress(function () {
+        if ($('#FName').val().trim() != "") {
+            $('#FName').removeClass('errorClass');
+        }
+    })
+    $('#LName').keypress(function () {
+        if ($('#LName').val().trim() != "") {
+            $('#LName').removeClass('errorClass');
+        }
+    })
+    $('#Email').keypress(function () {
+        if ($('#Email').val().trim() != "") {
+            $('#Email').removeClass('errorClass');
+            $('#emailidval').html("");
+        }
+    })
+    $('#CName').keypress(function () {
+        if ($('#CName').val().trim() != "") {
+            $('#CName').removeClass('errorClass');
+        }
+    })
+    $('#ddlFlow').change(function () {
+        if ($('#ddlFlow').find('option:selected').text().trim() != '-- Select --') {
+            $('#ddlFlow').removeClass('errorClass');
+        }
+    })
+    $('#ddldocFlow').change(function () {
+        if ($('#ddldocFlow').find('option:selected').text().trim() != '-- Select --') {
+            $('#ddldocFlow').removeClass('errorClass');
+        }
+    })
+    function validatebulkVendor() {
+      
+        var firstName = $('#FName').val();
+        var lastName = $('#LName').val();
+        var email = $('#Email').val();
+        var CompanyName = $('#CName').val()
+        var firstNameval = true;
+        var lastNameval = true;
+        var emailval = true;
+        var companynameval = true;
+        var flowval = true;
+        var docflowval = true;
+        var flow = $('#ddlFlow').find('option:selected').text(); 
+        var docflow = $('#ddldocFlow').find('option:selected').text();
+
+        if (CompanyName.trim() == null || CompanyName.trim() == "") {
+            $('#CName').addClass('errorClass');
+            companynameval= false;
+        }
+        
+        if (flow.trim() == '-- Select --') {
+            $('#ddlFlow').addClass('errorClass');
+            flowval = false;
+        }
+
+        if (docflow.trim() == '-- Select --') {
+            $('#ddldocFlow').addClass('errorClass');
+            docflowval = false;
+        }
+      
+        if (firstName.trim() == null || firstName.trim() == "") {
+            $('#FName').addClass('errorClass');
+            firstNameval= false;
+        }
+       
+        if (lastName.trim() == null || lastName.trim() == "") {
+            $('#LName').addClass('errorClass');
+            lastNameval= false;
+        }
+        
+        if (email.trim() == null || email.trim() == "") {
+            $('#Email').addClass('errorClass');
+            emailval= false;
+        }
+        else if (email.trim() != null || email.trim() != "") {
+
+            if (!validateEmail(email.trim())) {
+                $('#Email').addClass('errorClass');
+                $('#emailidval').html("Please enter correct email id")
+                emailval= false;
+            }
+        }
+        if (firstNameval && lastNameval && emailval && companynameval && flowval && docflowval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+</script>
+
+

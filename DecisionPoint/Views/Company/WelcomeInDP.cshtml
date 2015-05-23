@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "WelcomeInDP";
+}
+
+@using DecisionPointCAL.Common;
+@{
+    ViewBag.Title = "Welcome";
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+}
+
+<div class="welcome-wraper">
+    <div class="top-background">
+    </div>
+    <div class="welcome-text">
+        <p class="welcome-h1">
+            WELCOME TO COMPLIANCE TRACKER. LET'S GET STARTED<br>
+            @*ACCPETING YOUR INVITATION WAS A SMART MOVE*@
+        </p>
+        <p class="p-tag">
+            We hope you enjoy the convenience of using our simple yet sophisticated compliance management tools. Take a few minutes to register, so you can take advantage of all that
+            <a style="color:#8dc73f;" href="http://getcompliancetracker.com/" target="_blank">
+                ComplianceTracker
+            </a>
+            has to offer!
+            @*www.GetComplianceTracker.com*@
+        </p>
+    </div>
+    <div class="contact-wraper clearfix">
+        <div class="col-50">
+            <div class="border-line-gradient"></div>
+            <h1><img src="@Url.Content("~/Content/images/client-icon.png")" width="64" height="59" style="margin-right:10px;">IF YOU'RE A CLIENT...</h1>
+            <div class="border-line-gradient"></div>
+            <p>
+                <strong>IF YOU'RE A CLIENT COMPANY,</strong> you'll be able to drastically
+                <strong>reduce the effort and expense</strong> of managing compliance information.
+                You and your staff can use <span class="blue-color">COMPLIANCE</span><span class="green-color">TRACKER</span> to communicate with your
+                vendors and track vendor licensing, insurance, training, background infomation,
+                training and policies & procedures.
+            </p>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('.col-50').first().hide();
+                $('.col-50:eq(1)').removeClass();
+            });
+        </script>
+        <div class="col-50">
+            <div class="border-line-gradient"></div>
+            <h1><img src="@Url.Content("~/Content/images/vender.png")" width="64" height="59" style="margin-right:10px;">IF YOU'RE A CONTRACTOR/VENDOR...</h1>
+            <div class="border-line-gradient"></div>
+            <p>
+                IF <strong>YOU'RE A CONTRACTOR/VENDOR,</strong> you'll be
+                able to <strong>save time and money</strong> with our <strong>
+                    single,
+                    centralized platform
+                </strong> that gives your potential and
+                existing clients access to your profile. No more paying
+                for background checks over and over, and sending the
+                same set of documents to each and every client.
+            </p>
+        </div>
+    </div>
+    <div class="logo-bottom">
+        <img src="@Url.Content("~/Content/images/bottom-logo.png")" width="477" height="42">
+        <div class="border-line-gradient"></div>
+    </div>
+
+
+
+    <div class="welcome-footer">
+
+
+        @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"])))
+        {
+            if (Convert.ToString(Session["UserType"]) == "IC")
+            {
+                <a role="button" href="~/Company/SetupCompnayProfile?type=@Request["type"]&Res=@Request["Res"]" class="next-btn"></a>
+            }
+            else if (Convert.ToString(Session["UserType"]) == Shared.NonClient)
+            {<a role="button" href="~/Company/SetupCompnayProfile?type=@Request["type"]" class="next-btn"></a>}
+            else if (Convert.ToString(Session["UserType"]) == Shared.Individual)
+            {<a role="button" href="~/Login/ChangePassword?type=@Request["type"]" class="next-btn"></a>}
+            else
+            {
+                <a role="button" href="~/Company/SetupCompnayProfile" class="next-btn"></a>
+            }
+        }
+    </div>
+</div>

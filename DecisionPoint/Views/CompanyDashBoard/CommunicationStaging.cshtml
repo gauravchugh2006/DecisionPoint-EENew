@@ -1,0 +1,189 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "CommunicationStaging";
+   string DocId = (string)ViewData["DocId"];
+   if (DocId == null)
+   {
+       DocId = "0";
+   }
+   WebGrid grddocumentsdetails = new WebGrid(ajaxUpdateContainerId: "unsentdocumentgrid", rowsPerPage: Model.RowperPage, canPage: true);
+    if (Model.DocumentsDetails != null)
+    {
+        grddocumentsdetails.Bind(Model.DocumentsDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", System.Globalization.CultureInfo.InvariantCulture);
+   
+}
+
+ @functions {
+     public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+     {
+         return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+           grid.SortDirection == SortDirection.Ascending ? "↑" :
+             "↓" : string.Empty);
+     }
+}
+<style>
+     .grid-width300
+    {
+        width: 125px;
+    }
+</style>
+<div>
+    <div>
+        <div class='content-box'>
+            <br />
+            <div id='new-document'>
+
+                <ul class='nav nav-tabs' id='my_tabs'>
+                    <li id="step1content">
+                        @Html.ActionLink("STEP 1: Document Content", "Communication", "CompanyDashBoard", new { id = DocId }, null)
+                      
+                    </li>
+                    <li id="step2recipient" class="prevent">
+                        @Html.ActionLink("STEP 2: Assignment", "CommunicationRecipient", "CompanyDashBoard", new { id = DocId }, null)
+                       
+                    </li>
+                    <li id="step3staging" >
+                        @Html.ActionLink("Staging ", "CommunicationStaging", "CompanyDashBoard",new { id = DocId }, null)
+                       
+                    </li>
+                </ul>
+
+                <div  id='unsentdocuments'>
+                            @if (Model.DocumentsDetails!=null)
+                            {
+                            
+                                @grddocumentsdetails.GetHtml(htmlAttributes: new { id = "unsentdocumentgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+  grddocumentsdetails.Column(columnName:"effectiveDate",header :Sorter("effectiveDate", " Started Date", grddocumentsdetails), format: @<text> 
+                    @if (item.effectiveDate!=defaultdate)
+                    {
+            <span>  @string.Format("{0:MM/dd/yyyy}",
+             item.effectiveDate)</span>
+                    }
+       </text>,style:"webgridcol1" ),
+                                 grddocumentsdetails.Column("policyNo",header: Sorter("policyNo", "Comm #", grddocumentsdetails),
+                                   format:@<text>@item.policyNo  </text>
+                                 ,style:"webgridcol1"),
+   
+         grddocumentsdetails.Column(
+                    columnName:"DocTitle",
+                    header :Sorter("DocTitle", "Title", grddocumentsdetails),
+                    format:@<text> 
+                         
+    @item.DocTitle
+                      
+
+                             </text> ,style:"webgridcol1"),
+                                grddocumentsdetails.Column("hourofcredit", header: Sorter("hourofcredit", "CE", grddocumentsdetails),
+      format:@<text> 
+     
+     <div>@item.hourofcredit</div> 
+ 
+        </text>,style:"webgridcol1"),
+                                grddocumentsdetails.Column(columnName:"DocType",header :Sorter("DocType", "Category", grddocumentsdetails),format:  @<text><SPAN>@item.DocType</SPAN></text>,style:"webgridcol1"),
+    grddocumentsdetails.Column("reference",header: Sorter("reference", "Source", grddocumentsdetails),
+   
+    style:"webgridcol1"),
+    grddocumentsdetails.Column(columnName:"DocFrom",header: Sorter("DocFrom", "Creator", grddocumentsdetails)
+    ,
+    format:  @<text>
+     @(item.DocFrom)
+    </text>
+                                ,style:"webgridcol1"),
+grddocumentsdetails.Column("", format: @<text>
+     <button class="btn btn-mini btn-info" onclick="UnsenDocumentOperation('@item.DocId','0')"  >Continue</button> 
+    <button class="btn btn-mini btnminired"  onclick="UnsenDocumentOperation('@item.DocId','1')"  >Delete</button>
+   
+   
+    </text>, style:"grid-width300", canSort: false),
+   
+}) 
+                            }
+                           
+</div> 
+
+            </div>
+        </div>
+    </div>
+</div>
+ @*confiramtion box Popup*@
+                        <div class="confirmationdivmain" id="unsenddocouter"></div>
+                        <div class="confirmationdivinner" id="unsenddocinner">
+                            <div style="background-clip: padding-box; background-color: #FFFFFF; height: 87px; padding: 20px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+                                <div id="divmsg" style="font-size: 16px; padding-bottom: 10px;">Are you sure, you want to delete this record ? </div>
+
+                                <div style="float: left; width: 50px; padding-top: 25px;" >
+                                    <input type="button" id="btnok"  onclick="DeleteUnsentDoc()" class="btn btn-primary" value="Yes" />
+                                    <input type="hidden" id="msgdocid" /><input type="hidden" id="type" />
+                                    </div>
+                                <div style="float: left; width: 70px; padding-top: 25px;margin-left:5px;" >
+                                    <input type="button" class="btn btn-primary" id="btncancel" onclick="CancelUnsentDoc()" value="No" />
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+<script>
+    $('.prevent a').unbind();
+    $('.prevent a').click(function () {
+        return false;
+    });
+    $(document).ready(function () {
+        $('#step1content').removeClass("active");
+        $('#step2recipient').removeClass("active");
+        $('#step3staging').addClass("active");
+
+        ShowHideTabs('communication');
+    })
+
+    //show dlete confirmation div
+    function UnsenDocumentOperation(docId, type) {
+        if (type == "0") {
+            window.location.href = "../Communication/" + docId + "";
+        }
+        else {
+            $('#divmsg').html("Are you sure you want to delete this record ?");
+           
+            $('#unsenddocouter').fadeIn('slow');
+            $('#unsenddocinner').fadeIn('slow');
+            $('#msgdocid').val(docId);
+        }
+       
+    }
+    function CancelUnsentDoc() {
+        $('#unsenddocouter').fadeOut('slow');
+        $('#unsenddocinner').fadeOut('slow');
+    }
+    function DeleteUnsentDoc() {
+      
+        var type = 3;
+
+        var docId = parseInt($('#msgdocid').val());
+        
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/RemoveDocument/")',
+            cache: false,
+            data: { 'docId': docId, type: parseInt(type) },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+               
+                    window.location.reload();
+              
+            },
+            error: function () {
+            },
+            async: false,
+
+        });
+    }
+</script>
+
+

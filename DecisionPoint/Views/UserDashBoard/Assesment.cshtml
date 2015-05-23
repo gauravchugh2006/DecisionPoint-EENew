@@ -1,0 +1,184 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "UserDashBoard : View Document";
+   
+}
+ @Styles.Render("~/Content/css/UserDashboardcss")
+    @Scripts.Render("~/bundles/dashboard")
+
+    <script src="~/Scripts/jquery-2.0.0.js"></script>
+    <link href="~/Content/css/UserDashBoard/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap-datetimepicker.min.css" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <link href="~/Content/css/UserDashboard/style.css" rel="stylesheet" />
+    <link href="~/Content/css/UserDashboard/common.css" rel="stylesheet" />
+    
+ 
+
+<div class="tab-content">
+    <div class='row'>
+           <div class='span5 text-right'>
+              <h2></h2>
+            </div>
+          </div>
+    <ul class='nav nav-tabs' id='my_tabs'>
+                        <li id="viewdocli" class='active'>
+                            @{
+                                int docID = 25;
+                                if (ViewBag.DocumentID != null)
+                                {
+                                docID = Convert.ToInt32(Session["DocumentID"].ToString());   
+                                }
+                                else
+                                {
+                                    docID = 25;
+                                }
+                             }
+                            @Html.ActionLink("View Document", "ViewDocument", "UserDashBoard", new { id = docID }, null)
+
+                        </li>
+                        <li id="assesmentli">
+                            @Html.ActionLink("Assessment", "Assesment", "UserDashBoard")
+
+                        </li>
+                    </ul>
+                <div id="document" class="tab-pane fade">
+                  <div class="box">
+                    <div class="row">
+                      <div class="span6">
+                        <h4>Requested Actions:</h4>
+                        <ol>
+                          <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt</li>
+                          <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt</li>
+                        </ol>
+                      </div>
+                      <div class="span4">
+                        <a style="width: 260px" class="btn btn-primary">Due Date: 10/12/2013</a>
+                        <br>
+                        <a style="width: 260px" class="btn btn-info">
+                          <i class="icon-circle-arrow-down icon-white"></i>
+                          Download PDF to read offline
+                        </a>
+                        <br>
+                        Please email
+                        <a href="adminatexamplecom.html">admin@example.com</a>
+                        if you have any questions
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="pdf" style="background-color: rgb(255, 255, 255); width: 930px;"><iframe width="930" height="1070" src="/pdfs/sample-1.pdf"></iframe></div>
+                  <hr>
+                    <form>
+                      <div class="control-group">
+                        <div class="controls">
+                          <label class="checkbox">
+                            <input type="checkbox">I have read and understood this document
+                          </label>
+                        </div>
+                      </div>
+                      <div class="control-group">
+                        <div class="controls">
+                          <label class="checkbox">
+                            <input type="checkbox">I agree to the terms and conditions indicated in this document
+                          </label>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="control-group">
+                        <div class="controls">
+                          <button type="submit" class="btn btn-primary">Go to Assessment</button>
+                        </div>
+                      </div>
+                    </form>
+                  
+                </div>
+                <div id="assessment" class="tab-pane fade active in">
+                  <form>
+                    <h3>Assessment</h3>
+                    <ol>
+                      <li>
+                        <p>
+                          Some sample question text
+                        </p>
+                       <input type="radio" name="optionsRadios1" id="optionsRadios1" class="radio">True
+                        <br>
+                        <input type="radio" name="optionsRadios1" id="optionsRadios1" class="radio">False
+                      </li>
+                      <li>
+                        <p>
+                          Some sample question text
+                        </p>
+                        <input type="radio" name="optionsRadios2" id="optionsRadios2" class="radio">True
+                        <br>
+                        <input type="radio" name="optionsRadios2" id="optionsRadios2" class="radio">False
+                      </li>
+                      <li>
+                        <p>
+                          Another sample question text
+                        </p>
+                        <input type="radio" name="optionsRadios1" id="optionsRadios1" class="radio">Answer A
+                        <br>
+                        <input type="radio" name="optionsRadios1" id="optionsRadios1" class="radio">Answer B
+                        <br>
+                        <input type="radio" name="optionsRadios1" id="optionsRadios1" class="radio">Answer C
+                        <br>
+                        <input type="radio" name="optionsRadios1" id="optionsRadios1" class="radio">Answer D
+                      </li>
+                      <li>
+                        <p>
+                          Another sample question text
+                        </p>
+                        <input type="radio" name="optionsRadios2" id="optionsRadios2" class="radio">Answer A
+                        <br>
+                        <input type="radio" name="optionsRadios2" id="optionsRadios2" class="radio">Answer B
+                        <br>
+                        <input type="radio" name="optionsRadios2" id="optionsRadios2" class="radio">Answer C
+                        <br>
+                        <input type="radio" name="optionsRadios2" id="optionsRadios2" class="radio">Answer D
+                      </li>
+                      <li>
+                        <p>
+                          Another sample question text
+                        </p>
+                        <input type="radio" name="optionsRadios3" id="optionsRadios3" class="radio">Answer A
+                        <br>
+                        <input type="radio" name="optionsRadios3" id="optionsRadios3" class="radio">Answer B
+                        <br>
+                        <input type="radio" name="optionsRadios3" id="optionsRadios3" class="radio">Answer C
+                        <br>
+                        <input type="radio" name="optionsRadios3" id="optionsRadios3" class="radio">Answer D
+                      </li>
+                    </ol>
+                    <div class="pagination">
+                      <ul>
+                        <li class="disabled"><a href="#">«</a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">»</a></li>
+                      </ul>
+                    </div>
+                     <div class='control-group'>
+                            <div class='controls' style="float:inherit">
+                                 <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                   
+                  </form>
+                    <br />
+                    <br />
+                    <br />
+                    <hr>
+                </div>
+              </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#viewdocli').removeClass("active");
+        $('#assesmentli').addClass("active");
+        
+    });
+</script>

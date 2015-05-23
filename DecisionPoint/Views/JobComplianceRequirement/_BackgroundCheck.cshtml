@@ -1,0 +1,227 @@
+﻿@model DecisionPoint.Models.JobComplianceRequirementModel
+
+@{
+    string reqById = string.Empty;
+    string bgCheckTitle = string.Empty;
+    //string bgCheckPkgId = string.Empty;
+    int indexType = 0;
+}
+<div class="row-fluid">
+    <div class="span12 mt20">
+        <h4>Background</h4>
+
+    </div>
+
+    <div class="span12" style="margin-left: 0; border: 1px solid rgb(225, 225, 225); padding: 9px;">
+        <div class="span12" style="margin-left: 0;">
+            <div class="span4"><b id="userTypeLbl">IC Type(s)</b></div>
+            <div class="span4"><b>Requirements set by</b></div>
+            <div id="dvBackgroundAttributes" class="span4"><b>Attribute</b><sup style="color: red; font-size: 10px;">*</sup></div>
+
+        </div>
+        <div class="span12" style="margin-left: 0;">
+            <div class="span4" id="icTypeDiv">
+            </div>
+            <div class="span4" id="staffTitleDiv">
+            </div>
+            <div class="span4" id="clientsDiv">
+            </div>
+            <div class="span4">
+                <ul id="ulPackageList">
+                    @foreach (var item in Model.BackgroundPkgList.Where(x => (x.PacakgeType == 0 || x.PacakgeType == 3)))
+                    {
+                        if (item.PacakgeGroup > 1)
+                        {
+                            indexType = 1;
+                        }
+
+                        <li>
+                            <label class="radio">
+                                <input type="radio" class="chkBGCheck" id="@item.Id" name="@item.PacakgeGroup" value="@item.Id" title="@item.Source" onclick="SetBgCheckPkgId(this.value, this.title,@indexType)" />@item.BackgroundTitle
+                            </label>
+                        </li>
+                    }
+                    <li id="liError"></li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="span12" style="margin-left: 0;">
+            <input type="button" id="bgCheckCancel" class="btn btn-primary pull-right" value="Cancel" onclick="ResetRecord(0, 0)" style="display: none;" />
+            <input type="submit" id="backgroundSave" class="btn btn-primary pull-right" title="Save" value="Save" style="margin-right: 4px;" />
+        </div>
+    </div>
+    <div class="span12" style="margin-left: 0;" id="BGCheckDetailDiv">
+        <div class="span12" style="margin-top: 10px;">
+            <label class="radio pull-right" style="margin-left: 10px;">
+                <input type="radio" onclick="ShowCurrentOrPastDetails(0, false)" name="currentpastbg" id="pastBGCheck">Past
+            </label>
+            <label class="radio pull-right">
+                <input type="radio" onclick="ShowCurrentOrPastDetails(0, true)" name="currentpastbg" id="currentBGCheck" checked="checked">Current
+            </label>
+        </div>
+        <table class="table table-hover" id="currentBGCheckDetails">
+            <thead>
+                <tr>
+                    <th>Required By</th>
+                    <th>Title</th>
+                    <th>IC Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (object.Equals(Model.BackgroundMasterList, null))
+                {
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model.BackgroundMasterList.Where(x => x.IsActive))
+                    {
+                        if (reqById == item.RequiredByCompanyId)
+                        {
+                            <tr>
+                                <td></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(bgCheckTitle))
+                                    {
+                                        if (!bgCheckTitle.Equals(item.BackgroundTitle))
+                                        {
+                                            @item.BackgroundTitle
+                                        }
+                                    }
+                                </td>
+                                <td>@item.ICType</td>
+                                <td>
+                                    <a>
+                                        <img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.Id',0)" />
+                                    </a>
+                                    <a>
+                                        <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetBGDetailForEdit('@item.RequiredByCompanyId','@item.ICTypeId','@item.BGCheckPkgId','@Session["CompanyId"]')" />
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@item.ReqCompanyName</td>
+                                <td>@item.BackgroundTitle</td>
+                                <td>@item.ICType</td>
+                                <td>
+                                    <a>
+                                        <img src='@Url.Content("~/Content/images/delete.png")' style='margin-left:5px;height:14px;' onclick="ActiveOrDeactivate(false,'@item.Id',0)" />
+                                    </a>
+                                    <a>
+                                        <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetBGDetailForEdit('@item.RequiredByCompanyId','@item.ICTypeId','@item.BGCheckPkgId','@Session["CompanyId"]')" />
+                                    </a>
+
+                                </td>
+                            </tr>
+                            // bgCheckPkgId = string.Empty;
+                        }
+                        reqById = item.RequiredByCompanyId;
+                        bgCheckTitle = item.BackgroundTitle;
+                        //if (string.IsNullOrEmpty(bgCheckPkgId))
+                        //{
+                        //    bgCheckPkgId = Convert.ToString(item.BGCheckPkgId);
+                        //}
+                        //else { bgCheckPkgId =bgCheckPkgId+","+Convert.ToString(item.BGCheckPkgId); }
+                    }
+                }
+
+
+            </tbody>
+        </table>
+        @{reqById = string.Empty; bgCheckTitle = string.Empty;}
+        <table class="table table-hover" id="pastBGCheckDetails" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Required By</th>
+                    <th>Title</th>
+                    <th>IC Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.BackgroundMasterList.Where(x => !x.IsActive))
+                {
+
+                    if (reqById == item.RequiredByCompanyId)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(bgCheckTitle))
+                                {
+                                    if (!bgCheckTitle.Equals(item.BackgroundTitle))
+                                    {
+                                        @item.BackgroundTitle
+                                    }
+                                }
+                            </td>
+                            <td>@item.ICType</td>
+                            <td>
+
+                                @*<a><img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetBGDetailForEdit('@item.RequiredByCompanyId','@item.ICTypeId','@item.BGCheckId','@item.Id','@Session["CompanyId"]')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.Id',0)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@item.ReqCompanyName</td>
+                            <td>@item.BackgroundTitle</td>
+                            <td>@item.ICType</td>
+                            <td>
+                                @* <a><img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;' onclick="GetBGDetailForEdit('@item.RequiredByCompanyId','@item.ICTypeId','@item.BGCheckId','@item.Id','@Session["CompanyId"]')"/></a>*@
+                                <a onclick="ActiveOrDeactivate(true,'@item.Id',0)" style="cursor:pointer;font-style:italic;">reactive</a>
+                            </td>
+                        </tr>
+                    }
+                    reqById = item.RequiredByCompanyId;
+                    bgCheckTitle = item.BackgroundTitle;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<input type="hidden" id="hidBGCheckSource" />
+<script>
+    var ROOT = '@Url.Content("~/")';
+    $('#backgroundSave').click(function () {
+        if (IsValidBackgroundProperties()) {
+            SaveBackgroundDetails(ROOT, '@Session["UserId"]', '@Session["CompanyId"]');
+        }
+
+    });
+    $('.chkBGCheck').click(function (e) {
+        if ($('.chkBGCheck:checked').length != 0) {
+            $('#liError').children().remove();
+        }
+    });
+    function IsValidBackgroundProperties() {
+        $('#liError').children().remove();
+        if ($('.chkBGCheck:checked').length === 0) {
+            console.log(ERRORMESSAGE + '' + $('.chkBGCheck:checked').length);
+            if (ERRORMESSAGE != null) {
+                msg = String(ERRORMESSAGE) + ' ' + $('#dvBackgroundAttributes').text().toLowerCase();
+                msg = msg.replace("*", "");
+                var errLabel = '<label id="errMsgLicenseType" style="color: red;">' + msg + '</label>';
+
+                $(errLabel).appendTo('#liError');
+            }
+            return false;
+        } else {
+            console.log(ERRORMESSAGE + '' + $('.chkBGCheck:checked').length);
+            return true;
+        }
+    }
+</script>

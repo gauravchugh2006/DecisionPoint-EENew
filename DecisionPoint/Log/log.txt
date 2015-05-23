@@ -1,0 +1,656 @@
+2013-10-16 22:22:00,647 [5] ERROR DecisionPoint.Controllers.LoginController - System.InvalidOperationException: No connection string named 'DecisionPointEntities' could be found in the application config file.
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+System.InvalidOperationException: No connection string named 'DecisionPointEntities' could be found in the application config file.
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+2013-10-16 23:32:25,645 [5] ERROR DecisionPoint.Controllers.LoginController - System.InvalidOperationException: No connection string named 'DecisionPointEntities' could be found in the application config file.
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+System.InvalidOperationException: No connection string named 'DecisionPointEntities' could be found in the application config file.
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+2013-10-17 14:15:33,019 [7] ERROR DecisionPoint.Controllers.LoginController - System.InvalidOperationException: No connection string named 'DecisionPointEntities' could be found in the application config file.
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+System.InvalidOperationException: No connection string named 'DecisionPointEntities' could be found in the application config file.
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+2013-10-17 14:20:37,648 [6] ERROR DecisionPoint.Controllers.LoginController - System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+2013-10-17 14:21:32,115 [6] ERROR DecisionPoint.Controllers.LoginController - System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+2013-10-17 14:24:07,884 [6] ERROR DecisionPoint.Controllers.LoginController - System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+2013-10-17 14:25:43,407 [5] ERROR DecisionPoint.Controllers.LoginController - System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+System.Data.MetadataException: Schema specified is not valid. Errors: 
+The relationship 'DecisionPointModel.fk_dp_City' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorIdMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyVendorMapping' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyCompanyUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ComapnyStaffUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentDetails' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_DocumentLinks' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_EmailTrakingDetails' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_MessagesDetails' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientDocId' was not loaded because the type 'DecisionPointModel.DP_DocumentDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadDoc' does not exist on the type 'DecisionPointDAL.Repository.DP_DocumentDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Recipient' was not loaded because the type 'DecisionPointModel.DP_MessagesDetails' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'NumberOfTimesReadMsg' does not exist on the type 'DecisionPointDAL.Repository.DP_MessagesDetails'.
+
+
+The relationship 'DecisionPointModel.fk_DP_RecipientUserId' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_ReqiureDocument' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_DP_Security' was not loaded because the type 'DecisionPointModel.DP_User' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'Enailid' does not exist on the type 'DecisionPointDAL.Repository.DP_User'.
+
+
+The relationship 'DecisionPointModel.fk_dp_state' was not loaded because the type 'DecisionPointModel.DP_Profile' is not available.
+The following information may be useful in resolving the previous error:
+The required property 'DP_User' does not exist on the type 'DecisionPointDAL.Repository.DP_Profile'.
+
+
+   at DecisionPointDAL.Implemention.DecisionPointRepository.CheckLogin(String UserId, String Password) in d:\Projects\Decisionpoint\DecisionPointDAL\Implemention\DecisionPointRepository.cs:line 51
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 35
+2013-10-17 19:35:47,737 [7] ERROR DecisionPoint.Controllers.LoginController - Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: Cannot apply indexing with [] to an expression of type 'System.Dynamic.DynamicObject'
+   at CallSite.Target(Closure , CallSite , Object , String , String )
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute3[T0,T1,T2,TRet](CallSite site, T0 arg0, T1 arg1, T2 arg2)
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 54
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: Cannot apply indexing with [] to an expression of type 'System.Dynamic.DynamicObject'
+   at CallSite.Target(Closure , CallSite , Object , String , String )
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute3[T0,T1,T2,TRet](CallSite site, T0 arg0, T1 arg1, T2 arg2)
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 54
+2013-10-17 19:36:12,712 [6] ERROR DecisionPoint.Controllers.LoginController - Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: Cannot apply indexing with [] to an expression of type 'System.Dynamic.DynamicObject'
+   at CallSite.Target(Closure , CallSite , Object , String , String )
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 54
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: Cannot apply indexing with [] to an expression of type 'System.Dynamic.DynamicObject'
+   at CallSite.Target(Closure , CallSite , Object , String , String )
+   at DecisionPoint.Controllers.LoginController.Login(UserLogin userLogin) in d:\Projects\Decisionpoint\DecisionPoint\Controllers\LoginController.cs:line 54

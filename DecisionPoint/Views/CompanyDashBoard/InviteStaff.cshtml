@@ -1,0 +1,782 @@
+﻿@model DecisionPoint.Models.InviteStaffModel
+
+@{
+    ViewBag.Title = "ManualInvitation";
+    string requestType = Request["Type"];
+    if (Request["Type"] == "V")
+    {
+        Layout = "~/Views/Shared/_VendorSetUpProfileLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    }
+}
+@Styles.Render("~/Content/css/UserDashboard")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/dashboard")
+@Scripts.Render("~/bundles/jqueryval")
+
+<link href="~/Content/css/Register/common.css" rel="stylesheet" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<style>
+    .row {
+        margin-left: 0px !important;
+    }
+
+    .w20 {
+        margin-right: 50px;
+        float: left;
+        margin-bottom: 10px;
+        line-height: 26px;
+    }
+
+    .pdr5 {
+        padding-right: 5px;
+        float: left;
+        padding-top: 3px;
+    }
+
+    .ui-autocomplete {
+        max-height: 150px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+        font-size: 11px;
+    }
+    /* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+    * html .ui-autocomplete {
+        height: 150px;
+    }
+
+    .inputauto {
+        width: 135px!important;
+        /*height:30px !important;*/
+    }
+
+    .errorClass {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+
+    .w100 {
+        width: 100%;
+        float: left;
+    }
+
+    .w200 {
+        width: 80px;
+        float: left;
+        margin-right: 20px;
+        margin-top: 5px;
+    }
+
+    .w50 {
+        width: 100px;
+    }
+
+    .butmargin {
+        margin: 2px 0 5px 10px;
+    }
+
+    .butmargin-left1 {
+        margin: -2px 0px 1px 0px;
+    }
+
+    .grid-width100 {
+        width: 100px;
+    }
+
+    .grid-width181 {
+        width: 181px;
+    }
+
+    .iconcontainer {
+        width: 70%;
+        overflow: hidden;
+        margin: 1% auto;
+    }
+
+    .individual {
+        width: 202px;
+        height: 202px;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+        box-shadow: 2px 2px 2px 2px #E1E1E1;
+        border: 1px solid #e1e1e1;
+    }
+
+    .bulk {
+        width: 202px;
+        height: 202px;
+        float: right;
+        text-align: center;
+        box-shadow: 2px 2px 2px 2px #E1E1E1;
+        border: 1px solid #e1e1e1;
+    }
+
+    #download {
+        background: url(../../images/download.png) no-repeat;
+        width: 28px;
+        height: 32px;
+        float: right;
+        width: 175px;
+        padding-left: 32px;
+        line-height: 30px;
+        text-decoration: underline;
+    }
+
+    .autodetect {
+        margin-left: 10px;
+        margin-top: 10px;
+        display: inline;
+        background: red;
+    }
+
+    .forlabel {
+        float: left;
+    }
+
+    .fl {
+        float: left;
+    }
+
+
+    label {
+        font-weight: normal;
+        vertical-align: baseline;
+    }
+
+    label {
+        margin-bottom: 5px;
+        margin-left: 15px;
+    }
+
+    label, input, button, select, textarea {
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 23px;
+        float: left;
+    }
+
+    .manualinput {
+        width: 50px;
+        margin-left: 10px;
+    }
+
+    .considerfirstrow {
+        margin-left: 166px;
+        float: left;
+        display: block;
+        float: left;
+    }
+
+    .mt20 {
+        margin-top: 15px;
+    }
+
+    .mr10 {
+        margin-right: 10px;
+        float: left;
+    }
+
+    .w250 {
+        width: 100px;
+        float: left;
+        margin-top: 5px;
+    }
+
+    .wcol1 {
+        width: 14%;
+        float: left;
+    }
+
+    .wcol2 {
+        width: 220px;
+        float: left;
+    }
+
+    .wcol3 {
+        width: 30%;
+        float: left;
+    }
+
+    .mt5px {
+        margin-top: 5px;
+    }
+
+    .wcol4 {
+        width: 14%;
+        float: left;
+    }
+
+    .wcol5 {
+        width: 220px;
+        float: left;
+    }
+
+    .wcol6 {
+        width: 30%;
+        float: left;
+    }
+
+    .w206 {
+        width: 206px;
+    }
+
+    .selectheading {
+        background: #eee;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 3px 3px 3px 3px;
+        padding: 5px 0px;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .multiselectable {
+        display: block;
+        overflow: hidden;
+        width: 60%;
+        padding-right: 20px;
+        margin-bottom: 10px;
+    }
+
+        .multiselectable select, .multiselectable div {
+            width: 216px;
+            float: left;
+        }
+
+            .multiselectable div * {
+                display: block;
+                margin: 0 auto;
+            }
+
+        .multiselectable div {
+            display: inline;
+            overflow: hidden;
+        }
+
+        .multiselectable .m-selectable-controls {
+            margin-top: 4em;
+            width: 70px;
+        }
+
+            .multiselectable .m-selectable-controls button {
+                margin-top: 2em;
+                margin-left: .5em;
+            }
+
+    a.bulk-invitaion {
+        background: url("../../images/bulk.jpg") repeat-x scroll left;
+        display: block;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+    a.manual-invitaion {
+        background: url("../../images/manual.jpg") repeat-x scroll left;
+        display: block;
+        height: 150px;
+        text-indent: -9999px; /* hides the link text */
+    }
+</style>
+
+
+
+<div class='heading'>
+    <div class='row'>
+        <h3>Add Staff</h3>
+    </div>
+</div>
+
+<div class="row">
+
+
+
+    @*Staff*@
+    <div class='tabbable'>
+        <div>
+
+
+            <table id="tblstaff" class="table table-hover">
+                <thead style="text-align: center">
+                    <tr>
+                        <th style="margin-left: 5px;">First Name</th>
+                        <th>Last Name</th>
+                        <th>Title</th>
+                        <th>Email</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(model => model.staffFName, new { id = "staffFName", @class = "fnameclass" })
+
+                            <input placeholder='First Name' type='text' name="fname" style="width: 250px;" autocomplete="off" maxlength="50" id="fname_0" onkeypress="Removeclass(this.id)" />
+                        </td>
+                        <td>
+                            @Html.HiddenFor(model => model.staffLName, new { id = "stafflname" })
+
+                            <input placeholder='Last Name' type='text' name="lname" style="width: 250px;" autocomplete="off" id="lname_0" maxlength="50" onkeypress="Removeclass(this.id)" />
+                        </td>
+                        <td style="width: 130px">
+                            @Html.HiddenFor(model => model.staffTitleId, new { id = "staffTitleId" })
+                            @Html.DropDownList("ddTitle", new SelectList(Model.titleDetails, "id", "titleName"), new { @name = "ddTitle", @style = "width:130px;" })
+                        </td>
+                        <td>
+                            @Html.HiddenFor(model => model.staffEmailId, new { id = "staffEmailId" })
+
+                            <input placeholder='Email' type='text' name="emailid" style="width: 165px" autocomplete="off" id="emailid_0" maxlength="100" onkeypress="Removeclass(this.id)" />
+                        </td>
+                        <td class="removeStaff">
+                            <img style="margin-left: 20px;" src="../Content/images/delete.png" /></td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="paddingleft15">
+                <div style="cursor: pointer; width: 85px; color: #49AFCD;" id="addnewstaff">Add another</div>
+                <div style="float: left; margin-top: 10px; color: red; display: none;" id="div_UserExists">User already a member of Compliance Tracker.</div>
+            </div>
+        </div>
+        <span style="float: right; margin-right: 13px; margin-top: 0px;"><a id="btninvite" class="btn btn-small btn-info butmargin" style="width: 80px;" title="Add staff">Add Staff</a></span>
+    </div>
+</div>
+
+
+<div style="border: 1px solid #e1e1e1; display: none;">
+    @using (Html.BeginForm("InviteStaff", "CompanyDashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+             
+        <div class='content-box' style="margin-left: 25px; margin-top: 10px;">
+            <div class='row'>
+                <div class='span7'>
+                    &nbsp;
+                </div>
+                <div class='span5 text-left'>
+                    <h2>Upload Staff</h2>
+                </div>
+            </div>
+            <div class='row'>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="text" id="txtcsvs" style="height: 20px; line-height: 20px;" placeholder="Upload Staff CSV/Excel" />
+                        @Html.TextBoxFor(m => m.File, new { @name = "attachment", @id = "txtcsv", type = "file" })
+
+                        <input type="submit" value="Upload File" class="btn btn-small btn-info butmargin" style="height: 25px; width: 100px;" id="btnUploadZip" />
+                        <div id="download">
+                            @Html.ActionLink("Download sample CSV file", "DownloadStaffIviteSample", "CompanyDashboard")
+
+                        </div>
+                    </div>
+                    <div class="controls" style="color: red;">
+                        @Html.ValidationMessageFor(m => m.File)
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+                <div class="control-group">
+                    <div class="controls">
+                        <div class="fl">Choose Seperators :</div>
+                        <div class="forlabel" alignment="center">
+                            <label style="float: left; margin-left: 10px;">
+                                <input type="radio" id="" name="ss" value="," checked="checked" class=" mr10" style="margin-right: 7px;" />
+                                (,)</label>
+                            <label style="float: left; margin-left: 10px;">
+                                <input type="radio" id="" name="ss" value="." class=" mr10" style="margin-right: 7px;" />
+                                (.)</label>
+                            <label style="float: left; margin-left: 10px;">
+                                <input type="radio" id="" name="ss" value=";" class=" mr10" style="margin-right: 7px;" />
+                                (;)</label>
+                            @Html.HiddenFor(model => model.Seprator, new { @id = "hidSeprator", @value = "," })
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="control-group">
+                    <div class="controls">
+                        <label style="margin-left: 0px;">
+                            @Html.CheckBoxFor(model => model.FirstRowHeader, new { @id = "firstRowHeader" })
+
+                            Consider first row as header</label>
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+
+
+
+
+
+            </div>
+        </div> 
+                       
+    }
+</div>
+
+
+@* Staff *@
+<script id="ddtitle" type="text/template">
+         @Html.DropDownList("ddTitle", new SelectList(Model.titleDetails, "id", "titleName"), new { @style = "width:130px;" })
+</script>
+
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 277px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvPopUpMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+
+    </div>
+
+</div>
+@* Saved Pop up End *@
+
+
+
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        if ('@requestType' != "V") {
+            ShowHideTabs('administration');
+        }
+        //$('#tblstaff tr input[name="fname"]').keypress(function () {
+        //    alert($(this).closest().val());
+        //})
+        $('input[id="txtcsv"]').change(function () {
+            var filename = $(this).val();
+            $('#txtcsvs').val(filename);
+
+        });
+        $('#hidSeprator').val(',');
+        $('input[type="radio"]').change(function () {
+            var seprators = $(this).val();
+            $('#hidSeprator').val(seprators);
+        })
+
+        $("#addnewstaff").click(function () {
+            var count = $('#tblstaff').length;
+            if (validateAddStaff() == true) {
+                var template = '<tr><td> <input id="fname_' + count + '" placeholder="First Name" class="fnameclass" type="text" name="fname" style="width: 250px;" autocompleted="off" maxlength="50" onkeypress="Removeclass(this.id)"/></td><td><input placeholder="Last Name" type="text" name="lname" style="width:250px;" autocompleted="off" maxlength="50" id="lname_' + count + '" onkeypress="Removeclass(this.id)"/></td><td>' + ($("#ddtitle").html()) + '</td><td><input  placeholder="Email" type="text" class="CheckUser" name="emailid" style="width: 165px" autocompleted="off" maxlength="100" id="emailid_' + count + '" onkeypress="Removeclass(this.id)" , onchange="CheckUserExistence(this.id)"/></td><td class="removeStaff" ><img style="margin-left: 20px;" src="../Content/images/delete.png" /></td></tr>';
+                $('#tblstaff tr:last').after(template);
+            }
+
+        })
+        $('#tblstaff ').on('click', 'tr td', function () {
+            if ($(this).index() == 4) {
+                var row = $(this).parent().parent().children().index($(this).parent());
+                if (row == 0) {
+                    $(this).parent('tr').find('input').val('');
+                    var fname = $(this).parent('tr').find('input[name="fname"]');
+                    var lname = $(this).parent('tr').find('input[name="lname"]');
+                    var email = $(this).parent('tr').find('input[name="emailid"]');
+                    fname.removeClass("errorClass");
+                    lname.removeClass("errorClass");
+                    email.removeClass("errorClass");
+                }
+                else if (row > 0) {
+                    var fname = $(this).parent('tr').find('input[name="fname"]').val();
+                    var lname = $(this).parent('tr').find('input[name="lname"]').val();
+                    var email = $(this).parent('tr').find('input[name="emailid"]').val();
+                    if (fname != '' || lname != '' || email != '') {
+                        if (confirm("Are you sure to remove this row?")) {
+                            $(this).parent('tr').remove();
+                        }
+                    } else {
+                        $(this).parent('tr').remove();
+                    }
+                }
+            }
+        });
+
+
+    })
+
+    function Removeclass(id) {
+        var value = $('#' + id).val();
+        if (value.trim() != "") {
+            $('#' + id).removeClass("errorClass");
+            $('#' + id).removeAttr("title");
+        }
+    }
+    $('#rdSelectByZip').change(function () {
+        if ($('#rdSelectByZip').is(':checked')) {
+            window.location.href = "InviteStaffBulk";
+        }
+    })
+    $('#rdSelectByAddress').change(function () {
+
+        if ($('#rdSelectByAddress').is(':checked')) {
+            window.location.href = "InviteStaff";
+        }
+    })
+
+    // Validation
+
+    function validateAddStaff() {
+        var res = false;
+        $('#tblstaff tr').each(function (index) {
+            if (index != 0) {
+
+                var firstName = $(this).find('input[name="fname"]');
+                var lastName = $(this).find('input[name="lname"]');
+                var email = $(this).find('input[name="emailid"]');
+                var title = $(this).find('select[id="ddTitle"]');
+
+                if (firstName.val().trim() != null || firstName.val().trim() != "") {
+                    firstName.removeClass('errorClass');
+                    firstName.removeAttr("title");
+                    res = true;
+                }
+                if (lastName.val().trim() != null || lastName.val().trim() != "") {
+                    lastName.removeClass('errorClass');
+                    lastName.removeAttr("title");
+                    res = true;
+
+                }
+                if (title.val() != undefined || title.text().trim() != "") {
+                    title.removeClass('errorClass');
+                    res = true;
+
+                }
+                if (email.val().trim() != null || email.val().trim() != "") {
+
+                    if (validateEmail(email.val().trim())) {
+                        email.removeClass('errorClass');
+                        email.removeAttr("title");
+                        res = true;
+                    }
+                    else {
+
+                        email.addClass('errorClass');
+                        email.attr("title", "Please input correct emailid");
+                        res = false;
+                    }
+
+
+                }
+                if (firstName.val().trim() == null || firstName.val().trim() == "") {
+                    firstName.addClass('errorClass');
+                    firstName.attr("title", "Please input first name");
+                    res = false;
+                }
+
+                if (lastName.val().trim() == null || lastName.val().trim() == "") {
+                    lastName.addClass('errorClass');
+                    lastName.attr("title", "Please input last name");
+                    res = false;
+                }
+                if (title.val() == undefined || title.text().trim() == "") {
+                    title.addClass('errorClass');
+                    res = false;
+                }
+                if (email.val().trim() == null || email.val().trim() == "") {
+                    email.addClass('errorClass');
+                    email.attr("title", "Please input emailid");
+                    res = false;
+                }
+
+            }
+        });
+        return res;
+    }
+    $(".compId").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashboard/GetCompanyId")',
+                type: "GET",
+                dataType: "json",
+                data: { term: request.term },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.CompanyId, value: item.Id };
+                    }))
+                },
+                error: (function (data) {
+                    $('.compId').val('');
+                })
+            })
+        },
+        select: function (event, ui) {
+            $('.compId').val(ui.item.label);
+
+            return false;
+        }, minLength: 1,
+        messages: {
+            noResults: "", results: ""
+        }
+
+    });
+
+
+        //Send Invitaion
+    $("#btninvite").click(function () {
+        StaffInvite();
+    });
+
+    function StaffInvite(index) {
+        //Staff
+        if (validateAddStaff()) {
+            var staff = [];
+            $('#tblstaff tr').each(function (index) {
+                if (index != 0) {
+
+                    var firstName = $(this).find('input[name="fname"]').val().trim();
+                    var lastName = $(this).find('input[name="lname"]').val().trim();
+                    var titleId = $(this).find('select[id="ddTitle"]').val();
+                    var emailId = $(this).find('input[name="emailid"]').val().trim();
+                    var emailIdVal = $(this).find('input[name="emailid"]').attr('id');
+                    var companyname = '@Session["BusinessName"]';
+                    var IsMailSent = isMail;
+                    var flowId = 0;
+                    var docflowId = 0;
+                    var type = 'staff';
+                    var PaymentType = "1";
+
+                    var isMail = true;
+                    if (index > 5) {
+                        isMail = false;
+
+                    }
+
+                    staff.push({
+                        firstName: firstName,
+                        lastName: lastName,
+                        titleId: parseInt(titleId),
+                        emailId: emailId,
+                        companyId: 0,
+                        companyname: companyname,
+                        IsMailSent: isMail,
+                        flowId: 0,
+                        docflowId: 0,
+                        type: 'staff',
+                        PaymentType: "1",
+                        emailIdVal: emailIdVal
+                    });
+
+                }
+            });
+           
+            CheckExistEmail(staff);
+        }
+
+    }
+    function CheckExistEmail(staff) {
+        var errorstatus = false;
+        //Vendor Without ID
+        var countValidateRows = 1;
+        //Vendor Without ID
+        $(staff).each(function (index) {
+            var EmailIdVal = staff[index].emailId;
+
+                $.ajax({
+                    url: '@Url.Content("~/CompanyDashboard/CheckUserExistence")',
+                    cache: false,
+                    type: 'POST',
+                        data: { emailId: EmailIdVal, type: 'staff' },
+                    async: true,
+                    success: function (data) {
+                        if (data != "Not Found") {
+                                $('#' + staff[index].emailIdVal).addClass("errorClass");
+                            $('#div_UserExists').show();
+                        } else {
+                            $('#div_UserExists').hide();
+                                $('#' + staff[index].emailIdVal).removeClass("errorClass");
+                        }
+                        countValidateRows = countValidateRows + 1;
+                        if (countValidateRows == $('#tblstaff tr').length) {
+                            if (!($('#div_UserExists').is(':visible'))) {
+                                    InviteStaff(staff);
+
+                            }
+                        }
+                    },
+                    error: function (data) {
+                        return false;
+                    }
+                });
+
+                //}
+        })
+                    }
+    function InviteStaff(staff) {
+                   
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Content("~/CompanyDashBoard/SendInvitation")',
+                                cache: false,
+                data: JSON.stringify(staff),
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (data) {
+                                    if (data > 0) {
+                                        $('#divManualInviteOuter').show();
+                                        $('#divManualInviteInner').show();
+                                        $('#dvPopUpMsg').text('Invitation sent sucessfully');
+                                        setTimeout(function () {
+                                            $('#divManualInviteOuter').fadeOut('slow');
+                                            $('#divManualInviteInner').fadeOut('slow');
+                                            window.location.reload();
+                                        }, 1000);
+                                    }
+                                    else {
+                                        $('#divManualInviteOuter').hide();
+                                        $('#divManualInviteInner').hide();
+                                    }
+                                },
+                                beforeSend: function (jqXHR, obj) {
+
+                                    $('#divManualInviteOuter').show();
+                                    $('#divManualInviteInner').show();
+                                    var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                                    var poistion = scrollTop + 100;
+                                    $('#divManualInviteInner').css("top", poistion);
+                                    $('#dvPopUpMsg').text('Please wait...');
+
+                                },
+                                error: function (data) {
+
+
+                                    $('#divManualInviteOuter').show();
+                                    $('#divManualInviteInner').show();
+                                    $('#dvMsg').text('Error in input details : Invitation not sent sucessfully');
+                                    setTimeout(function () {
+                                        $('#divManualInviteOuter').fadeOut('slow');
+                                        $('#divManualInviteInner').fadeOut('slow');
+                                        window.location.reload();
+                                    }, 1000);
+
+                                }
+
+                });
+        }
+
+
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    
+</script>
+
+
+
+

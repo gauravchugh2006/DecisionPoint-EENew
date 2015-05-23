@@ -1,0 +1,130 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@using GridMvc.Html
+@{
+    ViewBag.Title = "UserDashBoard : Messages";
+    //Grid for Dispaly Messages details
+    WebGrid grdmessages = new WebGrid(ajaxUpdateContainerId: "messagegrid", rowsPerPage: Model.rowperpage);
+    if (Model.MessagesDetails != null)
+    {
+        grdmessages.Bind(Model.MessagesDetails, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#messageli').addClass("active");
+        $('#documentli').removeClass("active");
+        $('#internalstaffli').removeClass("active");
+        $('#vendorli').removeClass("active");
+        $('#companyprofile').removeClass("active");
+        $('#accountprofile').removeClass("active");
+        $('#communicationli').removeClass("active");
+    });
+</script>
+@*<div class="row">
+                    <div class="span4 text-right" style="float:right; padding-top:10px;">
+                      <a href="/add-a-document.html" class="btn btn-primary">
+                        <i class="icon-plus-sign icon-white"></i>
+                        Create Message
+                      </a>
+                    </div>
+</div*@
+<div class="filter-bar">
+    <strong>Filter List By:</strong>
+<div id="msgdiv" class="dropdown">
+    
+            <a data-toggle="dropdown" id="msgdd" class="dropdown-toggle btn btn-info">
+             <b id="msgstatusdd">Message Status</b>
+              <b class="caret"></b>
+            </a>
+            <ul role="menu" class="dropdown-menu"id="dd" >
+              <li onclick="filter('message','All','0')">
+                <a>
+                  <label style="font-weight: normal"  id="allmsg" class="checkbox">
+                     
+                    All
+                  </label>
+                </a>
+              </li>
+              <li onclick="filter('message','read','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="open">
+                     
+                    Opened
+                  </label>
+                </a>
+              </li>
+              <li onclick="filter('message','unread','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="unopen">
+                  
+                    Unopened
+                  </label>
+                </a>
+              </li>
+              <li onclick="filter('message','sent','0')">
+                <a>
+                  <label style="font-weight: normal" class="checkbox" id="sent">
+                      
+                    Sent
+                  </label>
+                </a>
+              </li>
+            </ul>
+          </div>
+    </div>
+
+ @*funtion used for sorting in webgrid*@
+ @functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid){
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+
+@*Messages*@
+<div id='messages' style="padding-top:20px;">
+   @if (Model.MessagesDetails != null)
+  {
+    if (Model.MessagesDetails.Count()>0)
+    {
+   
+                               
+        @grdmessages.GetHtml(htmlAttributes: new { id = "messagegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+
+grdmessages.Column(columnName:"msgDate",header : Sorter("msgDate", "Date", grdmessages), format: (item) => string.Format("{0:MM/dd/yyyy}", item.msgDate)),
+  grdmessages.Column(columnName:"msgTitle",header: Sorter("msgTitle", "Title", grdmessages), format:@<text> <a id="messagetitle" onclick="showpopupInbox('@item.emailIdTo','@item.msgId','@item.id','@item.deliveredUserId')" style="cursor:pointer;"> @(item.msgTitle) </a></text>),
+  grdmessages.Column(columnName:"msgFrom",header:Sorter("msgFrom", "From", grdmessages),format:  @<text><a id="lnkfrom" onclick="showCompanyprofile('@item.deliveredUserId')" style="cursor:pointer;"> @(item.msgFrom) </a></text>),
+ 
+        grdmessages.Column("", 
+  format: @<text> 
+    <button class="btn btn-mini btn-info" onclick="showpopup('@item.emailIdTo','@item.msgId','@item.id','@item.deliveredUserId')">Forward</button>
+    <button class="btn btn-mini btnminired" onclick="showconfirmationdiv('@item.id','message')"  id="(int)@item.id">Archive</button>
+    <button class="btn btn-mini btn-info" >Edit</button>
+     </text>, canSort: false),
+    })
+ }
+    else
+    {
+        <div>
+           <b> There is No Messages !</b>
+        </div>
+    }
+    }
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,137 @@
+﻿@model DecisionPoint.Models.ManualInvitation
+@{
+    ViewBag.Title = "Manual";
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";  
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/register")
+<link href="~/Content/css/Register/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/Register/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@using (Html.BeginForm("ManualInvitation", "company", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div id="content">
+        <div class="container">
+            <br>
+            <div id="company-setup">
+
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <div class="controls">
+                            <h4>Manual Invitation</h4>
+                        </div>
+                    </div>
+                    <div class="registration-LEftbox">
+                        <div class="control-group">
+                            <label class="control-label">Company Name</label>
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.CompanyName, new { maxlength = 100, @class = "input-xlarge", @placeholder = "Company Name" })
+
+                            </div>
+                            <div class="controls">
+                                <span class="validation">@Html.ValidationMessageFor(model => model.CompanyName)</span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">First Name </label>
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.FirstName, new { maxlength = 20, @class = "input-xlarge", @placeholder = "First Name", @onkeypress = "return onlyAlphabets(event,this);" })
+                            </div>
+                            <div class="controls">
+                                <span class="validation">@Html.ValidationMessageFor(model => model.FirstName)</span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">Email</label>
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Email, new { @class = "input-xlarge", @placeholder = "Email" })
+                            </div>
+                            <div class="controls">
+                                <span class="validation">@Html.ValidationMessageFor(model => model.Email)</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"></label>
+                            <div class="controls">
+                                <button id="Submit" class='btn btn-primary' type='submit'>Send Invitation</button>
+                                <span class="validation">@ViewBag.ErrorMessage</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="registration-LEftbox">
+                        <div class="control-group">
+                            <label class="control-label">Company Id </label>
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.CompanyId, new { maxlength = 20, @class = "input-xlarge", @placeholder = "Last Name", @onkeypress = "return onlyAlphabets(event,this);" })
+                            </div>
+                            <div class="controls">
+                                <span class="validation">@Html.ValidationMessageFor(model => model.CompanyId)</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Last Name </label>
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.LastName, new { maxlength = 20, @class = "input-xlarge", @placeholder = "Last Name", @onkeypress = "return onlyAlphabets(event,this);" })
+                            </div>
+                            <div class="controls">
+                                <span class="validation">@Html.ValidationMessageFor(model => model.LastName)</span>
+                            </div>
+                        </div>
+                         <div class="control-group">  
+                             <label class="control-label"></label>                         
+                            <div class="controls">
+                                @Html.CheckBoxFor(model => model.VendorInvitation) Invite Vendor &nbsp;
+                                @Html.CheckBoxFor(model => model.UserInvitation) Invite User.
+                            </div>
+                            
+                        </div>
+                          <div class="control-group"> 
+                               <label class="control-label"></label>                           
+                           <div class="controls">
+                                @Html.CheckBoxFor(model => model.CompanyNotWorkingForMe) Sending communications to the person invited <br />
+                                @Html.CheckBoxFor(model => model.CompanyWorkingForMe) Is the company I am inviting working for me or am I working for them.
+                            </div>
+                            
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/dashboard")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        function onlyAlphabets(e, t) {
+            try {
+                if (window.event) {
+                    var charCode = window.event.keyCode;
+                }
+                else if (e) {
+                    var charCode = e.which;
+                }
+                else { return true; }
+
+                if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode >= 0 && charCode <= 32))
+                    return true;
+                else
+                    return false;
+            }
+            catch (err) {
+                alert(err.Description);
+            }
+        }
+
+
+
+    </script>
+
+}

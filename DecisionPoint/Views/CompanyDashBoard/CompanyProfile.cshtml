@@ -1,0 +1,780 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@using System.Globalization;
+@using DecisionPointCAL.Common;
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "UserDashBoard : My profile";
+    var imagePath = @Model.File;
+    double count = 0;
+    string userType = Convert.ToString(Session["UserType"],CultureInfo.InvariantCulture);
+}
+
+
+<link href="~/Content/css/Dashboard/common.css" rel="stylesheet" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>
+ <script src="~/Scripts/jquery.maskedinput.js"></script>
+
+  <style>
+      .ui-autocomplete {
+          max-height: 150px;
+          overflow-y: auto;
+          /* prevent horizontal scrollbar */
+          overflow-x: hidden;
+          /* add padding to account for vertical scrollbar */
+          padding-right: 20px;
+          font-size: 11px;
+          margin-top: 100px;
+          margin-left: 200px;
+          z-index: 999;
+      }
+      /* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+      * html .ui-autocomplete {
+          height: 150px;
+      }
+
+      .w20 {
+          margin-right: 65px;
+          float: left;
+          margin-bottom: 10px;
+          line-height: 26px;
+          width: auto !important;
+      }
+
+      .pdr5 {
+          padding-right: 5px;
+          float: left;
+      }
+
+      .multiselectable {
+          width: 500px;
+          display: block;
+          overflow: hidden;
+          width: 100%;
+          padding-right: 20px;
+          margin-bottom: -9px;
+      }
+
+          .multiselectable select, .multiselectable div {
+              width: 205px;
+              float: left;
+          }
+
+              .multiselectable div * {
+                  display: block;
+                  margin: 0 auto;
+                  font-size: 12px;
+                  font-weight: normal;
+              }
+
+          .multiselectable div {
+              display: inline;
+              overflow: hidden;
+          }
+
+      .butmargin {
+          margin: -11px 0 0 3px;
+      }
+
+      .multiselectable .m-selectable-controls {
+          margin-top: 45px;
+          width: 43px;
+      }
+
+      .w1002 {
+          float: left;
+          margin-bottom: 30px;
+      }
+
+      .multiselectable .m-selectable-controls button {
+          margin-top: 0.2em;
+          margin-left: .5em;
+          width: 30px;
+      }
+
+      .multiselectable select, .multiselectable div {
+          float: left;
+          width: 207px;
+      }
+
+      .m-selectable-to > select {
+          height: 150px;
+      }
+
+      .m-selectable-from > select {
+          height: 151px;
+      }
+
+      .selectheading {
+          /* padding: 6px 0 7px;*/
+      }
+
+      .unselectable {
+          -moz-user-select: none;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+      }
+
+      table {
+          background-color: transparent;
+          border-spacing: 0;
+          max-width: none !important;
+      }
+  </style>
+  <div class='heading'>
+        <div class='row'>
+            <h3>Company Profile Details</h3>
+        </div>
+    </div>
+<div id='Companyprofile'>
+
+
+<div class="w100">
+@using (Html.BeginForm("Updatecompanyprofile", "CompanyDashBoard", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return checkvalidation()" }))
+{
+    <div style="width:50%; float:left;"><div class='control-group w100'>
+                        
+
+                        
+                         
+                        <div class="control-group w100">
+                            <div class="halfwidth" >Contact Person: </div>
+                             <div class="halfrest">
+                                 <div class = "input-xlarge" style="display:block; width:auto !important;" id="lblfname"><span id="0">@Model.FName</span><span id="1">
+                                     @Model.MName</span> <span id="2">@Model.LName</span></div>
+                              
+                    
+                        </div>
+                    </div>
+         <div class='control-group w100'>
+                        <div class="halfwidth" >Business Name: </div>
+                        <div class='halfrest'>
+                           <div class = "input-xlarge" style="display:block;" id="lblcompanyname">@Model.CompanyName</div>           &nbsp;&nbsp;
+                       
+                        </div>
+                    </div>
+                     <div class='control-group w100'>
+                        <div class="halfwidth" >Company ID:</div>
+                        <div class='halfrest'>
+                            @Html.DisplayFor(model => model.CompanyId, new { @class = "input-xlarge" })                    &nbsp;&nbsp;
+                       
+                        </div>
+                    </div>
+                    <div class='control-group w100'>
+                        <div class="halfwidth" >Email: </div>
+                        <div class='halfrest'>
+                             <div class = "input-xlarge",style="display:block;" id="lbltxtemailid">@Model.EmailId</div>
+                           
+                            
+                        </div>
+                    </div>
+
+                     <div class='control-group w100'>
+                        <div class="halfwidth" >Office Phone:</div>
+                        <div class='halfrest'>
+                            @if (Model.OfficePhone != null && Model.OfficePhone != string.Empty)
+                            {
+                             <div class = "input-xlarge",style="display:block;" id="lblofficephn">
+                                
+                               <span>(@Model.OfficePhone.Substring(0, 3)) @Model.OfficePhone.Substring(3, 3)-@Model.OfficePhone.Substring(6, 4)</span>
+                                 
+                                 
+
+                             </div>
+                            }
+                            
+                        </div>
+                    </div>
+                    
+                     <div class='control-group w100' id="edit" style="margin-top: -12px;">
+                    <div class='controls mt10' >
+                        <a id="btnnameedit" style="cursor:pointer;font-style:italic;">Edit</a>
+                      
+
+                    </div>
+                </div>
+  
+         <div class="trans" id="nametrans"></div>
+                        @*Name Popup*@
+                        <div class="popup" id="namepopup">
+                            <div class="Reply-MessageBox" style="display: block;  height: 268px !important;">
+
+                                <div class="tittle-MessageBox btn-primary">
+                                    <span>Edit Company Profile</span><a href="#">
+                                        <img id="btnnamelose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+                                </div>
+                                <div class="MessageSection-Box">
+                                    <div class="control-group w100">
+                            <div class="halfwidth1" >Contact Person <sup style="color:red;font-size:10px;">*</sup></div>
+                             <div class="halfrest">
+                                 
+                              <div class="w18">  @Html.TextBoxFor(model => model.FName, new { @placeholder = "First Name", @class = "input-xsmall", @maxlength = "50", onkeypress = "ChangeOnKeyPress(this.id)" })</div>
+                               <div class="middlename" > @Html.TextBoxFor(model => model.MName, new { @placeholder = "Middel Name", @class = "input-mini1", @maxlength = "1", onkeypress = "ChangeOnKeyPress(this.id)" })</div>
+                               <div class="w33">  @Html.TextBoxFor(model => model.LName, new { @placeholder = "Last Name", @class = "input-xsmall", @maxlength = "50", onkeypress = "ChangeOnKeyPress(this.id)" })</div>                        
+                    
+                        </div>
+                    </div>
+                                   
+                                     <div class='control-group w100'>
+                        <div class="halfwidth1" >Email <sup style="color:red;font-size:10px;">*</sup></div>
+                        <div class='halfrest'>
+                             @Html.TextBoxFor(model => model.EmailId, new { @placeholder = "Email Id", @class = "input-xlarge", @title = "", @maxlength = "100", onkeypress = "ChangeOnKeyPress(this.id)" })
+                            <label id="emailerrormsg" style="color:red; font-size:12px;"></label>
+                            
+                        </div>
+                    </div> 
+
+                                    <div class='control-group w100'>
+                        <div class="halfwidth1" >Office Phone</div>
+                        <div class='halfrest'>
+                             @Html.TextBoxFor(model => model.OfficePhone, new { @placeholder = "Office phone", @class = "input-xlarge", @title = "", @maxlength = "14", onkeypress = "ChangeOnKeyPress(this.id)" })
+                            <label id="phoneerrormsg" style="color:red; font-size:12px;"></label>
+                            
+                        </div>
+                    </div>
+                                    <div class='control-group w100'>
+                        <div class="halfwidth1" >Business Name <sup style="color:red;font-size:10px;">*</sup></div>
+                        <div class='halfrest'>
+                             @Html.TextBoxFor(model => model.CompanyName, new { @placeholder = "Business Name", @class = "input-xlarge", @maxlength = "50", onkeypress = "ChangeOnKeyPress(this.id)" })
+                            
+                        </div>
+                    </div>
+                 <div class="control-group " style="float: right; margin-top: -165px;">
+
+                                        <div class="halfrest" style="margin-bottom: 1px !important; float: none;">
+                                            <div style="width: 223px; height: 121px; border: 1px solid #d7d7d7;">
+                                                <img src="@imagePath" id="personpic1" style="width:223px; height:121px;" />
+                                            </div>
+                                            <label style="color: rgb(255, 255, 255); font-size: 12px; margin-top: 1px; width: 48px; margin-left: 155px; height: 23px;" class="btn btn-small btn-info butmargin">
+                                            <p style="padding-top: 0px;">Browse</p>
+                                            @Html.TextBoxFor(model => model.File, new { type = "file", name = "file", id = "file", @style = "color:transparent;opacity:0; margin-top:-33px;width:5px;", onchange = "readURL(this);check_file();", onmouseover = "tooltip(this);" })
+                                            
+                                        </label>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="Bottom-ButtonControl" style="float: right; margin-top: -5px; width: 100%; margin-right: 9px;">
+
+                                    <button type="submit" id="btnnamedone" class="btn btn-primary" title="Update Profile">Update</button>
+                                    <div id="btnnamecancel" class="btnred" title="Cancel">Cancel</div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                </div></div>
+}
+
+    @if (Convert.ToString(Session["UserType"]) != Shared.NonClient){
+    <div style="width:20%; float:left;margin-top:-16px;"><div class='control-group w100'>
+                        <a href="~/CompanyDashBoard/ViewService?type=CD" target="_blank" class='control-label' style="font-weight: bold !important; text-decoration:underline;cursor:pointer;">Services</a>
+                      
+                        <div class='controls' style="height: 250px; overflow-y: auto;">
+                             @if (Model.ServiceDetails != null)
+                             {
+                                 if (Model.ServiceDetails.Count > 0)
+                                 {
+                         <ul style="list-style: none; margin-left: 1px;" id="service">
+                                             @foreach (var item in Model.ServiceDetails)
+                                             {
+                                <li>
+                                    @item
+
+                                </li>
+                                             }
+                                
+                            </ul>
+                                 }
+                                 
+                             }
+                           
+                            
+                        @*Services Popup*@
+                        <div class="popup" id="servicepopup" style="left:25% !important; top:45%!important;overflow-y:auto;">
+                            <div class="Reply-MessageBox" style="display: block; overflow:auto; height:auto !important;width:700px;">
+
+                                <div class="tittle-MessageBox">
+                                    <span>Services</span><a href="#">
+                                        <img id="btnserviceclose" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" /></a>
+                                </div>
+                                <div class="MessageSection-Box" id="servicelist">
+                                     <div style="margin-left: -8px;">
+          <div style="padding-left:5px;">
+              <input type="radio" id="chkserviceselected" class="chkserviceselected" style="margin-top: -1px; margin-right: 5px;" name="service" autocomplete="off" value="Selected" checked="checked"/>Select
+          <input type="radio" id="chkserviceall" class="chkserviceall" style="margin-left: 20px; margin-right: 6px; margin-top: -2px;" autocomplete="off" name="service" value="All"/>All
+          <input type="radio" id="chkservicedna" class="chkservicedna" style="margin-left: 20px; margin-right: 6px; margin-top: -2px;" name="service" autocomplete="off" value="DNA"/>DNA
+           </div>
+      </div>
+<hr />
+                                    <div style=" width:660px; overflow-x:auto; height:145px;">
+                                <table style="margin-left: 1px;" id="tblservice">
+                                        <tr>
+                                            
+                                               @{count = 0; }
+                                                @{int ii = Model.ServiceList.Count(); }
+                                                  @{
+                                                      int k = 0;
+                                                      float totle1 = ii / 5;
+                                                    }
+                                                  @while (count <= totle1)
+                                                  {
+                                                      count++;
+                                                     <td style="vertical-align: top;">
+                                                          @{var j = 0; int jj = 0;}
+                                              @foreach (var item in Model.ServiceList)
+                                              {
+                                                  if (jj < k)
+                                                  {
+                                                      jj++;
+                                                      continue;
+                                                  }
+                                                  else
+                                                  {
+
+                                                      if (j != 5)
+                                                      {
+                                                          if (Model.ServiceDetails.Contains(item.serviceName))
+                                                          {
+                                  <input type="checkbox" id="chk_@count" style="margin-top:-1px" class="chk" autocomplete="off" value=" @item.id" checked />  @item.serviceName <br />
+                                                          }
+                                                          else
+                                                          {
+                                        <input type="checkbox" id="chk_@count" style="margin-top:-1px" class="chk" autocomplete="off" value=" @item.id"   />  @item.serviceName <br />
+                                                          }
+                                                          j++;
+                                                      }
+                                                      else { k = k + 5; break; }
+                                                  }
+
+                                              }  
+                                                 
+                                            </td> 
+                                                  }
+                                           
+                                        </tr>
+                                    </table>
+                                   </div>
+                                </div>
+                                <div class="Bottom-ButtonControl">
+                                    <button id="btnservicedone" class="btn btn-primary" title="Reply">Update</button>&nbsp;
+                                <button id="btnservicecancel" class="btnred" title="Cancel">Cancel</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+      
+                            
+                          
+</div>
+                    </div></div>
+      if (Model.IsCoverageAreaApply)
+      {
+    <div style="width:25%; float:left;margin-top:-16px;">
+    @if (!Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("SuperAdmin"))
+    {
+       
+        <div class='control-group w100'>
+                        @*<a href="~/Company/CreateServices?type=ICD" class='control-label' target="_blank"  style="font-weight: bold !important;text-decoration:underline;cursor:pointer;">Coverage Area</a>*@
+            <a href="~/Company/CoverageArea?type=0" class='control-label' target="_blank"  style="font-weight: bold !important;text-decoration:underline;cursor:pointer;">Coverage Area</a>
+                        <div class='controls' style="height: 250px; overflow-y: auto;">
+                             @if (Model.StateDetails != null)
+                             {
+                                 if (Model.StateDetails.Count > 0)
+                                 {
+                           <ul style="list-style: none; margin-left: 1px;" id="state">
+                                
+                                     @{count = 0;}
+
+                                     @foreach (var item in Model.StateDetails)
+                                     {
+                                <li>
+                                @item.SateName  
+
+                                </li>
+                                         count++;
+                                     }
+                                 
+                                <li> </li>
+                            </ul>
+                                 }
+                                 else
+                                 {
+                                     if (!string.IsNullOrEmpty(Model.CoverageAreaStatus))
+                                     {
+                                         if (Model.CoverageAreaStatus.Trim().ToLower().Equals(Shared.All.Trim().ToLower()))
+                                         {
+                                              <span>United States plus the District of Columbia and all the US Territories.</span><br />
+                                         }
+                                         else
+                                         {     <span>Does Not Apply</span><br />
+                                         }
+                                     }
+                                    
+                                 }
+                             }
+                             else
+                             {
+                                 if (!string.IsNullOrEmpty(Model.CoverageAreaStatus))
+                                 {
+                                     if (Model.CoverageAreaStatus.Trim().ToLower().Equals(Shared.All.Trim().ToLower()))
+                                     {
+                                              <span>United States plus the District of Columbia and all the US Territories.</span><br />
+                                     }
+                                     else
+                                     {     <span>Does Not Apply</span><br />
+                                     }
+                                 }
+                                 
+                             }
+                        </div>
+           
+                    </div>
+       
+    }
+    
+    </div>
+      }
+    }
+
+</div>
+
+
+</div>
+
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 435px; left: 44%; top: 58%;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 76px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvSaveMsg"></div>
+        <div style="clear: both;">
+            <input id="btnSaveOK" class="btn btn-primary" type="button" value="Ok">
+        </div>
+
+
+    </div>
+
+</div>
+@*<script src="~/Scripts/jquery-1.9.0.min.js"></script>*@
+ <script type="text/javascript">
+     $(document).ready(function () {
+         if ('@userType' == "@Shared.NonClient") {
+             ShowHideTabs('liguestapproval');
+         } else {
+             ShowHideTabs('administration');
+         }
+         //In service
+         addviewinservice();
+         //In state
+         addviewinstate();
+     });
+     function addviewinstate() {
+         //added view more link on state section
+         var Stcount = 0;
+         var chkStstatus = false;
+         $('#state li').each(function () {
+             Stcount = Stcount + 1;
+             // alert(Scount);
+             if (Stcount > 5) {
+                 //set view more option
+                 if (!$(this).find('#VmoreSt').length) {
+                     $(this).hide();
+                     chkStstatus = true;
+                 }
+             }
+         })
+         if ($('#state li').find('#VmoreSt').length) {
+             chkStstatus = false;
+         }
+         if (chkStstatus) {
+             $('#state').append("<li><a id='VmoreSt' style='cursor:pointer;' onclick='showalldetails(this.id)'>view more</a></li>");
+         }
+     }
+
+     function addviewinservice() {
+         //added view more link on services section
+         var Scount = 0;
+         var chkSstatus = false;
+         $('#service li').each(function () {
+             Scount = Scount + 1;
+             // alert(Scount);
+             if (Scount > 5) {
+                 //set view more option
+                 if (!$(this).find('#VmoreS').length) {
+                     $(this).hide();
+                     chkSstatus = true;
+                 }
+             }
+         })
+         if ($('#service li').find('#VmoreS').length) {
+             chkSstatus = false;
+         }
+         if (chkSstatus) {
+             $('#service').append("<li><a id='VmoreS' style='cursor:pointer;' onclick='showalldetails(this.id)'>view more</a></li>");
+         }
+     }
+     function showalldetails(id) {
+         if (id == "VmoreS") {
+             if ($('#VmoreS').html().trim() == "view more".trim()) {
+                 $('#service li').each(function () {
+                     $(this).show();
+                 })
+                 $('#VmoreS').html('hide');
+             }
+
+             else {
+
+                 addviewinservice();
+                 $('#VmoreS').html('view more');
+             }
+         }
+         else if (id == "VmoreC") {
+             if ($('#VmoreC').html().trim() == "view more".trim()) {
+                 $('#client li').each(function () {
+                     $(this).show();
+                 })
+                 $('#VmoreC').html('hide');
+             }
+             else {
+                 addviewinclient();
+                 $('#VmoreC').html('view more');
+             }
+
+         }
+         else if (id == "VmoreSt") {
+             if ($('#VmoreSt').html().trim() == "view more".trim()) {
+                 $('#state li').each(function () {
+                     $(this).show();
+                 })
+                 $('#VmoreSt').html('hide');
+             }
+             else {
+                 addviewinstate();
+                 $('#VmoreSt').html('view more');
+             }
+
+         }
+     }
+
+     //Services
+     $("#editservices").click(function () {
+         $('#servicetrans').fadeIn('slow');
+         $('#servicepopup').fadeIn('slow');
+         var count = $('#tblservice td').length;
+         var width = parseInt(count) * 150;
+         $('#tblservice').css("width", width);
+     });
+     $("#btnserviceclose").click(function () {
+         $('#servicetrans').fadeOut('slow');
+         $('#servicepopup').fadeOut('slow');
+     });
+     $("#btnservicecancel").click(function () {
+         $('#servicetrans').fadeOut('slow');
+         $('#servicepopup').fadeOut('slow');
+         window.location.reload();
+     });
+
+     //Name
+     $("#btnnameedit").click(function () {
+         var phones = [{ "mask": "(###) ###-####" }, { "mask": "(###) ###-####" }];
+         $('#OfficePhone').inputmask({
+             mask: phones,
+             greedy: false,
+             definitions: { '#': { validator: "[0-9]", cardinality: 1 } }
+         });
+         $('#nametrans').fadeIn('slow');
+         $('#namepopup').fadeIn('slow');
+         var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+         var poistion = scrollTop + 100;
+         $('#namepopup').css("top", poistion);
+         setIntvalues();
+     });
+     $("#btnnamelose").click(function () {
+         $('#nametrans').fadeOut('slow');
+         $('#namepopup').fadeOut('slow');
+     });
+     $("#btnnamecancel").click(function () {
+         $('#nametrans').fadeOut('slow');
+         $('#namepopup').fadeOut('slow');
+
+
+     });
+     function setIntvalues() {
+
+         $('#CompanyName').val($('#lblcompanyname').html().trim());
+         $('#EmailId').val($('#lbltxtemailid').html());
+         $('#OfficePhone').val($('#lblofficephn span').html().trim());
+
+         $('#FName').val($('#0').html().trim());
+         $('#MName').val($('#1').html().trim());
+         $('#LName').val($('#2').html().trim());
+
+     }
+     $('#btnSaveOK').click(function () {
+         $('#divManualInviteOuter').hide();
+         $('#divManualInviteInner').hide();
+     })
+
+
+     $("#btnservicedone").click(function () {
+         var obj = '';
+         var serviceId = '';
+         $(".chk:checked").each(function () {
+             serviceId = $(this).val();
+             if (obj == '') {
+                 obj = serviceId;
+             }
+             else {
+                 obj = obj + "," + serviceId;
+             }
+
+         });
+         var url = '@Url.Action("../UserDashBoard/Updatemyprofileservices")';
+         $.post(url, { 'serviceId': obj }, function (result) {
+             if (result > 0) {
+                 window.location.reload();
+             }
+         });
+
+     });
+
+
+     $('#chkserviceall').change(function () {
+
+         if ($("#chkserviceall").is(':checked')) {
+             $('#chkservicedna').prop('checked', false);
+             $(".chk").each(function () {
+                 $(this).attr("disabled", true);
+                 $(this).prop('checked', true);
+
+             });
+         }
+         else {
+             $('#chkservicedna').prop('checked', true);
+             $(".chk").each(function () {
+                 $(this).attr("disabled", false);
+                 $(this).prop('checked', false);
+
+             });
+         }
+     });
+
+     $('#chkserviceselected').change(function () {
+
+         if ($("#chkserviceselected").is(':checked')) {
+             $(".chk").each(function () {
+                 $(this).attr("disabled", false);
+                 $(this).prop('checked', false);
+             });
+         }
+         else {
+             $(".chk").each(function () {
+                 $(this).attr("disabled", false);
+                 $(this).prop('checked', true);
+             });
+         }
+     });
+
+     $('#chkservicedna').change(function () {
+         if ($("#chkservicedna").is(':checked')) {
+             $(".chk").each(function () {
+                 $(this).prop('checked', false);
+                 $(this).attr("disabled", true);
+             });
+         }
+         else {
+             $(".chk").each(function () {
+                 $(this).attr("disabled", false);
+                 $(this).prop('checked', true);
+             });
+         }
+     });
+
+     function ChangeOnKeyPress(id) {
+         if ($('#' + id).val().trim() != '') {
+             $('#' + id).removeClass("errorClass");
+         }
+     }
+
+     function checkvalidation() {
+         //
+         var fnameval = true;
+         var lnameval = true;
+         var emailidval = true;
+         var officephnval = true;
+         var companynameval = true;
+
+         if ($('#EmailId').val().trim() == '') {
+             $('#EmailId').addClass('errorClass');
+             fnameval = false;
+         }
+
+         if ($('#CompanyName').val().trim() == '') {
+             $('#CompanyName').addClass('errorClass');
+             companynameval = false;
+         }
+
+         if ($('#FName').val().trim() == '') {
+             // alert(1);
+             $('#FName').addClass("errorClass");
+             fnameval = false;
+         }
+
+
+         if ($('#LName').val().trim() == '') {
+             $('#LName').addClass("errorClass");
+             lnameval = false;
+         }
+
+         if ($('#EmailId').val() != '') {
+             if (!validateEmail($('#EmailId').val())) {
+                 $('#emailerrormsg').html("Enter correct email id");
+                 emailidval = false;
+             }
+         }
+
+         if ($('#OfficePhone').val() != '') {
+             if (!validatePhone($('#OfficePhone').val())) {
+                 $('#phoneerrormsg').html("Enter correct phone number");
+                 officephnval = false;
+             }
+         }
+
+
+         if (fnameval && emailidval && officephnval && companynameval && lnameval) {
+
+             return true;
+         }
+         else {
+
+             return false;
+         }
+     }
+     function validateEmail(sEmail) {
+         var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+         if (filter.test(sEmail)) {
+             return true;
+         }
+         else {
+             return false;
+         }
+     }
+     function validatePhone(phone) {
+         var s = false;
+
+         var filter = /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/;
+         if (filter.test(phone)) {
+             s = true;
+         }
+         else {
+             s = false;
+         }
+
+         return s;
+
+     }
+</script>

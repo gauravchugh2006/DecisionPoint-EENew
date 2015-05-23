@@ -1,0 +1,243 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+
+@{
+    ViewBag.Title = "UserDashBoard : Documents";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grddocumentsdetails = new WebGrid(ajaxUpdateContainerId: "documentgrid", rowsPerPage: Model.RowperPage);
+    if (Model.DocumentsDetails != null)
+    {
+        grddocumentsdetails.Bind(Model.DocumentsDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+    DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", System.Globalization.CultureInfo.InvariantCulture);
+}
+
+<style>
+    .grid-width300
+    {
+        width: 120px;
+    }
+</style>
+<div class='heading'>
+    <div class='row'>
+        <h3>Communication List</h3>
+    </div>
+</div>
+<div class="filter-bar">
+    <strong>Filter List By:</strong>
+    <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn btn-info">
+                <b id="grouptypedd" >Group</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.GroupDetails != null)
+            {
+                if (Model.GroupDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li>
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                <input class="groupchkall" type="checkbox" autocomplete="off" value="All" onchange="filter('document','All','2')" style="margin-left: -2px;">
+                               &nbsp;  All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.GroupDetails.Select(x => x.categoryName))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li>
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                     <input class="groupchk" type="checkbox" autocomplete="off" value="@refe" onchange="filter('document','@refe','2')" style="margin-left: -2px;">
+                                  &nbsp;   @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+   <div class="dropdown">
+
+        <a data-toggle="dropdown" id="refdd" class="dropdown-toggle btn btn-info">
+            <b id="reftypedd">Category</b>
+            <b class="caret"></b>
+        </a>
+       <ul role="menu" id="catlis" class="dropdown-menu" style="width: auto !important;">
+               
+            </ul>
+    </div>
+
+    <div class="dropdown">
+
+        <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+            <b id="doctypedd">Sub Category</b>
+            <b class="caret"></b>
+        </a>
+          <ul role="menu" id="refelis" class="dropdown-menu" style="width: auto !important;">
+               
+            </ul>
+    </div>
+
+    
+</div>
+
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+          grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+
+<div id='documents'>
+    @if (Model.DocumentsDetails != null)
+    {
+                            
+        @grddocumentsdetails.GetHtml(htmlAttributes: new { id = "documentgrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+  grddocumentsdetails.Column(columnName:"DueDate",header :Sorter("DueDate", " Due", grddocumentsdetails),format: @<text>
+     @if (item.DueDate != null  && item.DueDate != defaultdate )
+    {
+        if (item.DueDate >= System.DateTime.Now.Date)
+    {
+        if (item.DueDate == System.DateTime.Now.Date)
+        {
+<SPAN style="color:black;">Due  Today</SPAN>
+        }
+       
+        else
+            if ((item.DueDate - System.DateTime.Now.Date).TotalDays > 1)
+        {
+              
+<SPAN style="color:black;">Due  @((item.DueDate-System.DateTime.Now.Date).TotalDays) Days</SPAN>
+        }
+        else
+        {
+
+            if ((item.DueDate - System.DateTime.Now.Date).TotalDays == 1)
+            {
+                
+            <text>
+            <SPAN style="color:red;">Late   @((item.DueDate-System.DateTime.Now.Date).ToString().Split('.')[0])  Day</SPAN>
+    </text>
+    }
+            else{
+            <text>
+            <SPAN style="color:red;">Late   @((item.DueDate-System.DateTime.Now.Date).ToString().Split('.')[0])  Days</SPAN>
+    </text>
+            }
+    }
+        }
+    
+    else
+    {
+
+        if ((System.DateTime.Now.Date - item.DueDate).TotalDays == 1)
+            {
+                
+            <text><SPAN style="color:red;">Late   @((System.DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Day</SPAN></text>
+            }
+            else{
+            <text><SPAN style="color:red;">Late   @((System.DateTime.Now.Date - item.DueDate).ToString().Split('.')[0])  Days</SPAN></text>
+            }
+        
+    }
+    }
+        </text>,style:"webgridcol1" ),
+                                 grddocumentsdetails.Column("CompanyId",header: Sorter("CompanyId", "Comm #", grddocumentsdetails),
+                                   format:@<text>@item.policyNo </text>
+                                 ,style:"webgridcol1"),
+   
+    
+         grddocumentsdetails.Column(
+                    columnName:"DocTitle",
+                    header :Sorter("DocTitle", "Title", grddocumentsdetails),
+                    format:@<text>
+       
+        <a href="@Url.Action("ViewDocument", "UserDashboard", new {id=item.DocId,tbid=item.tableId }, null)" target="_blank">@item.DocTitle</a>
+
+
+        </text> ,style:"webgridcol1"),
+                                grddocumentsdetails.Column("hourofcredit", header: Sorter("hourofcredit", "CE", grddocumentsdetails),
+      format:@<text>
+
+        <div>@item.hourofcredit</div>
+
+        </text>,style:"grid-width100"),
+        grddocumentsdetails.Column("reference",header: Sorter("reference", "Category", grddocumentsdetails), style:"webgridcol1"),
+                                grddocumentsdetails.Column(columnName:"reqDocType",header :Sorter("reqDocType", "Sub Category", grddocumentsdetails),format:  @<text><span>@item.reqDocType</span></text>,style:"webgridcol1"),
+    
+   
+   
+    grddocumentsdetails.Column(columnName:"DocFrom",header: Sorter("DocFrom", "From", grddocumentsdetails)
+    ,
+    format:  @<text>
+        <a id="lnkfrom" onclick="showCompanyprofile('@item.deliveredUserId','@item.CompanyId')" style="cursor:pointer;">@(item.DocFrom) </a>
+        </text>
+                                ,style:"webgridcol1"),
+grddocumentsdetails.Column("", format: @<text>
+        <button class="btn btn-mini btn-info" onclick="showconfirmationdiv('@item.tableId','0')"  >Archive</button>
+        </text>, style:"webgridcol155", canSort: false),
+                               
+}) 
+    }
+   
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('mycommunication');
+
+      
+
+    })
+    //category
+    $('#refdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $('#refelis').empty();
+    })
+    //category
+    $('#groupdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $("#refdd").css({ "background-color": "#0044CC" });
+        $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#reftypedd').html("Category");
+        var chkstatus = true;
+        $('.groupchk').each(function () {
+
+            if ($(this).is(':checked')) {
+                chkstatus = false
+            }
+        })
+        if ($('.groupchkall').is(":checked")) {
+            chkstatus = false
+        }
+        //alert(chkstatus);
+        if (chkstatus) {
+            $('#catlis').empty();
+        }
+    })
+    
+</script>

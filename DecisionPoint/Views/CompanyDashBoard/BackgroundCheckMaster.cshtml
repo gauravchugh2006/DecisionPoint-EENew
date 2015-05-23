@@ -1,0 +1,94 @@
+﻿@model DecisionPoint.Models.BackGroundCheckMasterModel
+@{
+    ViewBag.Title = "BackgroundCheckMaster";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+@{
+    Dictionary<string, string> SourceDictionary = new Dictionary<string, string>();
+
+    SourceDictionary.Add("Electronic Data Source", "Electronic Data Source");
+    SourceDictionary.Add("Manual", "Manual");
+    SelectList FillSourceList = new SelectList(SourceDictionary, "value", "key");
+}
+<style>
+    .row
+    {
+        margin-left: 0px !important;
+    }
+
+    .errorClass
+    {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div class='heading'>
+    <div class='row'>
+        <h3>Background Check Master</h3>
+    </div>
+</div>
+
+@using (Html.BeginForm("BackgroundCheckMaster", "CompanyDashboard", FormMethod.Post, new { id = "SubmitForm", @class = "form-horizontal" }))
+{
+    <div style="float: left; width: 100%;">
+
+        <div class="control-group">
+            <label class="control-label">Background Title<sup style="color: red; font-size: 10px;"> *</sup></label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.BackgroundTitle, new { maxlength = 50, @class = "input-xlarge", @placeholder = "Title" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.BackgroundTitle)</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Background Source<sup style="color: red; font-size: 10px;"> *</sup></label>
+            <div class="controls">
+                @Html.DropDownListFor(model => model.BackgroundSource, FillSourceList, "Select", new { @class = "input-xlarge", @style = "width:285px" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.BackgroundSource)</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" id="btnSubmit" value="Submit" class="btn btn-primary" />
+                @Html.HiddenFor(model => model.Status)
+                @Html.HiddenFor(model => model.Id)
+            </div>
+            <div class="controls">
+                <span style="color: red; font-size: small">@ViewData["ErrorMsg"]</span>
+                <span style="color: green; font-size: small">@ViewData["SucessMsg"]</span>
+            </div>
+        </div>
+
+        <hr />
+        <div style="float:left; width:100%">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Source</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+           
+            @if (Model.BackgroundList != null)
+            {
+                foreach (var item in Model.BackgroundList)
+                {
+                    <tr>
+                        <td>@item.BackgroundTitle</td>
+                        <td>@item.BackgroundSource</td>
+                        <td>Edit</td>
+                        <td>Delete</td>
+
+                    </tr>
+                }
+            }
+ </table>
+        </div>
+    </div>
+}
+

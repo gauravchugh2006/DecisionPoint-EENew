@@ -1,0 +1,1450 @@
+﻿@using DecisionPointBAL.Implementation;
+@using DecisionPointBAL.Implementation.Request;
+@using System.Globalization
+@using DecisionPointCAL.Common;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=8, IE=9, IE=10" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@ViewBag.Title - Decision Point</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+
+    @Styles.Render("~/Content/css/Dashboardcss")
+    @Scripts.Render("~/bundles/dashboard")
+
+
+    <script src="~/Scripts/new.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="~/Content/css/Dashboard/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/css/Dashboard/bootstrap-datetimepicker.min.css" />
+
+
+    <link href="~/Content/css/Dashboard/style.css" rel="stylesheet" />
+    <link href="~/Content/css/Dashboard/common.css" rel="stylesheet" />
+    <link href="~/Content/css/Dashboard/megamenu.css" rel="stylesheet" />
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script src="~/Scripts/CustomePaging.js"></script>
+    <script src="~/Scripts/dateformat.min.js"></script>
+    <script src="~/Scripts/DashBoard/MyProfile.js"></script>
+    <script src="~/Scripts/DashBoard/DashBoard.js"></script>
+    <style>
+        #ConfirmSuperAdmindiv {
+            width: 150px;
+            height: 150px;
+            padding: 0;
+            background-color: #063;
+            position: relative;
+            margin: 0;
+        }
+
+        .ui-resizable-se {
+            height: 10px;
+            width: 10px;
+            background-color: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            bottom: 2px;
+            right: 1px;
+        }
+
+        div#ConfirmSuperAdmindiv textarea {
+            max-height: 100%;
+            min-height: 150px;
+        }
+    </style>
+
+    @* Start Get Configuration Settings *@
+
+    @{
+        DecisionPointEngine objDecisionPointEngine = new DecisionPointEngine();
+        ConfiguratonSettingRequest objConfiguratonSettingRequest = new ConfiguratonSettingRequest();
+        if (!object.Equals(Session["UserId"], null))
+        {
+            objConfiguratonSettingRequest = objDecisionPointEngine.GetConfigSetting(Convert.ToString(Session["CompanyId"], CultureInfo.InvariantCulture));
+        }
+    }
+    @* End Get Configuration Settings *@
+
+    <div id="ConfirmSuperAdmindiv" class="popup" class="popup" style="background-clip: padding-box; background-color: #FFFFFF; min-height: 340px; min-width: 520px; left: 45%; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none; display: none; position: absolute; margin: 0px 0 0 0px !important; float: right;">
+
+        <div style="float: right; width: 15px; height: 15px; top: 5px;">
+            <a style="cursor: pointer;">
+                <img id="btnSuperGudielose" src="~/Content/images/Close-Icon-mail.png" width="15" height="15" alt="" border="0" />
+            </a>
+
+        </div>
+
+        <h4>System User Guide</h4>
+        <div style="min-height: 200px; min-width: 485px; max-width: 100%; float: left; position: absolute; bottom: 45px;">
+            <textarea id="txtInstruction" placeholder="Instruction.." style="width: 95%; height: 98%; left: 1%; top: 1%; right: 1%; position: absolute; margin: 0; padding: 0; resize: none;" title="Put instruction here."></textarea>
+            <ul id="PaginInst" style="display: none;"></ul>
+
+        </div>
+        <div style="bottom: 0; float: left; position: absolute; right: 20px; width: 100%;">
+            <label id="Insterror" style="float: left; margin-left: 30px; margin-top: 5px;"></label>
+            <span><a id="btnSubmitInst" class="btn btn-small btn-info butmargin" style="margin-top: 10px; margin-right: 0px; float: right; color: #ffffff;" title="Save Instruction">Publish </a></span>
+            <span><a id="btnCloseInst" class="btn btn-small btn-info butmargin" style="margin-top: 10px; margin-right: -4px; float: right; color: #ffffff; margin-left: 10px;" title="Save">Save</a></span>
+
+        </div>
+
+    </div>
+    <div id="ConfirmdivAdmin" class="popup" class="popup" style="background-clip: padding-box; min-height: 390px; min-width: 520px; background-color: #FFFFFF; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none; left: 45%; display: none; position: absolute; margin: 0px 0 0 0px !important; float: right;">
+        <div style="float: right; width: 15px; height: 15px; top: 5px;">
+            <a style="cursor: pointer;">
+                <img id="btnGudielose" src="~/Content/images/Close-Icon-mail.png" width="15" height="15" alt="" border="0" />
+            </a>
+        </div>
+        <h4>System User Guide</h4>
+
+
+        <div id="lblGuideInst" style="margin-left: 5px; margin-top: 40px; overflow: auto; width: 95%; height: 80%; left: 1%; top: 1%; right: 1%; position: absolute; resize: both; border: 1px solid rgba(0, 0, 0, 0.3); min-height: 340px; min-width: 485px;">
+        </div>
+
+        <div style="float: left; height: 30px;">
+        </div>
+
+    </div>
+
+</head>
+
+<body>
+
+    <div id="fullcontent">
+        <div id='header'>
+            <div class='navbar navbar-static-top'>
+                <div class='navbar-inner'>
+                    <div class='container'>
+                        <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+                            <span class='icon-bar'></span>
+                            <span class='icon-bar'></span>
+                            <span class='icon-bar'></span>
+                        </a>
+                        <div class='brand'>
+                            <a class='brand'> <img src="~/Content/images/logo-ee.png" /></a>
+                        </div>
+                        <div class='container nav-collapse'>
+                            <ul class='nav pull-right'>
+                                <li class='active'>
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(Session["parentUserid"], System.Globalization.CultureInfo.InvariantCulture)))
+                                    {
+                                        if (Convert.ToString(Session["IsSuperAdmin"]) != string.Empty)
+                                        {
+                                            if (Convert.ToString(Session["IsSuperAdmin"]) == "Yes".Trim())
+                                            {
+                                        @Html.ActionLink("DashBoard", "MyDashBoard", "CompanyDashBoard", new { date = DateTime.Now.Date }, null)
+                                                //@Html.ActionLink("Dashboard", "GetCompanies", "CompanyDashBoard", new { id = "1", search = string.Empty }, null)
+
+                                            }
+                                            else
+                                            {
+                                        @Html.ActionLink("DashBoard", "MyDashBoard", "CompanyDashBoard", new { date = DateTime.Now.Date }, null)
+                                                // @Html.ActionLink("Dashboard", "DocumentAction", "CompanyDashBoard", new { Id = "All", type = "D", onclick = "needToConfirm = false" }, null)
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Dashboard", "DocumentAction", "UserDashBoard", new { Id = "All" }, null)
+                                    }
+
+                                </li>
+
+                                <li>
+                                    @Html.ActionLink("Sign Out", "LogOut", "Login")
+
+                                </li>
+                                @if (Convert.ToString(Session["IsSuperAdmin"]) != string.Empty)
+                                {
+                                    if (Session["IsSuperAdmin"].ToString().Trim() == "Yes".Trim())
+                                    {
+                                    <li id="SuperAdminInstruction"><a id="GuideInstruction" style="cursor: pointer; margin-left: 20px;">Guide</a> </li>
+                                    }
+                                    else
+                                    {
+                                    <li id="AdminInstruction"><a id="GetInstruction" style="cursor: pointer; margin-left: 20px;">Guide</a> </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li id="AdminInstruction"><a id="GetInstruction" style="cursor: pointer; margin-left: 20px;">Guide</a> </li>
+                                }
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="body">
+            <div id='content'>
+                <div class='container'>
+                    <div class='content-box'>
+                        <div class='row'>
+                            <div class='span7' style="width: 180px; height: 150px;">
+                                @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture)))
+                                {
+                                    if (!Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("IC"))
+                                    {
+                                        if (!string.IsNullOrEmpty(Convert.ToString(Session["logopath"], System.Globalization.CultureInfo.InvariantCulture)))
+                                        {
+
+                                    <img id="companylogo" src="@Session["logopath"]" />
+
+                                        }
+                                    }
+                                }
+
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Convert.ToString(Session["parentUserid"], System.Globalization.CultureInfo.InvariantCulture)))
+                            {
+                                <div class='span6' id="CompanyProfile">
+                                    <div class='control-group w100' style="width: 92% !important; margin-left: 401px;">
+                                        <div class="control-group w100">
+                                            <div class="halfwidth">Name:</div>
+                                            <div class="halfrest">
+                                                @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserName"], System.Globalization.CultureInfo.InvariantCulture)))
+                                                {
+                                                    <div style="display: block; width: auto !important;" id="lblname">@Session["UserName"]</div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div class="control-group w100">
+                                            <div class="halfwidth">Email:</div>
+                                            <div class="halfrest">
+                                                <div style="display: block; width: auto !important;" id="lblemailid">
+                                                    @if (!string.IsNullOrEmpty(Convert.ToString(Session["Emailid"], System.Globalization.CultureInfo.InvariantCulture)))
+                                                    {
+                                                        <a id="lnkemailid" style="cursor: pointer;">@Session["Emailid"]</a>
+                                                    }
+                                                    <br />
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="control-group w100">
+                                            <div class="halfwidth">Business Name:</div>
+                                            <div class="halfrest">
+                                                @if (!string.IsNullOrEmpty(Convert.ToString(Session["BusinessName"], System.Globalization.CultureInfo.InvariantCulture)))
+                                                {
+                                                    <div style="display: block; width: auto !important; margin-top: 1px;" id="lbluserid">@Session["BusinessName"]</div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div class="control-group w100">
+                                            @{
+                                                string parentForm = string.Empty;
+                                                if (!string.IsNullOrEmpty(Convert.ToString(Session["parentform"], CultureInfo.InvariantCulture)))
+                                                {
+                                                    parentForm = Convert.ToString(Session["parentform"], CultureInfo.InvariantCulture).Split(':')[0];
+                                                }
+                                            }
+
+                                            @if (Convert.ToString(Session["IsSuperAdmin"]) != string.Empty)
+                                            {
+                                                if (Convert.ToString(Session["IsSuperAdmin"]) == "Yes".Trim() && string.IsNullOrEmpty(Convert.ToString(Session["parentUserid"], System.Globalization.CultureInfo.InvariantCulture)))
+                                                {
+
+                                                <div style="margin-left: -2px; font-style: italic; text-decoration: underline;">@Html.ActionLink("Return to my view", "GetCompanies", "CompanyDashBoard", new { id = "1", search = string.Empty, type = 1 }, null)     </div>
+
+                                                }
+                                                else
+                                                {
+                                                <div style="margin-left: -2px; font-style: italic; text-decoration: underline;">@Html.ActionLink("Return to my view", "Returntomyview", "CompanyDashBoard", new { id = parentForm }, null)</div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div style="margin-left: -2px; font-style: italic; text-decoration: underline;">@Html.ActionLink("Return to my view", "Returntomyview", "CompanyDashBoard", new { id = parentForm }, null)</div>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            }
+
+                        </div>
+                        <div id='user-dashboard'>
+
+                            <div class='tabbable'>
+                                <ul class='nav nav-tabs' id='my_tabs' style="cursor: pointer;">
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(Session["parentUserid"], System.Globalization.CultureInfo.InvariantCulture)))
+                                    {
+                                        if (!Convert.ToString(Session["UserType"], CultureInfo.InvariantCulture).Equals(Shared.IC))
+                                        {
+                                        <li id="mydashboardli">@Html.ActionLink("My Calender", "MyDashBoard", "UserDashBoard", new { date = DateTime.Now.Date }, null)</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li id="mydashboardli">@Html.ActionLink("My Calender", "MyDashBoard", "UserDashBoard", new { date = DateTime.Now.Date }, null)</li>
+                                    }
+
+
+                                    <li class="messagedocli">
+                                        @Html.ActionLink("My Communication", "DocumentAction", "UserDashBoard", new { Id = "All" }, null)
+                                    </li>
+                                    <li class="historyli">
+                                        @Html.ActionLink("My Library", "HistoryAction", "UserDashBoard", new { id = "All" }, null)
+                                    </li>
+                                    <li id="myprofileli">
+                                        @if (Session["UserType"].ToString().Trim() == "IC".Trim())
+                                        {
+                                            @Html.ActionLink("My Profile", "ICProfile", "UserDashBoard")
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("My Profile", "MyProfileAction", "UserDashBoard")
+                                        }
+                                    </li>
+
+
+                                    @if (Session["UserType"].ToString().Trim() == "IC".Trim())
+                                    {
+                                        if (!object.Equals(objConfiguratonSettingRequest, null))
+                                        {
+                                            if (objConfiguratonSettingRequest.IsClient)
+                                            {
+                                        <li id="clientlistli">@Html.ActionLink("Client List", "ICClientList", "UserDashBoard", new { id = 1 }, null)</li>}
+                                        }
+                                        else
+                                        {
+                                        <li id="clientlistli">@Html.ActionLink("Client List", "ICClientList", "UserDashBoard", new { id = 1 }, null)</li>}
+
+                                        <li id="inviteli">@Html.ActionLink("Invites", "ICInvites", "Invitation", new { id = "All", type = 1 }, null)</li>
+                                        <li id="liaddinvite">
+                                            @Html.ActionLink("Add Invite", "AddInvite", "Invitation")
+                                        </li>
+                                    }
+
+                                </ul>
+
+
+                            </div>
+
+                            <div id='content'>
+                                <div class='container'>
+                                    <div class='content-box'>
+                                        <section class="content-wrapper main-content clear-fix" id="sectionid">
+                                            @RenderBody()
+                                        </section>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id='footer'>
+            <div class='container'>
+                <div class='row'>
+                    <div class='span6'>
+                    </div>
+                    <div class='span12'>
+                        <div class='text-right'>
+                            Copyright @System.DateTime.Now.Year &sdot; All rights reserved
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*confiramtion box Popup*@
+        <div class="confirmationdivmain"></div>
+        <div class="confirmationdivinner">
+            <div style="background-clip: padding-box; background-color: #FFFFFF; height: 87px; padding: 20px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+                <div id="divmsg" style="font-size: 16px; padding-bottom: 10px;">Are you sure you want to move this record in archive? </div>
+
+                <div style="float: left; width: 50px; padding-top: 9px;">
+                    <input type="button" id="btnok" onclick="DeleteDoc()" class="btn btn-primary" value="Ok" />
+                    <input type="hidden" id="msgdocid" /><input type="hidden" id="type" />
+                </div>
+                <div id="btnokyes" style="width: 50px; padding-top: 25px; display: none;">
+                    <input type="button" class="btn btn-primary" value="Ok" />
+                </div>
+                <div style="float: left; width: 70px; padding-top: 9px;">
+                    <input type="button" class="btn btn-primary" onclick="CancelDoc()" id="btncancel" value="Cancel" />
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+
+        <div class="profiletrans" id="CompProfileouter"></div>
+        @*Company profile Popup*@
+        <div class="popup" id="CompProfilepopup" style="left: 25%; top: 25%;">
+            <div class="profile-popup" style="display: block;">
+                <div class="tittle-MessageBox">
+                    <span>Contact</span><a>
+                        <img id="btncloseprofile" src="~/Content/images/Close-Icon-mail.png" onclick="CloseProfile()" width="19" height="19" alt="" border="0" />
+                    </a>
+                </div>
+                <div class="MessageSection-Box">
+                    <div class="To-Section">
+                        <input type="hidden" id="companyprofileUserId" hidden="hidden" />
+                    </div>
+                    <div style="float: left;">
+                        <div id="tblcomprofile1">
+                        </div>
+                    </div>
+                    <div style="float: right;">
+                        <b>Services</b>
+                        <div id="tblrole" style="padding-right: 103px; overflow-y: auto; height: 135px;">
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    var CountText = 1;
+    var InstResult;
+
+
+    tinymce.init({
+        selector: 'textarea', browser_spellcheck: true,
+        mode: 'exact',
+        force_p_newlines: false,
+        force_br_newlines: true,
+        forced_root_block: '',
+        paste_data_images: true,
+        plugins: [
+                "pagebreak advlist autolink autosave link image lists charmap print preview hr anchor spellchecker",
+                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                "table contextmenu directionality emoticons template textcolor paste fullpage textcolor"
+        ],
+
+        toolbar1: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect | forecolor backcolor | cut copy paste | searchreplace | bullist numlist",
+        toolbar2: "search,replace,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,|,insertdate,inserttime,preview,|,charmap,emotions,iespell,media,advhr|,fullscreen,pagebreak",
+
+
+        menubar: false,
+        toolbar_items_size: 'small',
+        resize: false,
+
+        style_formats: [
+                { title: 'Bold text', inline: 'b' },
+                { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                { title: 'Example 1', inline: 'span', classes: 'example1' },
+                { title: 'Example 2', inline: 'span', classes: 'example2' },
+                { title: 'Table styles' },
+                { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+        ],
+
+        templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+        ]
+
+    });
+
+    $("#lnkemailid").click(function () {
+        var getemail = $("#lnkemailid").text();
+        window.location.href = "mailto:" + getemail;
+
+
+    });
+
+
+    $(window).load(function () {
+
+
+
+        $('#btncommalert').click(function () {
+
+            var type = $('#type').val();
+            var docId = parseInt($('#msgdocid').val());
+            if ($('#OPTypeId').val() == 1) {
+                $.ajax({
+                    url: '@Url.Content("~/CompanyDashBoard/RemoveDocument/")',
+                    cache: false,
+                    data: { 'docId': docId, type: parseInt(type) },
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+
+                        CancelDoc();
+                        if (type == '0') {
+                            getdocumentsdetails(getpageid("documentgrid"));
+                        }
+                        else if (type == '2') {
+                            gethistorydetails(getpageid("historygrid"));
+                        }
+
+
+                    },
+                    error: function () {
+                    },
+                    async: false,
+
+                });
+            }
+            else if ($('#OPTypeId').val() == 2) {
+                Reactivedoc();
+            }
+        });
+        var top = $("#SuperAdminInstruction").position();
+        var InstStatus = '@ViewBag.UserDashboarInst';
+
+        if (InstStatus == "True") {
+
+            var status = '@TempData["GuideStatus"]';
+
+            if (status == "True") {
+                $('#Insterror').text("");
+
+                $('#ConfirmSuperAdmindiv').animate({ 'top': top.top + 55 }).css("display", "block");
+                $("#licompanyDashboard").removeClass("active");
+                $("#SuperAdminInstruction").addClass("active");
+
+                var SuperadminInst = tinymce.get('txtInstruction').getContent();
+                var bodyTextInst = new RegExp(/<body[^>]*>([\S\s]*?)<\/body>/).exec(SuperadminInst)[1];
+
+                SetTempData(bodyTextInst);
+
+            }
+            else {
+
+                $('#Insterror').text("");
+                $.ajax({
+                    url: '@Url.Content("~/UserDashBoard/GetGuideInstruction/")',
+                    type: 'GET',
+                    cache: false,
+                    data: { IsActive: true },
+
+                    success: function (result) {
+
+                        tinymce.get('txtInstruction').setContent(result);
+
+                    },
+                    error: function (result) {
+
+                    }
+                })
+
+                $('#ConfirmSuperAdmindiv').animate({ 'top': top.top + 55 }).css("display", "block");
+                $("#licompanyDashboard").removeClass("active");
+                $("#SuperAdminInstruction").addClass("active");
+                SetTempData(bodyTextInst);
+
+            }
+        }
+
+
+    });
+
+
+    function SetTempData(instruction) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/UserDashBoard/SetTempData/")',
+            data: JSON.stringify({
+                GuidInstruction: instruction,
+                ID: 2
+            }),
+            cache: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+
+            },
+            error: function (error) {
+
+            }
+
+        })
+    }
+
+    /// same as companydashboard get guide Instruction
+    $('#SuperAdminInstruction').click(function (event) {
+        if (CountText == 1) {
+            CountText = 2;
+
+        }
+        var tinymce_editor_id1 = 'txtInstruction';
+
+        $('#Insterror').text("");
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/GetGuideInstruction/")',
+            type: 'GET',
+            cache: false,
+            data: { IsActive: true },
+
+            success: function (result) {
+                tinymce.get(tinymce_editor_id1).setContent(result);
+
+            },
+            error: function (result) {
+
+            }
+        });
+        var top = $("#SuperAdminInstruction").position();
+
+        $('#ConfirmSuperAdmindiv').animate({ 'top': top.top + 55 }).css("display", "block");
+        $("#licompanyDashboard").removeClass("active");
+        $("#SuperAdminInstruction").addClass("active");
+    });
+    // no required
+    $('#btnSubmitInst').click(function (event) {
+        CountText = 1;
+        var SuperadminInst = tinymce.get('txtInstruction').getContent();
+        var bodyTextInst = new RegExp(/<body[^>]*>([\S\s]*?)<\/body>/).exec(SuperadminInst)[1];
+
+        if (bodyTextInst.trim() != "") {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/UserDashBoard/SaveGuidInstrictions/")',
+                data: JSON.stringify({
+                    GuidInstruction: bodyTextInst,
+                    ID: 2
+                }),
+                cache: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+
+                    if (response > 0) {
+
+                        $('#ConfirmSuperAdmindiv').css("display", "none");
+                        $("#licompanyDashboard").addClass("active");
+                        $("#SuperAdminInstruction").removeClass("active");
+                    }
+                    else {
+
+                        $('#ConfirmSuperAdmindiv').css("display", "none");
+                        $("#licompanyDashboard").addClass("active");
+                        $("#SuperAdminInstruction").removeClass("active");
+                    }
+                },
+                error: function (data) {
+
+                    $('#ConfirmSuperAdmindiv').css("display", "none");
+                    $("#licompanyDashboard").addClass("active");
+                    $("#SuperAdminInstruction").removeClass("active");
+                }
+            });
+        }
+        else {
+            $('#Insterror').css("color", "red");
+            $('#Insterror').text("Please Enter Instruction.");
+
+        }
+    });
+
+    // same as company dashboard
+    $('#btnSuperGudielose').click(function () {
+        CountText = 1;
+
+        $('#ConfirmSuperAdmindiv').css("display", "none");
+        $("#licompanyDashboard").addClass("active");
+        $("#SuperAdminInstruction").removeClass("active");
+        SetTempData("");
+    })
+
+    // same for user/company dashboard layout
+    $('#btnGudielose').click(function () {
+
+        $('#ConfirmdivAdmin').css("display", "none");
+        $("#licompanyDashboard").addClass("active");
+        $("#SuperAdminInstruction").removeClass("active");
+        $('#lblGuideInst').text("");
+    });
+    // same for user/company dashboard layout
+    $('#btnCloseInst').click(function () {
+        var SuperadminInst = tinymce.get('txtInstruction').getContent();
+        var bodyTextInst = new RegExp(/<body[^>]*>([\S\s]*?)<\/body>/).exec(SuperadminInst)[1];
+
+        if (bodyTextInst.trim() != "") {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/CompanyDashBoard/SaveGuidInstrictions/")',
+                data: JSON.stringify({
+                    GuidInstruction: bodyTextInst,
+                    ID: 2
+                }),
+                cache: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (response > 0) {
+
+                        $('#ConfirmSuperAdmindiv').css("display", "none");
+                        $("#licompanyDashboard").addClass("active");
+                        $("#SuperAdminInstruction").removeClass("active");
+                    }
+                    else {
+
+                        $('#ConfirmSuperAdmindiv').css("display", "none");
+                        $("#licompanyDashboard").addClass("active");
+                        $("#SuperAdminInstruction").removeClass("active");
+                    }
+                    SetTempData("");
+                },
+                error: function (data) {
+
+                    $('#ConfirmSuperAdmindiv').css("display", "none");
+                    $("#licompanyDashboard").addClass("active");
+                    $("#SuperAdminInstruction").removeClass("active");
+                    SetTempData("");
+                }
+            });
+        }
+        else {
+            $('#Insterror').css("color", "red");
+            $('#Insterror').text("Please Enter Instruction.");
+
+        }
+
+
+    });
+
+    // same for user/company dashboard layout
+    $("#AdminInstruction").click(function (event) {
+
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/GetGuideInstruction/")',
+            type: 'GET',
+            cache: false,
+            async: true,
+            data: { IsActive: false },
+            success: function (result) {
+
+                $('#lblGuideInst').append(result);
+                var top = $('#AdminInstruction').position();
+
+                $('#ConfirmdivAdmin').animate({ 'top': top.top + 60 }).css("display", "block");
+                $("#licompanyDashboard").removeClass("active");
+                $("#SuperAdminInstruction").addClass("active");
+
+            },
+            error: function (result) {
+
+
+            }
+        })
+
+    })
+    // same for user/company dashboard layout
+    $(function () { $("#ConfirmdivAdmin").draggable({ containment: "window" }); });
+    // same for user/company dashboard layout
+    $("#ConfirmdivAdmin").resizable({
+
+        minWidth: 150,
+        minHeight: 150,
+        maxWidth: ($(window).width() - 100),
+        maxHeight: ($(window).height() - 100),
+        resize: function (event, ui) {
+            var ed = tinymce.get('txtInstruction');
+            var width = parseFloat($(this).width()) - 10;
+            var height = parseFloat($(this).height()) - 170;
+            ed.theme.resizeTo(width, height);
+        },
+        stop: function (event, ui) {
+
+
+        }
+
+    });
+    // same for user/company dashboard layout
+    $(function () { $("#ConfirmSuperAdmindiv").draggable({ containment: "window" }); });
+    // same for user/company dashboard layout
+    $("#ConfirmSuperAdmindiv").resizable({
+
+        minWidth: 150,
+        minHeight: 150,
+        maxWidth: ($(window).width() - 100),
+        maxHeight: ($(window).height() - 100),
+        resize: function (event, ui) {
+            var ed = tinymce.get('txtInstruction');
+            var width = parseFloat($(this).width()) - 10;
+            var height = parseFloat($(this).height()) - 170;
+            ed.theme.resizeTo(width, height);
+        },
+        stop: function (event, ui) {
+
+
+        }
+
+    });
+
+    //Get User Roles
+
+    //Close contact popup
+    function CloseProfile() {
+        
+        $('.profiletrans').fadeOut('slow');
+        $('#CompProfilepopup').fadeOut('slow');
+    }
+
+
+
+    //show dlete confirmation div /// same as in user/company dashboardlayout
+    function showconfirmationdiv(msgId, type) {
+        $('#type').val(type);
+        $('#msgdocid').val(msgId);
+        if (type == '0') {
+            $('#divmsg').html("Are you sure you want to move this record in library? ");
+        }
+
+        $('.confirmationdivinner').fadeIn('slow');
+        $('.confirmationdivmain').fadeIn('slow');
+    }
+
+    // same as in compoany dashboardlayout $('#btncommalert').click(function () {
+    function DeleteDoc() {
+        var type = $('#type').val();
+        var docId = parseInt($('#msgdocid').val());
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/RemoveDocument/")',
+            cache: false,
+            data: { 'docId': docId, type: parseInt(type) },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html'
+
+        })
+.success(function (data) {
+    if (data == 1) {
+
+        $('.confirmationdivinner').fadeOut('slow');
+        $('.confirmationdivmain').fadeOut('slow');
+        getdocumentsdetails(getpageid("documentgrid"));
+
+    }
+    else if (data == 0) {
+        $('.confirmationdivinner').fadeOut('slow');
+        $('.confirmationdivmain').fadeOut('slow');
+    }
+})
+.error(function (xhr, status) {
+
+})
+
+    }
+
+    function getdocumentsdetails(pageid) {
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/DocumentAction/?page=")" + pageid,
+            data: { id: 'All' },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (result) {
+                $('#documents').html($(result).find('#documents').html().trim());
+            }
+        });
+    }
+    //same as company/user
+    function CancelDoc() {
+        $('.confirmationdivinner').fadeOut('slow');
+        $('.confirmationdivmain').fadeOut('slow');
+    }
+
+
+    //Filteration in webgrid using in drop down
+    function filterForIC(filterOn, filtervalue, filteronDD) {
+
+        var filterselectedvalue = "";
+        if (filterOn == "document") {
+            if (filteronDD == "0") if (filteronDD == "0") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+            }
+
+            if (filteronDD == "1") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+
+            }
+            if (filteronDD == "2") {
+
+                if (filtervalue != "All") {
+
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+                else {
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+
+            }
+            setbackgroundForIC(filteronDD, filterselectedvalue, filterOn);
+            filtervalue = setgroupfiltervalue() + ":group" + "," + $('#reftypedd').html() + ":reference" + "," + $('#doctypedd').html() + ":doctype";
+
+            //  setTimeout(function () {
+            $.ajax({
+                type: 'GET',
+                datatype: 'json',
+                url: '@Url.Content("~/UserDashBoard/DocumentAction")',
+                cache: false,
+                data: { 'id': filtervalue },
+                success: function (result) {
+                    $('#documents').html($(result).find('#documents').html().trim());
+                    // setbackground(filteronDD, filterselectedvalue, filterOn);
+
+                }, async: true,
+                error: function (result) {
+                }
+
+            });
+            // }, 200)
+
+        }
+
+
+        if (filterOn == "history") {
+            // alert('call');
+            if (filteronDD == "0") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+            }
+
+            if (filteronDD == "1") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+
+            }
+            if (filteronDD == "2") {
+
+                if (filtervalue != "All") {
+
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+                else {
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+
+            }
+            setbackgroundForIC(filteronDD, filterselectedvalue, filterOn);
+            filtervalue = setgroupfiltervalue() + ":group" + "," + $('#reftypedd').html() + ":reference" + "," + $('#doctypedd').html() + ":doctype";
+            //  setTimeout(function () {
+            //   alert(filtervalue);
+            $.ajax({
+                type: 'GET',
+                datatype: 'json',
+                url: '@Url.Content("~/UserDashBoard/HistoryAction")',
+                cache: false,
+                data: { 'id': filtervalue },
+                success: function (result) {
+                    $('#historys').html($(result).find('#historys').html().trim());
+                    // setbackground(filteronDD, filterselectedvalue, filterOn);
+
+                }, async: true,
+                error: function (result) {
+                }
+
+            });
+            // }, 200);
+
+        }
+
+    }
+    //Filteration in webgrid using in drop down
+    function filter(filterOn, filtervalue, filteronDD) {
+
+
+        var filterselectedvalue = "";
+        if (filterOn == "document") {
+            if (filteronDD == "0") if (filteronDD == "0") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+            }
+
+            if (filteronDD == "1") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+
+            }
+            if (filteronDD == "2") {
+
+                if (filtervalue != "All") {
+
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+                else {
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+
+            }
+            setbackground(filteronDD, filterselectedvalue, filterOn);
+            filtervalue = setgroupfiltervalue() + ":group" + "," + $('#reftypedd').html() + ":reference" + "," + $('#doctypedd').html() + ":doctype";
+
+            //  setTimeout(function () {
+            $.ajax({
+                type: 'GET',
+                datatype: 'json',
+                url: '@Url.Content("~/UserDashBoard/DocumentAction")',
+                cache: false,
+                data: { 'id': filtervalue },
+                success: function (result) {
+                    $('#documents').html($(result).find('#documents').html().trim());
+                    // setbackground(filteronDD, filterselectedvalue, filterOn);
+
+                }, async: true,
+                error: function (result) {
+                }
+
+            });
+            //   }, 200)
+
+        }
+
+
+        if (filterOn == "history") {
+            // alert('call');
+            if (filteronDD == "0") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+            }
+
+            if (filteronDD == "1") {
+                if (filtervalue != "All") {
+                    filterselectedvalue = filtervalue;
+
+                }
+                else {
+                    filterselectedvalue = "All";
+
+                }
+
+            }
+            if (filteronDD == "2") {
+
+                if (filtervalue != "All") {
+
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+                else {
+                    filterselectedvalue = setgroupfiltervalue();
+
+                }
+
+            }
+
+            setbackground(filteronDD, filterselectedvalue, filterOn);
+            filtervalue = setgroupfiltervalue() + ":group" + "," + $('#reftypedd').html() + ":reference" + "," + $('#doctypedd').html() + ":doctype";
+            // setTimeout(function () {
+            //   alert(filtervalue);
+            $.ajax({
+                type: 'GET',
+                datatype: 'json',
+                url: '@Url.Content("~/UserDashBoard/HistoryAction")',
+                cache: false,
+                data: { 'id': filtervalue },
+                success: function (result) {
+                    $('#historys').html($(result).find('#historys').html().trim());
+                    // setbackground(filteronDD, filterselectedvalue, filterOn);
+
+                }, async: true,
+                error: function (result) {
+                }
+
+            });
+            //  }, 200);
+
+        }
+
+
+
+
+
+
+    }
+    function setbackgroundForIC(filteronDD, filtervalue, filterOn) {
+
+        if (filteronDD == "2") {
+            if (filtervalue != "All") {
+                if (filtervalue == "") {
+                    $('#groupddic').attr("title", "Group");
+                    $("#groupddic").css({ "background-color": "#0044CC" });
+                    $("#groupddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+                }
+                else {
+                    $('#groupddic').attr("title", filtervalue);
+                    $("#groupddic").css({ "background-color": "#0044CC !important" });
+                    $("#groupddic").css({ "background-image": "linear-gradient(to bottom, #0044CC, #0044CC)" });
+                }
+
+            }
+            else {
+
+                filtervalue = "Group";
+                $('#groupddic').attr("title", filtervalue);
+                $("#groupddic").css({ "background-color": "#0044CC" });
+                $("#groupddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+
+            }
+
+
+        }
+        if (filteronDD == "0") {
+            if (filtervalue == "All") {
+                $("#docdd").css({ "background-color": "#0044CC" });
+                $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+                filtervalue = "Sub Category";
+
+            }
+            else {
+                $("#docdd").css({ "background-color": "#0044CC !important" });
+                $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0044CC, #0044CC)" });
+            }
+            if (filtervalue != "All") {
+                $('#doctypedd').html(filtervalue);
+            }
+            else { $('#doctypedd').html(filtervalue); }
+
+
+        }
+        if (filteronDD == "1") {
+            if (filtervalue != "All") {
+
+                $('#reftypedd').html(filtervalue);
+                $("#refddic").css({ "background-color": "#0044CC !important" });
+                $("#refddic").css({ "background-image": "linear-gradient(to bottom, #0044CC, #0044CC)" });
+            }
+            else {
+
+                filtervalue = "Category";
+                $('#reftypedd').html(filtervalue);
+                $("#refddic").css({ "background-color": "#0044CC" });
+                $("#refddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+
+            }
+
+
+        }
+    }
+    function setbackground(filteronDD, filtervalue, filterOn) {
+        //  alert("filteron" + filteronDD);
+        if (filteronDD == "2") {
+            if (filtervalue != "All") {
+                if (filtervalue == "") {
+                    $('#groupddic').attr("title", "Group");
+                    //filtervalue = "All";
+                    $("#groupddic").css({ "background-color": "#0044CC" });
+                    $("#groupddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+                }
+                else {
+                    $('#groupddic').attr("title", filtervalue);
+                    $("#groupddic").css({ "background-color": "#0044CC !important" });
+                    $("#groupddic").css({ "background-image": "linear-gradient(to bottom, #0044CC, #0044CC)" });
+                }
+                // $('#grouptypedd').html(filtervalue);
+
+                fillcategory(filtervalue, filterOn);
+
+            }
+            else {
+
+                //alert(filtervalue);
+                fillcategory(filtervalue, filterOn);
+                filtervalue = "Group";
+                $('#groupddic').attr("title", filtervalue);
+                $("#groupddic").css({ "background-color": "#0044CC" });
+                $("#groupddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+
+            }
+
+
+        }
+        if (filteronDD == "0") {
+            // alert(filtervalue);
+            if (filtervalue == "All") {
+                $("#docdd").css({ "background-color": "#0044CC" });
+                $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+                filtervalue = "Sub Category";
+                //fillsubcategory("All");
+                //$("#refdd").css({ "background-color": "#0044CC" });
+                //$("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+                //$('#reftypedd').html("Category");
+            }
+            else {
+                $("#docdd").css({ "background-color": "#0044CC !important" });
+                $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0044CC, #0044CC)" });
+            }
+            if (filtervalue != "All") {
+                $('#doctypedd').html(filtervalue);
+            }
+            else { $('#doctypedd').html(filtervalue); }
+
+
+        }
+        if (filteronDD == "1") {
+            // alert(filtervalue+"asas");
+            //alert(filtervalue);
+            if (filtervalue != "All") {
+
+                $('#reftypedd').html(filtervalue);
+                filtervalue = filtervalue + "$" + setgroupfiltervalue();
+                fillsubcategory(filtervalue, filterOn);
+                $("#refddic").css({ "background-color": "#0044CC !important" });
+                $("#refddic").css({ "background-image": "linear-gradient(to bottom, #0044CC, #0044CC)" });
+            }
+            else {
+
+                //alert(filtervalue);
+                fillsubcategory(filtervalue, filterOn);
+                filtervalue = "Category";
+                $('#reftypedd').html(filtervalue);
+                $("#refddic").css({ "background-color": "#0044CC" });
+                $("#refddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+
+            }
+            //if (filtervalue == "All") {
+            //    $("#refdd").css({ "background-color": "#0044CC" });
+            //    $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+
+            //}
+            //else {
+            //    $("#refdd").css({ "background-color": "#0044CC !important" });
+            //    $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0044CC, #0044CC)" });
+            //}
+
+
+        }
+    }
+
+    function setgroupfiltervalue() {
+        var groupv = "";
+        var count = 0;
+        var maxcount = $('.groupchk').length;
+        //alert(maxcount);
+        $('.groupchk').each(function () {
+
+            if ($(this).is(':checked')) {
+                // $('.groupchkall').prop('checked', false);
+                // alert($(this).val()+"S V");
+                if (groupv == "") {
+                    groupv = $(this).val();
+                }
+                else {
+                    groupv = groupv + "*" + $(this).val();
+                }
+                count = count + 1;
+            }
+
+        })
+
+        if ($('.groupchkall').is(":checked")) {
+            groupv = "";
+            $('.groupchk').each(function () {
+
+
+                if (groupv == "") {
+                    groupv = $(this).val();
+                }
+                else {
+                    groupv = groupv + "*" + $(this).val();
+                }
+                count = count + 1;
+
+
+            })
+        }
+        // alert(groupv);
+        return groupv;
+    }
+    function fillsubcategory(source, filterOn) {
+        // alert(source);
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/getSubCategoryOnbasisOfCategory/")",
+            data: { 'id': source },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (result) {
+                //alert(result);
+                // alert(result[0].categoryName);
+                $('#refelis').empty();
+                if (result.length > 0) {
+                    $('#refelis').prepend('<li onclick=filter("' + filterOn + '","All","0")><a><label style="font-weight:normal" class="checkbox" id="allref">All</label></a></li>');
+                }
+                else {
+                    $('#refelis').prepend('<li><a><label style="font-weight:normal" class="checkbox" id="allref">No Sub Category</label></a></li>');
+                }
+
+                for (var i = 0; i < result.length; i++) {
+                    var catname = result[i].categoryName;
+                    $('#refelis').append('<li id="' + catname + '" onclick=filter("' + filterOn + '",this.id,"0")><a><label style="font-weight:normal" class="checkbox" id=' + result[i].categoryName + '>' + result[i].categoryName + '</label></a></li>');
+                    //'<option>' + result[i].categoryName + '</option>')
+                }
+                //$("#doctype option").each(function () {
+                //    if ($(this).text() == "-- Select --") {
+                //        $(this).attr('selected', 'selected');
+                //    }
+                //});
+            }
+        })
+    }
+    function fillcategory(group, filterOn) {
+        // alert(source);
+        if (group != "") {
+            $.ajax({
+                url: "@Url.Content("~/CompanyDashBoard/getCategoryOnbasisOfGroup/")",
+                data: { 'group': group },
+                cache: false,
+                type: "GET",
+                datatype: 'json',
+                success: function (result) {
+                    //alert(result);
+                    // alert(result[0].referenceName);
+                    $('#catlis').empty();
+                    // alert($('#catlis').length + $('#catlis').html());
+                    if (result.length > 0) {
+                        $('#catlis').prepend('<li onclick=filter("' + filterOn + '","All","1")><a><label style="font-weight:normal" class="checkbox" id="allref">All</label></a></li>');
+                    }
+                    else {
+                        $('#catlis').prepend('<li><a><label style="font-weight:normal" class="checkbox" id="allref">No Category</label></a></li>');
+                    }
+                    for (var i = 0; i < result.length; i++) {
+                        var catname = result[i].referenceName;
+                        $('#catlis').append('<li id="' + catname + '" onclick=filter("' + filterOn + '",this.id,"1")><a><label style="font-weight:normal" class="checkbox" id=' + result[i].referenceName + '>' + result[i].referenceName + '</label></a></li>');
+                        //'<option>' + result[i].categoryName + '</option>')
+                    }
+
+                }
+            })
+        }
+        else {
+            $('#catlis').empty();
+        }
+    }
+    //View Documents
+    function viewdocument(docid, type) {
+        if (type == 'document') {
+            var url = '@Url.Action("../UserDashBoard/ViewDocument")';
+            $.get(url, { id: parseInt(docid) }, function (result) {
+            });
+        }
+
+    }
+    var currentgridl = $('#historygrid tr').length;
+    //serach in history section
+    function Go() {
+        var currentlength = $('#historygrid tr').length;
+        if (currentgridl == currentlength) {
+            $('#btnviewall').css("display", "none");
+        }
+        var filtervalue = setgroupfiltervalue() + ":group" + "," + $('#reftypedd').html() + ":reference" + "," + $('#doctypedd').html() + ":doctype";
+
+        filtervalue = filtervalue + "," + $('#txtserach').val();
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/HistoryAction/")',
+            cache: false,
+            data: { id: filtervalue + ":serach" },
+            type: "GET",
+            success: function (result) {
+                $('#historys').html($(result).find('#historys').html().trim());
+                $("#btnviewall").css("display", "block");
+                currentlength = $('#historygrid tr tbody').length;
+                if (currentlength == 0) {
+                    $('#divmsg').html("No record found !");
+                    $('.confirmationdivinner').slideDown('fast');
+                    $('.confirmationdivmain').slideDown('fast');
+                    $('#btnok').hide();
+                    $('#btncancel').hide();
+                    $('#btncommalert').hide();
+                    $('.confirmationdivinner').css("width", "175px");
+                    setTimeout(function () {
+                        $('.confirmationdivinner').slideUp('fast');
+                        $('.confirmationdivmain').slideUp('fast');
+
+                    }, 1000)
+                }
+                if (currentgridl == currentlength) {
+                    $('#btnviewall').css("display", "none");
+                }
+            }
+        });
+
+
+
+    }
+    //View all histroy data
+
+    function viewall() {
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/HistoryAction/")',
+            cache: false,
+            data: { id: 'All' },
+            type: "GET",
+            success: function (result) {
+                $('#historys').html($(result).find('#historys').html().trim());
+                $("#btnviewall").hide();
+                $('#txtserach').val('')
+            }
+        });
+
+
+
+    }
+
+    function showCompanyprofile(UserId, CompanyId) {
+        showCompanyprofileDetails(UserId, CompanyId, ROOT);
+    }
+</script>

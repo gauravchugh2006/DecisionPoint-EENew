@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c29283ad52b443d0b3cdd14d01c0c6a3" Name="Diagram1" ZoomLevel="46">
+        <EntityTypeShape EntityType="DecisionPointModel.DP_AdditionalReqAck" Width="1.5" PointX="10" PointY="24.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_AdditionalReqMapping" Width="1.5" PointX="10" PointY="20.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_AdditionalReqMaster" Width="1.5" PointX="7.75" PointY="22.625" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_AdditionalReqUploadDocs" Width="1.5" PointX="10" PointY="26.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Announcement" Width="1.5" PointX="5.25" PointY="34.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_APILog" Width="1.5" PointX="27" PointY="16" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_APIMapping" Width="1.5" PointX="5.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_APIMaster" Width="1.5" PointX="24.75" PointY="16.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_APIRoleTypeMaster" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BackgroundDocUpload" Width="1.5" PointX="15" PointY="26.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BackGroundMapping" Width="1.5" PointX="12.75" PointY="26" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BGCheckDetailMapping" Width="1.5" PointX="19.5" PointY="6.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BGCheckMapping" Width="1.5" PointX="17.25" PointY="6.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BGCheckMaster" Width="1.5" PointX="15" PointY="7.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BGCheckPackageDetailMaster" Width="1.5" PointX="15" PointY="3.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BGCheckPackageMaster" Width="1.5" PointX="12.75" PointY="5.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_BusinessClasses" Width="1.5" PointX="2.75" PointY="13.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Category" Width="1.5" PointX="24" PointY="3.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_City" Width="1.5" PointX="24.25" PointY="11.625" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CityMapping" Width="1.5" PointX="0.75" PointY="16.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CitysTest" Width="1.5" PointX="4.75" PointY="13.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ClientMapping" Width="1.5" PointX="17.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ClientMaster" Width="1.5" PointX="0.75" PointY="20.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ComapnyVendorMapping" Width="1.5" PointX="5.25" PointY="94.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommAnswers" Width="1.5" PointX="9.75" PointY="41.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommAssesment" Width="1.5" PointX="7.5" PointY="41.625" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommAsstAnswer" Width="1.5" PointX="6.75" PointY="13.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.Dp_CommAsstAtempts" Width="1.5" PointX="12.75" PointY="21.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommContents" Width="1.5" PointX="7.5" PointY="57.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommContentViewTime" Width="1.5" PointX="14.75" PointY="21.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommDocSpentTime" Width="1.5" PointX="0.75" PointY="24.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommLinks" Width="1.5" PointX="7.5" PointY="44.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommRecipientFilter" Width="1.5" PointX="7.5" PointY="47.5" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommRquiredActions" Width="1.5" PointX="7.5" PointY="54.625" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CommTestRules" Width="1.5" PointX="7.5" PointY="51" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CompanyPayment" Width="1.5" PointX="24.75" PointY="19.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CompanyStaffMapping" Width="1.5" PointX="5.25" PointY="23.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ConfigurationSetting" Width="1.5" PointX="17.75" PointY="27.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ContractEvent" Width="1.5" PointX="25" PointY="26.5" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ContractEventsMailLog" Width="1.5" PointX="19.75" PointY="27.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ContractMailReminderLog" Width="1.5" PointX="26.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ContractMaster" Width="1.5" PointX="0.75" PointY="28.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_County" Width="1.5" PointX="22" PointY="11.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CountyMapping" Width="1.5" PointX="26.75" PointY="5.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CreateContractDocMaster" Width="1.5" PointX="26.75" PointY="10.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CreateContractMaster" Width="1.5" PointX="22.75" PointY="25.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_CreateContractServiceMaster" Width="1.5" PointX="26.75" PointY="19.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_DefaultPaymentMaster" Width="1.5" PointX="27.75" PointY="23.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_DescendentMapping" Width="1.5" PointX="7.75" PointY="17.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_DocFlow" Width="1.5" PointX="9.75" PointY="17.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_DocFlowMapping" Width="1.5" PointX="5.25" PointY="85.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_DocumentDetails" Width="1.5" PointX="5.25" PointY="47.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_DocumentMailLog" Width="1.5" PointX="27.75" PointY="27.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_EmailAccount" Width="1.5" PointX="28.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_EmailTemplate" Width="1.5" PointX="28.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_EmailTokens" Width="1.5" PointX="19.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_EmailTrakingDetails" Width="1.5" PointX="5.25" PointY="89" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_FlowMapping" Width="1.5" PointX="10.25" PointY="50" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_FlowMaster" Width="1.5" PointX="8" PointY="38.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Group" Width="1.5" PointX="21.75" PointY="5" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_GuideInstructions" Width="1.5" PointX="28.75" PointY="9.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ICClientsPermissionMaster" Width="1.5" PointX="7.75" PointY="30.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ICNonClientsMapping" Width="1.5" PointX="5.25" PointY="16.5" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ICNonClientsPaymentLog" Width="1.5" PointX="9.75" PointY="30.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ICPaymentMapping" Width="1.5" PointX="14.75" PointY="30.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_InsuranceAck" Width="1.5" PointX="20" PointY="24.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_InsuranceMapping" Width="1.5" PointX="20" PointY="19.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_InsuranceMaster" Width="1.5" PointX="17.75" PointY="20.625" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_InsuranceUploadDocs" Width="1.5" PointX="22.25" PointY="20.625" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Invitation" Width="1.5" PointX="28.75" PointY="19.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_License" Width="1.5" PointX="5.25" PointY="91.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_LicenseInsuranceAck" Width="1.5" PointX="10" PointY="3.5" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_LicenseInsuranceDocUpload" Width="1.5" PointX="10" PointY="14" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_LicenseInsuranceMaster" Width="1.5" PointX="7.75" PointY="7.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_LicenseInsuranceReceiver" Width="1.5" PointX="10" PointY="8.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_LicenseInsuranceVendorType" Width="1.5" PointX="10" PointY="6.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_MailFooter" Width="1.5" PointX="5.25" PointY="21.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_PayementMaster" Width="1.5" PointX="28.75" PointY="12.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_PaymentFlowMaster" Width="1.5" PointX="11.75" PointY="31.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Performance" Width="1.5" PointX="19.75" PointY="31.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_PermissionMapping" Width="1.5" PointX="5.25" PointY="56" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_PermissionMaster" Width="1.5" PointX="3" PointY="61.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_PermissionTableMapping" Width="1.5" PointX="29.75" PointY="23.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_PermissionTableMaster" Width="1.5" PointX="29.75" PointY="16.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.Dp_ProfessionalLicenseAck" Width="1.5" PointX="15" PointY="18.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ProfessionalLicenseMapping" Width="1.5" PointX="15" PointY="13.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ProfessionalLicenseMaster" Width="1.5" PointX="12.75" PointY="14.5" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ProfessionalLicenseUploadDocs" Width="1.5" PointX="17.25" PointY="14.5" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Profile" Width="1.5" PointX="5.25" PointY="76.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Recipient" Width="1.5" PointX="24.75" PointY="31.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_RecurringPayment" Width="1.5" PointX="5.25" PointY="104.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_RecurringPaymentTransaction" Width="1.5" PointX="29.75" PointY="27.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Reference" Width="1.5" PointX="24" PointY="6.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReportLog" Width="1.5" PointX="26.75" PointY="31.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocAck" Width="1.5" PointX="28.75" PointY="31.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocAudit" Width="1.5" PointX="10.25" PointY="57.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocAuditUpload" Width="1.5" PointX="12.5" PointY="58.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocReceiver" Width="1.5" PointX="8" PointY="66" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocSender" Width="1.5" PointX="0.75" PointY="4.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocService" Width="1.5" PointX="3" PointY="10.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocUpload" Width="1.5" PointX="3" PointY="7.25" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ReqDocVendorType" Width="1.5" PointX="3" PointY="4" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_RoleMapping" Width="1.5" PointX="5.25" PointY="60" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_RoleMaster" Width="1.5" PointX="3" PointY="64.375" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Security" Width="1.5" PointX="0.75" PointY="54" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ServiceMapping" Width="1.5" PointX="30.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ServicesMaster" Width="1.5" PointX="0.75" PointY="32.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ServiceTranslationTable" Width="1.5" PointX="30.75" PointY="5.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_SiteUrl" Width="1.5" PointX="30.75" PointY="9.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_SkillSetMapping" Width="1.5" PointX="22" PointY="15.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_SkillSetMaster" Width="1.5" PointX="19.75" PointY="15.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_State" Width="1.5" PointX="19.75" PointY="11.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_StateMapping" Width="1.5" PointX="30.75" PointY="12.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_SterlingReqResMaster" Width="1.5" PointX="21.75" PointY="32.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_SterlingScreeningMapping" Width="1.5" PointX="30.75" PointY="19.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_SuperAdminLogin" Width="1.5" PointX="30.75" PointY="31.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_TabMaster" Width="1.5" PointX="31.75" PointY="23.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_TitleMapping" Width="1.5" PointX="10.25" PointY="54" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_TitleMaster" Width="1.5" PointX="8" PointY="62" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_User" Width="1.5" PointX="3" PointY="50.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_UserDocContentStatus" Width="1.5" PointX="31.75" PointY="27.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_VendorType" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_VendorTypeMapping" Width="1.5" PointX="5.25" PointY="100.125" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_VerfiedLicenseDetails" Width="1.5" PointX="5.25" PointY="107.875" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_WebinarOrganiserMaster" Width="1.5" PointX="5.25" PointY="28" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_Welcome" Width="1.5" PointX="5.25" PointY="31.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ZipCode" Width="1.5" PointX="31.75" PointY="16.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ZipMapping" Width="1.5" PointX="32.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.DP_ZipTest" Width="1.5" PointX="32.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DecisionPointModel.StateAndCity" Width="1.5" PointX="32.75" PointY="9.75" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_AdditionalReqAck_DP_AdditionalReqMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_AdditionalReqMapping_DP_AdditionalReqMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_AdditionalReqUploadDocs_DP_AdditionalReqMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_Announcement_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_APILog_DP_APIMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_BackgroundDocUpload_DP_BackGroundMapping" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_BGCheckDetailMapping_DP_BGCheckMapping" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_BGCheckDetailMapping_DP_BGCheckPackageDetailMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_BGCheckMapping_DP_BGCheckMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_BGCheckMaster_DP_BGCheckPackageMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_BGCheckPackageDetailMaster_DP_BGCheckPackageMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_BGCheckPackageMaster_DP_BGCheckPackageMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_GC" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_City_DP_County" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_City_DP_State" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_CompanyVendorMapping_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_CommAnswers_DP_CommAssesment" />
+        <AssociationConnector Association="DecisionPointModel.fk_DP_DocumentDetails" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_CommContents_DP_DocumentDetails" />
+        <AssociationConnector Association="DecisionPointModel.fk_DP_DocumentLinks" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_CommRecipientFilter_DP_DocumentDetails" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_CommRquiredActions_DP_CommRquiredActions" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_CommTestRules_DP_CommTestRules" />
+        <AssociationConnector Association="DecisionPointModel.fk_DP_ComapnyStaffUserId" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ContractEvent_DP_CreateContractMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_County_DP_State" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_DocFlowMapping_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.fk_DP_DocumentDetailsxyz" />
+        <AssociationConnector Association="DecisionPointModel.fk_DP_EmailTrakingDetails" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_Flowid" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_Flowuserid" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_GR" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_NonClientUserId_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_InsuranceAck_DP_InsuranceMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_InsuranceMapping_DP_InsuranceMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_InsuranceUploadDocs_DP_InsuranceMapping" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_InsuranceUploadDocs_DP_InsuranceMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_License_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_LicenseInsuranceAck_DP_LicenseInsuranceMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_LicenseInsuranceDocUpload_DP_LicenseInsuranceMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_LicenseInsuranceReceiver_DP_LicenseInsuranceMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_LicenseInsuranceVendorType_DP_LicenseInsuranceVendorType" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_MailFooter_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_Permissionid" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_Permissionuserid" />
+        <AssociationConnector Association="DecisionPointModel.FK_Dp_ProfessionalLicenseAck_Dp_ProfessionalLicenseMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ProfessionalLicenseMapping_DP_ProfessionalLicenseMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ProfessionalLicenseUploadDocs_DP_ProfessionalLicenseMapping" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ProfessionalLicenseUploadDocs_DP_ProfessionalLicenseMaster" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_Profile_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_RecurringPayment_DP_user" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ReqAuditDoc_DP_ReqDocAudit" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ReqDocAudit_DP_ReqDocReceiver" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ReqDocAudit_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ReqDocId" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ReqDocService_SERVICE" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ReqDocVendorType_DP_ReqDocSender" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_ReqDocVendorType_DP_VTM" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_Role" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_Roleid" />
+        <AssociationConnector Association="DecisionPointModel.fk_DP_Security" />
+        <AssociationConnector Association="DecisionPointModel.fk_DP_SkillSetMaster" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_titleid" />
+        <AssociationConnector Association="DecisionPointModel.fk_dp_titleuserid" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_LicenseMapping_DP_user" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_VendorTypeMapping_DP_user" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_WebinarOrganiserMaster_DP_User" />
+        <AssociationConnector Association="DecisionPointModel.FK_DP_Welcome_DP_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

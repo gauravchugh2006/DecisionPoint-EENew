@@ -1,0 +1,44 @@
+﻿@model DecisionPoint.Models.Reports
+@{
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+     ViewBag.Title = "ReportViwer";
+}
+
+<h2>Report</h2>
+<div >
+    <input type="hidden" id="datefrom" value="@Model.DateFrom" />
+<input type="hidden" id="dateto" value="@Model.DateTo" />
+<input type="hidden" id="statusval" value="@Model.Status" />
+
+<div style="float:right;"> <a id="btnclose" class="btn btn-primary" onclick="close()">Close</a></div>
+<div style="float:right;margin-right:5px;"> <a id="btnsave" class="btn btn-primary">Save</a></div></div>
+ <iframe name="temp_iframe" style="margin-top:10px;" id="iframe11" height="800px" width="100%" src="~/Reports/ReportIFrame?datefrom=@Model.DateFrom&dateto=@Model.DateTo&status=@Model.Status"></iframe>
+
+<script>
+    $(document).ready(function () {
+        $("body").css("overflow", "hidden");
+    })
+    function closewin() {
+        window.opener.document.location.reload(true);
+        window.open("", "_top", "", "true ");
+        window.onbeforeunload = null;
+      window.close();
+    }
+    $('#btnsave').click(function () {
+        $.ajax({
+            url: "@Url.Content("~/Reports/SavedReportLog/")",
+            data: JSON.stringify({
+                DateFrom: $('#datefrom').val(),
+                DateTo: $('#dateto').val(),
+                Status: $('#statusval').val()
+            }),
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            type: "POST",
+            datatype: 'json',
+            success: function (result) {
+                closewin();
+            }
+        });
+    })
+</script>

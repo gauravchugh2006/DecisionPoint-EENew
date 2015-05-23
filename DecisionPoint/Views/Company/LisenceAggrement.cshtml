@@ -1,0 +1,216 @@
+﻿@using DecisionPointCAL.Common;
+@{
+    ViewBag.Title = "User Agreement";
+    string type = string.Empty;
+    string Res = string.Empty;
+    if (Request["type"] != null && Request["type"] == "IC")
+    {
+        type = Request["type"];
+        Res = Request["Res"];
+        Layout = "~/Views/Shared/_ICSetUpLayoutPage.cshtml";
+    }
+    else if (Request["type"] != null && Request["type"] == Shared.NonClient)
+    {
+        type = Request["type"];
+        Layout = "~/Views/Shared/_NonClientSetUpLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+    }
+}
+@*@if (type == Shared.NonClient)
+{
+    <h2>User Agreement</h2>
+}
+else
+{
+    <h2>License Agreement</h2>
+}*@
+<h2>User Agreement</h2>
+<div class="agreement-div">
+    <p><strong>PLEASE READ THE FOLLOWING <u>ENTITIES’ AND USERS’ AGREEMENT</u> (“AGREEMENT”) CAREFULLY BEFORE ACCESSING AND USING THIS WEBSITE.  YOU CAN ONLY USE THE WEBSITE AS LONG AS YOU CONTINUE TO AGREE TO BE BOUND BY AND COMPLY WITH THESE TERMS AND CONDITIONS.  DECISIONPOINT CAN MODIFY, ALTER, OR UPDATE THIS AGREEMENT, AND YOU AGREE TO BE BOUND BY SUCH MODIFICATIONS, ALTERATIONS, OR UPDATES WHEN THEY ARE POSTED ON THE WEBSITE OR WHEN YOU OTHERWISE RECEIVE NOTICE OF SUCH MODIFICATIONS.</strong></p>
+    <ul>
+        <li><strong>1. Definitions</strong> Individuals  and businesses that use the Website are listed below. A business can be included in one or more of the defined types of users below, depending on how they are using the Website.
+            <ul>
+                <li>1.1 “<strong>Entitles</strong>” are businesses that can post information on the Website, give Users access to it to and track Users’ review of the information. They can also use the Website to communicate with and manage the services provided or to be provided by other Entities and Users.</li>
+                <li>1.2 “<strong>Users</strong>” have access to and use of the Website at the discretion of Entities, including the ability to upload information in response to inquiries or requests from Entities and the ability to request information from third parties that can then be shared with Entities.  Users are individuals who have a DP user name and password:</li>
+            </ul>
+        </li>
+        <li><strong>2. Use of the Website</strong>  Decision Point, LLC ("DP") provides a service to Entities and Users through its Website, <a href="http://www.compliancetracker.org/" target="_blank">www.compliancetracker.org</a>. The Website can only be used by Entities and Users for the purposes authorized by DP. All use is at the sole discretion of the Entity or User accessing or using the Website.
+            <ul>
+                <li>2.1 Entities can use the Website to (i) disseminate content to Users and to track Users’ access, review and understanding of that information and (ii) to communicate with Users in relation to using Users’ services.</li>
+                <li>2.2 After being granted to access to the Website by an Entity, Users can access the Website to upload information in response to inquiries or requests for information from an Entity(ies) .  Users who offer services as independent contractors can also use the Website to request information from third parties that can then be shared with the Entity(ies) who has granted them access to the Website.</li>
+                <li>2.3 Access to the Website requires agreement to these terms and payment of the applicable fees and can be revoked by DP for noncompliance with these terms or nonpayment of fees.  Each Entity and User is assigned a user name and password to access the Website.  A user name and password can only be used by the Entity or User to which it is assigned and cannot be transferred, sold or shared with any other person or entity.</li>
+                <li>2.4 The Website will generally be accessible 24 hours a day, subject to interruptions for maintenance and/or technical or other problems.  DP may revise the specifications and/or functionality of the Website, although it has no obligation to do so.</li>
+            </ul>
+        </li>
+        <li><strong>3. Fees</strong>
+            <li>3.1 DP charges fees for access to and use of the Website.  DP reserves the right to change its fees on notice to Entities and/or Users, which will be effective at the end of the period for which any Entity or User has paid, or as to future services that have not been ordered, as of the effective date of the price change or the imposition of the fee.  Fees vary by the type of Entity and User and include:
+                <ul>
+                    <li>3.1.1 A Seat License  payable in advance of each 12 month period that an Entity wants to access and use the Website, based on the number of user names and passwords that they have on the first day of the 12 month period (“Seat License”).  The Seat License is adjusted upward on the first day of each month during the 12 month period for which the Seat License has been paid to reflect increases, net of decreases, in the number of user names and passwords that an Entity has on that date.</li>
+                    <li>3.1.2 An annual License Fee which may be in addition to the Seat License.</li>
+                    <li>3.1.3 Users who are independent contractors who have been granted access the Website by an Entity pay: 
+                        <ul>
+                            <li>3.1.3.1 an annual based on the services that they select and may also pay fees related to specific services requested.</li>
+                            <li>3.1.3.2 for criminal background checks and/or other information (e.g., information on professional licenses held) that they order. The cost is shown at the time of ordering, prior to being charged.  Each Entity determines the information and verifications that an Independent contractor must provide, the frequency that such information and verifications must be updated and how it will use, analyze and store that information once it receives it.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>3.2 DP makes no guarantee or assurance that accessing the Website or placing an order for the information or verification will result in a User’s being hired to provide products or services to any Entity, or in a User’s receiving any compensation for any products or services provided.</li>
+            <li>3.3 All fees are nonrefundable.  No portion of the License Fee or Seat License, or any fee paid by a User, will be refunded if use of or access to the Website stops before the end of the period for which the fees have been paid.  Any fees owed at the time of termination will become immediately due and payable.</li>
+        </li>
+        <li><strong>4. Users’ Information</strong>
+            <ul>
+                <li>4.1  DP does not access, collect or store a User’s background information or criminal records, which  ordered, accessed, transmitted or provided by Users through the Website or any other means, except that DP does collect and store Users’ information related to an individual’s professional licenses and their status, insurance coverage and driver’s license and whether an Entity has accepted or rejected a User based on information the User has directly or indirectly provided the Entity.</li>
+                <li>4.2 Each User and Entity acknowledges that (i) DP imposes no obligation to order information through DP or the Website, to access or use the Website or to use, or to provide information to, any Entity,  or other person or entity, (ii) DP has no control of or liability for any information requested or ordered through the Website, or provided by any User or Entity, (iii) DP is not responsible for the accuracy, inaccuracy, completeness, incompleteness  or content of any information accessed or transmitted using the Website or provided by or to, or stored by, DP or any third party, (iv) his/her/its use and access of the Website is voluntary, (v) he/she/it may or may not receive any compensation, be asked to provide any services or otherwise benefit from accessing or using the Website, (vi) if he/she/it does receive compensation or otherwise benefits from accessing or using the Website, there is no assurance that such compensation or other benefits will continue or that they will equal or exceed amounts paid to DP and/or its service providers or other third parties, and (vii) DP is not responsible for any relationship or transaction that any Entity or User has with any other User or Entity or third party.</li>
+                <li>4.3 Users acknowledge that they control who can access or receive the information related to them or their business or profession and the DP has no liability or responsibility for information that a User makes available to any Entity or other User.</li>
+            </ul>
+        </li>
+        <li><strong>5. Entities’ and Users’ Responsibilities</strong>  Entities and Users are responsible for obtaining and maintaining all equipment, hardware, software and services necessary to connect to and use the Website.  Entities and Users agree to run commercially accepted virus scanning software and take other reasonable security measures consistent with standard industry practices while connected to the Website.  Entities and Users will (i) not use the Website to post or transmit any information or data that could violate any law, regulation or the rights of any Entity, User or third party, (ii) comply with the use policies established by DP and its service providers, (iii) cooperate with DP, its representatives or service providers in investigating any suspected violation of any polices relating to accessing or using the Website, and associated networks and servers, (iv) not provide access to the Website, or associated networks or servers to any person, government or entity that is located in or is a national of any embargoed or highly restricted country under United States Export Regulations, (v) not act or fail to act in a way that could cause a denial of service attack on any computers used by DP or its service providers, or (vi)  allow any other person or entity to access the Website with the same user name and/or password assigned to a User or Entity.</li>
+        <li><strong>6. Content and IP Rights</strong>  Entities and Users (or their third-party providers) retain title to all content they post to, or make accessible through, the Website or store using the Website.  Any Entity or User posting or storing content to or on the Website grants DP a nonexclusive license to transmit, display, distribute, and, to the extent necessary in facilitating delivery of the content to Users and the functioning of the Website, to create derivative works thereof.  DP owns all software and code underlying the Website, and all documentation and any copies thereof, and no license, right, or interest in any trademark, trade name, service mark, copyright, patent or other intellectual property right of DP is granted hereunder.  Entities and Users agree as a condition of accessing the Website not to assert any rights in relation thereto.  All rights not expressly granted herein are reserved to DP.</li>
+        <li><strong>7. Confidentiality</strong>  Entities and Users will not disclose the terms, conditions, and pricing relating to the use of the Website, or provide access to the Website to any third party who is not a User.  Entities and Users shall protect DP’s confidential information and on DP’s request, will destroy or return DP’s confidential information.</li>
+        <li><strong>8. Disclaimer of Warranty</strong>  Notwithstanding anything in this Agreement to the contrary and unless applicable law provides otherwise, THE WEBSITE AND DOCUMENTATION ARE PROVIDED ON AN AS-IS BASIS WITH NO WARRANTIES.  DP DISCLAIMS ALL REPRESENTATIONS AND WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NONINFRINGEMENT.  DP MAKES NO REPRESENTATIONS OR WARRANTIES THAT 
+(i) INFORMATION ORDERED, ACCESSED, TRANSMITTED OR STORED USING THE WEBSITE WILL BE ACCURATE OR COMPLETE, (ii) THE WEBSITE WILL BE ACCESSIBLE AT ALL TIMES, WILL FUNCTION ERROR FREE OR UNINTERRUPTED, OR BE SECURE OR BE FREE FROM VIRUSES, OR (iii) THAT CONTENT AND OTHER DATA AN ENTITY OR USER POSTS TO, ATTEMPTS TO TRANSMIT AND/OR TRANSMITS VIA THE WEBSITE OR ACCESSES, WILL BE SECURE, UNCORRUPTED, ACCURATELY TRANSMITTED, OR ERROR FREE.  DP MAKES NO REPRESENTATION OR WARRANTY AS TO THE ACCURACY OR RELIABILITY OF ANY INFORMATION ACCESSIBLE OR ORDERED THROUGH THE WEBSITE, OR OBTAINED THROUGH THE USE OF DP’S PRODUCTS OR SERVICES OR THE PRODUCTS OR SERVICES OF ANY OF ITS VENDORS OR SERVICES PROVIDERS.  DP MAKES NO REPRESENTATIONS OR WARRANTIES AS TO ANY ECONOMIC OR OTHER BENEFIT AN ENTITY OR USER MAY REALIZE BY USING THE WEBSITE.</li>
+        <li><strong>9. Disclaimer of Liability and Indemnification</strong>
+            <ul>
+                <li>9.1 DP, and its agents, directors, officers, employees, information providers, service providers, suppliers, and all other related, associated, or connected persons and entities (“Other Indemnitees”) will have no responsibility or liability to Entities and Users or any third party for any fees (including attorneys’ fees), costs, claims, damage, expense, injury, demands, causes of action, liabilities, settlements, judgments, and disbursements (“Liabilities”) that allegedly result from the occurrences listed below (“Occurrences”), even if they have been advised of the possibility of such damages.  Entities and Users release DP and the Other Indemnitees from any and all Liabilities of any nature and kind whatsoever and howsoever arising, whether known or unknown, which now or hereafter exist, which allegedly arise from, relate to, or are connected with the Occurrences.  Entities and Users will indemnify, hold DP and the Other Indemnitees harmless, and be solely responsible for, all Liabilities owed or owing to Entities and Users or any third party/ies that allegedly arise out of or are related in any way to the Occurrences.  The Occurrences are:  (i) information or data posted to or transmitted through the Website, (ii) access to or use of the Website, (iii) lost or corrupted information or data, (iv) any errors, inaccuracies, or omissions on the Website, or in any information or data accessed or transmitted by or at the request of any Entity or User, (v) any errors, inaccuracies, or omissions in the transmission of the data, (vi) any unauthorized access to any Entity’s or User’s information, (vii) any relationship, agreement or transaction with or among any Entity(ies) and any User(s) or other third parties, (viii) defects or deficiencies in the Website which cannot be corrected by DP or that DP decides not to correct, (ix) any Entity’s or User’s violation of any laws, regulations, policies, rights of a third party or another Entity(ies) or User(s), and (x) any Entity’s or User’s noncompliance with these terms and conditions, or any other terms related to access to and use of the Website and/or access to or use or misuse of any User’s personal information.  If California law is held to apply to this provision, Entities and Users waive California Civil Code 1542, which says: "A general release does not extend to claims which the creditor does not know or suspect to exist in his favor at the time of executing the release, which if known by him must have materially affected his settlement with the debtor," as well as any other statute or common law principle of similar effect.</li>
+                <li>9.2 Each Entity and User acknowledges that he/she/it has not entered into this Agreement in reliance upon any warranty or representation of any kind by DP.  Each Entity and User understands that the Website may have defects or deficiencies which cannot or will not be corrected by DT and that DP is under no obligation to correct such defects or deficiencies, but may do so at its sole discretion.  Each Entity and User acknowledges that the company(ies) providing information transmitted or accessed through the Website are not owned or controlled by DP and that DP has no liability or responsibility for their content or for any errors, omissions or inaccuracies in any information that is  transmitted through or using the Website or that is provided to any Entity or User.</li>
+            </ul>
+        </li>
+        <li><strong>10. Limitation of Damages. TO THE FULLEST EXTENT PERMITTED BY LAW, DP AND THE OTHER INDEMNITEES WILL HAVE NO LIABILITY FOR DAMAGES (WHETHER IN CONTRACT OR TORT) ARISING OUT OF, RELATING TO OR IN ANY WAY CONNECTED WITH THE RELATIONSHIP OF THE PARTIES, THE TERMINATION OF THIS AGREEMENT, OR THE PROVISION OR NON-PROVISION OF THE SERVICES, OR THE INABILITY TO USE THE WEBSITE.  DP AND THE OTHER INDEMNITEES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES, INCLUDING BUT NOT LIMITED TO LOST DATA, LOST PROFITS, THE COST OF PROCURING SUBSTITUTE GOODS OR SERVICES, HOWEVER ARISING, AND DAMAGES RESULTING FROM INCONVENIENCE, DELAY OR LOSS OF USE OF ANY INFORMATION, DATA, SOFTWARE OR HARDWARE, EVEN IF IT/THEY HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</strong></li>
+        <li>11. Agreement to Disclaimers of Warranty and Other Limitations.  THE PARTIES AGREE TO THE DISCLAIMERS and ALLOCATION OF LIABILITY SET FORTH IN SECTIONS 8., 9. and 10.  THESE DISCLAIMERS AND LIMITATIONS WILL APPLY NOTWITHSTANDING ANY FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.   EACH ENTITY AND USER ACKNOWLEDGES THAT WITHOUT HIS/HER/ITS AGREEMENT TO THE LIMITATIONS CONTAINED HEREIN, THE FEES CHARGED FOR WEBSITE ACCESS AND SERVICES WOULD BE HIGHER.</li>
+        <li><strong>12. Termination</strong>  This Agreement will continue in effect until terminated by either party on 15 days written notice to the other.  If any fees are not timely paid, or if an Entity or User is not in compliance with the terms of this Agreement or has acted in a way that is potentially injurious to the operation of the Website or DP’s business, DP can immediately terminate the Entity’s or User’s access to the Website. Upon termination, the terminated Entity or User will immediately cease using the Website.  DP will have no obligation or liability for content and/or data posted, transmitted or stored by an Entity or User during the term of this Agreement or after an Entity’s or User’s termination.</li>
+        <li><strong>13. General</strong> This Agreement will be governed by the laws of the State of Illinois, without regard to its choice of law or conflicts of laws provisions, and the state courts in Cook County and the Federal Courts for the Northern District of Illinois will have exclusive jurisdiction and venue of such actions.  The parties waive their right to a trial by jury.  Except for Entities and Users’ indemnification of DP and the Other Indemnitees, Entities and Users’ misappropriation or infringement of DP’s intellectual property rights, or Entities and Users’ failure to comply with this Agreement as it relates to access to and/or use of the Website, neither party shall be liable for any failure to perform due to causes beyond its reasonable control.  If any provision of this Agreement is held to be unenforceable, this Agreement shall be construed without such provision.  Entities and Users agree to be bound by the obligations related to access and/or use of the Website imposed by DP’s service provider(s).  Except for such obligations which may be imposed by DP’s service provider(s) on Entities and Users, no party will have any right or authority to assume or create any obligations of any kind or to make any representation or warranty on behalf of any other party.  DP’s election of any remedies shall not be exclusive and all such remedies shall be deemed to be cumulative.  No action, regardless of form, arising out of this Agreement may be brought by Entities and Users more than one year after the cause of action has accrued.  DP reserves the right to audit Entities’ and Users' use of the Website.  All audits shall be conducted during regular business hours at Entities or Users sites.  This Agreement constitutes the entire agreement between the parties concerning use of the Website and can be modified or amended only by (i) a written document signed by the parties’ authorized representatives, (ii) notice on the Website advising Entities and Users of a change in terms, or (iii) other than the terms described in (ii), terms contained on the Website to which Entities and Users indicates its/their assent.  DP may assign this Agreement without Entities’ and Users’ consent.  Entities and Users may not assign this Agreement (by operation of law or otherwise) without DP’s prior written consent and any such attempted or purported assignment shall be null and void.  Subject to the foregoing, this Agreement shall be binding on and inure to the benefit of the parties and their respective successors and permitted assigns.  The following provisions will survive the termination or expiration of this Agreement: 1., 3.3 ., 6., 7., 8.,  9., 10., 11., 12. and 13.    Notice to DP under this Agreement will be given in writing to:  President, Decision Point, LLC, 757 Strawberry Hill, Glencoe, IL  60022, and sent by mail or overnight courier and will be effective on receipt.  Notice to Entities and Users will be given by email at the email address contained in DP’s records.  If DP has more than one email address for an Entity or User, notice may be given to any email address, and will be effective on transmission by DP.</li>
+    </ul>
+    
+    <p></p>
+    <p> </p>    
+    
+    <div style="clear: both; height: 10px; width: 100%"></div>
+    <label class="checkbox" style="font-weight: normal;">
+        <input type="checkbox" id="chkAggrement" checked="@Session["checked"]" style="vertical-align: top" />
+        I have read the Agreement and agree to be comply with and be bound by its terms.  
+    </label>
+    <label id="lbl_error" style="color: red; font-size: small"></label>
+</div>
+
+@*@if (type == Shared.NonClient)
+{
+    <h2>Background User Agreement</h2>
+    <div style="float: left; width: 100%;">
+        There is some term and conditions for user background aggreement please review all tear and conditions carefully and accecpt them before go ahead. 
+        <div style="clear: both; height: 10px; width: 100%"></div>
+        <label class="checkbox" style="font-weight: normal;">
+            <input type="checkbox" id="chkbgAggrement" checked="@Session["checked"]" style="vertical-align: top" />
+            I have read the Agreement and agree to be comply with and be bound by its terms.
+        </label>
+        <label id="lbl_bgerror" style="color: red; font-size: small"></label>
+    </div>
+}*@
+<div style="float: left; width: 100%;">
+
+
+    <button id="div3Next" class="btn btn-primary" style="float: right; margin: 5px;" onclick="return CheckValidation()">Next</button>
+    @if (type == "IC")
+    {
+        @Html.ActionLink("Back", "SetupCompnayProfile", "Company", new { Type = type, Res = Res }, new { @class = "btn btn-primary", @style = "float:right;margin:5px;" })
+    }
+    else if (type == Shared.NonClient)
+    {
+        @Html.ActionLink("Back", "SetupCompnayProfile", "Company", new { Type = type }, new { @class = "btn btn-primary", @style = "float:right;margin:5px;" })
+    }
+    else
+    {
+        @Html.ActionLink("Back", "AdminAccount", "Company", new { @class = "btn btn-primary", @style = "float:right;margin:5px;" })
+    }
+</div>
+<div class="confirmationdivmain" style="display: none"></div>
+<div class="confirmationdivinner" style="display: none;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 75px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;">You must accept terms and conditions to move forward.</div>
+
+        <div style="float: left; width: 50px;">
+            <input type="button" id="btnok" class="btn btn-primary" value="Ok">
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+
+@*}*@
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+        $('#li2').removeClass("active-new");
+        $('#li1').removeClass("active-new");
+        $('#li3').removeClass("active-new");
+        $('#li2').addClass("d-active-new");
+        $('#li4').addClass("d-active-new");
+        $('#li1').addClass("d-active-new");
+        $('#li4').removeClass("active-new");
+        $('#li4').addClass("d-active-new");
+        $('#li5').removeClass("d-active-new");
+
+        $('#li5').addClass("active-new");
+
+    })
+
+
+
+
+
+    $('#div3Next').click(function () {
+       
+        if (CheckValidation()) {
+            if ('@type' == 'IC') {
+               
+                window.location.href = "@Url.Content("~/Company/PackagePayment?type=")@type&Res=@Res";
+            } else if ('@type' == 'Guest') {
+                
+                window.location.href ="@Url.Content("~/Company/MakeNonClientPayment")";
+            } else {
+              
+                $('#li2').removeClass("active-new");
+                $('#li1').removeClass("active-new");
+                $('#li3').removeClass("active-new");
+                $('#li2').addClass("d-active-new");
+                $('#li4').addClass("d-active-new");
+                $('#li1').addClass("d-active-new");
+                $('#li4').removeClass("d-active-new");
+                $('#li4').addClass("active-new");
+                $('#li5').removeClass("active-new");
+                $('#li5').removeClass("active");
+                $('#li5').addClass("d-active-new");
+                window.location.href = "@Url.Content("~/Company/MakePayment")";
+            }
+        }
+    })
+    function CheckValidation() {
+        if ('@type' == 'NonClient') {
+            if ($('#chkAggrement').is(':checked')) {
+                return true;
+            } else {
+                $('.confirmationdivmain').show();
+                $('.confirmationdivinner').show();
+                return false;
+            }
+        } else {
+            if ($('#chkAggrement').is(':checked')) {
+                return true;
+            } else {
+                $('.confirmationdivmain').show();
+                $('.confirmationdivinner').show();
+                return false;
+            }
+        }
+    }
+    $('#btnok').click(function () {
+        $('.confirmationdivmain').hide();
+        $('.confirmationdivinner').hide();
+    })
+
+</script>

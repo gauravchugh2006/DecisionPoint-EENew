@@ -1,0 +1,60 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    ViewBag.Title = "LicenseAndInsuranceView";
+    WebGrid grdlicandins = new WebGrid(rowsPerPage: 10);
+    if (Model.LicAndInsAsDetails != null)
+    {
+        grdlicandins.Bind(Model.LicAndInsAsDetails, autoSortAndPage: false, rowCount: 10);
+    }
+}
+
+  @if (Model.ReqiuredDocumentsDetails != null && Model.ReqiuredDocumentsDetails.Count() > 0)
+  {
+       @grdlicandins.GetHtml(htmlAttributes: new { id = "reqdocgridgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+
+
+grdlicandins.Column(columnName:"reqiuredDocId",header: "Title"
+,format: @<text>
+                    <a onclick="getGridData('@item.reqiuredDocId','0')" title="Click to complete the reqiurement" style="cursor: pointer;">
+                        <span>@item.reqiuredDoctName</span>
+                    </a>
+
+                    </text>,style:"grid-width229"),
+                   
+grdlicandins.Column(columnName:"expirationDate",header: "Expiration date",
+  format:@<text>
+                    @if (item.expirationDate!=null)
+                {
+<span> @string.Format("{0:MM/dd/yyyy}",
+             item.expirationDate)</span>
+                }
+                    </text>,style:"grid-width3002"),
+
+grdlicandins.Column(columnName:"reqiuredDoctName",header: "Status",
+  format:@<text>
+                    @if(item.IsCompleted==0)
+                {
+<span>In Progress</span>
+                }
+                    @if(item.IsCompleted==1)
+                {
+                        <span>Completed</span>
+
+                }
+                    @if(item.IsCompleted==2)
+                {
+                        <span>Incompleted</span>
+
+                }
+                    </text>,style:"grid-width100"),
+
+
+    })
+  }

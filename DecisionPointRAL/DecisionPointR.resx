@@ -1,0 +1,582 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="colon" xml:space="preserve">
+    <value>:</value>
+  </data>
+  <data name="completed" xml:space="preserve">
+    <value>completed</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password Required.</value>
+  </data>
+  <data name="CorrectEmailId" xml:space="preserve">
+    <value>Enter Correct Email Id.</value>
+  </data>
+  <data name="CsvHeaderNotMatch" xml:space="preserve">
+    <value>CSV Column header not match.</value>
+  </data>
+  <data name="CsvNotMatch" xml:space="preserve">
+    <value>CSV Column not match.</value>
+  </data>
+  <data name="EmailExist" xml:space="preserve">
+    <value>Email Already Exists.</value>
+  </data>
+  <data name="EmailNotMatch" xml:space="preserve">
+    <value>Email Id Not Matched.</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email Required.</value>
+  </data>
+  <data name="Fail" xml:space="preserve">
+    <value>Fail</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name Required</value>
+  </data>
+  <data name="IC" xml:space="preserve">
+    <value>IC</value>
+  </data>
+  <data name="incomming" xml:space="preserve">
+    <value>incomming</value>
+  </data>
+  <data name="IncorrectPswd" xml:space="preserve">
+    <value>The user name or password provided is incorrect.</value>
+  </data>
+  <data name="InvalidCsvFormat" xml:space="preserve">
+    <value>Please Upload CSV Format File.</value>
+  </data>
+  <data name="InvalidEmailOldPswd" xml:space="preserve">
+    <value>Invalid Email or Old Password.</value>
+  </data>
+  <data name="InvalidUserNamePassword" xml:space="preserve">
+    <value>The user name or password provided is incorrect.</value>
+  </data>
+  <data name="InviteFilterIncoming" xml:space="preserve">
+    <value>incoming</value>
+  </data>
+  <data name="InviteFilteroutgoing" xml:space="preserve">
+    <value>outgoing</value>
+  </data>
+  <data name="InviteFilterremoved" xml:space="preserve">
+    <value>removed</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name Required</value>
+  </data>
+  <data name="MailfooterInserted" xml:space="preserve">
+    <value>Inserted Successfully..</value>
+  </data>
+  <data name="MailfooterUpdated" xml:space="preserve">
+    <value>Updated Successfully..</value>
+  </data>
+  <data name="mycommunication" xml:space="preserve">
+    <value>mycommunication</value>
+  </data>
+  <data name="NoPayment" xml:space="preserve">
+    <value>Payment Not Done.</value>
+  </data>
+  <data name="NotChangedPswd" xml:space="preserve">
+    <value>Password Not Changed.</value>
+  </data>
+  <data name="NotRegistered" xml:space="preserve">
+    <value>Registration Not Done.</value>
+  </data>
+  <data name="PaaswordNotMatch" xml:space="preserve">
+    <value>Password Not Matched</value>
+  </data>
+  <data name="PasswordLength" xml:space="preserve">
+    <value>Password minimum length should be 6 character.</value>
+  </data>
+  <data name="PasswordNotMatch" xml:space="preserve">
+    <value>New Password should not match with old password.</value>
+  </data>
+  <data name="PasswordRules" xml:space="preserve">
+    <value>Password should be alphanumeric with one special character.</value>
+  </data>
+  <data name="PasswordSent" xml:space="preserve">
+    <value>Password Sent To Your Email.</value>
+  </data>
+  <data name="PaymentSuccess" xml:space="preserve">
+    <value>Payment Sucessfull.</value>
+  </data>
+  <data name="RequireNewPassword" xml:space="preserve">
+    <value>New Password Required.</value>
+  </data>
+  <data name="RequireOldPassword" xml:space="preserve">
+    <value>Old Password Required.</value>
+  </data>
+  <data name="RequirePassword" xml:space="preserve">
+    <value>Password Required.</value>
+  </data>
+  <data name="staffcommunication" xml:space="preserve">
+    <value>staffcommunication</value>
+  </data>
+  <data name="UploadCsv" xml:space="preserve">
+    <value>Please Upload CSV File.</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="UserExists" xml:space="preserve">
+    <value>This email ID does not exist in our records.</value>
+  </data>
+  <data name="WithID" xml:space="preserve">
+    <value>WithID</value>
+  </data>
+  <data name="WithoutID" xml:space="preserve">
+    <value>WithoutID</value>
+  </data>
+  <data name="accecptedI" xml:space="preserve">
+    <value>accecptedI</value>
+  </data>
+  <data name="accecptedO" xml:space="preserve">
+    <value>accecptedO</value>
+  </data>
+  <data name="admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="astrik" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="client" xml:space="preserve">
+    <value>client</value>
+  </data>
+  <data name="comma" xml:space="preserve">
+    <value>,</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="ComplianceManager" xml:space="preserve">
+    <value>Compliance Manager</value>
+  </data>
+  <data name="denyI" xml:space="preserve">
+    <value>denyI</value>
+  </data>
+  <data name="denyO" xml:space="preserve">
+    <value>denyO</value>
+  </data>
+  <data name="failinsmall" xml:space="preserve">
+    <value>fail</value>
+  </data>
+  <data name="forward" xml:space="preserve">
+    <value>forward</value>
+  </data>
+  <data name="getcompanyid" xml:space="preserve">
+    <value>getcompanyid</value>
+  </data>
+  <data name="history" xml:space="preserve">
+    <value>history</value>
+  </data>
+  <data name="ICListWithID" xml:space="preserve">
+    <value>ICListWithID.csv</value>
+  </data>
+  <data name="ICListWithoutID" xml:space="preserve">
+    <value>ICListWithoutID.csv</value>
+  </data>
+  <data name="IDenied" xml:space="preserve">
+    <value>IDenied</value>
+  </data>
+  <data name="IOAccepted" xml:space="preserve">
+    <value>IOAccepted</value>
+  </data>
+  <data name="IReceived" xml:space="preserve">
+    <value>IReceived</value>
+  </data>
+  <data name="logmessageerror" xml:space="preserve">
+    <value>Error : {0}\n By : {1}-{2}</value>
+  </data>
+  <data name="logmessagend" xml:space="preserve">
+    <value>End {0} function.</value>
+  </data>
+  <data name="logmessagestart" xml:space="preserve">
+    <value>Called {2} function ::{0} {1}.</value>
+  </data>
+  <data name="OPending" xml:space="preserve">
+    <value>OPending</value>
+  </data>
+  <data name="pass" xml:space="preserve">
+    <value>Pass</value>
+  </data>
+  <data name="passinsmall" xml:space="preserve">
+    <value>pass</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>password</value>
+  </data>
+  <data name="pendingO" xml:space="preserve">
+    <value>pendingO</value>
+  </data>
+  <data name="receivedI" xml:space="preserve">
+    <value>receivedI</value>
+  </data>
+  <data name="service" xml:space="preserve">
+    <value>service</value>
+  </data>
+  <data name="SubCategory" xml:space="preserve">
+    <value>Sub Category</value>
+  </data>
+  <data name="SuperAdmin" xml:space="preserve">
+    <value>SuperAdmin</value>
+  </data>
+  <data name="trueval" xml:space="preserve">
+    <value>true</value>
+  </data>
+  <data name="underscore" xml:space="preserve">
+    <value>_</value>
+  </data>
+  <data name="vendor" xml:space="preserve">
+    <value>vendor</value>
+  </data>
+  <data name="Zero" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="CmpLogo" xml:space="preserve">
+    <value>_CmpLogo</value>
+  </data>
+  <data name="Errorlbl" xml:space="preserve">
+    <value>Something wronge in error message.</value>
+  </data>
+  <data name="ErrorPageMsg1" xml:space="preserve">
+    <value>The requested URL could not be retrieved</value>
+  </data>
+  <data name="ErrorPageMsg2" xml:space="preserve">
+    <value>The following error was encountered while trying to retrieve the URL</value>
+  </data>
+  <data name="MyProfileOutstandingActionMsg1" xml:space="preserve">
+    <value>Job requirements of </value>
+  </data>
+  <data name="MyProfileOutstandingActionMsg2" xml:space="preserve">
+    <value>is pending, please review it.</value>
+  </data>
+  <data name="MyProfileOutstandingActionMsg3" xml:space="preserve">
+    <value>in license and insurance section</value>
+  </data>
+  <data name="MyDashBoardAdminMsg1" xml:space="preserve">
+    <value>This communication exist in your Inbox.please review this communication and forward to staff.</value>
+  </data>
+  <data name="MyDashBoardAdminMsg2" xml:space="preserve">
+    <value>pending invites please review these invites.</value>
+  </data>
+  <data name="MyDashBoardAdminMsg3" xml:space="preserve">
+    <value>There are</value>
+  </data>
+  <data name="MyDashBoardAdminMsg4" xml:space="preserve">
+    <value>staff members that have not completed their registration.</value>
+  </data>
+  <data name="MyDashBoardAdminMsg5" xml:space="preserve">
+    <value>IC's who have not accepted their invitation.</value>
+  </data>
+  <data name="MyDashBoardAdminMsg6" xml:space="preserve">
+    <value>vendor/client who have not accepted their invitation.</value>
+  </data>
+  <data name="MyDashBoardCommunicationMsg1" xml:space="preserve">
+    <value>Please review this communication</value>
+  </data>
+  <data name="MyDashBoardCommunicationMsg2" xml:space="preserve">
+    <value>it's due date is</value>
+  </data>
+  <data name="MyDashBoardCommunicationMsg3" xml:space="preserve">
+    <value>due date is nothing</value>
+  </data>
+  <data name="MyDashBoardCoplianceMsg1" xml:space="preserve">
+    <value>There is</value>
+  </data>
+  <data name="MyDashBoardCoplianceMsg2" xml:space="preserve">
+    <value>communication need to be completed by staff.</value>
+  </data>
+  <data name="MyDashBoardCoplianceMsg3" xml:space="preserve">
+    <value>communication need to be completed by ic.</value>
+  </data>
+  <data name="MyDashBoardCoplianceMsg4" xml:space="preserve">
+    <value>communication need to be completed by vendor.</value>
+  </data>
+  <data name="MyDashBoardCoplianceMsg5" xml:space="preserve">
+    <value>communication need to be completed by client.</value>
+  </data>
+  <data name="MyDashBoardMyProfileMsg1" xml:space="preserve">
+    <value>Please complete the</value>
+  </data>
+  <data name="MyDashBoardMyProfileMsg2" xml:space="preserve">
+    <value>Please added at least one</value>
+  </data>
+  <data name="MyDashBoardMyProfileMsg3" xml:space="preserve">
+    <value>in company</value>
+  </data>
+  <data name="MyDashBoardMyProfileMsg4" xml:space="preserve">
+    <value>You have</value>
+  </data>
+  <data name="MyDashBoardMyProfileMsg5" xml:space="preserve">
+    <value>incompleted job compliance reqiurements.please review these.</value>
+  </data>
+  <data name="MyDashBoardNoAlertMsg" xml:space="preserve">
+    <value>No Alerts !</value>
+  </data>
+  <data name="MyDashBoardAdminMsg7" xml:space="preserve">
+    <value>you get invites from</value>
+  </data>
+  <data name="PageErrorMsg" xml:space="preserve">
+    <value>There is some issue in requested url. Please contact to admin person.</value>
+  </data>
+  <data name="BreakLineTag" xml:space="preserve">
+    <value>&lt;br/&gt;</value>
+  </data>
+  <data name="InviteMailBodyForSAndICMsg1" xml:space="preserve">
+    <value>&lt;br/&gt;Subject: Compliance Tracker Account&lt;br/&gt;&lt;br/&gt;</value>
+  </data>
+  <data name="InviteMailBodyForSAndICMsg2" xml:space="preserve">
+    <value> welcome to Compliance Tracker.Below you will find your username and a temporary password to gain access to the application. With Compliance Tracker you will be able to access and read all your company’s policy and procedures, directives, e-learning and much more! You also get a library where all the documents and e-learning are stored for your easy reference.Log in, reset you temporary password and complete your profile.If you have any trouble please feel free to contact your system administrator.&lt;br/&gt;&lt;br/&gt; Please &lt;a href='</value>
+  </data>
+  <data name="InviteMailBodyForSAndICMsg3" xml:space="preserve">
+    <value>'&gt;click here&lt;/a&gt; to get to log in page&lt;/br&gt;&lt;br/&gt;User Name:</value>
+  </data>
+  <data name="InviteMailBodyForVendorAndClientMsg1" xml:space="preserve">
+    <value>&lt;br/&gt;Subject: Compliance Tracker&lt;br/&gt;&lt;br/&gt;</value>
+  </data>
+  <data name="InviteMailBodyForVendorAndClientMsg2" xml:space="preserve">
+    <value> has requested to join Compliance Tracker. Compliance Tracker is first industry wide tool that was  born out of federal regulations requiring that we can communicate state, federal, client and </value>
+  </data>
+  <data name="InviteMailBodyForVendorAndClientMsg3" xml:space="preserve">
+    <value>’s best practices, policies and procedures to everyone relevant to process down to the ‘boots on the street’ and be able to provide an audit trail.&lt;br/&gt;&lt;br/&gt; Please &lt;a href='</value>
+  </data>
+  <data name="InviteMailBodyForVendorAndClientMsg4" xml:space="preserve">
+    <value>'&gt;click here&lt;/a&gt; to get to log in page&lt;/br&gt;&lt;br/&gt;User Name:</value>
+  </data>
+  <data name="InviteMailBodyMsg1" xml:space="preserve">
+    <value>&lt;div style='line-height:25px'&gt;To: </value>
+  </data>
+  <data name="InviteMailBodyMsg2" xml:space="preserve">
+    <value>&lt;br/&gt;From: </value>
+  </data>
+  <data name="InviteMailBodyMsg3" xml:space="preserve">
+    <value>&lt;br/&gt; Password: </value>
+  </data>
+  <data name="InviteMailBodyMsg4" xml:space="preserve">
+    <value>&lt;br/&gt;&lt;br/&gt;&lt;/br&gt;&lt;/br&gt;</value>
+  </data>
+  <data name="InviteMailBodyMsg5" xml:space="preserve">
+    <value>&lt;/div&gt;</value>
+  </data>
+  <data name="InviteMailBodyMsg6" xml:space="preserve">
+    <value>?id=</value>
+  </data>
+  <data name="InviteMailSubjectForStaffAndIC" xml:space="preserve">
+    <value>Compliance Tracker Account</value>
+  </data>
+  <data name="InviteMailSubjectForVendorAndClient" xml:space="preserve">
+    <value>Compliance Tracker</value>
+  </data>
+  <data name="inviteSentSucessfullMsg" xml:space="preserve">
+    <value>Invitation send sucessfully</value>
+  </data>
+  <data name="ComleteStateTitle" xml:space="preserve">
+    <value> (Complete State)</value>
+  </data>
+  <data name="CompleteCountyTitle" xml:space="preserve">
+    <value> (Complete County)</value>
+  </data>
+  <data name="MyDashBoardContractMsg1" xml:space="preserve">
+    <value>Contract created by</value>
+  </data>
+  <data name="MyDashBoardContractMsg2" xml:space="preserve">
+    <value>going to expire on</value>
+  </data>
+  <data name="MyDashBoardContractMsg3" xml:space="preserve">
+    <value>has been expired on </value>
+  </data>
+  <data name="MyDashBoardContractMsg4" xml:space="preserve">
+    <value>going to expire today </value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="NonMember" xml:space="preserve">
+    <value>Non-Member</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="APIAddProductMsg1" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="APIAddProductMsg2" xml:space="preserve">
+    <value>Sub client not found</value>
+  </data>
+  <data name="APIAddProductMsg3" xml:space="preserve">
+    <value>Client not found</value>
+  </data>
+  <data name="APIAddProductMsg4" xml:space="preserve">
+    <value>Product not found for client </value>
+  </data>
+  <data name="processingTimestampNodeAttributeValue" xml:space="preserve">
+    <value>Results Processed</value>
+  </data>
+  <data name="ContentTypeNotMatchMsg" xml:space="preserve">
+    <value>Content type should be in text/xml</value>
+  </data>
+  <data name="BrowserRequestMessage" xml:space="preserve">
+    <value>403 Forbidden response should be used afterwards, when the user is authenticated but is not authorized to perform the requested operation on the given resource</value>
+  </data>
+  <data name="ExceptionMsg" xml:space="preserve">
+    <value>Issue in XML File</value>
+  </data>
+  <data name="SterlingPassword" xml:space="preserve">
+    <value>Sterling001</value>
+  </data>
+  <data name="SterlingUserName" xml:space="preserve">
+    <value>ST</value>
+  </data>
+  <data name="ClientNotMeetAndInvestorNotMeetColor" xml:space="preserve">
+    <value>#ffc8ce</value>
+  </data>
+  <data name="ClientMeetInvestorNotMeetColor" xml:space="preserve">
+    <value>#Feeb9e</value>
+  </data>
+  <data name="ClientAndInvestorMeetColor" xml:space="preserve">
+    <value>#c6efcd</value>
+  </data>
+  <data name="EntityIdentifierMessage" xml:space="preserve">
+    <value>Successfully Received</value>
+  </data>
+  <data name="ClientAndInvestorMeet" xml:space="preserve">
+    <value>Client and investors/servicers requirements met</value>
+  </data>
+  <data name="ClientMeetInvestorNotMeet" xml:space="preserve">
+    <value>Client requirements met – not all investor/servicers requirements met</value>
+  </data>
+  <data name="ClientNotMeetAndInvestorNotMeet" xml:space="preserve">
+    <value>Client requirements not met</value>
+  </data>
+  <data name="SterlingResAction1" xml:space="preserve">
+    <value>Please review your </value>
+  </data>
+  <data name="SterlingResAction2" xml:space="preserve">
+    <value> result.</value>
+  </data>
+  <data name="SterlingResSubject" xml:space="preserve">
+    <value>Response</value>
+  </data>
+</root>

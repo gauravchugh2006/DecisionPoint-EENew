@@ -1,0 +1,825 @@
+﻿<div id="MakePayment">
+    @model DecisionPoint.Models.Payment
+    @{
+        ViewBag.Title = "MakeIcPayment";
+        Layout = "~/Views/Shared/_ICSetUpLayoutPage.cshtml";
+    
+    }
+
+    @{
+        Dictionary<string, string> CardDictionary = new Dictionary<string, string>();
+
+        CardDictionary.Add("Visa", "Visa");
+        CardDictionary.Add("MasterCard", "MasterCard");
+        CardDictionary.Add("American Express", "American Express");
+        CardDictionary.Add("JCB", "JCB");
+        CardDictionary.Add("Discover", "Discover");
+        SelectList FillCardList = new SelectList(CardDictionary, "value", "key");
+    }
+    @{
+        Dictionary<string, string> MonthDictionary = new Dictionary<string, string>();
+        MonthDictionary.Add("01", "01");
+        MonthDictionary.Add("02", "02");
+        MonthDictionary.Add("03", "03");
+        MonthDictionary.Add("04", "04");
+        MonthDictionary.Add("05", "05");
+        MonthDictionary.Add("06", "06");
+        MonthDictionary.Add("07", "07");
+        MonthDictionary.Add("08", "08");
+        MonthDictionary.Add("09", "09");
+        MonthDictionary.Add("10", "10");
+        MonthDictionary.Add("11", "11");
+        MonthDictionary.Add("12", "12");
+        SelectList MonthList = new SelectList(MonthDictionary, "value", "key");
+    }
+    @{
+        Dictionary<string, string> YearDictionary = new Dictionary<string, string>();
+        YearDictionary.Add("2014", "2014");
+        YearDictionary.Add("2015", "2015");
+        YearDictionary.Add("2016", "2016");
+        YearDictionary.Add("2017", "2017");
+        YearDictionary.Add("2018", "2018");
+        YearDictionary.Add("2019", "2019");
+        YearDictionary.Add("2020", "2020");
+        YearDictionary.Add("2021", "2021");
+        YearDictionary.Add("2022", "2022");
+        YearDictionary.Add("2023", "2023");
+        YearDictionary.Add("2024", "2024");
+        YearDictionary.Add("2025", "2025");
+        SelectList YearList = new SelectList(YearDictionary, "value", "key");
+    }
+    <style type="text/css">
+        .input-validation-error {
+            border: solid 1px red !important;
+        }
+    </style>
+    <link rel="stylesheet" href="/resources/demos/style.css" />
+
+
+    <div class="registration-LEftbox" style="display: none">
+
+
+
+        <div class="control-group" id="ChkAddress" style="display: none">
+            <label class="control-label" style="padding-top: 0px">@Html.CheckBoxFor(model => model.IsSameAddress, new { @value = Model.IsSameAddress })</label>
+            <div class="controls">
+                Same As Business Address
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Address</label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.Directions, new { @value = Model.Directions, maxlength = 2, @class = "input-xlarge", @placeholder = "Direction", @style = "Width:60px" })
+                @Html.TextBoxFor(model => model.Street, new { @value = Model.Street, @class = "input-xlarge", @placeholder = "Street Name", @style = "Width:193px" })
+            </div>
+
+        </div>
+        <div class="control-group" style="display: none">
+            <label class="control-label">Address</label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.StreetNumber, new { maxlength = 6, @class = "input-xlarge", @placeholder = "Number", @style = "Width:60px", })
+                @Html.TextBoxFor(model => model.Directions, new { maxlength = 2, @class = "input-xlarge", @placeholder = "Direction", @style = "Width:60px" })
+                @Html.TextBoxFor(model => model.Street, new { maxlength = 50, @class = "input-xlarge", @placeholder = "Street Name", @style = "Width:115px" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.StreetNumber)</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Zip Code</label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.Zip, new { @value = Model.Zip, maxlength = 5, @class = "input-xlarge", @placeholder = "Zip Code" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.Zip)</span>
+                <span class="validation" id="Span_ZipError" style="display: none;">Invalid Zip</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">City <sup style="color: red; font-size: 10px;">*</sup></label>
+            <div class="controls">
+                @Html.DropDownListFor(model => model.CityId, FillCityList(), "Select City", new { @id = "City", @value = Model.CityId, @class = "input-xlarge", @style = "width:285px" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.CityId)</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">State <sup style="color: red; font-size: 10px;">*</sup></label>
+            <div class="controls">
+                @Html.DropDownListFor(model => model.StateId, FillStateList(), "Select State", new { @id = "State", @value = Model.StateId, @class = "input-xlarge", @style = "width:285px" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.StateId)</span>
+            </div>
+        </div>
+
+
+        <div class="control-group" style="margin-bottom: 0px; display: none">
+            <label class="control-label" style="margin-top: -10px">Annual Fee</label>
+            @Html.HiddenFor(model => model.IcFee)
+            @Html.HiddenFor(model => model.IsInvoice)
+            <div class="controls">
+                <div style="float: right; margin-right: 10px;">
+                    @*<span style="float: left;">$ </span>*@
+                    <label id="disIcFee" style="float: left;">0</label>
+                    @Html.HiddenFor(model => model.IcFee, new { @id = "lblIcFee" })
+                </div>
+                @Html.TextBoxFor(model => model.NoOfIc, new { maxlength = 4, @class = "input-medium", @placeholder = "No Of IC", @Value = "1", @style = "float:left;width:140px;margin-right: 10px;display:none" })
+                <span style="float: left; width: 75%; font-size: 9px; line-height: 11px;">Monthly fee for Independent Contractors.
+                         Fee is based on the number of IC’s at the start of each month plus IC’s added for a total during that month time the monthly fee.  IC’s that leave will be accounted for at the beginning of the following month.
+                </span>
+            </div>
+
+        </div>
+
+        <div class="control-group" style="margin-bottom: 0px;">
+            <label class="control-label" style="margin-top: -10px;">Membership Fee</label>
+            <div class="controls">
+                <div style="float: right; margin-right: 10px;">
+                    @*<span style="float: left;">$ </span>
+                        <label id="memberShipFee" style="float: left;">$@Model.MemberShipAmount<span>0</span></label>
+                        @Html.HiddenFor(model => model.MemberShipAmount, new { @id = "lblmemberShipFee" })
+                    </div>
+                    <span style="float: left; width: 75%; font-size: 9px; line-height: 11px;">Membership fee for Independent Contractors.
+                         Fee is based on the number of packages purchase by IC.
+                    </span>
+                </div>
+
+            </div>
+
+            <div style="width: 100%; display: none">
+                <div style="float: right; width: 90px; margin-top: -5px; margin-right: 6px; background-color: black; height: 2px;"></div>
+            </div>
+            <div style="clear: both;"></div>
+            <div class="control-group" style="margin-bottom: 0px; display: none">
+                <div class="controls">
+                    <label class="control-label" style="width: 185px; line-height: 13px; display: block;">Total</label>
+                    <div style="float: right; margin-right: 10px;">
+                        @* <p style="float: left; width: 10px">$ </p>*@
+                    <label id="disTotalAmount" style="float: left;">0</label>
+                    @Html.HiddenFor(model => model.Amount, new { @id = "TotalAmount" })
+                    @Html.HiddenFor(model => model.Amount, new { @id = "hidAmount" })
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.ShowCardDiv != true)
+    {
+        <div class="registration-LEftbox" id="div_CreditCard" style="display: none">
+
+            <div class="control-group" style="display: none;">
+                <label class="control-label">Business Name<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.BusinessName, new { @class = "input-xlarge", @placeholder = "Business Name" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.BusinessName)</span>
+                </div>
+            </div>
+
+            <div class="control-group" style="display: none">
+                <label class="control-label">Transaction Type</label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.TransactionType, new { @class = "input-xlarge", @placeholder = "Transaction Type" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.TransactionType)</span>
+                </div>
+            </div>
+            <div class="control-group" style="display: none">
+                <label class="control-label">Annual License Fee</label>
+                <div class="controls">
+                    <div style="float: right; margin-right: 10px;">
+                        @* <span style="float: left;">$</span>*@
+                        <label id="disCompanyFee" style="float: left;">0</label>
+                        @Html.HiddenFor(model => model.CompanyFee, new { @id = "lblCompanyFee", @Value = "0" })
+                        @*   @Html.TextBoxFor(model => model.CompanyFee, new { @id = "lblCompanyFee", @Value = "0" })*@
+                    </div>
+                </div>
+            </div>
+            <div class="control-group" style="display: none">
+                <label class="control-label">Code</label>
+                <div class="controls">
+
+                    @Html.TextBoxFor(model => model.CompanyCode, new { @id = "CompanyCode", @class = "input-xlarge", @placeholder = "Company Id" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CompanyId)</span>
+                </div>
+            </div>
+            <div class="control-group" style="display: none">
+                <label class="control-label" style="margin-top: -10px;">Monthly per Business Partner Fee</label>
+                @Html.HiddenFor(model => model.PerFieldStaffFee, new { @Value = "0" })
+                <div class="controls" style="margin-bottom: 0px;">
+                    <div style="float: right; margin-right: 10px;">
+                        @*<span style="float: left;">$ </span>*@
+                        <label id="disFieldStaffFee" style="float: left;">0</label>
+                        @Html.HiddenFor(model => model.FieldStaffFee, new { @id = "lblFieldStaffFee" })
+                    </div>
+                    @Html.TextBoxFor(model => model.NoOfFieldStaff, new { maxlength = 4, @class = "input-medium", @placeholder = "No Of Partners", @Value = "0", @style = "float:left;width:140px;margin-right: 10px;;display:none" })
+                    <span style="float: left; width: 75%; font-size: 9px; line-height: 11px;">Business Partner is defined as a company that you have connected with that you can send or receive communications from.  Independent Contractors are not subject to Business Partner fees. </span>
+                </div>
+            </div>
+            <div class="control-group" style="display: none">
+                <label class="control-label" style="margin-top: -10px;">Monthly per Staff Fee </label>
+                @Html.HiddenFor(model => model.PerOfficeStaffFee, new { @Value = "0" })
+                @Html.HiddenFor(model => model.IcFee)
+                @Html.HiddenFor(model => model.IsInvoice)
+                <div class="controls">
+                    <div style="float: right; margin-right: 10px;">
+                        @*<span style="float: left;">$ </span>*@
+                        <label id="disOfficeStaffFee" style="float: left;">0</label>
+                        @Html.HiddenFor(model => model.OfficeStaffFee, new { @id = "lblOfficeStaffFee", @Value = "0" })
+                    </div>
+                    @Html.TextBoxFor(model => model.NoOfOfficeStaff, new { maxlength = 4, @class = "input-medium", @placeholder = "No Of Staff", @Value = "0", @style = "float:left;width:140px;margin-right: 10px;;display:none" })
+                    <span style="float: left; width: 75%; font-size: 9px; line-height: 11px;">Fee is based on the number of staff at the start of each month plus staff added for a total during that month time the monthly fee.  Staff that leave will be accounted for at the beginning of the following month. </span>
+                </div>
+
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Select Credit Card <sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.CreditCardType, FillCardList, "Select", new { @class = "input-xlarge", @style = "width:285px", onchange = "ValidateCreditCard()" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CreditCardType)</span>
+                    <span id="span_PayError" class="validation"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Credit Card Number<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.CardNumber, new { @class = "input-xlarge", @placeholder = "Credit Card Number", onchange = "ValidateCreditCard()", maxlength = 20 })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CardNumber)</span>
+                    <span id="span_cardError" class="validation"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Card Holder Name <sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.NameOnCard, new { @class = "input-xlarge", @placeholder = "Card Holder Name", maxlength = 50 })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.NameOnCard)</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Expiry Date <sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.ExpiryMonth, MonthList, "Month", new { @class = "input-xlarge", @style = "width:140px" })
+                    @Html.DropDownListFor(model => model.ExpiryYear, YearList, "Year", new { @class = "input-xlarge", @style = "width:140px" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.ExpiryMonth)</span>
+                    <span class="validation">@Html.ValidationMessageFor(model => model.ExpiryYear)</span>
+                    <span id="span_ExpirationError" class="validation"></span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">CVV @*<sup style="color: red; font-size: 10px;">*</sup>*@</label>
+                <div class="controls">
+                    @Html.PasswordFor(model => model.CVC, new { @class = "input-xlarge", @placeholder = "CVV", onchange = "ValidateCreditCard()", maxlength = 4 })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CVC)</span>
+                    <span id="span_CvcError" class="validation"></span>
+                </div>
+            </div>
+        </div>
+    }
+    @Html.HiddenFor(model => model.RedirectType)
+    @Html.HiddenFor(model => model.PaymentType)
+    <div style="clear: both; display: none"></div>
+
+    <div style="text-align: right; display: none">
+        @*  @if (TempData["SucessMessage"] != null)
+            {
+                <div class="confirmationdivmain" style="display: block"></div>
+                <div class="confirmationdivinner" style="display: block;">
+                    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+                        <div style="font-size: 16px; color: green; padding-bottom: 10px;">@TempData["SucessMessage"]</div>
+
+                        <div style="float: left; width: 50px;">
+                            <input type="button" id="btnok2" class="btn btn-primary" value="Ok">
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>            
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="confirmationdivmain" style="display: block"></div>
+                <div class="confirmationdivinner" style="display: block;">
+                    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+                        <div style="font-size: 16px; color: green; padding-bottom: 10px;">@TempData["ErrorMessage"]</div>
+
+                        <div style="float: left; width: 50px;">
+                            <input type="button" id="btnok1" class="btn btn-primary" value="Ok">
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            }*@
+
+    </div>
+    @Html.HiddenFor(model => model.ParentUserType)
+
+    <div id="monthlydiv" class="control-group" style="margin-bottom: 0px; display: none">
+        <label class="control-label" style="margin-top: -10px">Annual Fee</label>
+        @Html.HiddenFor(model => model.IcFee)
+        @Html.HiddenFor(model => model.IsInvoice)
+        <div class="controls">
+            <div style="float: right; margin-right: 10px;">
+                @*<span style="float: left;">$ </span>*@
+                <label id="disIcFee" style="float: left;">$31.00</label>
+                @Html.HiddenFor(model => model.IcFee, new { @id = "lblIcFee" })
+            </div>
+            @Html.TextBoxFor(model => model.NoOfIc, new { maxlength = 4, @class = "input-medium", @placeholder = "No Of IC", @Value = "1", @style = "float:left;width:140px;margin-right: 10px;display:none" })
+            <span style="float: left; width: 75%; font-size: 9px; line-height: 11px;">Monthly fee for Independent Contractors.
+                         Fee is based on the number of IC’s at the start of each month plus IC’s added for a total during that month time the monthly fee.  IC’s that leave will be accounted for at the beginning of the following month.
+            </span>
+        </div>
+
+    </div>
+
+    <br />
+    <div id="memberdiv" class="control-group" style="margin-bottom: 0px;">
+        <label class="control-label" style="margin-top: 30px;">Membership Fee</label>
+        <div class="controls">
+            <div style="float: right; margin-right: 10px;">
+                @*<span style="float: left;">$ </span>*@
+                <label id="memberShipFee" style="float: left;">$@Model.MemberShipAmount.ToString("F")</label>
+                @Html.HiddenFor(model => model.MemberShipAmount, new { @id = "lblmemberShipFee" })
+            </div>
+            <span style="float: left; width: 75%; font-size: 12px; line-height: 11px;">Membership fee for Independent Contractors.
+                         Fee is based on the number of packages purchase by IC.
+            </span>
+        </div>
+
+    </div>
+    <div style="text-align: right; margin-top: 50px">
+        <a id="div_Backs" href="~/Company/PackagePayment?type=IC&Res=@Request["Res"]" class="btn btn-primary" style="margin-right:69px;">Back</a>
+        <button id="next3" class="btn btn-primary" style="display: none">Submit</button>
+        
+        <form method="post"  action=@Model.PaymentGetwayActionUrl>
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="business" value="@Model.PayPalAccount">
+            <input type="hidden" name="item_name" value="IC Registration">
+            <input type="hidden" name="item_number" value="1">
+            <input type="hidden" id="payAmount" name="amount" value="@Model.Amount">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="notify_url" value="@Model.RootUrl/Company/PayPalResponse">
+            <input type="hidden" name="return" value="@Model.RootUrl/Company/Welcome">
+            <input id="btnPay" style="float: right; height: 37px; margin-right: -8px; margin-top: -34px;" type="image" src="~/Content/images/submit.png" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+            <input type="hidden" name="custom" value="@Session["CompanyId"],@Session["UserId"],@Session["BusinessName"],@Session["InviteeCompany"],@Session["Emailid"]" />
+        </form>
+
+    </div>
+
+    @functions{
+        private IEnumerable<SelectListItem> FillStateList()
+        {
+            return new SelectList(Model.StateList, "StateId", "SateName");
+        }
+
+        private IEnumerable<SelectListItem> FillCityList()
+        {
+            return new SelectList(Model.CityList, "CityId", "CityName");
+        }
+    }
+
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/dashboard")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/FormatCurrency.js"></script>
+    <script src="~/Scripts/ValidateCreditCard.js"></script>
+    <script type="text/javascript">
+        function ValidateCreditCard() {
+            var myCardNo = $('#CardNumber').val();
+            var myCardType = $('#CreditCardType').val();
+            var myCvv = $('#CVC').val();
+            var result1 = false;
+            var result2 = false;
+            if (myCardNo.length > 0 && myCardType != 'Select') {
+                if (checkCreditCard(myCardNo, myCardType)) {
+                    $('#span_cardError').html("");
+                    $('#CardNumber').css('border', '');
+                    result1 = true;
+                }
+                else {
+                    $('#span_cardError').html(ccErrors[ccErrorNo]);
+                    $('#CardNumber').css('border', 'solid 1px red');
+                    result1 = false;
+
+                };
+            }
+            if (myCardType != 'Select' && myCvv.length > 0) {
+                if (validateCvvCode(myCardType, myCvv)) {
+                    $('#span_CvcError').html('');
+                    $('#CVC').css('border', '');
+                    result2 = true;
+                } else {
+                    $('#CVC').css('border', 'solid 1px red');
+                    $('#span_CvcError').html('Invalid CVV Code');
+                    result2 = false;
+
+                }
+            }
+            return (result1 && result2);
+        }
+
+
+        $(".input-xlarge").keyup(function () {
+            if (this.value.length == this.maxLength) {
+                $(this).next('.input-xlarge').focus();
+            }
+        });
+      
+        $('#btnok1').click(function () {
+            $('.confirmationdivmain').hide();
+            $('.confirmationdivinner').hide();
+        });
+        $('btnOkError2').click(function () {
+
+            $('.confirmationdivmain').hide();
+            $('.confirmationdivinner').hide();
+        });
+       
+        $(document).ready(function () {
+           
+            $('#lblCompanyFee').val("0");
+            $('#li2').removeClass("active-new");
+            $('#li1').removeClass("active-new");
+            $('#li3').removeClass("active-new");
+            $('#li2').addClass("d-active-new");
+            $('#li4').addClass("d-active-new");
+            $('#li1').addClass("d-active-new");
+            $('#li4').removeClass("d-active-new");
+            $('#li4').addClass("active-new");
+            
+            if ($('#ParentUserType').val().trim().toLowerCase() != 'SuperAdmin'.toLowerCase()) {
+                $('#NoOfFieldStaff').val('1');
+            } else {
+                $('#NoOfFieldStaff').val('0');
+            }
+            var errorMsg = '@TempData["ErrorMessage"]';
+            if (errorMsg != null || errorMsg != '') {
+                if (errorMsg.match(/expiration/g)) {
+                    $('#span_ExpirationError').html(errorMsg);
+                    $('#ExpiryMonth').css('border', 'solid 1px red');
+
+                }
+                else if (errorMsg.match(/number/g)) {
+                    $('#span_cardError').html(errorMsg);
+                    $('#CardNumber').css('border', 'solid 1px red');
+                }
+                else if (errorMsg.match(/security/g)) {
+                    $('#span_CvcError').html(errorMsg);
+                    $('#CVC').css('border', 'solid 1px red');
+                }
+                else {
+                    $('#span_PayError').html(errorMsg);
+                }
+            }
+            $('#Amount').val('');
+            $('#NoOfEmployee').val('')
+            var CmpCode = 'CHETU';
+            $.ajax({
+                url: '@Url.Content("~/Company/GetPaymentAmount")',
+                data: { CompanyId: '@Session["CompanyId"]' },
+                type: 'GET',
+                async: true
+            })
+                  .success(function (data) {
+                      if (data.length > 0) {
+                          if (data[0].IsInvoice == true) {
+                              // $('#next3').hide();
+                              //$('#div_CreditCard').hide();
+                              $('#lblCompanyFee').val("0");
+                              $('#disCompanyFee').html("0");
+                              // $('#lblCompanyFee').attr("value", data[0].CompanyFee);
+                              $('#PerFieldStaffFee').val("0");
+                              $('#PerOfficeStaffFee').val("0");
+                              $('#lblFieldStaffFee').val("0");
+                              $('#lblOfficeStaffFee').val("0");
+                              $('#disFieldStaffFee').html("0");
+                              $('#disOfficeStaffFee').html("0");
+
+                              $('#IcFee').val(0);
+                              $('#lblIcFee').val(0);
+                              $('#disIcFee').html(0);
+
+                              $('#IsInvoice').val(data[0].IsInvoice);
+                              $('#lblIcFee').val(0);
+                          } else {
+                              //  $('#next3').show();
+                              
+                              $('#div_CreditCard').hide();
+                              $('#lblCompanyFee').val("0");
+                              $('#disCompanyFee').html("0");
+                              // $('#lblCompanyFee').attr("value", data[0].CompanyFee);
+                              $('#PerFieldStaffFee').val("0");
+                              $('#PerOfficeStaffFee').val("0");
+                              $('#lblFieldStaffFee').val("0");
+                              $('#lblOfficeStaffFee').val("0");
+                              $('#disFieldStaffFee').html("0");
+                              $('#disOfficeStaffFee').html("0");
+
+                              $('#IcFee').val(data[0].PerIcFee);
+                              $('#lblIcFee').val(data[0].PerIcFee);
+                              $('#disIcFee').html(data[0].PerIcFee);
+
+                              $('#IsInvoice').val(data[0].IsInvoice);
+                              $('#lblIcFee').val(data[0].IcFee);
+                          }
+
+                          formatFields();
+                          NoOfFieldStaffChange();
+                          NoOfOfficeStaffChange();
+                          NoOfIcChange();
+                          SetCustomValueForPayPal();
+                          SetPaymentAmount();
+                          
+                          
+                      }
+                  })
+                  .error(function (data) {
+                  })
+            $("input[type='text']").each(function () {
+                $(this).attr("autocomplete", "off");
+            });
+        })
+
+        $("#div4Prev").click(function () {
+            $.ajax({
+                url: '../Company/AdminAccount',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'accecpted': "" },
+                async: true
+
+            })
+          .success(function (result) {
+              $('#MakePayment').hide();
+              $('#f3').show();
+              $('#f1').hide();
+              $('#f2').hide();
+              $('#f4').hide();
+              $('#f3').html(result);
+          })
+          .error(function (xhr, status) {
+              // alert(status);
+          })
+            $('#li1').removeClass("active");
+            $('#li2').removeClass("active");
+            $('#li4').removeClass("active");
+            $('#li3').addClass("active");
+        });
+        $('#ChkAddress input:checkbox').on("change", function () {
+            $.ajax({
+                url: '../Company/GetCompanyProfile?Type=IC',
+                type: 'GET',
+                async: true
+            })
+                   .success(function (data) {
+                       if (data.length > 0) {
+
+                           $('#Directions').val(data[0].Direction);
+                           $('#Street').val(data[0].StreetName);
+                           $('#Zip').val(data[0].ZipCode);
+
+                           $('#State').val(data[0].StateId);
+                           $('#City').val(data[0].CityId);
+                       }
+                   })
+                   .error(function (data) {
+
+                   })
+        });
+        $('#CompanyCode').change(function () {
+            var CmpCode = $('#CompanyCode').val();
+            $.ajax({
+                url: '../Company/GetPaymentAmount',
+                data: { CompanyId: CmpCode },
+                type: 'GET',
+                async: true
+            })
+                  .success(function (data) {
+                      if (data.length > 0) {
+
+                          $('#lblCompanyFee').html(data[0].CompanyFee);
+                          $('#lblCompanyFee').attr("value", data[0].CompanyFee);
+                          $('#PerFieldStaffFee').val(data[0].PerFieldStaffFee);
+                          $('#PerOfficeStaffFee').val(data[0].PerOfficeStaffFee);
+                          $('#lblFieldStaffFee').val(data[0].PerFieldStaffFee);
+                          $('#lblOfficeStaffFee').val(data[0].PerOfficeStaffFee);
+                          $('#IsInvoice').val(data[0].IsInvoice);
+                          //formatFields();
+                      }
+                  })
+                  .error(function (data) {
+                  })
+        })
+        function formatFields() {
+
+            $('#disCompanyFee').formatCurrency();
+            $('#disFieldStaffFee').formatCurrency();
+            $('#disOfficeStaffFee').formatCurrency();
+            $('#disTotalAmount').formatCurrency();
+            $('#disIcFee').formatCurrency();
+        }
+        $('#NoOfFieldStaff').on('input', function () {
+            NoOfFieldStaffChange();
+
+        })
+        function NoOfFieldStaffChange() {
+            var CompFee = $('#lblCompanyFee').val();
+            var amt = $('#lblFieldStaffFee').val();
+            var amt2 = $('#lblOfficeStaffFee').val();
+            var amt1 = $('#PerFieldStaffFee').val();
+            var NoOfEmp = $('#NoOfFieldStaff').val();
+            var amt3 = $('#IcFee').val();
+            var total = $('#TotalAmount');
+            if ((amt1 != '') && (NoOfEmp != '')) {
+                var TotalAmt = parseInt(NoOfEmp) * parseFloat(amt1);
+                $('#lblFieldStaffFee').val(TotalAmt);
+                var Sum = parseFloat(TotalAmt) + parseFloat(CompFee) + parseFloat(amt2) + parseFloat(amt3);
+
+                $('#lblFieldStaffFee').val(TotalAmt);
+                $('#disFieldStaffFee').html(TotalAmt);
+                $('#disTotalAmount').html(Sum);
+                $('#TotalAmount').val(Sum);
+                $('#TotalAmount').val(Sum);
+                $('#hidAmount').val(Sum);
+                formatFields();
+            }
+            else { total.val(''); }
+        }
+        function NoOfOfficeStaffChange() {
+            var CompFee = $('#lblCompanyFee').val();
+            var amt = $('#lblFieldStaffFee').val();
+            var amt2 = $('#PerOfficeStaffFee').val();
+            var amt1 = $('#lblFieldStaffFee').val();
+            var NoOfEmp = $('#NoOfOfficeStaff').val();
+            var amt3 = $('#IcFee').val();
+            var total = $('#TotalAmount');
+            if ((amt1 != '') && (NoOfEmp != '')) {
+                var TotalAmt = parseInt(NoOfEmp) * parseFloat(amt2);
+                $('#lblOfficeStaffFee').val(TotalAmt);
+                var Sum = parseFloat(TotalAmt) + parseFloat(CompFee) + parseFloat(amt1) + parseFloat(amt3);
+                $('#lblOfficeStaffFee').val(TotalAmt);
+                $('#disOfficeStaffFee').html(TotalAmt);
+                $('#disTotalAmount').html(Sum);
+                $('#TotalAmount').val(Sum);
+                //$('#TotalAmount').val(Sum);
+
+                $('#hidAmount').val(Sum);
+                formatFields();
+            }
+            else { total.val(''); }
+        }
+        function NoOfIcChange() {
+            var CompFee = $('#lblCompanyFee').val();
+            var amt = $('#lblFieldStaffFee').val();
+            var amt2 = $('#lblOfficeStaffFee').val();
+            var amt1 = $('#IcFee').val();
+            var NoOfEmp = $('#NoOfIc').val();
+            var amt3 = $('#lblFieldStaffFee').val();
+            var total = $('#TotalAmount');
+            if ((amt1 != '') && (NoOfEmp != '')) {
+                var TotalAmt = parseInt(NoOfEmp) * parseFloat(amt1);
+                $('#lblIcFee').val(TotalAmt);
+                var Sum = parseFloat(TotalAmt) + parseFloat(CompFee) + parseFloat(amt2) + parseFloat(amt3);
+
+                $('#lblIcFee').val(TotalAmt);
+                $('#disIcFee').html(TotalAmt);
+                $('#disTotalAmount').html(Sum);
+                $('#TotalAmount').val(Sum);
+                $('#TotalAmount').val(Sum);
+                $('#hidAmount').val(Sum);
+                formatFields();
+            }
+            else { total.val(''); }
+        }
+        $('#NoOfOfficeStaff').on('input', function () {
+            NoOfOfficeStaffChange();
+        })
+
+        $('#NoOfIc').on('input', function () {
+            NoOfIcChange();
+        })
+
+
+        $('#Amount').on('input', function () {
+            var amt = $('#Amount').val();
+            var NoOfEmp = $('#NoOfEmployee').val();
+            var total = $('#AnnualTransaction');
+            if ((amt != '') && (NoOfEmp != '')) {
+                var TotalAmt = parseInt(NoOfEmp) * parseFloat(amt);
+                total.val(TotalAmt);
+            }
+            else { total.val(''); }
+        })
+        $('#NoOfEmployee').on('input', function () {
+            var amt = $('#Amount').val();
+            var NoOfEmp = $('#NoOfEmployee').val();
+            var total = $('#AnnualTransaction');
+            if ((amt != '') && (NoOfEmp != '')) {
+                var TotalAmt = parseInt(NoOfEmp) * parseFloat(amt);
+                total.val(TotalAmt);
+            }
+
+            else { total.val(''); }
+        })
+
+        //called when key is pressed in textbox
+        $("#NoOfFieldStaff").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#NoOfOfficeStaff").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#Zip").keypress(function () {
+            var zipText = $("#Zip").val().trim();
+            if (zipText.length > 4) {
+                getStateCityByZip();
+            }
+        })
+        $("#Zip").change(function () {
+            getStateCityByZip();
+        })
+        function getStateCityByZip() {
+            var zipText = $("#Zip").val().trim();
+            if (zipText.length > 4) {
+                $.ajax({
+                    url: '@Url.Content("~/Company/getStateCityByZip")',
+                    cache: false,
+                    type: 'get',
+                    async: true,
+                    data: { zip: $("#Zip").val() },
+                    success: function (data) {
+                        $('#Span_ZipError').hide();
+                        if (data.length > 0) {
+                            $("#City option").each(function () {
+                                this.selected = $(this).text() == data[0].CityName;
+                            });
+                            $("#State option").each(function () {
+                                this.selected = $(this).text() == data[0].StateName;
+                            });
+                            $("#City").focus();
+                            $("#State").focus();
+                        } else {
+                            $('#Span_ZipError').show();
+                            $("#City option").each(function () {
+                                this.selected = $(this).text() == "Select City";
+                            });
+                            $("#State option").each(function () {
+                                this.selected = $(this).text() == "Select State";
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+
+                    }
+                })
+               } else {
+                   $('#Span_ZipError').show();
+                   $("#City option").each(function () {
+                       this.selected = $(this).text() == "Select City";
+                   });
+                   $("#State option").each(function () {
+                       this.selected = $(this).text() == "Select State";
+                   });
+               }
+           }
+           function SetCustomValueForPayPal() {
+               var customFiledValue = $('input[name=custom]').val();
+               $('input[name=custom]').val(customFiledValue + ',' + $('#NoOfFieldStaff').val() + ',' + $('#NoOfOfficeStaff').val() + ',' + $('#NoOfIc').val()+','+'IC Registration');
+           }
+           function SetPaymentAmount() {
+               var amount = parseFloat($('#lblmemberShipFee').val());
+               $('#payAmount').val(amount);
+           }
+    </script>
+</div>
+
+

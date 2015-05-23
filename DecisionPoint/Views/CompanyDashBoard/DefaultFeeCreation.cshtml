@@ -1,0 +1,195 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+
+@{
+    ViewBag.Title = "FeeCreation";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+<style>
+    .validation
+    {
+        color:red;
+    }
+</style>
+<div class='heading'>
+        <div class='row'>
+      <h3>Manage Fee Master</h3>
+        </div>
+ </div>
+<div class="w100">
+    @using (Html.BeginForm("SetDefaultFee", "CompanyDashBoard", FormMethod.Post, new { id = "SubmitForm", onsubmit = "return ValidateSave()" }))
+    {
+          
+        <div style="width: 100%; float: left; margin-top: 0px;">
+            <div class='control-group w100'>
+                <label class='control-label' style="font-weight: bold !important; text-decoration: underline;">Fee Structure</label>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Company Fee (Annual)<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.CompanyFee, new { maxlength = 10, @class = "input-xlarge", @placeholder = "Company Fee" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.CompanyFee)</span>
+                </div>
+            </div>
+             <div class="control-group">
+                <label class="control-label">Per Staff Member Fee (Annual)<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.PerFieldStaffFee, new { maxlength = 10, @class = "input-xlarge", @placeholder = "Per Staff Member Fee" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.PerFieldStaffFee)</span>
+                </div>
+            </div>
+             <div class="control-group" style="display:none;">
+                <label class="control-label">Per Business Connection Fee (Monthly)<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.PerOfficeStaffFee, new { maxlength = 10, @class = "input-xlarge", @placeholder = "Per Business Connections Fee" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.PerOfficeStaffFee)</span>
+                </div>
+            </div>
+            <div class="control-group" style="display:none;">
+                <label class="control-label">Per Independent Contractor Fee (Monthly)<sup style="color: red; font-size: 10px;">*</sup></label>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.PerICFee, new { maxlength = 10, @class = "input-xlarge", @placeholder = "Per Independent Contractor Fee" })
+                </div>
+                <div class="controls">
+                    <span class="validation">@Html.ValidationMessageFor(model => model.PerICFee)</span>
+                     <span style="float:left; width:100%;color:green; font-size:12.5px;"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"></label>
+                <div class="controls">
+                    @Html.CheckBoxFor(model => model.IsInvoice, new { @style = "margin-top:-1px;" }) Invoice
+                </div>
+                <div class="controls">
+                    <span style="float:left; width:100%;color:green; font-size:12.5px;">Last Updated on @Model.LastUpdatedDate</span>
+                </div>
+            </div>
+            
+             <div class="controls">
+                
+                 <input type="submit" name="Save" value="Save" class="btn btn-primary" id="btnSubmit" />
+             </div>
+           <div class='halfrest' style="margin-top:10px;">
+            <span id="Sucess" style="color: green;"> @TempData["SucessMessage"]</span>
+    <span id="Fialure" style="color: red;">@TempData["ErrorMessage"]</span>
+                </div>
+            @Html.HiddenFor(model => model.CompanyId)
+            @Html.HiddenFor(model => model.CompanyName)
+            @Html.HiddenFor(model => model.Id)
+        </div>
+    }
+
+ 
+  
+</div>
+<script>
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        setTimeout(function () {
+            btnok();
+        }, 1500)
+    });
+    $('#CompanyFee').keypress(function () {
+        if ($('#CompanyFee').val().trim() != "") {
+            $('#CompanyFee').removeClass("errorClass");
+        }
+    })
+    $('#PerFieldStaffFee').keypress(function () {
+        if ($('#PerFieldStaffFee').val().trim() != "") {
+            $('#PerFieldStaffFee').removeClass("errorClass");
+        }
+    })
+    $('#PerOfficeStaffFee').keypress(function () {
+        if ($('#PerOfficeStaffFee').val().trim() != "") {
+            $('#PerOfficeStaffFee').removeClass("errorClass");
+        }
+    })
+    $('#PerICFee').keypress(function () {
+        if ($('#PerICFee').val().trim() != "") {
+            $('#PerICFee').removeClass("errorClass");
+        }
+    })
+    //validate with decimal
+    $("#CompanyFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    $("#PerFieldStaffFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    $("#PerOfficeStaffFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    $("#PerICFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    function ValidateSave() {
+        var companyFee = $('#CompanyFee').val().trim();
+        var FieldStaffFee = $('#PerFieldStaffFee').val().trim();
+        var OfficeStaffFee = $('#PerOfficeStaffFee').val().trim();
+        var IcFee = $('#PerICFee').val().trim();
+
+        var companyFeeval = true;
+        var FieldStaffFeeval = true;
+        var OfficeStaffFeeval = true;
+        var IcFeeval = true;
+
+
+        //if (companyFee != null || companyFee.trim() != '') {
+        //    ret= true;
+        //}
+        //if (FieldStaffFee != null || FieldStaffFee.trim() != '') {
+        //    ret = true;
+        //}
+        //if (OfficeStaffFee != null || OfficeStaffFee.trim() != '') {
+        //    ret = true;
+        //}
+        if (companyFee == null || companyFee.trim() == '') {
+            $('#CompanyFee').addClass("errorClass");
+            companyFeeval = false;
+        }
+        if (FieldStaffFee == null || FieldStaffFee.trim() == '') {
+            $('#PerFieldStaffFee').addClass("errorClass");
+            FieldStaffFeeval = false;
+        }
+        if (OfficeStaffFee == null || OfficeStaffFee.trim() == '') {
+            $('#PerOfficeStaffFee').addClass("errorClass");
+            OfficeStaffFeeval = false;
+        }
+        if (IcFee == null || IcFee.trim() == '') {
+            $('#PerICFee').addClass("errorClass");
+            IcFeeval = false;
+        }
+        if (companyFeeval && FieldStaffFeeval && OfficeStaffFeeval && IcFeeval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function btnok() {
+
+      
+        $('#changepwdOuter').hide();
+        $('#changepwdInner').hide();
+    }
+
+</script>

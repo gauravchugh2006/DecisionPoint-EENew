@@ -1,0 +1,18 @@
+﻿
+.btn-blue {
+    background-color: #0CADE4;
+    background-image: linear-gradient(to bottom, #0CADE4,  #0F7BC0);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-blue:hover {
+    background-color: #00B3F1;
+    background-image: linear-gradient(to bottom, #00B3F1,  #0075CB);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}

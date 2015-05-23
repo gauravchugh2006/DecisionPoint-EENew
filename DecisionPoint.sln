@@ -1,0 +1,128 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPoint", "DecisionPoint\DecisionPoint.csproj", "{630F6BFD-59D0-4B36-867B-A4167339ADFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPoint.Tests", "DecisionPoint.Tests\DecisionPoint.Tests.csproj", "{2FF41F75-9693-4860-8487-FA63E0A7861E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPointDAL", "DecisionPointDAL\DecisionPointDAL.csproj", "{1F02F745-6A13-4564-8561-189B413CA968}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPointBAL", "DecisionPointBAL\DecisionPointBAL.csproj", "{BE0D6E8A-F550-4DE9-9F8C-65ECAE06D007}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPointCAL", "DecisionPointRAL\DecisionPointCAL.csproj", "{4A8D98B2-9F11-450F-83F6-64EB4BF2B968}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPointAPIService", "DecisionPointAPIService\DecisionPointAPIService.csproj", "{22B27336-428C-4A59-9909-38BE803C9161}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPointHandler", "DecisionPointHandler\DecisionPointHandler.csproj", "{3C1414CB-E4A4-4349-A20A-D2FB77D3C87F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionPointMailMatixBAL", "DecisionPointMailMatixBAL\DecisionPointMailMatixBAL.csproj", "{D39721DE-6161-4FEF-BEE6-AC25803F190F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecurringPaymentService", "RecurringPaymentService\RecurringPaymentService.csproj", "{8F1E0D10-A9DC-49B6-8396-47560AFE6115}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RusticiSoftware.HostedEngine.Client", "SCORMCloud_NetLibrary-master\RusticiSoftware.HostedEngine.Client.csproj", "{11AF12EE-C99E-4A73-8BE2-1FC016867BC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinStripe", "XamarinStripe\XamarinStripe.csproj", "{218CF4C2-C457-43E4-9D1B-0880D10181FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2F4A5A3B-749C-493C-8B9C-3CD3D080C8AC}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 12
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://tfs01:8080/tfs/chetuprojects
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DecisionPoint\\DecisionPoint.csproj
+		SccProjectName1 = DecisionPoint
+		SccLocalPath1 = DecisionPoint
+		SccProjectUniqueName2 = DecisionPoint.Tests\\DecisionPoint.Tests.csproj
+		SccProjectName2 = DecisionPoint.Tests
+		SccLocalPath2 = DecisionPoint.Tests
+		SccProjectUniqueName3 = DecisionPointDAL\\DecisionPointDAL.csproj
+		SccProjectName3 = DecisionPointDAL
+		SccLocalPath3 = DecisionPointDAL
+		SccProjectUniqueName4 = DecisionPointBAL\\DecisionPointBAL.csproj
+		SccProjectName4 = DecisionPointBAL
+		SccLocalPath4 = DecisionPointBAL
+		SccProjectUniqueName5 = DecisionPointRAL\\DecisionPointCAL.csproj
+		SccProjectName5 = DecisionPointRAL
+		SccLocalPath5 = DecisionPointRAL
+		SccProjectUniqueName6 = DecisionPointAPIService\\DecisionPointAPIService.csproj
+		SccProjectName6 = DecisionPointAPIService
+		SccLocalPath6 = DecisionPointAPIService
+		SccProjectUniqueName7 = DecisionPointHandler\\DecisionPointHandler.csproj
+		SccProjectName7 = DecisionPointHandler
+		SccLocalPath7 = DecisionPointHandler
+		SccProjectUniqueName8 = DecisionPointMailMatixBAL\\DecisionPointMailMatixBAL.csproj
+		SccProjectName8 = DecisionPointMailMatixBAL
+		SccLocalPath8 = DecisionPointMailMatixBAL
+		SccProjectUniqueName9 = RecurringPaymentService\\RecurringPaymentService.csproj
+		SccProjectName9 = RecurringPaymentService
+		SccLocalPath9 = RecurringPaymentService
+		SccProjectUniqueName10 = SCORMCloud_NetLibrary-master\\RusticiSoftware.HostedEngine.Client.csproj
+		SccProjectName10 = SCORMCloud_NetLibrary-master
+		SccLocalPath10 = SCORMCloud_NetLibrary-master
+		SccProjectUniqueName11 = XamarinStripe\\XamarinStripe.csproj
+		SccProjectName11 = XamarinStripe
+		SccLocalPath11 = XamarinStripe
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{630F6BFD-59D0-4B36-867B-A4167339ADFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630F6BFD-59D0-4B36-867B-A4167339ADFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630F6BFD-59D0-4B36-867B-A4167339ADFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630F6BFD-59D0-4B36-867B-A4167339ADFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FF41F75-9693-4860-8487-FA63E0A7861E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF41F75-9693-4860-8487-FA63E0A7861E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF41F75-9693-4860-8487-FA63E0A7861E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF41F75-9693-4860-8487-FA63E0A7861E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F02F745-6A13-4564-8561-189B413CA968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F02F745-6A13-4564-8561-189B413CA968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F02F745-6A13-4564-8561-189B413CA968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F02F745-6A13-4564-8561-189B413CA968}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE0D6E8A-F550-4DE9-9F8C-65ECAE06D007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE0D6E8A-F550-4DE9-9F8C-65ECAE06D007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE0D6E8A-F550-4DE9-9F8C-65ECAE06D007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE0D6E8A-F550-4DE9-9F8C-65ECAE06D007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A8D98B2-9F11-450F-83F6-64EB4BF2B968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A8D98B2-9F11-450F-83F6-64EB4BF2B968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A8D98B2-9F11-450F-83F6-64EB4BF2B968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A8D98B2-9F11-450F-83F6-64EB4BF2B968}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22B27336-428C-4A59-9909-38BE803C9161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B27336-428C-4A59-9909-38BE803C9161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B27336-428C-4A59-9909-38BE803C9161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B27336-428C-4A59-9909-38BE803C9161}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C1414CB-E4A4-4349-A20A-D2FB77D3C87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C1414CB-E4A4-4349-A20A-D2FB77D3C87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C1414CB-E4A4-4349-A20A-D2FB77D3C87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C1414CB-E4A4-4349-A20A-D2FB77D3C87F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D39721DE-6161-4FEF-BEE6-AC25803F190F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39721DE-6161-4FEF-BEE6-AC25803F190F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39721DE-6161-4FEF-BEE6-AC25803F190F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39721DE-6161-4FEF-BEE6-AC25803F190F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F1E0D10-A9DC-49B6-8396-47560AFE6115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F1E0D10-A9DC-49B6-8396-47560AFE6115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F1E0D10-A9DC-49B6-8396-47560AFE6115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F1E0D10-A9DC-49B6-8396-47560AFE6115}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11AF12EE-C99E-4A73-8BE2-1FC016867BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11AF12EE-C99E-4A73-8BE2-1FC016867BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11AF12EE-C99E-4A73-8BE2-1FC016867BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11AF12EE-C99E-4A73-8BE2-1FC016867BC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{218CF4C2-C457-43E4-9D1B-0880D10181FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{218CF4C2-C457-43E4-9D1B-0880D10181FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{218CF4C2-C457-43E4-9D1B-0880D10181FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{218CF4C2-C457-43E4-9D1B-0880D10181FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

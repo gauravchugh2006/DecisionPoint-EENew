@@ -1,0 +1,490 @@
+﻿@model DecisionPoint.Models.UploadZipModel
+@using DecisionPointCAL.Common;
+@using System.Globalization;
+@{
+    ViewBag.Title = "UploadZipList";
+    Layout = null;
+    int requestType = Convert.ToInt32(Request["type"], CultureInfo.InvariantCulture);
+    
+}
+@Styles.Render("~/Content/css")
+<link href="~/Content/css/Register/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/Register/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/Content/css/Register/common.css" rel="stylesheet" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link href="~/Content/css/Dashboard/common.css" rel="stylesheet" />
+<script src="~/Scripts/DashBoard/Coveragrea.js"></script>
+<style>
+    .ui-autocomplete {
+        max-height: 150px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+        font-size: 11px;
+    }
+    /* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+    * html .ui-autocomplete {
+        height: 150px;
+    }
+
+    #download {
+        background: url(../Content/images/download.png) no-repeat;
+        width: 28px;
+        height: 32px;
+        float: right;
+        width: 175px;
+        padding-left: 32px;
+        line-height: 30px;
+        text-decoration: underline;
+    }
+
+    .w20 {
+        margin-right: 50px;
+        float: left;
+        margin-bottom: 10px;
+        line-height: 26px;
+    }
+
+    .pdr5 {
+        padding-right: 5px;
+        float: left;
+    }
+
+    .multiselectable {
+        width: 500px;
+        display: block;
+        overflow: hidden;
+        width: 100%;
+        padding-right: 20px;
+        margin-bottom: 10px;
+    }
+
+        .multiselectable select, .multiselectable div {
+            width: 205px;
+            float: left;
+        }
+
+            .multiselectable div * {
+                display: block;
+                margin: 0 auto;
+                font-size: 12px;
+                font-weight: normal;
+            }
+
+        .multiselectable div {
+            display: inline;
+            overflow: hidden;
+        }
+
+        .multiselectable .m-selectable-controls {
+            margin-top: 6.5em;
+            width: 43px;
+        }
+
+            .multiselectable .m-selectable-controls button {
+                margin-top: 0.2em;
+                margin-left: .5em;
+                width: 30px;
+            }
+</style>
+
+@*<script src="~/Scripts/FilterZipList/jquery-1.8.0.min.js"></script>
+<script src="~/Scripts/FilterZipList/jquery-ui-1.8.23.custom.min.js"></script>
+<link href="~/Scripts/FilterZipList/ui-lightness/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
+<link href="~/Scripts/FilterZipList/checkList.css" rel="stylesheet" />
+
+<style type="text/css">
+    body {
+        font-family: 'Segoe UI',Tahoma,Arial,Helvetica,sans-serif;
+        vertical-align: top;
+        font-size: .813em;
+        line-height: 1.4em;
+        color: #44525E;
+    }
+
+    #myCheckList, #selected {
+        display: block;
+        margin-bottom: 10px;
+        width: 250px;
+    }
+</style>*@
+
+<div style="display: block; margin-top: 10px;">
+    @using (Html.BeginForm("UploadZip", "Company", FormMethod.Post, new { onsubmit = "return ValidateSave()", enctype = "multipart/form-data" }))
+    {
+        <div class="control-group" id="ziptopdiv">
+            <div class="controls">
+                <input type="text" id="txtcsvs" style="height: 33px; line-height: 30px;" placeholder="Zip code CSV/Manually added zip code" />
+               
+                @*<div id="myCheckList" style="display:none;"></div>*@
+                <input type="button" value="Add" class="btn btn-small btn-primary butmargin" style="height: 30px; width: 5%; margin-top: -9px;" id="addzipmanually" />
+                <label class="btn btn-small btn-primary" style="height: 25px; color: #fff; width: 80px; margin-top: -14px;" id="btnbrowse">
+                    <p style="padding-top: 2px;">Browse</p>
+                    @Html.TextBoxFor(m => m.File, new { @name = "attachment", @id = "txtcsv", type = "file", @style = "color:transparent;opacity:0; margin-top:-33px;width:5px;",onchange="readdocURL(this)", onclick="removeval()" })
+                </label>
+                <input type="submit" value="Upload File" class="btn btn-small btn-primary" style="height: 30px; width: 100px; margin-top: -14px;" id="btnUploadZip" />
+                <div id="download">
+                    @Html.ActionLink("Download Template", "DownloadZipSample", "Company", new { @id = "download" })
+                    @* <a href="../App_Data/CSV Files/zip csv.csv">Download sample CSV file</a>*@
+                </div>
+                <div class="popup jcrdetails" id="outerpopup" style="left: 21%; margin-top: -7px; display: none;">
+                    <div class="ziplist-popup-box" id="myCheckList">
+                    </div>
+                </div>
+            </div>
+            <div class="controls" style="color: red;">
+                @Html.ValidationMessageFor(m => m.File)
+            </div>
+            <div class="controls" style="display: none">
+                <div class="fl">Choose Seperators :</div>
+                <div class="forlabel" alignment="center">
+                    <label style="float: left; margin-left: 10px;">
+                        <input type="radio" id="" name="ss" value="," checked="checked" class=" mr10" style="margin-right: 7px;" />
+                        (,)</label>
+                    <label style="float: left; margin-left: 10px;">
+                        <input type="radio" id="" name="ss" value="." class=" mr10" style="margin-right: 7px;" />
+                        (.)</label>
+                    <label style="float: left; margin-left: 10px;">
+                        <input type="radio" id="" name="ss" value=";" class=" mr10" style="margin-right: 7px;" />
+                        (;)</label>
+                    @Html.HiddenFor(model => model.Seprator, new { @id = "hidSeprator", @value = "," })
+
+                </div>
+            </div>
+
+        </div>
+       
+        <div class="control-group" style="display:none;">
+            <div class="controls">
+                 <label id="manualzipcode" style="color:red;"></label>
+
+                <label style="margin-left: 0px;">
+                    @Html.CheckBoxFor(model => model.FirstRowHeader, new { @id = "firstRowHeader", @style = "margin-top:-1px;" })
+                    Consider first row as header</label>
+            </div>
+        </div>
+        <div style="clear: both"></div>
+        
+        
+        <div class="leftcol1">
+            <div class="span8" style="margin-left: 0px;">
+                <div class="selectheading" style="width: 74%; font-size: 12px;">
+                    @*<input type="checkbox" id="allzipcode" style="float: left; display: none; margin-top: 4px; margin-left: 8px;" checked="checked" onchange="SetZipCheckBoxStatus(this.id)" />*@
+                    Selected Zips
+                </div>
+                <div id="ZipList2" class="span6" style="min-height: 345px; overflow-y: auto; height: 214px; border-radius: 3px; border: solid 1px #ddd; font-size: 12px; margin-left: 0;">
+                     @{bool chkexistingzipstatus = false;}
+                     @if (Model.CompanyBasedZipList != null)
+                    {
+                        if (Model.CompanyBasedZipList.Count > 0)
+                        {
+                            foreach (var item in Model.CompanyBasedZipList)
+                            {
+                                chkexistingzipstatus = false;
+                                if (requestType.Equals(1))
+                                {
+                                    if (Model.ZipList != null)
+                                    {
+                                        if (Model.ZipList.Count > 0)
+                                        {
+                                            foreach (var userzip in Model.ZipList)
+                                            {
+                                                if (item.ZipCode == userzip.ZipCode)
+                                                {
+                                                    chkexistingzipstatus = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    chkexistingzipstatus = true;
+                                }
+                        <div id="@item.ZipCode" >
+                            @if (chkexistingzipstatus){
+                            <input style="margin: 7px 8px;" type="checkbox" checked="checked" class="ZipList" id="rdZipCode_@item.ZipCode" value="@item.ZipCode" name="ZipCode" />
+                            }else{
+                                <input style="margin: 7px 8px;" type="checkbox" class="ZipList" id="rdZipCode_@item.ZipCode" value="@item.ZipCode" name="ZipCode" />
+                            }
+                            <span>@item.ZipCode</span>
+                        </div>
+                        <input type="hidden" id="allzipcodechkstatus" value="1" />
+                            }
+                        }
+                    }
+                    @{bool chkstatus = false;}
+                    @if (Model.UploadedZipList != null)
+                    {
+                        if (Model.UploadedZipList.Count > 0)
+                        {
+                            foreach (var item in Model.UploadedZipList)
+                            {
+                                chkstatus = false;
+                                if (Model.CompanyBasedZipList != null)
+                                {
+                                    if (Model.CompanyBasedZipList.Count > 0)
+                                    {
+                                        foreach (var savedzip in Model.CompanyBasedZipList)
+                                        {
+                                            if (item[0].ToString() == savedzip.ZipCode)
+                                            {
+                                                chkstatus = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!chkstatus)
+                                {
+                        <div id="@item[0].ToString()" >
+                            <input style="margin: 7px 8px;" type="checkbox" checked="checked" class="ZipList" id="rdZipCode_@item[0].ToString()" value="@item[0].ToString()" name="ZipCode" />
+                            <span>@item[0].ToString()</span>
+                        </div>
+                        <input type="hidden" id="allzipcodechkstatus" value="1" />
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                <input type="hidden" id="hidSelectedZip2" />
+            </div>
+
+        </div>
+        
+        
+    }
+
+</div>
+@if (requestType.Equals(1))
+{
+if (!object.Equals(Model.ZipList, null))
+{
+    if (Model.ZipList.Count > 0)
+    { 
+    <input type="hidden" class="coverageAreaType" value="1" />
+    }
+    else
+    {   <input type="hidden" class="coverageAreaType" value="0" />
+    }
+}
+else
+{<input type="hidden" class="coverageAreaType" value="0" />
+}
+}else{
+    if (!object.Equals(Model.CompanyBasedZipList, null))
+    {
+        if (Model.CompanyBasedZipList.Count > 0)
+        { 
+    <input type="hidden" class="coverageAreaType" value="1" />
+        }
+        else
+        {   <input type="hidden" class="coverageAreaType" value="0" />
+        }
+    }
+    else
+    {<input type="hidden" class="coverageAreaType" value="0" />
+    }
+}
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/dashboard")
+@Scripts.Render("~/bundles/jqueryval")
+<input type="hidden" id="validfileid" value="1"/>
+@*<script src="~/Scripts/multiSelect.js"></script>*@
+@*<script src="~/Scripts/FilterListPlugin.js"></script>*@
+<script src="~/Scripts/FilterZipList/jquery.ui.checkList.js"></script>
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $("#txtcsvs").on("keyup", function (e) {
+        $('#manualzipcode').html('');
+        $('#txtcsvs').removeClass('errorClass');
+        var keyCode = e.which ? e.which : e.keyCode
+
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105)) {
+            if ($('#txtcsvs').val().trim() != '') {
+                $.ajax({
+                    url: '@Url.Content("~/Company/SearchZip")',
+                    cache: false,
+                    type: "GET",
+                    data: { term: $('#txtcsvs').val().trim(), citylist: '' },
+                    async: true,
+                    success: function (data) {
+                        $('#myCheckList').empty();
+                        $('#outerpopup').show();
+                        $.each(data, function (i, item) {
+                            $('#myCheckList').append('<ul style="list-style:none;"><li><input id="' + item + '" type="checkbox" class="MarginTop4"/><span class="Marginleft5" value="' + item + '">' + item + '</span></li></ul>');
+                        })
+
+                    },
+                    error: function (data) { alert('error'); }
+                })
+            }
+        }
+        else {
+            if ($('#txtcsvs').val().trim() == '') {
+                $('#myCheckList').empty();
+                $('#outerpopup').hide();
+            }
+        }
+    })
+    //$("#txtcsvs").change(function () {
+    //    if ($('#txtcsvs').val().trim() == '') {
+    //        $('#myCheckList').empty();
+    //        $('#outerpopup').hide();
+    //    }
+    //})
+    $('#addzipmanually').click(function () {
+        AddedZipManually();
+    })
+    $(document).ready(function () {
+        if ($('#allzipcodechkstatus').length) {
+            $('#allzipcode').show();
+        }
+        $('input[id="txtcsv"]').change(function () {
+            var filename = $(this).val();
+            $('#txtcsvs').val(filename);
+
+        });
+        $('#hidSeprator').val(',');
+        $('input[type="radio"]').change(function () {
+            var seprators = $(this).val();
+            $('#hidSeprator').val(seprators);
+        })
+       
+        SetCAStatuForZip();
+
+        if (($('body', window.parent.document).find(('#coverageareastatus')).length)) {
+          //  alert(($('body', window.parent.document).find(('#coverageareastatus')).val()));
+            if ($('body', window.parent.document).find(('#coverageareastatus')).val() != "dna") {
+                $('body', window.parent.document).find($('#nocoveragearea')).hide();
+                if ($('body', window.parent.document).find(('#coverageareastatus')).val() != "all") {
+                    if ($('body', window.parent.document).find(('#coverageareastatus')).val() == "zip") {
+                        if ($('.coverageAreaType').val() == 0 && $('body', window.parent.document).find('.coverageAreaType').val() == 0 && $('body', window.parent.document).find('#coverageareastatus').length) {
+
+                            $('body', window.parent.document).find('#btnmarkascomplete').show();
+                        }
+                        if ($('body', window.parent.document).find('#coverageAreaFor').val() == 1) {
+                           $("#ziptopdiv").hide();}
+
+
+                        if ($('.coverageAreaType').val() == 1) {
+
+                            SaveCoverageAreaAsPerZipCode(ROOT, $('body', window.parent.document).find('#coverageAreaFor').val(), 1);
+                        }
+                    }
+                }
+            }
+        }
+       
+    })
+    function SetCAStatuForZip()
+    {
+        if ($('.coverageAreaType').val() == 0 && $('body', window.parent.document).find('#coverageAreaFor').val() != 0 && $('body', window.parent.document).find('#coverageareastatus').val() != "all")
+        { $('body', window.parent.document).find($('#nocoveragearea')).show(); }
+        else {
+            $('body', window.parent.document).find($('#nocoveragearea')).hide();
+        }
+    }
+    //$('#ZipList2').append(function () {
+    //    // var abbre = $('#hidStateAbb').val();
+    //    var lst = '';
+    //    var tst = $("#ZipList2>option").map(function () {
+    //        lst += ($(this).val()) + ',';
+    //    });
+    //    lst = (lst.slice(0, -1));
+    //    var selected = $('#hidSelectedZip2');
+    //    selected.val(lst);
+    //    $.ajax({
+    //        url: '../Company/GetCityListByZip',
+    //        type: 'Post',
+    //        data: { 'ZipList': lst },
+    //        async: true
+    //    })
+    //     .success(function (data) {
+    //         if (data.length > 0) {
+    //             inHTML1 = "";
+    //             var County = $('#CityList2');
+    //             County.empty();
+    //             $.each(data, function (i, item) {
+    //                 var tool = item.CityName + '-' + item.StateAbbre;
+    //                 inHTML1 += '<option value="' + item.ZipCode + '"title=' + tool + '>' + item.CityName + ', ' + item.StateAbbre + '</option>';
+    //             })
+    //             County.append(inHTML1);
+    //         } else {
+    //             $('#CityList2').empty();
+    //         }
+
+    //     })
+    //     .error(function (data) {
+
+    //     })
+    //})
+    //$('#ZipList2').change(function () {
+    //    var lst = '';
+    //    lst += ($('#ZipList2').val()) + ',';
+    //    var arr = lst.split(',');
+    //    $('#CityList2 option').prop('selected', false);
+    //    for (var i = 0; i < arr.length; i++) {
+    //        var a = $('#CityList2').find('option[value=' + arr[i] + ']').prop("selected", true);
+    //        // $('#CityList2').removeAttr('selected').filter('[value='+ arr[i] +']').attr('selected', true)
+    //        // alert(a);
+    //    }
+    //    //alert(lst);
+    //})
+    function ValidateSave() {
+       // alert($('#manualzipcode').html().trim());
+        if ($('#txtcsvs').val().trim() == '') {
+                $('#manualzipcode').html('Please upload CSV file.');
+            $('#txtcsvs').addClass('errorClass');
+            return false;
+        }
+        if ($('#validfileid').val() != 1) {
+            $('#manualzipcode').html('Please upload valid file.');
+            return false;
+        }
+    }
+    function readdocURL(input, id) {
+            if (setdocfilename(input)) {
+                var filename = $('#txtcsvs').val();
+                var filetype = filename.slice(filename.length - 4, filename.length);
+                if (filetype == ".csv") {
+                  
+                    return true;
+                } else {
+                   
+                    return false;
+                }
+            }
+    }
+    function setdocfilename(input) {
+        //var fileName = input.files[0].name;
+        var fileName = $("input[id='" + input.id + "']").val().split('/').pop().split('\\').pop();
+        var ext = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+        switch (ext) {
+            case 'csv':
+              //  $('#manualzipcode').html('');
+                $('#validfileid').val(1);
+                return true;
+                break;
+            default:
+                $('#txtcsvs').val('');
+               // $('#manualzipcode').html("not allowed");
+                $('#validfileid').val(0);
+                return false;
+        }
+
+
+    }
+    function removeval() {
+        $('#manualzipcode').html('');
+        $('#txtcsvs').val('');
+        $('#txtcsvs').removeClass('errorClass');
+    }
+</script>

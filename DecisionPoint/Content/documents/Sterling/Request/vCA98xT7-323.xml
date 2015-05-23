@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BackgroundCheck account="DecisionPoint" password="DecisionPointtp456" userId="DecisionPointtp" dpuserId="323" xmlns="http://ns.hr-xml.org/2006-02-28" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <BackgroundSearchPackage type="Enhanced Nationwide Criminal">
+    <ProcessingInformation>
+      <AccessCredential type="UserName">DPINT</AccessCredential>
+      <AccessCredential type="Password">password456@</AccessCredential>
+      <AccessCredential type="Account">DP</AccessCredential>
+    </ProcessingInformation>
+    <ReferenceId>
+      <IdValue>vCA98xT7-323</IdValue>
+    </ReferenceId>
+    <PersonalData>
+      <PersonName>
+        <GivenName>4Comp</GivenName>
+        <MiddleName>
+        </MiddleName>
+        <FamilyName primary="true">4Comp</FamilyName>
+      </PersonName>
+      <PostalAddress>
+        <PostalCode>
+        </PostalCode>
+        <Region>
+        </Region>
+        <Municipality>
+        </Municipality>
+        <DeliveryAddress>
+          <AddressLine>
+          </AddressLine>
+        </DeliveryAddress>
+      </PostalAddress>
+      <ContactMethod>
+        <Telephone>
+          <FormattedNumber>4545455454</FormattedNumber>
+        </Telephone>
+        <InternetEmailAddress>4Comp1245201@yopmail.com</InternetEmailAddress>
+      </ContactMethod>
+    </PersonalData>
+    <Screenings>
+      <PackageId idOwner="Sterling">
+        <IdValue name="NumValue">Enhanced Nationwide Criminal</IdValue>
+      </PackageId>
+    </Screenings>
+  </BackgroundSearchPackage>
+</BackgroundCheck>

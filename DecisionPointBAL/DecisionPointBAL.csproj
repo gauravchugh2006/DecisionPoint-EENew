@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BE0D6E8A-F550-4DE9-9F8C-65ECAE06D007}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DecisionPointBAL</RootNamespace>
+    <AssemblyName>DecisionPointBAL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\packages\Dot_Net_Generic_Recommended_Code_Analysis_Ruleset.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\BusinessCore.cs" />
+    <Compile Include="Core\BusinessCryptography.cs" />
+    <Compile Include="Core\BusinessEmail.cs" />
+    <Compile Include="Core\CsvSplitter.cs" />
+    <Compile Include="Core\XamarinStripeCore.cs" />
+    <Compile Include="IDecisionPointEngine.cs" />
+    <Compile Include="Implementation\DecisionPointEngine.cs" />
+    <Compile Include="Implementation\Request\AdminProfileRequest.cs" />
+    <Compile Include="Implementation\Request\APIComplianceStatusRequest.cs" />
+    <Compile Include="Implementation\Request\APILogRequest.cs" />
+    <Compile Include="Implementation\Request\APIProductRequest.cs" />
+    <Compile Include="Implementation\Request\BackGroundCheckMasterRequest.cs" />
+    <Compile Include="Implementation\Request\CategoryRequest.cs" />
+    <Compile Include="Implementation\Request\ChangePasswordRequest.cs" />
+    <Compile Include="Implementation\Request\CityRequest.cs" />
+    <Compile Include="Implementation\Request\CommContentRequest.cs" />
+    <Compile Include="Implementation\Request\CommTestRulesRequest.cs" />
+    <Compile Include="Implementation\Request\CommunicationAssessmentRequest.cs" />
+    <Compile Include="Implementation\Request\CommunicationBasicDetailsRequest.cs" />
+    <Compile Include="Implementation\Request\CompanyDashBoradRequest.cs" />
+    <Compile Include="Implementation\Request\CompanyProfileRequest.cs" />
+    <Compile Include="Implementation\Request\ConfiguratonSettingRequest.cs" />
+    <Compile Include="Implementation\Request\CountyRequest.cs" />
+    <Compile Include="Implementation\Request\CreateContractRequest.cs" />
+    <Compile Include="Implementation\Request\DocTimeSpentRequest.cs" />
+    <Compile Include="Implementation\Request\DocumentDetailsRequest.cs" />
+    <Compile Include="Implementation\Request\DSTInviteRequest.cs" />
+    <Compile Include="Implementation\Request\FilterRequest.cs" />
+    <Compile Include="Implementation\Request\ICClientPermissionRequest.cs" />
+    <Compile Include="Implementation\Request\InitialRegisterRequest.cs" />
+    <Compile Include="Implementation\Request\JobReqForNewHireRequest.cs" />
+    <Compile Include="Implementation\Request\LicenseCheckRequest.cs" />
+    <Compile Include="Implementation\Request\LicenseInsuranceRequest.cs" />
+    <Compile Include="Implementation\Request\MailFooterRequest.cs" />
+    <Compile Include="Implementation\Request\MyDashBoardRequest.cs" />
+    <Compile Include="Implementation\Request\PaymentResponse.cs" />
+    <Compile Include="Implementation\Request\PermissionTableRequest.cs" />
+    <Compile Include="Implementation\Request\publishCommRequest.cs" />
+    <Compile Include="Implementation\Request\ReceiverReqDocRequest.cs" />
+    <Compile Include="Implementation\Request\ServiceTranslationTableRequest.cs" />
+    <Compile Include="Implementation\Request\SetUpCompanyProfile.cs" />
+    <Compile Include="Implementation\Request\StateRequest.cs" />
+    <Compile Include="Implementation\Request\SubmitReqDocRequest.cs" />
+    <Compile Include="Implementation\Request\UserDashBoardRequest.cs" />
+    <Compile Include="Implementation\Request\UserRegisterRequest.cs" />
+    <Compile Include="Implementation\Request\UserSelectedAnswersRequest.cs" />
+    <Compile Include="Implementation\Request\VendorTypeRequest.cs" />
+    <Compile Include="Implementation\Request\ZipRequest.cs" />
+    <Compile Include="Implementation\Response\AdminProfileResponse.cs" />
+    <Compile Include="Implementation\Response\AnnouncementResponse.cs" />
+    <Compile Include="Implementation\Response\APIMasterResponse.cs" />
+    <Compile Include="Implementation\Response\BackGroundCheckMasterResponse.cs" />
+    <Compile Include="Implementation\Response\BusinessClassResponse.cs" />
+    <Compile Include="Implementation\Response\CityResponse.cs" />
+    <Compile Include="Implementation\Response\CommDetailsResponse.cs" />
+    <Compile Include="Implementation\Response\CompanyDashBoardResponse.cs" />
+    <Compile Include="Implementation\Response\CompanyIdResponse.cs" />
+    <Compile Include="Implementation\Response\CompanyProfileResponse.cs" />
+    <Compile Include="Implementation\Response\CountyResponse.cs" />
+    <Compile Include="Implementation\Response\CoverageArea.cs" />
+    <Compile Include="Implementation\Response\CreateContractResponse.cs" />
+    <Compile Include="Implementation\Response\DocContentStatusResponse.cs" />
+    <Compile Include="Implementation\Response\DSTInviteResponse.cs" />
+    <Compile Include="Implementation\Response\GetCompaniesResponse.cs" />
+    <Compile Include="Implementation\Response\GuideInstructionResponse.cs" />
+    <Compile Include="Implementation\Response\ICPaymentModeResponse.cs" />
+    <Compile Include="Implementation\Response\ICResponse.cs" />
+    <Compile Include="Implementation\Response\InternalstaffResponse.cs" />
+    <Compile Include="Implementation\Response\InvitationMailSendResponse.cs" />
+    <Compile Include="Implementation\Response\InviteResponse.cs" />
+    <Compile Include="Implementation\Response\LicenseInsuranceResponse.cs" />
+    <Compile Include="Implementation\Response\LoginDetailResponse.cs" />
+    <Compile Include="Implementation\Response\MyDashBoardResponse.cs" />
+    <Compile Include="Implementation\Response\NonMemberResponse.cs" />
+    <Compile Include="Implementation\Response\PaymentAmountResponse.cs" />
+    <Compile Include="Implementation\Response\PermissionTableResponse.cs" />
+    <Compile Include="Implementation\Response\ReceiverReqDocResponse.cs" />
+    <Compile Include="Implementation\Response\ReportResponse.cs" />
+    <Compile Include="Implementation\Response\RoleResponse.cs" />
+    <Compile Include="Implementation\Response\SaveCommFilterResponse.cs" />
+    <Compile Include="Implementation\Response\SecurityQuestionResponse.cs" />
+    <Compile Include="Implementation\Response\ServiceResponse.cs" />
+    <Compile Include="Implementation\Response\SMTPResponse.cs" />
+    <Compile Include="Implementation\Response\StaffPerformaceResponse.cs" />
+    <Compile Include="Implementation\Response\StateRespone.cs" />
+    <Compile Include="Implementation\Response\SterlingResponse.cs" />
+    <Compile Include="Implementation\Response\SterlingWithDpResponse.cs" />
+    <Compile Include="Implementation\Response\SuperAdminDashBoardResponse.cs" />
+    <Compile Include="Implementation\Response\SuperAdminResponse.cs" />
+    <Compile Include="Implementation\Response\UserAcknowledgmentResponse.cs" />
+    <Compile Include="Implementation\Response\UserAssesmentAnswerResponse.cs" />
+    <Compile Include="Implementation\Response\UserAssesmentResponse.cs" />
+    <Compile Include="Implementation\Response\UserAsstSaveAnsResponse.cs" />
+    <Compile Include="Implementation\Response\UserCorrectAsstAnswerResponse.cs" />
+    <Compile Include="Implementation\Response\UserDashBoard.cs" />
+    <Compile Include="Implementation\Response\UserDashBoardResponse.cs" />
+    <Compile Include="Implementation\Response\UserInstructionsResponse.cs" />
+    <Compile Include="Implementation\Response\UserSelectedAnswerResponse.cs" />
+    <Compile Include="Implementation\Response\UserTimeSpanResponse.cs" />
+    <Compile Include="Implementation\Response\UserTrainingMaterialsResponse.cs" />
+    <Compile Include="Implementation\Response\UserViewResponse.cs" />
+    <Compile Include="Implementation\Response\VendorBulkResponse.cs" />
+    <Compile Include="Implementation\Response\VendorPerformance.cs" />
+    <Compile Include="Implementation\Response\VendorResponse.cs" />
+    <Compile Include="Implementation\Response\VendorsList.cs" />
+    <Compile Include="Implementation\Response\VendorTypeResponse.cs" />
+    <Compile Include="Implementation\Response\VerificationServiceResponse.cs" />
+    <Compile Include="Implementation\Response\ViewMessageResponse.cs" />
+    <Compile Include="Implementation\Response\WebinarUsersResponse.cs" />
+    <Compile Include="Implementation\Response\ZipResponse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DecisionPointDAL\DecisionPointDAL.csproj">
+      <Project>{1f02f745-6a13-4564-8561-189b413ca968}</Project>
+      <Name>DecisionPointDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DecisionPointRAL\DecisionPointCAL.csproj">
+      <Project>{4a8d98b2-9f11-450f-83f6-64eb4bf2b968}</Project>
+      <Name>DecisionPointCAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XamarinStripe\XamarinStripe.csproj">
+      <Project>{218cf4c2-c457-43e4-9d1b-0880d10181ff}</Project>
+      <Name>XamarinStripe</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

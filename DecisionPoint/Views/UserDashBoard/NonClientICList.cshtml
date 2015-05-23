@@ -1,0 +1,405 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "NonClientICList";
+    //Grid for Dispaly Messages details
+    WebGrid grdactivestaff = new WebGrid(ajaxUpdateContainerId: "currentICDetails", rowsPerPage: Model.RowperPage);
+    WebGrid grdinactivestaff = new WebGrid(ajaxUpdateContainerId: "pastICDetails", rowsPerPage: Model.RowperPage);
+    if (Model.CurrentClientList != null)
+    {
+        grdactivestaff.Bind(Model.CurrentClientList, autoSortAndPage: true, rowCount: Model.PageSize);
+
+    }
+    if (Model.PastClientList != null)
+    {
+        grdinactivestaff.Bind(Model.PastClientList, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+}
+<style>
+    .errorclass {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<div id='users'>
+    <div>
+        <div class='heading'>
+            <div class='row'>
+                <h3>IC List</h3>
+                <div style="float: right">
+                    <span style="margin-right: 5px;">
+                        @if (Model.CurrentClientList != null)
+                        {
+                            <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b>Current IC </b>
+                        }
+                        else
+                        {
+                            <input type="radio" id="currentstaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b>Current IC </b>
+                        }
+                    </span>
+                    <span>
+                        @if (Model.PastClientList != null)
+                        {
+                            <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" checked /><b> Past IC</b>
+                        }
+                        else
+                        {
+                            <input type="radio" id="paststaffrdo" name="staff" style="margin-top: -1px; margin-right: 3px;" /><b> Past IC</b>
+                        }
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @*funtion used for sorting in webgrid*@
+    @functions {
+        public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+    @functions {
+        public static string inactiveSorter(string columnName, string columnHeader, WebGrid grid)
+        {
+            return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                grid.SortDirection == SortDirection.Ascending ? "↑" :
+                "↓" : string.Empty);
+        }
+    }
+
+     <div class="filter-bar">
+            <strong>Filter List By:</strong>
+            <div class="dropdown">
+
+                <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+                    <b id="recordtypedd">IC Type</b>
+                    <b class="caret"></b>
+                </a>
+                <ul role="menu" class="dropdown-menu">
+                    <li onclick="filterrecord('All')">
+                        <a>
+                            <label style="font-weight: normal" class="checkbox">
+                              All
+                            </label>
+                        </a>
+                    </li>  
+                    @foreach (var item in Model.VendorTypeDetails)
+                    {
+                      <li onclick="filterrecord('@item')">
+                        <a>
+                            <label style="font-weight: normal" class="checkbox">
+                              @item
+                            </label>
+                        </a>
+                    </li>   
+                    }               
+                </ul>
+            </div>
+        </div>
+    <div style="float:right;margin-bottom:20px;">
+                
+                    <div class='input-append' style="margin-right:-2px;">
+
+                        <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+                        <button class='btn btn-primary' type='button' id="btngo" onclick="SearchICs(0)" style="height: 28px;">Go</button>
+                        
+                    </div>
+                    <div style="float: right; margin-left: 5px;">
+                        <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="SearchICs(1)" style="display: none; height: 28px;">View All</button>
+                        </div>
+               
+            </div>
+    @*Internal Staff*@
+    <div id='currentstaff' style="padding-top: 20px; display: block;">
+        @if (Model.CurrentClientList != null)
+        {
+
+            var gridColumns = new List<WebGridColumn>();
+          
+            gridColumns.Add(grdactivestaff.Column(columnName: "contact", header: Sorter("contact", "Name",
+            grdactivestaff),
+            format:@<text>
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event)" style="cursor:pointer;">
+               @item.Contact
+
+            </a>
+            </text>
+));
+            gridColumns.Add(grdinactivestaff.Column(columnName: "VendorType", header: Sorter("VendorType", "IC Type", grdactivestaff)));
+            gridColumns.Add(grdactivestaff.Column(columnName: "vendor", header: Sorter("vendor", "Business", grdactivestaff),
+            format:@<text>
+            <a  class="@item.Id"  onmousedown="jumptoprofilepage('@item.Id',event)" style="cursor:pointer;">
+                @item.vendor
+
+            </a>
+            </text>
+));
+ gridColumns.Add(grdinactivestaff.Column(columnName:"emailId",header:Sorter("emailId", "Email", grdactivestaff)));
+            gridColumns.Add(grdactivestaff.Column(columnName: "phone", header: Sorter("phone", "Phone", grdactivestaff),
+             format:@<text>
+
+
+            @if (item.phone != null && item.phone.Trim() != string.Empty)
+            {
+                   
+<span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+            }
+
+
+            </text>));
+
+
+
+            gridColumns.Add(grdactivestaff.Column(header: "Remove", format: @<text>
+            <a title="Remove the IC" onclick="showremovepopup('@item.Id')" style="cursor: pointer; margin-left: 19px;">
+                <img src="../../Content/images/delete.png" /></a>
+            </text>, canSort: false));
+          
+                   
+                     
+            @grdactivestaff.GetHtml(htmlAttributes: new { id = "currentICDetails" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: grdactivestaff.Columns(gridColumns.ToArray())) 
+        }
+    </div>
+
+    <div id='paststaff' style="padding-top: 20px; display: none;">
+        @if (Model.PastClientList != null)
+        {
+           
+                               
+            @grdinactivestaff.GetHtml(htmlAttributes: new { id = "pastICDetails" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+
+grdinactivestaff.Column(columnName:"contact",header : Sorter("contact", "Name", 
+grdinactivestaff),
+format:@<text>
+            @*<a href="~/CompanyDashBoard/UserDashboard?userID=@(item.Id)&parentform='mic'"  style="cursor:pointer;">*@
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event)"  style="cursor:pointer;">
+                @item.contact
+
+            </a>
+            </text>
+),
+grdinactivestaff.Column(columnName: "VendorType", header: Sorter("VendorType", "IC Type", grdactivestaff)),
+grdinactivestaff.Column(columnName:"vendor",header: Sorter("vendor", "Business Name", grdactivestaff),
+format:@<text>
+            @*<a  href="~/CompanyDashBoard/UserDashboard?userID=@(item.Id)&parentform='mic'"  style="cursor:pointer;">*@
+            <a  class="@item.Id" onmousedown="jumptoprofilepage('@item.Id',event)"  style="cursor:pointer;">
+                @item.vendor
+
+            </a>
+            </text>
+),
+grdinactivestaff.Column(columnName:"emailId",header:Sorter("emailId", "Email", grdactivestaff)),
+grdinactivestaff.Column(columnName:"phone",header:Sorter("phone", "Phone", grdactivestaff),
+  format:@<text>
+
+
+            @if (item.phone != null && item.phone.Trim() != string.Empty)
+                {
+                   
+<span>  (@item.phone.Substring(0, 3)) @item.phone.Substring(3, 3)-@item.phone.Substring(6, 4)</span>
+                
+                }
+
+
+            </text>
+
+),
+
+
+grdinactivestaff.Column(header: "Reactive",format: @<text>
+            <a title="Reactive the IC" onclick="Reactivestaff('@item.Id')" style="cursor: pointer;">Reactive
+            </a>
+            </text>, canSort: false),
+    })
+           
+        }
+    </div>
+    
+</div>
+
+<input type="hidden" id="Hid_ICStatus" value="0" />
+
+<script type="text/javascript">
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        ShowHideTabs('MyIC');
+        if ($('#currentstaffrdo').is(':checked')) {
+            $('#paststaff').hide();
+            $('#currentstaff').show();
+
+        }
+        else {
+            $('#paststaff').show();
+            $('#currentstaff').hide();
+
+        }
+
+    });
+
+
+    function jumptoprofilepage(id, e) {
+        if (e.which == 1 && !e.ctrlKey && !e.shiftKey) {
+            $('.' + id).attr("href", '@Url.Content("~/CompanyDashBoard/UserDashboard?userID=")' + id + "&parentform='mic'");
+            var target = e.target;
+            e.preventDefault();
+            target.click();
+
+        }
+    }
+
+
+
+    $('#currentstaffrdo').change(function () {
+        if ($('#currentstaffrdo').is(':checked')) {
+            GetICRecord("All",1);
+            $('#Hid_ICStatus').val(0);
+
+        } else {
+            $('#paststaff').show();
+            $('#currentstaff').hide();
+        }
+
+    });
+    $('#paststaffrdo').change(function () {
+        if ($('#paststaffrdo').is(':checked')) {
+            $('#Hid_ICStatus').val(1);
+            GetICRecord("All",1);
+
+
+        } else {
+            $('#paststaff').hide();
+            $('#currentstaff').show();
+        }
+
+
+    });
+
+    function Reactivestaff(Id) {
+
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/ReactiveICNonClient/")",
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                GetICRecord("All",1);
+
+            }
+        });
+    }
+
+    function showremovepopup(Id) {
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/RemoveICNonClient/")',
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                GetICRecord("All",1);
+            }
+        });
+    }
+
+    function Reset() {
+        $('#FName').removeClass("errorClass");
+        $('#LName').removeClass("errorClass");
+        $('#Email').removeClass("errorclass");
+        $('#emailerrormsg').html("");
+        $('#Phone').removeClass("errorclass");
+        $('#phoneerrormsg').html("");
+    }
+
+
+
+   
+    function GetICRecord(filtervalue, filterType) {
+        //if filter Type is 0 than method call from filter drop down
+        if (filterType == 0) {
+            filtervalue = filtervalue + ":" + 0;
+        } 
+        var inviteType = 0;
+        var pageid = getpageid("currentICDetails");
+        if ($('#paststaffrdo').is(':checked')) {
+            inviteType = 1;
+            pageid = getpageid("pastICDetails");
+        }
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/NonClientICList/?page=")" + pageid,
+        cache: false,
+        data: { 'id': parseInt(inviteType), 'type': filtervalue },
+        datatype: 'json',
+        type: "GET",
+        success: function (result) {
+            if (inviteType == 1) {
+                $('#paststaff').html($(result).find('#paststaff').html().trim());
+
+                $('#paststaffrdo').prop('checked', true);
+                $('#paststaff').show();
+                $('#currentstaff').hide();
+            }
+            else if (inviteType == 0) {
+                $('#currentstaff').html($(result).find('#currentstaff').html().trim());
+                $('#currentstaffrdo').prop('checked', true);
+                $('#paststaff').hide();
+                $('#currentstaff').show();
+            }
+        }
+    });
+}
+    function SearchICs(type) {
+        if ($('#txtserach').val().trim() != '') {
+            //0 call when user click on go button
+            if (type == 0) {
+                GetICRecord($('#txtserach').val(),1);
+                $('#btnviewallCompany').show();
+            }
+                //1 call when user click on view all button
+            else if (type == 1) {
+                $('#btnviewallCompany').hide();
+                $('#txtserach').val('');
+            }
+        } else {
+            $('#btnviewallCompany').hide();
+        }
+}
+
+$("#txtserach").autocomplete({
+    source: function (request, response) {
+        $.ajax({
+            url: '@Url.Content("~/UserDashBoard/SerachInICNonClients")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term, type: $('#Hid_ICStatus').val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item, value: item };
+                    }))
+                }
+            })
+        }
+
+});
+    function filterrecord(filtervalue) {
+        GetICRecord(filtervalue, 0);
+    }
+</script>

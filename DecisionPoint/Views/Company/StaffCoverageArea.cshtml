@@ -1,0 +1,1812 @@
+﻿<div id="createservices">
+    @model DecisionPoint.Models.RegisterStep2
+    @{
+        ViewBag.Title = "CreateServices";
+
+        string coverageareatype = string.Empty;
+        if (Request["Type"] == "V")
+        {
+            Layout = "~/Views/Shared/_VendorSetUpProfileLayout.cshtml";
+            coverageareatype = "vendor";
+        }
+        else if (Request["Type"] == "SIC")
+        {
+            Layout = "~/Views/Shared/_StaffICSetupProfileLayout.cshtml";
+            coverageareatype = "user";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_CommonLayout.cshtml";
+            coverageareatype = "vendor";
+        }
+    }
+
+    <link href="~/Content/css/Register/common.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <style>
+        .ui-autocomplete
+        {
+            max-height: 150px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+            /* add padding to account for vertical scrollbar */
+            padding-right: 20px;
+            font-size: 11px;
+        }
+        /* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+        * html .ui-autocomplete
+        {
+            height: 150px;
+        }
+
+        .w20
+        {
+            margin-right: 65px;
+            float: left;
+            margin-bottom: 10px;
+            line-height: 26px;
+            width: auto !important;
+        }
+
+        .pdr5
+        {
+            padding-right: 5px;
+            float: left;
+        }
+
+        .multiselectable
+        {
+            width: 500px;
+            display: block;
+            overflow: hidden;
+            width: 100%;
+            padding-right: 20px;
+            margin-bottom: 10px;
+        }
+
+            .multiselectable select, .multiselectable div
+            {
+                width: 205px;
+                float: left;
+            }
+
+                .multiselectable div *
+                {
+                    display: block;
+                    margin: 0 auto;
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+
+            .multiselectable div
+            {
+                display: inline;
+                overflow: hidden;
+            }
+
+            .multiselectable .m-selectable-controls
+            {
+                margin-top: 6.5em;
+                width: 43px;
+            }
+
+                .multiselectable .m-selectable-controls button
+                {
+                    margin-top: 0.2em;
+                    margin-left: .5em;
+                    width: 30px;
+                }
+
+        .unselectable
+        {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        select#m-selectable, select#m-selected, select#m-selectable_1, select#m-selected_1, select#m-selectable_2, select#m-selected_2
+        {
+            height: 248px;
+        }
+
+        .row
+        {
+            margin-left: 0px !important;
+        }
+    </style>
+    @if (Request["type"] == "IC")
+    {
+        <div>
+
+            <a id="backdashboard" style="cursor: pointer; font-style: italic; margin-left: -21px;">← Back to My Dasboard</a>
+            <br />
+            <br />
+        </div>
+    }
+
+    <div id="abc">
+
+        @*@if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"])))
+        {
+            if (Convert.ToString(Session["UserType"]) == "Individual")
+            { *@
+
+           <div class="row">
+                <div class="pdr5">
+                    <input type="radio" id="rdSelectAll" value="Select All" name="Ss" disabled="disabled" />
+                </div>
+                <div class="w20">Select All</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdSelectByAddress" value="Select By Address" name="Ss" checked="checked" disabled="disabled" />
+                </div>
+                <div class="w20">Select By Area</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdSelectByZip" value="Select By Address" name="Ss" disabled="disabled" />
+                </div>
+                <div class="w20">Select By Zip</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdUploadZip" value="Select By Address" name="Ss" disabled="disabled" />
+                </div>
+                <div class="w20">Upload Zip List</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdNoCoverageArea" value="Coverage area does not apply" name="Ss" disabled="disabled" />
+                </div>
+                <div class="w20" style="margin-right:55px;">Coverage area does not apply</div>
+            </div>
+           @* }
+            else
+            {
+            <div class="row">
+                <div class="pdr5">
+                    <input type="radio" id="rdSelectAll" value="Select All" name="Ss" />
+                </div>
+                <div class="w20">Select All</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdSelectByAddress" value="Select By Address" name="Ss" checked="checked" />
+                </div>
+                <div class="w20">Select By Area</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdSelectByZip" value="Select By Address" name="Ss" />
+                </div>
+                <div class="w20">Select By Zip</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdUploadZip" value="Select By Address" name="Ss" />
+                </div>
+                <div class="w20">Upload Zip List</div>
+                <div class="pdr5">
+                    <input type="radio" id="rdNoCoverageArea" value="Coverage area does not apply" name="Ss" />
+                </div>
+                <div class="w20">Coverage area does not apply</div>
+            </div>
+            }
+        }*@
+        <div class="row" id="divErrorMsg">
+            <label id="lblErrorMsg" style="color: red;"></label>
+        </div>
+
+        <div class='row' style="overflow: hidden;" id="divSelectedByAddress">
+
+            <div class="leftcol1">
+
+                <input id="txtStateSearch" readonly="readonly" style="width: 389px; font-size: 12px; height: 20px; margin-top: 5px;" type="text" placeholder="Add State/Territories">
+                <input type="hidden" id="hidStateAbb" />
+                <input type="hidden" id="hidSelectedState" />
+                <div id="divAddState" class="btn btn-small btn-primary butmargin" style="margin-top: -5px; height: 22px; margin-left: -1px;">Add</div>
+
+                <div class="w50" style="margin-top: -8px;">
+                    <div class="selectheading" style="width: 450px;">Selected States</div>
+                    <select id="StateList" size="14" data-duallistbox_generated="true" multiple="multiple" name="duallistbox_demo1[]_helper1" style="width: 451px; height: 214px; border-radius: 0px; font-size: 12px;">
+                    </select>
+                </div>
+                <div class="w1003" style="margin-top: 0px; margin-bottom: 10px; text-align: right; width: 94%;">
+                    <div id="removeAllState" class="btn btn-small btn-primary butmargin">Remove All</div>
+
+                    <div id="removeSelectedState" class="btn btn-small btn-primary butmargin">Remove Selected</div>
+                </div>
+                <div class="w100">
+                    <select style="height: 214px;" class="city">
+                    </select>
+                </div>
+            </div>
+            <div class="rightcol1">
+                <div class="w1002">
+                    <input type="hidden" id="hidCountyAbb" />
+                    <select id="CountyList" style="height: 248px;" class="multi">
+                    </select>
+                    <input type="hidden" id="hidSelectedCounty" />
+                </div>
+                <div class="w100">
+                    <select id="ZipList" style="height: 248px;" class="zip">
+                    </select>
+
+                </div>
+
+
+            </div>
+        </div>
+        <input type="hidden" id="selectedForMove" value="" />
+        <input type="hidden" id="selectedForMoveName" value="" />
+        <div class='row' style="overflow: hidden; display: none" id="divSelectedByZip">
+            <div class="leftcol1">
+
+                <input id="txtZipSearch1" readonly="readonly" style="width: 389px; font-size: 12px; height: 20px; margin-top: 5px;" type="text" placeholder="Add Zip">
+                <input type="hidden" id="hidZip1" />
+                <input type="hidden" id="hidSelectedZip1" />
+                <div id="divZipState1" class="btn btn-small btn-primary butmargin" style="margin-top: -5px; height: 22px; margin-left: -1px;">Add</div>
+
+                <div class="w50" style="margin-top: -8px;">
+                    <div class="selectheading" style="width: 450px;">Selected Zip</div>
+                    <select id="ZipList1" size="14" data-duallistbox_generated="true" multiple="multiple" name="duallistbox_demo1[]_helper1" style="width: 451px; height: 214px; border-radius: 0px; font-size: 12px;">
+                    </select>
+                </div>
+                <div class="w1003" style="margin-top: 0px; margin-bottom: 10px; float: left; margin-left: 50%;">
+                    <div id="removeAllZip1" class="btn btn-small btn-primary butmargin">Remove All</div>
+
+                    <div id="removeSelectedZip1" class="btn btn-small btn-primary butmargin">Remove Selected</div>
+                </div>
+
+            </div>
+
+            <div class="rightcol1">
+                <div class="w1002">
+                    <select multiple size="17" class="city2">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="divUploadZip" style="min-height: 220px; width: 100%; display: none; margin-top: 10px;">
+            <iframe id="myiframe" src="~/Company/UploadZipList" style="border: none; width: 100%; height: 400px"></iframe>
+        </div>
+
+        <div style="text-align: right;">
+            @if (TempData["SucessMessage"] != null)
+            {
+                <span style="color: green">@TempData["SucessMessage"]</span>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <span style="color: red">@TempData["ErrorMessage"]</span>
+            }
+            <div style="clear: both"></div>
+            <hr />
+            @Html.ActionLink("Back", "SetupCompnayProfile", "Company", new { @class = "btn btn-primary", @style = "display: none" })
+            @*<div id="div2Prev" class="btn btn-primary">Back</div>*@
+            <button id="next2" class="btn btn-primary" onclick="li3Click()" style="display: none">Submit</button>
+            <button id="div2Next" class="btn btn-primary" onclick="ValidateSave()" style="display: block; float: right; margin-top: 3px;">Next</button>
+            @* @using (Html.BeginForm("AdminAccount", "Company", FormMethod.Get, new { onsubmit = "return ValidateSave();", id = "SubmitForm", @style = "width:60px;float:right;" }))
+            { 
+               
+            }*@
+        </div>
+
+        <span style="color: green">@TempData["SucessMessage"]</span>
+        <span style="color: red">@TempData["ErrorMessage"]</span>
+        <div style="display: none;">@ViewBag.CountyList</div>
+    </div>
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/dashboard")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/multiSelect.js"></script>
+    <script src="~/Scripts/FilterListPlugin.js"></script>
+    <script type="text/javascript">
+        function removeDuplicateFromList(id) {
+            var seen = {};
+            $('#' + id + ' option').each(function () {
+                var txt = $(this).text();
+                if (seen[txt])
+                    $(this).remove();
+                else
+                    seen[txt] = true;
+            });
+            return false;
+        }
+        function validateAddStateList() {
+            var res = true;
+            var lst = $('#StateList option');
+            if (lst.length > 0) {
+                for (var i = 0; i < lst.length; i++) {
+                    if (lst[i].value == $('#hidStateAbb').val().trim()) {
+                        res = false;
+                        return false;
+                    } else {
+                        res = true;
+                    }
+                }
+
+            } else {
+                res = true;
+            }
+            return res;
+        }
+        function getZipOnAddSelectedRight(CityList, stateabbrelist, whichCounty) {
+            CityList = (CityList.slice(0, -1));
+            stateabbrelist = (stateabbrelist.slice(0, -1));
+            whichCounty = (whichCounty.slice(0, -1));
+
+            $.ajax({
+                url: '@Url.Content("~/Company/GetZipList")',
+                cache: false,
+                type: 'POST',
+                data: { 'CityList': CityList, 'stateabbrelist': stateabbrelist, 'county': whichCounty },
+                async: true,
+                success: function (data) {
+                    if (data.length > 0) {
+                        inHTML3 = "";
+                        var Zip = $('#m-selected_2');
+                        $.each(data, function (i, item) {
+
+                            inHTML3 += '<option value="' + item.ZipId + '_' + item.CityName + '_' + item.CountyName + '_' + item.StateAbbre + '">' + item.ZipCode + '</option>';
+                        })
+                        $('#m-selected_2').append(inHTML3);
+
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#div2Next").attr("disabled", true);
+                $("#backdashboard").attr("disabled", true);
+            });
+            $(document).ajaxStop(function () {
+                $("#div2Next").removeAttr("disabled");
+                $("#backdashboard").removeAttr("disabled");
+
+            });
+
+
+            $('#li2').addClass("active");
+            $('#li1').removeClass("active");
+            $('#li3').removeClass("active");
+            $('#li4').removeClass("active");
+            //Get State details
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetStateDetail")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { type: '@coverageareatype' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    if (data.length > 0) {
+                        inHTML1 = "";
+                        var State = $('#StateList');
+                        State.empty();
+                        $.each(data, function (i, item) {
+                            inHTML1 += '<option value="' + item.Abbrebiation + '">' + item.SateName + '</option>';
+                        })
+
+                        State.append(inHTML1);
+                    } else {
+                        $('#rdSelectByZip').attr("checked", "checked");
+                        $('#divSelectedByAddress').hide();
+                        $('#divUploadZip').hide();
+                        $('#divSelectedByZip').show();                       
+                        GetZip();
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+            //Get County Details
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetCounty")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { type: '@coverageareatype' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    // alert(data);
+                    if (data != null && data != '') {
+                        // alert('2');
+                        inHTML3 = "";
+                        var County = $('#m-selected');
+                        County.empty();
+                        $.each(data, function (i, item) {
+                            inHTML3 += '<option value="' + item.OptionsVal + '">' + item.CountyName + '</option>';
+                        })
+
+                        County.append(inHTML3);
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+            //Get City details
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetCityDetail")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { type: '@coverageareatype' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    if (data != null && data != '') {
+                        inHTML2 = "";
+                        var City = $('#m-selected_1');
+                        City.empty();
+                        $.each(data, function (i, item) {
+                            inHTML2 += '<option value="' + item.OptionsVal + '">' + item.CityName + '</option>';
+                        })
+
+                        City.append(inHTML2);
+                    } 
+
+                },
+                error: function (data) {
+
+                }
+            })
+
+            //Get Zip details
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetZipDetail")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { type: '@coverageareatype' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    if (data != null && data != '') {
+                        inHTML4 = "";
+                        var Zip = $('#m-selected_2');
+                        Zip.empty();
+                        $.each(data, function (i, item) {
+                            inHTML4 += '<option value="' + item.OptionsVal + '">' + item.ZipCode + '</option>';
+                        })
+
+                        Zip.append(inHTML4);
+                    } else {
+                        if ($('#StateList option').length > 0) {
+                            
+                            $('#rdSelectAll').attr("checked", "checked");
+                            
+                        }
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+           // getStaffCoverageArea();
+            $('#rdSelectAll').change(function () {
+                if ($('#rdSelectAll').is(':checked')) {
+                    $('#AddAll').click();
+                    $('#AddAll_1').click();
+                    $('#AddAll_2').click();
+                    //clearAll();
+                    //getAllStates();
+                    //$('#txtStateSearch').removeAttr("disabled");
+                    //$('#divUploadZip').hide();
+                    //$('#divSelectedByZip').hide();
+                    //$('#divSelectedByAddress').show();
+                }
+            })
+            $('#rdNoCoverageArea').change(function () {
+                if ($('#rdNoCoverageArea').is(':checked')) {
+                    inHTML = "";
+                    $('#StateList').empty();
+                    $('#m-selectable').empty();
+                    $('#m-selected').empty();
+                    $('#m-selectable_1').empty();
+                    $('#m-selected_1').empty();
+                    $('#m-selectable_2').empty();
+                    $('#m-selected_2').empty();
+                    $('#txtStateSearch').attr("disabled", "disabled");
+                }
+            })
+            $('#rdSelectByAddress').change(function () {
+                if ($('#rdSelectByAddress').is(':checked')) {
+                    clearAll();
+                    $('#divUploadZip').hide();
+                    $('#divSelectedByZip').hide();
+                    $('#divSelectedByAddress').show();
+                } else {
+                    $('#divSelectedByZip').show();
+                }
+            })
+            $('#rdSelectByZip').change(function () {
+
+                if ($('#rdSelectByZip').is(':checked')) {
+                    $('#divSelectedByAddress').hide();
+                    $('#divUploadZip').hide();
+                    $('#divSelectedByZip').show();
+                } else {
+                    $('#divSelectedByAddress').show();
+                }
+            })
+            $('#rdUploadZip').change(function () {
+
+                if ($('#rdUploadZip').is(':checked')) {
+                    $('#divSelectedByAddress').hide();
+                    $('#divSelectedByZip').hide();
+                    $('#divUploadZip').show();
+                } else {
+                    $('#divSelectedByAddress').show();
+                }
+            })
+            $("#txtStateSearch").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "../Company/SearchState",
+                        type: "POST",
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.SateName, value: item.Abbrebiation };
+                            }))
+
+                        }
+                    })
+                },
+                select: function (event, ui) {
+                    $('#txtStateSearch').val(ui.item.label);
+                    $('#hidStateAbb').val(ui.item.value);
+
+                    return false;
+                }, minLength: 1,
+                messages: {
+                    noResults: "", results: ""
+                }
+
+            });
+
+
+            $('#divAddState').click(function () {
+                inHTML = "";
+                if ($('#txtStateSearch').val().trim() != '' && $('#hidStateAbb').val().trim() != '') {
+                    if ($('#txtStateSearch').val().toUpperCase() != 'ALL') {
+                        var abbre = $('#hidStateAbb').val();
+                        inHTML += '<option value="' + abbre + '">' + $('#txtStateSearch').val() + '</option>';
+                        if (validateAddStateList()) {
+                            $('#StateList').append(inHTML);
+                        }
+                        $('#txtStateSearch').val("");
+                        $('#hidStateAbb').val('');
+                        $("#div2Next").removeAttr("disabled");
+                        $("#backdashboard").removeAttr("disabled");
+                    } else {
+                        getAllStates();
+                        $("#div2Next").removeAttr("disabled");
+                        $("#backdashboard").removeAttr("disabled");
+                    }
+                }
+
+            })
+
+            $('#removeAllState').click(function () {
+                inHTML = "";
+                clearAll();
+            })
+            $('#removeSelectedState').click(function () {
+                var RemoveStateAbb = $('#StateList').find('option:selected').val();
+                $('#StateList').find('option:selected').remove();
+                var tst1 = $("#m-selectable>option").map(function (index) {
+                    if (($(this).val().split('_')[1]) == RemoveStateAbb) {
+                        $(this).remove();
+                    }
+                });
+                var tst2 = $("#m-selected>option").map(function (index) {
+                    if (($(this).val().split('_')[1]) == RemoveStateAbb) {
+                        $(this).remove();
+                    }
+                });
+                var tst3 = $("#m-selectable_1>option").map(function (index) {
+                    if (($(this).val().split('_')[2]) == RemoveStateAbb) {
+                        $(this).remove();
+                    }
+                });
+                var tst4 = $("#m-selected_1>option").map(function (index) {
+                    if (($(this).val().split('_')[2]) == RemoveStateAbb) {
+                        $(this).remove();
+                    }
+                });
+                var tst5 = $("#m-selectable_2>option").map(function (index) {
+                    if (($(this).val().split('_')[3]) == RemoveStateAbb) {
+                        $(this).remove();
+                    }
+                });
+                var tst6 = $("#m-selected_2>option").map(function (index) {
+                    if (($(this).val().split('_')[3]) == RemoveStateAbb) {
+                        $(this).remove();
+                    }
+                });
+            });
+
+            $('#AddSelectedleft').click(function () {
+                //  alert($('#selectedForMove').val() + '  ' + $('#selectedForMoveName').val());
+                var SplitSelectedForMove = $('#selectedForMove').val().split(';');
+                var SplitselectedForMoveName = $('#selectedForMoveName').val().split(';');
+
+                for (var i = 0; i < SplitselectedForMoveName.length - 1; i++) {
+                    var RemovedCountyName = SplitselectedForMoveName[i].split(',')[0];
+
+                    var tst51 = $("#m-selectable_2>option").map(function (index) {
+                        if (($(this).val().split('_')[2]) == RemovedCountyName) {
+                            $(this).remove();
+                        }
+                    });
+                    var tst61 = $("#m-selected_2>option").map(function (index) {
+                        if (($(this).val().split('_')[2]) == RemovedCountyName) {
+                            $(this).remove();
+                        }
+                    });
+                }
+                for (var i = 0; i < SplitSelectedForMove.length - 1; i++) {
+                    var RemoveStateAbb = SplitSelectedForMove[i].split('_')[0];
+
+                    var tst31 = $("#m-selectable_1>option").map(function (index) {
+                        if (($(this).val().split('_')[1]) == RemoveStateAbb) {
+                            $(this).remove();
+                        }
+                    });
+                    var tst41 = $("#m-selected_1>option").map(function (index) {
+                        if (($(this).val().split('_')[1]) == RemoveStateAbb) {
+                            $(this).remove();
+                        }
+                    });
+                }
+
+                var countyCount = 0;
+                for (var i = 0; i < SplitSelectedForMove.length; i++) {
+                    var tst635 = $("#m-selected>option").map(function (index) {
+                        if (($(this).val().split('_')[1]) == SplitSelectedForMove[i].split('_')[1]) {
+                            countyCount = countyCount + 1;
+                        }
+                    });
+                    if (countyCount == 0) {
+                        var tst636 = $("#StateList>option").map(function (index) {
+                            if (($(this).val()) == SplitSelectedForMove[i].split('_')[1]) {
+                                $(this).remove();
+                                var tst637 = $("#m-selectable>option").map(function (index) {
+                                    if (($(this).val().split('_')[1]) == SplitSelectedForMove[i].split('_')[1]) {
+                                        $(this).remove();
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        countyCount = 0;
+                    }
+                }
+                $("#m-selectable_1").empty();
+
+
+            });
+            $('#AddSelectedleft_1').click(function () {
+                var RemovedCityName = $('#selectedForMoveName').val().split(',')[0];
+                var RemovedCity = $('#selectedForMove').val().split(';');
+                var tst51 = $("#m-selectable_2>option").map(function (index) {
+                    if (($(this).val().split('_')[1]) == RemovedCityName) {
+                        $(this).remove();
+                    }
+                });
+                var tst61 = $("#m-selected_2>option").map(function (index) {
+                    if (($(this).val().split('_')[1]) == RemovedCityName) {
+                        $(this).remove();
+                    }
+                });
+                var cityCount = 0;
+                for (var i = 0; i < RemovedCity.length; i++) {
+                    var tst633 = $("#m-selected_1>option").map(function (index) {
+                        if (($(this).val().split('_')[1]) == RemovedCity[i].split('_')[1]) {
+                            cityCount = cityCount + 1;
+                        }
+                    });
+                    if (cityCount == 0) {
+                        var tst634 = $("#m-selected>option").map(function (index) {
+                            if (($(this).val().split('_')[0]) == RemovedCity[i].split('_')[1]) {
+                                $(this).attr("selected", "selected");
+                                $('#AddSelectedleft').click();
+                            }
+                        });
+                    } else {
+                        cityCount = 0;
+                    }
+                }
+                if (RemovedCityName != '' && RemovedCity != '') {
+                    $("#m-selectable_1").empty();
+                }
+
+            });
+
+            $('#AddSelectedleft_2').click(function () {
+                var RemovedZipName = $('#selectedForMoveName').val().split(',')[0];
+                var RemovedZip = $('#selectedForMove').val().split(';');
+                var zipCount = 0;
+                for (var i = 0; i < RemovedZip.length; i++) {
+                    var tst633 = $("#m-selected_2>option").map(function (index) {
+
+                        if (($(this).val().split('_')[1]) == RemovedZip[i].split('_')[1]) {
+                            zipCount = zipCount + 1;
+                        }
+                    });
+                    if (zipCount == 0) {
+                        var tst634 = $("#m-selected_1>option").map(function (index) {
+                            if (($(this).html().split(',')[0]) == RemovedZip[i].split('_')[1]) {
+                                $(this).attr("selected", "selected");
+                                $('#AddSelectedleft_1').click();
+                            }
+                        });
+                    } else {
+                        zipCount = 0;
+                    }
+                }
+                if (RemovedZipName != '' && RemovedZip != '') {
+                    $("#m-selectable_2").empty();
+                }
+            });
+            $('#AddSelectedRight').click(function () {
+                var SplitSelectedForMove = $('#selectedForMove').val().split(';');
+                var SplitselectedForMoveName = $('#selectedForMoveName').val().split(';');
+                var CityList = ''; var CountyList = ''; var StateAbbreList = '';
+                var whichSelect = '';
+                for (var i = 0; i < SplitSelectedForMove.length - 1; i++) {
+                    whichSelect += (SplitSelectedForMove[i].split('_')[0]) + ",";
+                }
+                whichSelect = (whichSelect.slice(0, -1));
+                if (whichSelect != '') {
+                    $.ajax({
+                        url: '@Url.Content("~/Company/GetCityList")',
+                        cache: false,
+                        type: 'GET',
+                        data: { CountyId: whichSelect, type: '@coverageareatype' },
+                        async: true
+                    })
+                               .success(function (data) {
+                                   if (data.length > 0) {
+                                       inHTML2 = "";
+                                       var City = $('#m-selected_1');
+                                       $.each(data, function (i, item) {
+
+                                           inHTML2 += '<option value="' + item.CityId + '_' + item.CountyId + '_' + item.StateName + '">' + item.CityName + '</option>';
+                                           CityList += item.CityName + ',';
+                                           StateAbbreList += item.StateName + ',';
+                                           CountyList += item.CountyId + ',';
+                                       })
+                                       City.append(inHTML2);
+                                       getZipOnAddSelectedRight(CityList, StateAbbreList, CountyList);
+                                   }
+
+                               })
+                               .error(function (data) {
+
+                               })
+                }
+            })
+            $('#AddSelectedRight_1').click(function () {
+                var whichstate = '';
+                var whichSelect = '';
+                var whichCounty = '';
+                var SplitSelectedForMove = $('#selectedForMove').val().split(';');
+                var SplitselectedForMoveName = $('#selectedForMoveName').val().split(';');
+
+                for (var i = 0; i < SplitSelectedForMove.length - 1; i++) {
+                    whichstate += (SplitSelectedForMove[i].split('_')[2]) + ",";
+                    whichCounty += (SplitSelectedForMove[i].split('_')[1]) + ",";
+                }
+                for (var i = 0; i < SplitselectedForMoveName.length - 1; i++) {
+                    whichSelect += (SplitselectedForMoveName[i].split('_')[0]) + ",";
+                }
+
+                whichSelect = (whichSelect.slice(0, -1));
+                whichCounty = (whichCounty.slice(0, -1));
+                whichstate = (whichstate.slice(0, -1));
+                $.ajax({
+                    url: '@Url.Content("~/Company/GetZipList")',
+                    cache: false,
+                    type: 'POST',
+                    data: { 'CityList': whichSelect, 'stateabbrelist': whichstate, 'county': whichCounty },
+                    async: true,
+                    success: function (data) {
+                        if (data.length > 0) {
+                            inHTML3 = "";
+                            var Zip = $('#m-selected_2');
+                            $.each(data, function (i, item) {
+                                inHTML3 += '<option value="' + item.ZipId + '_' + item.CityName + '_' + item.CountyName + '_' + item.StateAbbre + '">' + item.ZipCode + '</option>';
+                            })
+                            $('#m-selected_2').append(inHTML3);
+
+                        }
+                    }, error: function (data) {
+                    }
+                })
+
+
+            })
+            // $('#m-selected').bind("DOMSubtreeModified", function () {
+            $('#m-selected').change(function () {
+                $('#m-selectable_1').empty();
+                var whichSelect = '';
+                //var mselectLength = $('#m-selected').find('option').length;
+                $('#m-selected').find('option:selected').each(function (index) {
+                    whichSelect += ($(this).val().split('_')[0]) + ",";
+                });
+                //if (mselectLength == index + 1) {
+                whichSelect = (whichSelect.slice(0, -1));
+                if (whichSelect != '') {
+                    $.ajax({
+                        url: '@Url.Content("~/Company/GetCityList")',
+                        cache: false,
+                        type: 'GET',
+                        data: { CountyId: whichSelect, type: '@coverageareatype' },
+                        async: true
+                    })
+                               .success(function (data) {
+                                   if (data.length > 0) {
+                                       inHTML2 = "";
+                                       var City = $('#m-selectable_1');
+                                       $.each(data, function (i, item) {
+
+                                           inHTML2 += '<option value="' + item.CityId + '_' + item.CountyId + '_' + item.StateName + '">' + item.CityName + '</option>';
+                                       })
+                                       City.append(inHTML2);
+                                       $('#m-selectable_1').filterByText($('#txtCitySearch'), true);
+
+                                   } else {
+                                       $('#m-selectable_1').empty();
+                                       $('#m-selected_1').empty();
+                                   }
+
+                               })
+                               .error(function (data) {
+
+                               })
+                } else {
+                    $('#m-selectable_1').empty();
+                    $('#m-selected_1').empty();
+                }
+                // }
+
+            })
+            $('#StateList').change(function () {
+                var lst = $('#StateList').val();
+                stateChangeAll(lst);
+                removeDuplicateFromList('m-selected');
+                // var abbre = $('#hidStateAbb').val();
+                var lst = $('#StateList').val();
+                @*if ($('#rdSelectAll').is(':checked')) {
+                    stateChangeAll(lst);
+                } else {
+                    if ('@coverageareatype' == 'user') {
+                        SelectedstateChange();
+                    }
+                    else {
+                        stateChange(lst);
+                    }
+                }*@
+            })
+
+            //  $('#m-selected_1').bind("DOMSubtreeModified", function () {
+            $('#m-selected_1').change(function () {
+                $('#m-selectable_2').empty();
+
+                //Concate State also
+                var whichstate = '';
+                $('#StateList').find('option:selected').each(function () {
+                    whichstate += ($(this).val()) + ",";
+                })
+
+                var whichSelect = '';
+                var whichCounty = '';
+                $('#m-selected_1').find('option:selected').each(function () {
+                    whichSelect += ($(this).html().split(',')[0]) + ",";
+                    whichCounty += ($(this).val().split('_')[1]) + ",";
+                });
+                whichSelect = (whichSelect.slice(0, -1));
+                whichCounty = (whichCounty.slice(0, -1));
+
+                $.ajax({
+                    url: '@Url.Content("~/Company/GetZipList")',
+                    cache: false,
+                    type: 'POST',
+                    data: { 'CityList': whichSelect, 'stateabbrelist': whichstate, 'county': whichCounty },
+                    async: true
+                })
+                           .success(function (data) {
+                               if (data.length > 0) {
+                                   inHTML3 = "";
+                                   var Zip = $('#m-selectable_2');
+                                   Zip.empty();
+                                   $.each(data, function (i, item) {
+
+                                       inHTML3 += '<option value="' + item.ZipId + '_' + item.CityName + '_' + item.CountyName + '_' + item.StateAbbre + '">' + item.ZipCode + '</option>';
+                                   })
+                                   $('#m-selectable_2').append(inHTML3);
+                                   $('#m-selectable_2').filterByText($('#txtZipSearch'), true);
+
+                               } else {
+                                   $('#m-selectable_2').empty();
+                                   $('#m-selectable_3').empty();
+                                   $('#m-selected_2').empty();
+                               }
+
+                           })
+                           .error(function (data) {
+                               $('#m-selectable_2').empty();
+                               $('#m-selectable_3').empty();
+                               $('#m-selected_2').empty();
+                           })
+            })
+            $("#txtZipSearch1").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "../Company/SearchZip",
+                        type: "POST",
+                        dataType: "json",
+                        minChars: 0,
+                        max: 12,
+                        scrollHeight: 220,
+                        data: { term: request.term, CityList: '' },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.ZipCode, value: item.ZipCode };
+                            }))
+
+                        }
+                    })
+                },
+                select: function (event, ui) {
+                    $('#txtZipSearch1').val(ui.item.label);
+                    $('#hidZip1').val(ui.item.value);
+
+                    return false;
+                }, minLength: 1,
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+            $('#divZipState1').click(function () {
+                inHTML = "";
+                var abbr = $('#hidZip1').val();
+                inHTML += '<option value="' + abbr + '">' + $('#txtZipSearch1').val() + '</option>';
+                $('#ZipList1').append(inHTML);
+                $('#txtZipSearch1').val("");
+
+            })
+            $('#removeAllZip1').click(function () {
+                inHTML = "";
+                $('#ZipList1').empty();
+                $('#m-selectable_2').empty();
+            })
+
+            $('#removeSelectedZip1').click(function () {
+                $('#ZipList1').find('option:selected').remove();
+            });
+            $('#ZipList1').change(function () {
+
+                // var abbre = $('#hidStateAbb').val();
+                var lst = $('#ZipList1').val();
+                var selected = $('#hidSelectedZip1');
+                selected.val(lst);
+                $.ajax({
+                    url: '../Company/GetCityListByZip',
+                    type: 'Post',
+                    data: { 'ZipList': selected.val() },
+                    async: true
+                })
+                 .success(function (data) {
+                     if (data != null) {
+                         inHTML1 = "";
+                         var County = $('#m-selectable_3');
+                         County.empty();
+                         $.each(data, function (i, item) {
+                             inHTML1 += '<option value="' + item.ZipId + '">' + item.CityName + '</option>';
+                         })
+                         County.append(inHTML1);
+                         // $('#txtStateSearch').val('');
+                         $('#m-selectable_3').filterByText($('#txtCitySearch2'), true);
+                     } else {
+                         $('#m-selectable_3').empty();
+                     }
+
+                 })
+                 .error(function (data) {
+
+                 })
+            })
+            $('#RemoveAll').click(function () {
+                var SplitSelectedForMove = $('#selectedForMove').val().split(';');
+                for (var i = 0; i < SplitSelectedForMove.length - 1; i++) {
+                    var RemoveStateAbb = SplitSelectedForMove[i].split('_')[1];
+                    var tst356 = $("#StateList>option").map(function (index) {
+                        if (($(this).val()) == RemoveStateAbb) {
+                            $(this).remove();
+                        }
+                    });
+                }
+                $('#m-selectable').empty();
+                $('#m-selectable_1').empty();
+                $('#m-selectable_2').empty();
+                $('#m-selected_1').empty();
+                $('#m-selected_2').empty();
+            })
+            $('#RemoveAll_1').click(function () {
+                //$('#m-selectable_2').empty();
+                //$('#m-selected_2').empty();
+                $('#RemoveAll').click();
+            })
+            $('#AddAll').click(function () {
+                var whichSelect = '';
+                var tst = $("#m-selected>option").map(function (index) {
+                    whichSelect += ($(this).val().split('_')[0]) + ',';
+                });
+                whichSelect = (whichSelect.slice(0, -1));
+                $.ajax({
+                    url: '@Url.Content("~/Company/GetCityList")',
+                    cache: false,
+                    type: 'Get',
+                    data: { 'CountyId': whichSelect, type: '@coverageareatype' },
+                    async: true
+                })
+                           .success(function (data) {
+                               if (data.length > 0) {
+
+                                   inHTML2 = "";
+                                   var City = $('#m-selectable_1');
+                                   $.each(data, function (i, item) {
+
+                                       inHTML2 += '<option value="' + item.CityId + '_' + item.CountyId + '_' + item.StateName + '">' + item.CityName + '</option>';
+                                   })
+                                   City.append(inHTML2);
+                                   $('#m-selectable_1').filterByText($('#txtCitySearch'), true);
+
+                               } else {
+                                   $('#m-selectable_1').empty();
+                                   $('#m-selected_1').empty();
+                               }
+
+                           })
+                           .error(function (data) {
+
+                           })
+
+            })
+            $('#AddAll_1').click(function () {
+                $('#m-selectable_2').empty();
+
+                //Concate State also
+                var whichstate = '';
+                $('#StateList').find('option:selected').each(function () {
+                    whichstate += ($(this).val()) + ",";
+                })
+
+                var whichSelect = '';
+                var whichCounty = '';
+                $('#m-selected_1').find('option').each(function () {
+                    whichSelect += ($(this).html().split(',')[0]) + ",";
+                    whichCounty += ($(this).val().split('_')[1]) + ",";
+                });
+                whichSelect = (whichSelect.slice(0, -1));
+                whichCounty = (whichCounty.slice(0, -1));
+                $.ajax({
+                    url: '@Url.Content("~/Company/GetZipList")',
+                    cache: false,
+                    type: 'POST',
+                    data: { 'CityList': whichSelect, 'stateabbrelist': whichstate, 'county': whichCounty },
+                    async: true
+                })
+                           .success(function (data) {
+                               if (data.length > 0) {
+                                   inHTML3 = "";
+                                   var Zip = $('#m-selectable_2');
+                                   Zip.empty();
+                                   $.each(data, function (i, item) {
+
+                                       inHTML3 += '<option value="' + item.ZipId + '_' + item.CityName + '_' + item.CountyName + '_' + item.StateAbbre + '">' + item.ZipCode + '</option>';
+                                   })
+                                   $('#m-selectable_2').append(inHTML3);
+                                   $('#m-selectable_2').filterByText($('#txtZipSearch'), true);
+
+                               } else {
+                                   $('#m-selectable_2').empty();
+                                   $('#m-selectable_3').empty();
+                                   $('#m-selected_2').empty();
+                               }
+
+                           })
+                           .error(function (data) {
+                               $('#m-selectable_2').empty();
+                               $('#m-selectable_3').empty();
+                               $('#m-selected_2').empty();
+                           })
+            })
+        })
+        function clearAll() {
+            $('#StateList').empty();
+            $('#m-selected').empty();
+            $('#m-selectable').empty();
+            $('#m-selectable_1').empty();
+            $('#m-selectable_2').empty();
+            $('#m-selected_1').empty();
+            $('#m-selected_2').empty();
+        }
+        function getAllStates() {
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '../Company/getAllStates',
+                success: function (data) {
+                    if (data != null) {
+                        var inHTML5 = '';
+                        $.each(data, function (i, item) {
+                            inHTML5 += '<option value="' + item.Abbrebiation + '">' + item.SateName + '</option>';
+                        })
+                        $('#StateList').append(inHTML5);
+                    }
+                },
+                async: false
+            });
+        }
+
+        function stateChange(lst) {
+            var selected = $('#hidSelectedState');
+            selected.val(lst);
+            $.ajax({
+                url: '@Url.Content("~/Company/GetCountyList")',
+                cache: false,
+                type: 'GET',
+                data: { 'StateAbbre': selected.val() },
+                async: true,
+                success: function (data) {
+                    if (data.length > 0) {
+                        inHTML1 = "";
+                        var County = $('#m-selectable');
+                        County.empty();
+                        $.each(data, function (i, item) {
+                            inHTML1 += '<option value="' + item.CountyId + '_' + item.StateAbbre + '">' + item.CountyName + '</option>';
+                        })
+                        County.append(inHTML1);
+                        $('#txtStateSearch').val('');
+                        $('#m-selectable').filterByText($('#txtCountySearch'), true);
+                    } else {
+
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+
+        function SaveStateDetails() {
+            var lst1 = $('#m-selected option');
+            var lst2 = $('#m-selected_1 option');
+            var lst3 = $('#m-selected_2 option');
+            var lst = $('#StateList option');
+            // var lstSelected = $('#StateList option:selected');
+            if ($('#rdSelectAll').is(':checked') && (lst1.length > 0) && (lst2.length > 0) && (lst3.length > 0)) {
+                lst = $('#StateList option:selected');
+            }
+            var res = '';
+            var val = '';
+            var values = $.map(lst, function (option) {
+                res += option.label + ',';
+                val += option.value + ',';
+            })
+
+            res = (res.slice(0, -1));
+            val = (val.slice(0, -1));
+            if (res != '') {
+                $.ajax({
+                    url: '@Url.Content("~/Company/SaveStateMapping")',
+                    cache: false,
+                    type: 'POST',
+                    data: { 'stateName': res, 'Abbre': val, type: 'update' },
+                    async: false,
+                    success: function (data) {
+                        if (data.length > 0) {
+
+                        } else {
+
+                        }
+                    },
+                    error: function (data) {
+                    }
+                })
+        }
+    }
+    function SaveCountyDetails() {
+        var lst = $('#m-selected option');
+        var res = '';
+        var values = $.map(lst, function (option) {
+            res += option.label + ':' + option.value + ';';
+        })
+        res = (res.slice(0, -1));
+        $.ajax({
+            url: '@Url.Content("~/Company/SaveCountyMapping")',
+            cache: false,
+            type: 'POST',
+            data: { 'countyName': res, type: 'update' },
+            async: false,
+            success: function (data) {
+                if (data.length > 0) {
+
+                } else {
+
+                }
+            },
+            error: function (data) {
+            }
+        })
+    }
+    function SaveCityDetails() {
+        var lst = $('#m-selected_1 option');
+        var res = '';
+        var values = $.map(lst, function (option) {
+            res += option.label + ':' + option.value + ';';
+        })
+        res = (res.slice(0, -1));
+        $.ajax({
+            url: '@Url.Content("~/Company/SaveCityMapping")',
+            cache: false,
+            type: 'POST',
+            data: { 'cityName': res, type: 'update' },
+            async: false,
+            success: function (data) {
+                if (data.length > 0) {
+
+                } else {
+
+                }
+            },
+            error: function (data) {
+            }
+        })
+    }
+    function SaveZipDetails() {
+        var lst = $('#m-selected_2 option');
+        var res = '';
+        var values = $.map(lst, function (option) {
+            res += option.label + ':' + option.value + ',';
+        })
+        res = (res.slice(0, -1));
+        $.ajax({
+            url: '@Url.Content("~/Company/SaveZipMapping")',
+                cache: false,
+                type: 'POST',
+                data: { 'zip': res, type: 'update', isdelete: '' },
+                async: false,
+                success: function (data) {
+
+                    if (parseInt(data) > 0) {
+                    } else {
+                    }
+                },
+                error: function (data) {
+                }
+            })
+
+        }
+
+        function SaveDetails() {
+            SaveStateDetails();
+            SaveCountyDetails();
+            SaveCityDetails();
+            SaveZipDetails();
+        }
+        function ValidateSave() {
+            var lst = $('#StateList option');
+            var lst1 = $('#m-selected option');
+            var lst2 = $('#m-selected_1 option');
+            var lst3 = $('#m-selected_2 option');
+            if ($('#rdSelectAll').is(':checked')) {
+                if (lst.length <= 0) {
+                    $('#divErrorMsg').show();
+                    $('#lblErrorMsg').html("Please Select State");
+                    return false;
+                } else {
+                    if (lst.length > 0) {
+                        SaveStateDetails();
+                    } if (lst1.length > 0) {
+                        SaveCountyDetails();
+                    } if (lst2.length > 0) {
+                        SaveCityDetails();
+                    } if (lst3.length > 0) {
+                        SaveZipDetails();
+                    }
+                    $('#lblErrorMsg').text("");
+                    nextUrl();
+                    return true;
+                }
+            }
+          else if ($('#rdSelectByAddress').is(':checked')) {
+                if (lst.length <= 0) {
+                    $('#divErrorMsg').show();
+                    $('#lblErrorMsg').html("Please Select State");
+                    return false;
+                }
+                if (lst1.length <= 0) {
+                    $('#lblErrorMsg').text("Please Select County");
+                    return false;
+                }
+                if (lst2.length <= 0) {
+                    $('#lblErrorMsg').text("Please Select City");
+                    return false;
+                }
+                if (lst3.length <= 0) {
+                    $('#lblErrorMsg').text("Please Select Zip Code");
+                    return false;
+                }
+                else {
+                    SaveDetails();
+                    $('#lblErrorMsg').text("");
+                    nextUrl();
+                    return true;
+                }
+            } else if ($('#rdSelectByZip').is(':checked')) {
+                if ($('#ZipList1 option').length <= 0) {
+                    $('#lblErrorMsg').text("Please Select Zip Code");
+                    return false;
+                } else {
+                    var lst = $('#ZipList1 option');
+                    var res = '';
+                    var values = $.map(lst, function (option) {
+                        res += option.label + ':' + option.value + ',';
+                    })
+                    res = (res.slice(0, -1));
+                    $.ajax({
+                        url: '../Company/SaveZipMapping',
+                        type: 'POST',
+                        data: { 'zip': res, type: 'update', isdelete: 'true' },
+                        async: false,
+                        success: function (data) {
+
+                            if (parseInt(data) > 0) {
+                            } else {
+                            }
+                        },
+                        error: function (data) {
+                        }
+                    })
+                    nextUrl();
+                    return true;
+                }
+            } else if ($('#rdUploadZip').is(':checked')) {
+                var ziplist = $("#myiframe").contents().find("#ZipList2 option")
+                if (ziplist.length <= 0) {
+                    $('#lblErrorMsg').text("Please Select Zip Code");
+                    return false;
+                } else {
+                    var lst = ziplist;
+                    var res = '';
+                    var values = $.map(lst, function (option) {
+                        res += option.label + ',';
+                    })
+                    res = (res.slice(0, -1));
+                    $.ajax({
+                        url: '../Company/SaveZipMapping',
+                        type: 'POST',
+                        data: { 'zip': res, type: 'update', isdelete: 'true' },
+                        async: false,
+                        success: function (data) {
+
+                            if (parseInt(data) > 0) {
+                            } else {
+                            }
+                        },
+                        error: function (data) {
+                        }
+                    })
+                    nextUrl();
+                    return true;
+                }
+            } else if ($('#rdNoCoverageArea').is(':checked')) {
+                $.ajax({
+                    url: '../Company/CoverageAreaDoesNotApply',
+                    type: 'GET',
+                    async: false,
+                    success: function (data) {
+
+                        if (parseInt(data) > 0) {
+                        } else {
+                        }
+                    },
+                    error: function (data) {
+                    }
+                })
+                nextUrl();
+                return true;
+            }
+        }
+
+        function GetZip() {
+            //Get Zip details
+            $.ajax({
+                url: '../UserDashBoard/GetZipDetail',
+                type: 'get',
+                async: true,
+                data: { type: '@coverageareatype' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    if (data != null && data != '') {
+                        inHTML4 = "";
+                        var Zip = $('#ZipList1');
+                        Zip.empty();
+                        $.each(data, function (i, item) {
+                            //inHTML4 += '<option value="' + item.ZipId + '">' + item.ZipCode + '</option>';
+                            inHTML4 += '<option value="' + item.OptionsVal + '">' + item.ZipCode + '</option>';
+                        })
+
+                        Zip.append(inHTML4);
+                    } else {
+
+                        $('#rdSelectByZip').removeAttr("checked");
+                        // $('#rdSelectByAddress').prop("checked", "checked");
+                        $('#divUploadZip').hide();
+                        $('#divSelectedByZip').hide();
+                        $('#divSelectedByAddress').show();
+                        $('#rdNoCoverageArea').prop("checked", "checked");
+                        $('#rdNoCoverageArea').change();
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+
+        function stateChangeAll(lst) {
+
+            var selected = $('#hidSelectedState');
+            selected.val(lst);
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetCountyDetail")',
+                cache: false,
+                type: 'GET',
+                data: { stateName: $('#hidSelectedState').val(), type: '@coverageareatype' },
+                async: true,
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    if (data != null && data != '') {
+                        inHTML1 = "";
+                        var County = $('#m-selected');
+                        //if ($('#rdSelectAll').is(':checked')) {
+                        County.empty();
+                        // }
+                        $.each(data, function (i, item) {
+                            inHTML1 += '<option value="' + item.CountyId + '_' + item.StateAbbre + '">' + item.CountyName + '</option>';
+
+                        })
+
+                        County.append(inHTML1);
+                        getCityList();
+                        //$('#txtStateSearch').val('');
+                        //$('#m-selectable').filterByText($('#txtCountySearch'), true);
+                    } else {
+
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+        function getCityList() {
+            $('#m-selectable_1').empty();
+            var whichSelect = '';
+            //var mselectLength = $('#m-selected').find('option').length;
+            $('#m-selected').find('option').each(function (index) {
+                whichSelect += ($(this).val().split('_')[0]) + ",";
+            });
+            //if (mselectLength == index + 1) {
+            whichSelect = (whichSelect.slice(0, -1));
+            if (whichSelect != '') {
+                $.ajax({
+                    url: '@Url.Content("~/Company/GetCityList")',
+                    cache: false,
+                    type: 'GET',
+                    data: { CountyId: whichSelect, type: '@coverageareatype' },
+                    async: true
+                })
+                           .success(function (data) {
+                               if (data.length > 0) {
+                                   inHTML2 = "";
+                                   var City = $('#m-selected_1');
+                                   // if ($('#rdSelectAll').is(':checked')) {
+                                   City.empty();
+                                   //  }
+                                   $.each(data, function (i, item) {
+                                       inHTML2 += '<option value="' + item.CityId + '_' + item.CountyId + '_' + item.StateName + '">' + item.CityName + '</option>';
+                                       // inHTML2 += '<option value="' + item.CityId + '">' + item.CityName + '</option>';
+                                   })
+                                   City.append(inHTML2);
+                                   // $('#m-selectable_1').filterByText($('#txtCitySearch'), true);
+                                   getZipList();
+                               } else {
+                                   $('#m-selectable_1').empty();
+                                   $('#m-selected_1').empty();
+                               }
+
+                           })
+                           .error(function (data) {
+
+                           })
+            } else {
+                $('#m-selectable_1').empty();
+                $('#m-selected_1').empty();
+            }
+        }
+        function getZipList() {
+
+            $('#m-selectable_2').empty();
+
+            //Concate State also
+            var whichstate = '';
+            $('#StateList').find('option:selected').each(function () {
+                whichstate += ($(this).val()) + ",";
+            })
+            // alert(whichstate);
+
+            var whichSelect = '';
+            var whichCounty = '';
+            $('#m-selected_1').find('option').each(function () {
+                //whichSelect += ($(this).html()) + ",";
+                whichSelect += ($(this).html().split(',')[0]) + ",";
+                whichCounty += ($(this).val().split('_')[1]) + ",";
+            });
+            whichSelect = (whichSelect.slice(0, -1));
+            whichCounty = (whichCounty.slice(0, -1));
+            $.ajax({
+                url: '@Url.Content("~/UserDashboard/GetZipDetailBySelectedCity")',
+                cache: false,
+                type: 'POST',
+                data: { 'CityName': whichSelect, type: '@coverageareatype' },
+            async: true
+            })
+                       .success(function (data) {
+                           data = $.parseJSON(data);
+                           if (data.length > 0) {
+                               inHTML3 = "";
+                               var Zip = $('#m-selected_2');
+                               // if ($('#rdSelectAll').is(':checked')) {
+                               Zip.empty();
+                               // }
+                               $.each(data, function (i, item) {
+                                   //inHTML3 += '<option value="' + item.ZipId + '">' + item.ZipCode + '</option>';
+                                   inHTML3 += '<option value="' + item.ZipId + '_' + item.CityName + '_' + item.CountyName + '_' + item.StateAbbre + '">' + item.ZipCode + '</option>';
+                               })
+                               $('#m-selected_2').append(inHTML3);
+                               //$('#m-selectable_2').filterByText($('#txtZipSearch'), true);
+
+                           } else {
+                               $('#m-selectable_2').empty();
+                               $('#m-selectable_3').empty();
+                               $('#m-selected_2').empty();
+                           }
+
+                       })
+                       .error(function (data) {
+                           $('#m-selectable_2').empty();
+                           $('#m-selectable_3').empty();
+                           $('#m-selected_2').empty();
+                       })
+    }
+    $('#backdashboard').click(function () {
+        //  var millisecondsToWait = 300;
+        //setTimeout(function () {
+
+        window.opener.document.location.reload(true);
+        close();
+        // }, millisecondsToWait);
+    })
+    function SelectedstateChange() {
+        //Concate State also
+        var whichstate = '';
+        $('#StateList').find('option:selected').each(function () {
+            whichstate += ($(this).html()) + ",";
+        })
+        // alert(whichstate);
+        $.ajax({
+            url: '@Url.Content("~/UserDashboard/GetCountyDetail")',
+                               type: 'GET',
+                               data: { 'stateName': whichstate, type: '@coverageareatype' },
+                               async: true,
+                               success: function (data) {
+                                   if (data != null) {
+                                       inHTML1 = "";
+                                       var County = $('#m-selectable');
+                                       County.empty();
+                                       data = $.parseJSON(data);
+                                       $.each(data, function (i, item) {
+                                           inHTML1 += '<option value="' + item.CountyId + '">' + item.CountyName + '</option>';
+                                       })
+                                       County.append(inHTML1);
+                                       $('#txtStateSearch').val('');
+                                       $('#m-selectable').filterByText($('#txtCountySearch'), true);
+                                   } else {
+
+                                   }
+
+                               },
+                               error: function (data) {
+
+                               }
+                           })
+                       }
+                       $('.multi').multiselectable({
+                           selectableLabel: 'County List',
+                           selectedLabel: 'Selected County',
+                           moveRightText: '>',
+                           moveLeftText: '<',
+                           moveAllRightText: '>>',
+                           moveAllLeftText: '<<',
+                       });
+                       $('.city').multiselectable({
+                           selectableLabel: 'City List',
+                           selectedLabel: 'Selected Cities',
+                           moveRightText: '>',
+                           moveLeftText: '<',
+                           moveAllRightText: '>>',
+                           moveAllLeftText: '<<',
+                       });
+                       $('.zip').multiselectable({
+                           selectableLabel: 'Zip List',
+                           selectedLabel: 'Selected Zips',
+                           moveRightText: '>',
+                           moveLeftText: '<',
+                           moveAllRightText: '>>',
+                           moveAllLeftText: '<<',
+                       });
+                       $('.city2').multiselectable({
+                           selectableLabel: 'City List',
+                           selectedLabel: 'Selected City',
+                           moveRightText: '>',
+                           moveLeftText: '<',
+                           moveAllRightText: '>>',
+                           moveAllLeftText: '<<',
+                       });
+
+                       function getStaffCoverageArea() {
+                           // alert("get staff coveragre area");
+                           //Get State details
+                           $.ajax({
+                               url: '@Url.Content("~/UserDashBoard/GetStateDetail")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { type: 'vendor' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    if (data.length > 0) {
+                        inHTML1 = "";
+                        var State = $('#StateList');
+                        State.empty();
+                        $.each(data, function (i, item) {
+                            inHTML1 += '<option value="' + item.Abbrebiation + '">' + item.SateName + '</option>';
+                        })
+                        State.append(inHTML1);
+                    } else {
+                        //$('#rdSelectByZip').attr("checked", "checked");
+                        //$('#divSelectedByAddress').hide();
+                        //$('#divUploadZip').hide();
+                        //$('#divSelectedByZip').show();
+                        //GetZip();
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+            //Get County Details
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetCounty")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { type: 'vendor' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    // alert(data);
+                    if (data.length > 0) {
+                        // alert('2');
+                        inHTML3 = "";
+                        var County = $('#m-selected');
+                        County.empty();
+                        $.each(data, function (i, item) {
+                            // inHTML3 += '<option value="' + item.CountyId + '">' + item.CountyName + '</option>';
+                            inHTML3 += '<option value="' + item.OptionsVal + '">' + item.CountyName + '</option>';
+                        })
+
+                        County.append(inHTML3);
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+            //Get City details
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetCityDetail")',
+                cache: false,
+                type: 'get',
+                async: true,
+                data: { type: 'vendor' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    if (data.length > 0) {
+                        inHTML2 = "";
+                        var City = $('#m-selected_1');
+                        City.empty();
+                        $.each(data, function (i, item) {
+                            //inHTML2 += '<option value="' + item.CityId + '">' + item.CityName + '</option>';
+                            inHTML2 += '<option value="' + item.OptionsVal + '">' + item.CityName + '</option>';
+                        })
+
+                        City.append(inHTML2);
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+
+            //Get Zip details
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/GetZipDetail")',
+                type: 'get',
+                async: true,
+                data: { type: 'vendor' },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    // alert(data);
+                    if (data.length > 0) {
+                        // alert('3');
+                        inHTML4 = "";
+                        var Zip = $('#m-selected_2');
+                        Zip.empty();
+                        $.each(data, function (i, item) {
+                            // inHTML4 += '<option value="' + item.ZipId + '">' + item.ZipCode + '</option>';
+                            inHTML4 += '<option value="' + item.OptionsVal + '">' + item.ZipCode + '</option>';
+                        })
+
+                        Zip.append(inHTML4);
+                    } else{
+                        if ($('#StateList option').length > 0) {
+
+                            $('#rdSelectAll').attr("checked", "checked");
+                        }
+                    }
+
+                },
+                error: function (data) {
+
+                }
+            })
+        }
+
+    </script>
+    @functions {
+        private IEnumerable<SelectListItem> FillStateList()
+        {
+            return new SelectList(Model.StateList, "StateId", "SateName");
+        }
+        
+    //private IEnumerable<SelectListItem> FillCityList()
+    //{
+    //    return new SelectList(Model.CityList, "CityId", "CityName");
+    //}
+  }
+</div>

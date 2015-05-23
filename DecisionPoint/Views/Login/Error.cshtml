@@ -1,0 +1,35 @@
+﻿@model DecisionPoint.Models.Error
+@using DecisionPointCAL;
+@{
+    ViewBag.Title = "Error";
+}
+
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>ERROR: The requested URL could not be retrieved</title>
+<link href="~/Content/css/Error/Error.css" rel="stylesheet" />
+</head>
+
+<body id="ERR_ACCESS_DENIED">
+    <div id="titles">
+        <h1>ERROR</h1>
+        <h2>@DecisionPointR.ErrorPageMsg1</h2>
+    </div>
+    <hr>
+    <div id="content">
+        <p>@DecisionPointR.ErrorPageMsg2<a id="requrl"></a></p>
+        <blockquote id="error">
+            <p><b>@Model.ErrorMsg</b></p>
+        </blockquote>
+        
+        <br>
+    </div>
+    <hr>
+    <div id="footer">
+        <p>Generated @System.DateTime.Now.Date by compliance tracker.</p>
+       
+    </div>
+</body>
+</html>
+

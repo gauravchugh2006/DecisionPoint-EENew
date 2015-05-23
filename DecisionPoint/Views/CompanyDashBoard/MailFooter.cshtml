@@ -1,0 +1,132 @@
+﻿@model DecisionPoint.Models.MailFooter
+
+@{
+    ViewBag.Title = "MailFooter";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+
+}
+<div class='heading'>
+        <div class='row'>
+      <h3>Signature Block and Footer</h3>
+        </div>
+ </div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/register")
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+<script>
+    $(window).load(function () {
+        window.onbeforeunload = null
+
+    })
+    tinymce.init({
+        selector: 'textarea', browser_spellcheck: true,
+        force_p_newlines: false,
+        force_br_newlines: true,
+        forced_root_block: '',
+        plugins: [
+                "advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
+                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                "table contextmenu directionality emoticons template textcolor paste fullpage textcolor "
+        ],
+
+        toolbar1: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect | inserttime preview | forecolor backcolor",
+        toolbar2: "cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | undo redo |table | hr removeformat | subscript superscript | charmap | fullscreen | ltr rtl | visualchars visualblocks nonbreaking template | link unlink anchor image",
+
+
+        menubar: false,
+        toolbar_items_size: 'small',
+
+        style_formats: [
+                { title: 'Bold text', inline: 'b' },
+                { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                { title: 'Example 1', inline: 'span', classes: 'example1' },
+                { title: 'Example 2', inline: 'span', classes: 'example2' },
+                { title: 'Table styles' },
+                { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+        ],
+
+        templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+        ]
+
+    });
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        $('#SignatureName').val('@Session["UserName"]');
+
+    });
+    function SaveValidate() {
+        var editorText = tinymce.get('Signauture').getContent();
+        //if ($('#SignatureName').val() == '') {
+        //    $('#lblErrorMessage').css('display', 'block');
+        //    $('#lblMsg').html(' ');
+        //    $('#lblErrorMessage').html('Please enter Signature Name');
+        //    return false;
+        //}
+        if (editorText == '' || editorText.length == 61) {
+            $('#lblErrorMessage').css('display', 'block');
+            $('#lblErrorMessage').html('Please enter Signature');
+            $('#lblMsg').html(' ');
+            return false;
+        }
+        else {
+            $('#lblErrorMessage').css('display', 'none');
+            $('#lblErrorMessage').html(' ');
+            return true;
+        }
+
+    }
+
+</script>
+
+<div>
+
+    @using (Html.BeginForm("MailFooter", "CompanyDashBoard", FormMethod.Post, new { id = "SubmitForm" }))
+    {
+        
+        <div>
+            <div class="control-group" style="display:none">
+                <label class="control-label">Signature Name</label>
+                <div class="controls">
+                    @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserName"], System.Globalization.CultureInfo.InvariantCulture)))
+                    {
+                        @Html.HiddenFor(model=>model.SignatureName,new {@value=Session["UserName"]})
+                    
+                    }
+                   @* @Html.TextBoxFor(model => model.SignatureName, new { @class = "input-xlarge", @placeholder = "Signature Name",@text="Name",Value=Session["UserName"]})*@
+
+                </div>
+                <div class="controls">
+                    <div class="validation">@Html.ValidationMessageFor(model => model.SignatureName)</div>
+                </div>
+            </div>
+
+            <div class="control-group" >
+                <label class="control-label" style="display:none">Signature</label>
+                <div class="controls">@Html.EditorFor(model => model.Signauture)</div>
+                <div class="controls">
+                    <div class="validation">@Html.ValidationMessageFor(model => model.Signauture)</div>
+                </div>
+            </div>
+
+            <div>
+                @if (ViewBag.Msg != null)
+                {
+                    <label id="lblMsg" style="color: green;">@ViewBag.Msg</label>
+                }
+                <label id="lblErrorMessage" style="color: red; display: none"></label>
+            </div>
+            <div style="float: right">
+                <input type="submit" class="btn btn-primary" value="Save" onclick="return SaveValidate()" />
+
+            </div>
+
+
+        </div>
+    }
+
+</div>
+

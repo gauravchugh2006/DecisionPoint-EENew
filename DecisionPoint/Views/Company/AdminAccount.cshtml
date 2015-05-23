@@ -1,0 +1,598 @@
+﻿@model DecisionPoint.Models.RegisterStep3
+@{
+    ViewBag.Title = "AdminAccount";
+    //Layout = null;
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml"; 
+}
+<style>
+    .input-validation-error
+    {
+        border: solid 1px red !important;
+    }
+</style>
+@using (Html.BeginForm("SetAdminProfile", "Company", FormMethod.Post, new { id = "SubmitForm", @class = "form-horizontal" }))
+{ 
+    <div class="registration-LEftbox">
+        <div class="control-group">
+            <label class="control-label">First Name<sup style="color: red; font-size: 10px;"> *</sup></label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.FirstName, new { maxlength = 50, @class = "input-xlarge", @placeholder = "First Name", @style = "width:192px" })
+                @Html.TextBoxFor(model => model.MiddleName, new { maxlength = 1, @class = "input-xlarge", @placeholder = "MI", @style = "width:60px" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.FirstName)</span>
+                <span class="validation">@Html.ValidationMessageFor(model => model.MiddleName)</span>
+                <span id="fname" class="validation" style="display: none;">@DecisionPointCAL.DecisionPointR.FirstName</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Last Name<sup style="color: red; font-size: 10px;"> *</sup></label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.LastName, new { maxlength = 50, @class = "input-xlarge", @placeholder = "Last Name" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.LastName)</span>
+                <span id="lname" class="validation" style="display: none;">@DecisionPointCAL.DecisionPointR.LastName</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Email<sup style="color: red; font-size: 10px;"> *</sup></label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.Email, new { maxlength = 50, @class = "input-xlarge", @placeholder = "Email" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.Email)</span>
+                <span id="emailid" class="validation" style="display: none;">@DecisionPointCAL.DecisionPointR.EmailRequired</span>
+
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Confirm Email <sup style="color: red; font-size: 10px;">*</sup></label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.ConfirmEmail, new { maxlength = 50, @class = "input-xlarge", @placeholder = " Re-Enter Email" })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.ConfirmEmail)</span>
+                <span class="validation" id="CnfEmailRequired" style="display:none;">Confirm Email Required.</span>
+                <span id="emailidnotmatch" class="validation" style="display: none;">@DecisionPointCAL.DecisionPointR.EmailNotMatch</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Create Password<sup style="color: red; font-size: 10px;"> *</sup></label>
+            <div class="controls">
+                @Html.PasswordFor(model => model.Password, new { maxlength = 20, @class = "input-xlarge", @placeholder = "Create Password", @value = Model.Password })
+            </div>
+            <div class="controls">
+                <span id="Div_PasswordRule" style="color: blue; font-size: small; cursor: pointer; font-style: italic; float: left; width: 100%;">Password Rules</span>
+                <div id="divPwdRules" style="font-size: small; display: none; font-family: Arial; color: rgb(128, 128, 128); width: 95%; padding-bottom: 10px;">
+                    Password should be alphanumeric with one special character.
+                Password should contain 0-9, a-z, A-Z, #$%^&*@@.
+                </div>
+                <span id="ValidatePassword" style="color: red; font-size: small; display: none">@DecisionPointCAL.DecisionPointR.PasswordRules</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Confirm Password<sup style="color: red; font-size: 10px;"> *</sup></label>
+            <div class="controls">
+                @Html.PasswordFor(model => model.ConfirmPassword, new { maxlength = 20, @class = "input-xlarge", @placeholder = "Confirm Password", @value = Model.ConfirmPassword })
+            </div>
+            <div class="controls">
+                <span class="validation">@Html.ValidationMessageFor(model => model.ConfirmPassword)</span>
+                <span class="validation" id="CnfPwdRequired" style="display:none;">Confirm Password Required.</span>
+                <span id="pwdnotmatch" class="validation" style="display: none;">@DecisionPointCAL.DecisionPointR.PaaswordNotMatch </span>
+            </div>
+        </div>
+    </div>
+    <div class="registration-LEftbox">
+        <div class="control-group">
+            <label class="control-label">Cell Number</label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.OfficePhone1, new { maxlength = 3, @class = "input-xlarge", @placeholder = "XXX", @style = "width:35px" })
+                - @Html.TextBoxFor(model => model.OfficePhone2, new { maxlength = 3, @class = "input-xlarge", @placeholder = "XXX", @style = "width:35px" })
+                - @Html.TextBoxFor(model => model.OfficePhone3, new { maxlength = 4, @class = "input-xlarge", @placeholder = "XXXX", @style = "width:148px" })
+
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Direct Number</label>
+            <div class="controls">
+                @Html.TextBoxFor(model => model.CellNumber1, new { maxlength = 3, @class = "input-xlarge", @placeholder = "XXX", @style = "width:35px" })
+                - @Html.TextBoxFor(model => model.CellNumber2, new { maxlength = 3, @class = "input-xlarge", @placeholder = "XXX", @style = "width:35px" })
+                - @Html.TextBoxFor(model => model.CellNumber3, new { maxlength = 4, @class = "input-xlarge", @placeholder = "XXXX", @style = "width:148px" })
+
+            </div>
+        </div>
+        <div class="control-group">
+                <label class="control-label">Security Questions</label>
+            </div>
+            @if (Model.SecurityList != null)
+            {                
+                <div class="control-group">
+                    <label class="control-label">@Model.SecurityList[0].SecurityQuestion</label>
+                    <p style="display: none">
+                        @(Model.SecurityQuestion1 = Convert.ToInt32(Model.SecurityList[0].SecurityId))
+                        @Html.HiddenFor(model=>model.SecurityQuestion1)
+                    </p>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.SecurityAnswer1, new { @class = "input-xlarge", @placeholder = "Pet’s name" })
+                    </div>
+                    <div class="controls">
+                        <span class="validation">@Html.ValidationMessageFor(model => model.SecurityAnswer1)</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">@Model.SecurityList[1].SecurityQuestion</label>
+                    <p style="display: none">
+                        @(Model.SecurityQuestion2 = Convert.ToInt32(Model.SecurityList[1].SecurityId))
+                         @Html.HiddenFor(model=>model.SecurityQuestion2)
+                    </p>
+
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.SecurityAnswer2, new { @class = "input-xlarge", @placeholder = "Favorite food" })
+                    </div>
+                      <div class="controls">
+                        <span class="validation">@Html.ValidationMessageFor(model => model.SecurityAnswer2)</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">@Model.SecurityList[2].SecurityQuestion</label>
+                    <p style="display: none">
+                        @(Model.SecurityQuestion3 = Convert.ToInt32(Model.SecurityList[2].SecurityId))
+                         @Html.HiddenFor(model=>model.SecurityQuestion3)
+                    </p>
+                    <div class="controls">
+                        @Html.TextBoxFor(model => model.SecurityAnswer3, new { @class = "input-xlarge", @placeholder = "Favorite place" })
+                    </div>
+                      <div class="controls">
+                        <span class="validation">@Html.ValidationMessageFor(model => model.SecurityAnswer3)</span>
+                    </div>
+                </div>
+            }
+        <div class="control-group">
+            <div class="controls">
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: right;">
+        <div style="clear: both"></div>
+       <div style="border: 1px solid rgb(225, 225, 225); margin-bottom: 5px;"></div>
+        @Html.ActionLink("Back", "SetupCompnayProfile", "Company", new { @class = "btn btn-primary" })
+        
+        <button id="next3" class="btn btn-primary" style="display: none">Submit</button>
+        <button id="div3Next" class="btn btn-primary" onclick="return CheckValidation()">Next</button>
+    </div>
+    <div class="confirmationdivmain" style="display: none"></div>
+    <div class="confirmationdivinner" style="display: none;">
+        <div style="background-clip: padding-box; background-color: #FFFFFF; height: 70px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+            <div style="font-size: small; font-family: Arial; color: #000; padding-bottom: 10px;">
+                Password should be alphanumeric with one special character.
+                Password should contain 0-9,a-z,A-Z,#$%^&*@@.
+            </div>
+
+            <div style="float: left; width: 50px;">
+                <input type="button" id="btnok" class="btn btn-primary" value="Ok">
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/dashboard")
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $(".input-xlarge").keyup(function () {
+        if (this.value.length == this.maxLength) {
+            $(this).next('.input-xlarge').focus();
+        }
+    });
+    $('#FirstName').change(function () {
+        if ($('#FirstName').val().trim() == '') {
+            $('#FirstName').css('border', 'solid 1px red');
+            $('#fname').show();
+        } else {
+            $('#FirstName').css('border', '');
+            $('#fname').hide();
+        }
+
+    });
+    $('#LastName').change(function () {
+        if ($('#LastName').val().trim() == '') {
+            $('#LastName').css('border', 'solid 1px red');
+            $('#lname').show();
+        } else {
+            $('#LastName').css('border', '');
+            $('#lname').hide();
+        }
+
+    });
+    $('#Email').change(function () {
+        if ($('#Email').val().trim() == '') {
+            $('#emailid').html("Email Id Reqiured");
+            $('#Email').css('border', 'solid 1px red');
+            $('#emailid').show();
+        } else {           
+            $('#Email').css('border', '');
+            $('#emailid').hide();
+        }
+
+    })
+    $('#ConfirmEmail').change(function () {
+        if ($('#ConfirmEmail').val().trim() == '') {         
+            $('#ConfirmEmail').css('border', 'solid 1px red');           
+            $('#CnfEmailRequired').show();
+        } else {
+            if ($('#ConfirmEmail').val().trim() != $('#Email').val().trim()) {
+                $('#ConfirmEmail').css('border', 'solid 1px red');
+                $('#CnfEmailRequired').hide();
+                $('#emailidnotmatch').show();
+            } else {
+                $('#ConfirmEmail').css('border', '');
+                $('#CnfEmailRequired').hide();
+                $('#emailidnotmatch').hide();
+            }
+
+        }
+
+    })
+    $('#ConfirmPassword').change(function () {
+        if ($('#ConfirmPassword').val().trim() == '') {
+            $('#ConfirmPassword').css('border', 'solid 1px red');
+            $('#CnfPwdRequired').show();
+        } else {
+            if ($('#ConfirmPassword').val().trim() != $('#Password').val().trim()) {
+                $('#ConfirmPassword').css('border', 'solid 1px red');
+                $('#CnfPwdRequired').hide();
+                $('#pwdnotmatch').show();
+            } else {
+                $('#ConfirmPassword').css('border', '');
+                $('#CnfPwdRequired').hide();
+                $('#pwdnotmatch').hide();
+            }
+
+        }
+
+    })
+    function validateNumberLength(id, length) {
+        var OfficeText = $('#' + id).val();
+
+        if (OfficeText.trim() != '' && OfficeText != null) {
+            if (OfficeText.trim().length == length) {
+                $('#' + id).css('border', '');
+                return true;
+            } else {
+                $('#' + id).css('border', 'solid 1px red');
+                return false;
+            }
+        } else {
+            $('#' + id).css('border', '');
+            return true;
+        }
+    }
+
+    function CheckPassword() {
+        var count = 0;
+        var pass = $("#Password").val();
+        count += /[a-z]/.test(pass) ? 1 : 0;
+        count += /[A-Z]/.test(pass) ? 1 : 0;
+        count += /\d/.test(pass) ? 1 : 0;
+        count += /[^\w\d\s]/.test(pass) ? 1 : 0;
+        if (count > 2 & !/[\s]+/.test(pass)) {
+            $("#Password").css('border', '');
+            $('#ValidatePassword').hide();
+            return true;
+        } else {
+            $("#Password").css('border', 'solid 1px red');
+            $('#ValidatePassword').show();
+            //alert("password should be alphanumeric with one special character");
+            return false;
+        }
+
+    }
+    $('#Password').change(function () {
+        CheckPassword();
+    })
+    $('#btnok').click(function () {
+        $('.confirmationdivmain').hide();
+        $('.confirmationdivinner').hide();
+    });
+    $('#Div_PasswordRule').click(function () {
+        $('.deal_details').is(':visible')
+        var status = $('#divPwdRules').is(':visible');
+        if (status == false) {
+            $('#divPwdRules').show();
+        } else if (status == true) {
+            $('#divPwdRules').hide();
+        }
+        // $('.confirmationdivinner').show();
+    });
+    function CheckValidation() {
+        if (!validateNumberLength('OfficePhone3', 4)) { return false }
+        if (!validateNumberLength('OfficePhone2', 3)) { return false; }
+        if (!validateNumberLength('OfficePhone1', 3)) { return false; }
+
+        if (!validateNumberLength('CellNumber1', 3)) { return false }
+        if (!validateNumberLength('CellNumber2', 3)) { return false }
+        if (!validateNumberLength('CellNumber3', 4)) { return false }
+        if ($('#Email').val() == '') {
+            $('#emailid').html("Email Id Reqiured");
+            $('#Email').css('border', 'solid 1px red');
+            $('#emailid').show();
+           // $('#lname').hide();
+           // $('#fname').hide();
+           // $('#pwdnotmatch').hide();
+            $('#emailidnotmatch').hide();
+            return false;
+        }
+        if ($('#LastName').val().trim() == '') {
+            $('#lname').show();
+            $('#LastName').css('border', 'solid 1px red');
+           // $('#emailid').hide();
+           // $('#fname').hide();
+           // $('#pwdnotmatch').hide();
+           // $('#emailidnotmatch').hide();
+            return false;
+        } 
+        if ($('#FirstName').val().trim() == '') {
+            $('#FirstName').css('border', 'solid 1px red');
+            $('#fname').show();
+            //$('#lname').hide();
+            //$('#emailid').hide();
+            //$('#pwdnotmatch').hide();
+            //$('#emailidnotmatch').hide();
+            return false;
+        }
+
+        if ($('#Password').val() == '') {
+            $('#pwdnotmatch').html("Password can not be blank");
+            $('#Password').css('border', 'solid 1px red');
+            //$('#fname').hide();
+            //$('#lname').hide();
+            //$('#emailid').hide();
+            //$('#emailidnotmatch').hide();
+            $('#pwdnotmatch').show();
+            return false;
+
+        }
+
+        if ($('#Email').val() != '') {
+            // alert('h')
+            if (!validateEmail($('#Email').val())) {
+                $('#emailid').html("Enter correct email Id");
+                $('#Email').css('border', 'solid 1px red');
+                //$('#fname').hide();
+                //$('#lname').hide();
+                //$('#emailidnotmatch').hide();
+                //$('#pwdnotmatch').hide();
+                $('#emailid').show();
+                return false;
+            }
+            else {
+                $('#emailid').hide();
+                $('#Email').css('border', '');
+                if ($('#ConfirmEmail').val() != $('#Email').val()) {
+                    $('#ConfirmEmail').css('border', 'solid 1px red');
+                    $('#emailidnotmatch').show();
+                    //$('#fname').hide();
+                    //$('#lname').hide();
+                    //$('#pwdnotmatch').hide();
+                    //$('#emailid').hide();
+                    return false;
+                }
+                else {
+                    $('#emailidnotmatch').hide();
+                    $('#ConfirmEmail').css('border', '');
+                }
+            }
+
+        }
+        if ($('#Password').val() != '') {
+            // alert('h')
+            if ($('#ConfirmPassword').val() != $('#Password').val()) {
+                $('#pwdnotmatch').html("Password should be match");
+                $('#ConfirmPassword').css('border', 'solid 1px red');
+                //$('#emailidnotmatch').hide();
+                //$('#fname').hide();
+                //$('#lname').hide();
+                //$('#emailid').hide();
+                $('#pwdnotmatch').show();
+                return false;
+            }
+            else {
+                $('#pwdnotmatch').hide();
+                $('#ConfirmPassword').css('border', '');
+
+
+            }
+        }
+        //$.ajax({
+        //    url: '../Company/MakePayment',
+        //    contentType: 'application/html; charset=utf-8',
+        //    type: 'GET',
+        //    dataType: 'html',
+        //    data: { 'accecpted': "" },
+        //    async: true
+        //})
+        //  .success(function (result) {
+        //      $('#f4').show();
+        //      $('#f1').hide();
+        //      $('#f3').hide();
+        //      $('#f2').hide();
+        //      $('#f4').html(result);
+        //  })
+        //  .error(function (xhr, status) {
+        //     // alert(status);
+        //  })
+        $('#li1').removeClass("active");
+        $('#li3').removeClass("active");
+        $('#li2').removeClass("active");
+        $('#li5').addClass("active");
+        return true;
+    }
+    function validateEmail(sEmail) {
+
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            // alert('true');
+            return true;
+        }
+        else {
+            // alert('false');
+            return false;
+        }
+    }
+    $(document).ready(function () {
+        $('#companylogo').attr('src','@Session["logopath"]')
+        //$('#li2').removeClass("active");
+        //$('#li1').removeClass("active");
+        //$('#li3').addClass("active");
+        //$('#li4').removeClass("active");
+        $('#li2').removeClass("active-new");
+        $('#li1').removeClass("active-new");
+        $('#li4').removeClass("active-new");
+        $('#li2').addClass("d-active-new");
+        $('#li4').addClass("d-active-new");
+        $('#li1').addClass("d-active-new");
+        $('#li3').removeClass("d-active-new");
+        $('#li3').addClass("active-new");
+        $('#li5').removeClass("active-new");
+        $('#li5').addClass("d-active-new");
+
+
+
+        $("#OfficePhone1").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+        //called when key is pressed in textbox
+        $("#OfficePhone2").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+        //called when key is pressed in textbox
+        $("#OfficePhone3").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#CellNumber1").keypress(function (e) {
+
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#CellNumber2").keypress(function (e) {
+
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+        $("#CellNumber3").keypress(function (e) {
+
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                // $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+
+
+        $("#OfficePhone3").change(function () {
+            validateNumberLength('OfficePhone3', 4);
+        });
+        $("#OfficePhone2").change(function () {
+            validateNumberLength('OfficePhone2', 3);
+        });
+        $("#OfficePhone1").change(function () {
+            validateNumberLength('OfficePhone1', 3);
+        });
+        $("#CellNumber1").change(function () {
+            validateNumberLength('CellNumber1', 3);
+        });
+        $("#CellNumber2").change(function () {
+            validateNumberLength('CellNumber2', 3);
+        });
+        $("#CellNumber3").change(function () {
+            validateNumberLength('CellNumber3', 4);
+        });
+
+        $("#div3Prev").click(function () {
+
+            //Get page
+            $.ajax({
+                url: '../Company/CreateServices',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'accecpted': "" },
+                async: true
+            })
+          .success(function (result) {
+
+              $('#f2').show();
+              $('#f1').hide();
+              $('#f3').hide();
+              $('#f4').hide();
+              $('#f2').html(result);
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+
+
+            $('#li1').removeClass("active");
+            $('#li3').removeClass("active");
+            $('#li4').removeClass("active");
+            $('#li2').addClass("active");
+        });
+
+        //$("#div3Next").click(function () {
+        //    $.ajax({
+        //        url: '../Company/MakePayment',
+        //        contentType: 'application/html; charset=utf-8',
+        //        type: 'GET',
+        //        dataType: 'html',
+        //        data: { 'accecpted': "" },
+        //        async: true
+        //    })
+        //  .success(function (result) {
+        //      $('#f4').show();
+        //      $('#f1').hide();
+        //      $('#f3').hide();
+        //      $('#f2').hide();
+        //      $('#f4').html(result);
+        //  })
+        //  .error(function (xhr, status) {
+        //      alert(status);
+        //  })
+        //    $('#li1').removeClass("active");
+        //    $('#li3').removeClass("active");
+        //    $('#li2').removeClass("active");
+        //    $('#li4').addClass("active");
+        //});
+    });
+
+</script>
+
+
+
+

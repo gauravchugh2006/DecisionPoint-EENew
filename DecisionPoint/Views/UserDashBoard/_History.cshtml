@@ -1,0 +1,572 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@{
+    ViewBag.Title = "UserDashBoard : History";
+    Layout = "~/Views/Shared/_UserDashBoardLayout.cshtml";
+    WebGrid grdhistory = new WebGrid(ajaxUpdateContainerId: "historygrid1", rowsPerPage: Model.RowperPage);
+    if (Model.HistoryDetails != null)
+    {
+        grdhistory.Bind(Model.HistoryDetails, autoSortAndPage: true, rowCount: Model.PageSize);
+    }
+     DateTime defaultdate = new DateTime();
+    defaultdate = Convert.ToDateTime("1/1/1900 12:00:00 AM", System.Globalization.CultureInfo.InvariantCulture);  
+}
+
+
+<style>
+    .setwidth
+    {
+        background:#F2F2F2;
+    }
+    .grid-width300 {
+        width:150px;
+    }
+</style>
+    
+
+<div style="background: none !important;">
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+    <script src="~/Scripts/jquery-ui-1.10.3.js"></script>
+    <div class='documents' style="line-height: 2px !important;">
+        <div class='heading'>
+            <div class='row'>
+                <h3>My Library List</h3>
+                <div style="padding-left: 100px;">
+                    <form class='search'>
+                        <div class='input-append'>
+
+                            <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+                            <button class='btn btn-primary' type='button' id="btngo" onclick="Go()" style="height: 27px;">Go</button>
+
+                        </div>
+                        <div style="float: right; margin-top: 9px; margin-left: 5px;">
+                            <button class='btn btn-primary' type='button' id="btnviewall" onclick="viewall()" style="display: none; margin-top: -9px; height: 28px;">View All</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br />
+    </div>
+    <div>
+        <div class="filter-bar">
+    <strong>Filter List By:</strong>
+     @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture)))
+     {
+         if (Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("IC"))
+         {
+            <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="groupddic" title="Group" class="dropdown-toggle btn btn-info">
+                <b id="grouptypedd" >Group</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.HistoryDetails != null)
+            {
+                if (Model.HistoryDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li >
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                <input class="groupchkall" type="checkbox" autocomplete="off" onchange="filterForIC('history','All','2')" value="All" style="margin-left: -2px;">
+                               &nbsp;  All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.HistoryDetails.Select(x => x.Group))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li> 
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                     <input class="groupchk" type="checkbox" autocomplete="off"  onchange="filterForIC('history','@refe','2')" value="@refe" style="margin-left: -2px;">
+                                  &nbsp;   @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+    
+         }
+         else
+         {
+             <div class="dropdown">
+
+            <a href="#" data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn btn-info">
+                <b id="grouptypedd" >Group</b>
+                <b class="caret"></b>
+            </a>
+            @if (Model.GroupDetails != null)
+            {
+                if (Model.GroupDetails.Count() > 0)
+                {
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li>
+                        <a>
+                            <label style="font-weight: normal" id="allref" class="checkbox">
+                                <input class="groupchkall" type="checkbox" autocomplete="off" onchange="filter('history','All','2')" value="All" style="margin-left: -2px;">
+                               &nbsp;  All
+                            </label>
+                        </a>
+                    </li>
+                    @{string docref = string.Empty;}
+                    @foreach (var refe in Model.GroupDetails.Select(x => x.categoryName))
+                    {
+                        if (refe != null && refe != string.Empty)
+                        {
+                            if (docref != refe && refe.Trim() != string.Empty)
+                            {
+                        <li> 
+                            <a>
+                                <label style="font-weight:normal" class="checkbox" id="@refe">
+                                     <input class="groupchk" type="checkbox" autocomplete="off" onchange="filter('history','@refe','2')"  value="@refe" style="margin-left: -2px;">
+                                  &nbsp;   @refe
+                                </label>
+                            </a>
+                        </li>
+                            }
+                            if (refe.Trim() != string.Empty)
+                            {
+                                docref = refe;
+                            }
+                        }
+                    }
+                </ul>
+                }
+            }
+        </div>
+         }
+     }
+  
+     @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture)))
+     {
+         if (Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("IC"))
+         {
+            <div class="dropdown">
+    
+            <a href="#" data-toggle="dropdown" id="refddic" class="dropdown-toggle btn btn-info">
+             <b id="reftypedd">Category</b> 
+              <b class="caret"></b>
+            </a>
+                @if (Model.HistoryDetails != null)
+                {
+                    if (Model.HistoryDetails.Count() > 0)
+                    {
+            <ul role="menu" id="catlis" class="dropdown-menu" style="width: auto !important;">
+              <li onclick="filterForIC('history','All','1')">
+                <a>
+                  <label style="font-weight: normal"  id="allref" class="checkbox">
+                    All
+                  </label>
+                </a>
+              </li>
+                 @{string docref = string.Empty;}
+                @foreach (var refe in Model.HistoryDetails.Select(x => x.reference))
+                {
+                    if (refe != null && refe != string.Empty)
+                    {
+                        if (docref != refe && refe.Trim() != string.Empty)
+                        {
+              <li onclick="filterForIC('history','@refe','1')">
+                <a>
+                  <label style="font-weight:normal" class="checkbox" id="@refe">
+                    @refe
+                  </label>
+                </a>
+              </li>
+                        }
+                        if (refe.Trim() != string.Empty)
+                        {
+                            docref = refe;
+                        }
+                    }
+                } 
+            </ul>
+                    }
+                }
+          </div>
+         }
+         else
+         {
+            <div class="dropdown">
+    
+            <a  data-toggle="dropdown" id="refdd" class="dropdown-toggle btn btn-info">
+             <b id="reftypedd">Category</b> 
+              <b class="caret"></b>
+            </a>
+               <ul role="menu" id="catlis" class="dropdown-menu" style="width:auto !important;">
+            
+            </ul>
+          </div>
+         }
+     }
+   
+     @if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture)))
+     {
+         if (Convert.ToString(Session["UserType"], System.Globalization.CultureInfo.InvariantCulture).Equals("IC"))
+         {
+            <div class="dropdown">
+    
+            <a  data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+             <b id="doctypedd">Sub Category</b> 
+              <b class="caret"></b>
+            </a>
+                @if (Model.HistoryDetails != null)
+                {
+                    if (Model.HistoryDetails.Count() > 0)
+                    {
+            <ul role="menu" id="refelis" class="dropdown-menu" style="width: auto !important;">
+              <li onclick="filterForIC('history','All','0')">
+                <a>
+                  <label style="font-weight: normal"  id="alldoc" class="checkbox">
+                    All
+                  </label>
+                </a>
+              </li>
+                 @{string docref = string.Empty;}
+                @foreach (var refe in Model.HistoryDetails.Select(x => x.reqDocType))
+                {
+                    if (refe != null && refe != string.Empty)
+                    {
+                        if (docref != refe && refe.Trim() != string.Empty)
+                        {
+              <li onclick="filterForIC('history','@refe','0')">
+                <a>
+                  <label style="font-weight:normal" class="checkbox" id="@refe">
+                    @refe
+                  </label>
+                </a>
+              </li>
+                        }
+                        if (refe.Trim() != string.Empty)
+                        {
+                            docref = refe;
+                        }
+                    }
+                } 
+            </ul>
+                    }
+                }
+          </div>
+    
+         }
+         else
+         {
+              <div class="dropdown">
+
+        <a data-toggle="dropdown" id="docdd" class="dropdown-toggle btn btn-info">
+            <b id="doctypedd">Sub Category</b>
+            <b class="caret"></b>
+        </a>
+         <ul role="menu" id="refelis" class="dropdown-menu" style="width: auto !important;">
+               
+            </ul>
+    </div>
+         }
+     }
+   
+   
+</div>
+
+      
+
+
+        @*funtion used for sorting in webgrid*@
+        @functions {
+            public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+            {
+                return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+                    grid.SortDirection == SortDirection.Ascending ? "↑" :
+                    "↓" : string.Empty);
+            }
+        }
+        <div id='historys'>
+            @if (Model.HistoryDetails != null)
+            {
+
+                            
+                @grdhistory.GetHtml(htmlAttributes: new { id = "historygrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: new[] {
+
+     grdhistory.Column(columnName:"",format:  @<text>
+                @if(item.accecpted ==true && item.assesmentStatus == "pass")
+    {
+<img src="~/Content/images/check-in.png" height="15" style="padding-left:inherit" width="20" alt="Status" title="Completed" />
+    }
+
+                </text>,style:"grid-width65px"),
+    grdhistory.Column(columnName:"",format:  @<text>
+                @if (item.versionno > 1)
+    {
+<SPAN style="color:red;">Updated</SPAN>
+    }
+  
+                </text>,style:"grid-width61px"),
+    grdhistory.Column(columnName:"policyNo", header: Sorter("policyNo", "Comm #", grdhistory),canSort: true,
+    format:@<text>
+                @if(item.versionno!=0)
+        {
+                    @item.policyNo <span style="height:45px;">v<sub>@item.versionno</sub></span>
+        }
+        else
+        {
+<span>&nbsp;</span>
+        }
+                </text>
+    ,style:"grid-width90"),
+    grdhistory.Column("reference", header: Sorter("reference", "Category", grdhistory),style:"grid-width100"),
+    grdhistory.Column("reqDocType", header: Sorter("reqDocType", "Sub Category", grdhistory),style:"grid-width300"),
+    
+    grdhistory.Column("title",header: Sorter("title", "Title", grdhistory),
+    format:@<text>
+                <a id="doctitle" href="@Url.Content("~/UserDashboard/ViewDocument?id=")@item.docTypeId&tbId=@item.tableId&type=libview" target="_blank">@item.title</a>
+                @*<a id="doctitle" href="@Url.Action("ViewDocument", "UserDashboard", new {id=item.docTypeId,tbid=item.tableId }, null)" target="_blank">@item.title</a>*@
+               
+
+                </text>
+    ,style:"webgridtitlecol1"),
+    grdhistory.Column("hourofcredit", header: Sorter("hourofcredit", "CE", grdhistory),
+      format:@<text>
+                @if(item.versionno!=0){
+<div>@item.hourofcredit</div> }
+
+                </text>,style:"grid-width100"),
+    
+   grdhistory.Column("receviedDate",header: Sorter("receviedDate", "Received", grdhistory), format: @<text>
+                @if (item.versionno != 0 )
+        {
+                     if (item.receviedDate != null)
+                {
+<span>  @string.Format("{0:MM/dd/yyyy}",
+             item.receviedDate)</span>
+                }
+        }</text>,style:"webgridcol1"),     
+        grdhistory.Column("completeDate",header: Sorter("completeDate", "Completed", grdhistory),format: @<text>  @if (item.versionno != 0 && item.completeDate!=null)
+                                                                                                                  {
+<span>  @string.Format("{0:MM/dd/yyyy}",
+             item.completeDate)</span>
+        }</text>,style:"webgridcol1"),      
+   grdhistory.Column("effectiveDate",header: Sorter("effectiveDate", "Effective Date", grdhistory), format: @<text>
+            @if(item.versionno!=0){
+
+    if(item.effectiveDate!=defaultdate)
+             {<span> 
+              @string.Format("{0:MM/dd/yyyy}",
+             
+                 item.effectiveDate) 
+             </span> 
+    }
+    }
+   </text>,style:"grid-width300"),
+        grdhistory.Column("", format: @<text>
+                @if (item.versionno != 0 )
+        {
+             
+             if(item.accecpted !=true && item.assesmentStatus != "pass"){
+<button class="btn btn-mini btnminired" onclick="showreactivediv('@item.tableId','2')" >Reactive</button>
+             }
+        
+         }
+                </text>, canSort: false,style:"webgridcol1"),
+    
+  }) 
+           
+            }
+               
+            
+           
+
+        </div>
+    </div>
+</div>
+@*Reactive box Popup*@
+<div class="profiletrans" id="reactiveouter"></div>
+<div class="popup" id="reactiveinner" style="left: 34%;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 87px; padding: 20px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; padding-bottom: 10px;">Are you sure you want to move this record in communcation? </div>
+
+        <div style="float: left; width: 50px; padding-top: 25px;">
+            <input type="button" id="btnokreactive" onclick="Reactivedoc()" class="btn btn-primary" value="Ok" />
+
+        </div>
+        <div style="float: left; width: 70px; padding-top: 25px;">
+            <input type="button" class="btn btn-primary" onclick="CancelreactiveDoc()" id="btnreactivecancel" value="Cancel" />
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function DocumentInfo() {
+        alert("Find No document Details!!");
+    }
+    $(document).ready(function () {
+        ShowHideTabs('mylib');
+
+        
+        $('#ui-id-1').css('top', '319px');
+        $('#ui-id-1').css('margin-left', '888px');
+        //set blank row width
+        $("#historygrid tbody tr").each(function (index) {
+            
+            var docname = $(this).find('#doctitle').html().trim();
+            if (docname == "") {
+                // alert(154);
+                $(this).addClass("setwidth");
+
+            }
+        });
+      
+
+    })
+    //reactive documrnt
+    function showreactivediv(msgId, type) {
+        $('#type').val(type);
+        $('#msgdocid').val(msgId);
+        $('#reactiveouter').fadeIn('slow');
+        $('#reactiveinner').fadeIn('slow');
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 150;
+        $('#reactiveinner').css("top", poistion);
+    }
+    function Reactivedoc() {
+       // alert(0);
+        var type = $('#type').val();
+     
+        var docId = parseInt($('#msgdocid').val());
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ReactiveDocument/")',
+            cache: false,
+            data: { 'docId': docId, 'type': parseInt(type) },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html'
+
+        })
+.success(function (data) {
+    if (data == 1) {
+        //view document
+        $('#btnreactivecancel').click();
+      
+        gethistorydetails(getpageid("historygrid"));
+    }
+    else if (data == 0) {
+        $('#btnreactivecancel').click();
+    }
+})
+.error(function (xhr, status) {
+    alert(status);
+})
+    }
+    function CancelreactiveDoc() {
+        $('#reactiveouter').fadeOut('slow');
+        $('#reactiveinner').fadeOut('slow');
+    }
+
+    function gethistorydetails(pageid) {
+       // alert(0);
+        $.ajax({
+            url: "@Url.Content("~/UserDashBoard/HistoryAction/?page=")"+pageid,
+             data: { id: 'All' },
+             cache: false,
+             type: "GET",
+             datatype: 'json',
+             success: function (result) {
+                 $('#historys').html($(result).find('#historys').html().trim());
+             }
+         });
+    }
+    //category
+    $('#refdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $('#refelis').empty();
+    })
+    $('#refddic').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+
+    })
+    //category
+    $('#groupdd').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $("#refdd").css({ "background-color": "#0044CC" });
+        $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#reftypedd').html("Category");
+        var chkstatus = true;
+        $('.groupchk').each(function () {
+
+            if ($(this).is(':checked')) {
+                chkstatus = false
+            }
+        })
+        if ($('.groupchkall').is(":checked")) {
+            chkstatus = false
+        }
+        //alert(chkstatus);
+        if (chkstatus) {
+            $('#catlis').empty();
+        }
+    })
+    $('#groupddic').click(function () {
+        $("#docdd").css({ "background-color": "#0044CC" });
+        $("#docdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#doctypedd').html("Sub Category");
+        $("#refddic").css({ "background-color": "#0044CC" });
+        $("#refddic").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+        $('#reftypedd').html("Category");
+
+    })
+    //refenrence
+    //$('#docdd').click(function () {
+    //    $("#refdd").css({ "background-color": "#0044CC" });
+    //    $("#refdd").css({ "background-image": "linear-gradient(to bottom, #0088CC, #0044CC)" });
+    //    $('#reftypedd').html("Source");
+    //})
+
+    $("#txtserach").autocomplete({
+        source: function (request, response) {
+            var filtervalue = setgroupfiltervalue() + ":group" + "," + $('#reftypedd').html() + ":reference" + "," + $('#doctypedd').html() + ":doctype";
+            filtervalue = filtervalue + "," + $('#txtserach').val() + ":serach";
+            request.term = filtervalue;
+            $.ajax({
+                url: '@Url.Content("~/UserDashBoard/SerachInhistory")',
+                cache: false,
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item, value: item };
+                    }))
+                }
+            })
+        }
+
+        });
+</script>
+
+

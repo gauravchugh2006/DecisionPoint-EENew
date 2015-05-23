@@ -1,0 +1,263 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@using DecisionPointCAL.Common;
+
+@{
+    ViewBag.Title = "FeeCreation";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+<div class='heading'>
+    <div class='row'>
+        @if (!Model.UserType.Equals(Shared.IC))
+        {
+            <h3>Partner Detail</h3>}
+        else
+        {<h3>Independent Contractor</h3>}
+
+    </div>
+</div>
+<div class="w100">
+    @using (Html.BeginForm("EditFee", "CompanyDashBoard", FormMethod.Post, new { id = "SubmitForm", onsubmit = "return ValidateSave()" }))
+    {
+        <div style="width: 50%; float: left;">
+
+            <div class='control-group w100'>
+                <div class='control-group w100'>
+                    <div class="halfwidth">Company ID :</div>
+                    <div class='halfrest'>
+                        @Html.DisplayFor(model => model.CompanyId, new { @class = "input-xlarge" })  &nbsp;&nbsp;
+                       
+                    </div>
+                </div>
+                <div class='control-group w100'>
+                    <div class="halfwidth">Business Name :</div>
+                    <div class='halfrest'>
+                        <div class="input-xlarge" style="display: block;" id="lblcompanyname">@Html.DisplayFor(model => model.CompanyName)</div>
+                        &nbsp;&nbsp;
+                       
+                    </div>
+                </div>
+                <div class="control-group w100">
+                    <div class="halfwidth">Name :</div>
+                    <div class="halfrest">
+                        <div class="input-xlarge" style="display: block; width: auto !important;" id="lblfname">@Model.FName @Model.MName @Model.LName</div>
+                    </div>
+                </div>
+                <div class='control-group w100'>
+                    <div class="halfwidth">Phone :</div>
+                    <div class='halfrest'>
+                        @if (Model.OfficePhone != null && Model.OfficePhone.Trim() != string.Empty)
+                        {
+                           
+                            <div class="input-xlarge" style="display: block;" id="lblofficephn">
+                                (@Model.OfficePhone.Substring(0, 3)) @Model.OfficePhone.Substring(3, 3)-@Model.OfficePhone.Substring(6, 4)
+                            </div>
+                             
+                        }
+                    </div>
+                </div>
+                <div class='control-group w100'>
+                    <div class="halfwidth">Email :</div>
+                    <div class='halfrest'>
+                        <div class="input-xlarge" style="display: block;" id="lblemailid">@Model.EmailId</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                       
+        <div style="width: 20%; float: left; margin-top: 0px;">
+             @if (!Model.UserType.Equals(Shared.IC))
+                        {
+            <div class='control-group w100'>
+                <label class='control-label' style="font-weight: bold !important; text-decoration: underline;">Fee Structure</label>
+            </div>
+            <div class="halfwidth" style="width: 100%">Company Fee (Annual)<sup style="color: red; font-size: 10px;">*</sup></div>
+            <div class='halfrest' style="width: 100px">@Html.TextBoxFor(model => model.CompanyFee, new { maxlength = 10 })</div>
+            <div class='halfrest' style="width: 100%; color: red; margin-bottom: 10px;">@Html.ValidationMessageFor(model => model.CompanyFee)</div>
+            <div class="halfwidth" style="width: 100%">Per Staff Member Fee (Annual)<sup style="color: red; font-size: 10px;">*</sup></div>
+            <div class='halfrest' style="width: 100px">@Html.TextBoxFor(model => Model.PerFieldStaffFee, new { maxlength = 10 })</div>
+            <div class='halfrest' style="width: 100%; color: red; margin-bottom: 10px;">@Html.ValidationMessageFor(model => model.PerFieldStaffFee)</div>
+            <div id="Busfee" class="halfwidth" style="width: 100%;display:none;">Per Business Connection Fee (Monthly)<sup style="color: red; font-size: 10px;">*</sup></div>
+            <div class='halfrest' style="width: 100px;display:none;">@Html.TextBoxFor(model => model.PerOfficeStaffFee, new { maxlength = 10 })</div>
+            <div class='halfrest' style="width: 100%; color: red; margin-bottom: 10px;">@Html.ValidationMessageFor(model => model.PerOfficeStaffFee)</div>
+
+            <div id="ICfee" class="halfwidth" style="width: 100%;display:none;">Per Independent Contractor Fee (Monthly)<sup style="color: red; font-size: 10px;">*</sup></div>
+            <div class='halfrest' style="width: 100px;display:none;">@Html.TextBoxFor(model => model.PerICFee, new { maxlength = 10 })</div>
+            <div class='halfrest' style="width: 100%; color: red; margin-bottom: 10px;">@Html.ValidationMessageFor(model => model.PerICFee)</div>
+           <div class='halfrest' style="width: 200px; margin-top: 5px;">@Html.CheckBoxFor(model => model.IsFreeBasicMembership, new { @style = "margin-top:-1px;" }) Free Basic Membership</div>
+            <div class='halfrest' style="width: 100px; margin-top: 10px;">@Html.CheckBoxFor(model => model.IsInvoice, new { @style = "margin-top:-1px;" }) Invoice</div>
+            <div class='halfrest' style="margin-top: 20px; margin-left: 100px;">
+                <input type="submit" name="Save" value="Save" class="btn btn-primary" id="btnSubmit" style="height: 30px;" />
+                <input type="submit" name="Close" value="Close" class="btn btn-primary" id="btnClose" style="height: 30px;" />
+                @* @Html.ActionLink("Close", "GetCompanies", "CompanyDashBoard", new { id = 1, type = 1 }, new {@class="btn btn-primary" })*@
+
+                @* <a class="btn btn-primary" id="btnclose" style="height:17px;">Close</a>*@
+
+            </div>
+            }
+            <div class='halfrest' style="margin-left: 110px; margin-top: 15px;">
+                <span id="Sucess" style="color: green;">@TempData["SucessMessage"]</span>
+                <span id="Fialure" style="color: red;">@TempData["ErrorMessage"]</span>
+            </div>
+            @Html.HiddenFor(model => model.CompanyId)
+            @Html.HiddenFor(model => model.CompanyName)
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.SaveClose)
+        </div>
+                        
+    }
+
+
+
+</div>
+<script>
+    $(document).ready(function () {
+       // checkIcInvoice();
+        $("input[type=submit]").click(function (e) {
+            var idClicked = e.target.id;
+            if (idClicked == 'btnClose') {
+                $('#SaveClose').val('true');
+            } else {
+                $('#SaveClose').val('false');
+            }
+        });
+        ShowHideTabs('administration');
+
+        setTimeout(function () {
+            btnok();
+        }, 1500)
+
+    });
+    $('#CompanyFee').keypress(function () {
+
+        $('#CompanyFee').removeClass("errorClass");
+
+    })
+    $('#PerFieldStaffFee').keypress(function () {
+
+        $('#PerFieldStaffFee').removeClass("errorClass");
+
+    })
+    $('#PerOfficeStaffFee').keypress(function () {
+
+        $('#PerOfficeStaffFee').removeClass("errorClass");
+
+    })
+    $('#PerICFee').keydown(function () {
+
+        $('#PerICFee').removeClass("errorClass");
+
+    })
+    //validate with decimal
+    $("#CompanyFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    $("#PerFieldStaffFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    $("#PerOfficeStaffFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    $("#PerICFee").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    function ValidateSave() {
+
+        var companyFee = $('#CompanyFee').val().trim();
+        var FieldStaffFee = $('#PerFieldStaffFee').val().trim();
+        var OfficeStaffFee = $('#PerOfficeStaffFee').val().trim();
+        var IcFee = $('#PerICFee').val().trim();
+
+        var companyFeeval = true;
+        var FieldStaffFeeval = true;
+        var OfficeStaffFeeval = true;
+        var IcFeeval = true;
+
+
+        //if (companyFee != null || companyFee.trim() != '') {
+        //    ret= true;
+        //}
+        //if (FieldStaffFee != null || FieldStaffFee.trim() != '') {
+        //    ret = true;
+        //}
+        //if (OfficeStaffFee != null || OfficeStaffFee.trim() != '') {
+        //    ret = true;
+        //}
+        if (companyFee == null || companyFee.trim() == '') {
+            $('#CompanyFee').addClass("errorClass");
+            companyFeeval = false;
+        }
+        if (FieldStaffFee == null || FieldStaffFee.trim() == '') {
+            $('#PerFieldStaffFee').addClass("errorClass");
+            FieldStaffFeeval = false;
+        }
+        if (OfficeStaffFee == null || OfficeStaffFee.trim() == '') {
+            $('#PerOfficeStaffFee').addClass("errorClass");
+            OfficeStaffFeeval = false;
+        }
+        if (IcFee == null || IcFee.trim() == '') {
+            $('#PerICFee').addClass("errorClass");
+            IcFeeval = false;
+        }
+        if (companyFeeval && FieldStaffFeeval && OfficeStaffFeeval && IcFeeval) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function btnok() {
+
+        $('#changepwdOuter').hide();
+        $('#changepwdInner').hide();
+    }
+
+    @*$('#btnclose').click(function () {
+        // window.location.href =    '@Url.Content("~/CompanyDashBoard/GetCompanies/id=1type=1")';
+        $('#SaveClose').val('true');
+        alert($('#SaveClose').val());
+    })*@
+    function checkIcInvoice() {
+    
+        if ($('#IsInvoice').is(':checked')) {
+           //   alert('checked');
+            $('#PerICFee').hide();
+            $('#PerOfficeStaffFee').hide();
+            $('#Busfee').hide();
+            $('#ICfee').hide();
+        }
+        else {
+           // alert('not checked');
+            $('#PerICFee').show();
+            $('#PerOfficeStaffFee').show();
+            $('#Busfee').show();
+            $('#ICfee').show();
+        }
+    }
+
+    function checkFreeBasicMembership()
+    {
+        if ($('#IsFreeBasicMembership').is(':checked')) {
+            //   alert('checked');
+          
+        }
+        else {
+   Is         // alert('not checked');
+           
+        }
+    }
+</script>

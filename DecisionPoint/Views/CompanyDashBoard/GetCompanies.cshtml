@@ -1,0 +1,668 @@
+﻿@model DecisionPoint.Models.SuperAdminDashBoard
+
+@{
+    ViewBag.Title = "GetCompanies";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+
+
+    WebGrid grdvendor = new WebGrid(ajaxUpdateContainerId: "messagegrid1", rowsPerPage: Model.rowperpage);
+    if (Model.CompanyList != null)
+    {
+
+        if (TempData["isCurrent"].ToString() == "1")
+        {
+            grdvendor.Bind(Model.CompanyList, autoSortAndPage: true, rowCount: Model.pagesize);
+        }
+    }
+
+    WebGrid grdvendorPost = new WebGrid(ajaxUpdateContainerId: "Pastvendorgrid1", rowsPerPage: Model.rowperpage);
+    if (Model.PastcompanyList != null)
+    {
+
+        if (TempData["isCurrent"].ToString() == "0")
+        {
+            grdvendorPost.Bind(Model.PastcompanyList, autoSortAndPage: true, rowCount: Model.pagesize);
+        }
+
+    }
+    
+}
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+@functions {
+    public static string PostVendorSorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+   <style>
+       #ui-id-1 {
+           height:300px;
+           overflow-y:auto;
+       }
+   </style>
+<div class='heading'>
+    <div class='row'>
+        <h3>Partner List</h3>
+    </div>
+</div>
+ <div class="filter-bar">
+        <strong>Filter List By Type:</strong>
+        <div class="dropdown">
+            <a href="#" data-toggle="dropdown" id="groupdd" title="Group" class="dropdown-toggle btn btn-info">
+                <b class="ddtype">Clients</b>
+                <b class="caret"></b>
+            </a>
+           
+                <ul role="menu" class="dropdown-menu" style="width: auto !important;">
+                    <li>
+                        <a onclick="filterpartners(0)">
+                            <label style="font-weight: normal" id="alltype" class="checkbox">
+                               All
+                            </label>
+                        </a>
+                         <a onclick="filterpartners(1)">
+                            <label style="font-weight: normal" id="allbetype" class="checkbox">
+                               Clients
+                            </label>
+                         </a>
+                        <a onclick="filterpartners(2)">
+                            <label style="font-weight: normal" id="allbtype" class="checkbox">
+                               IC Type
+                            </label>
+                        </a>
+                       
+                    </li>
+                   </ul>
+        </div>
+    </div>
+
+
+<div class='documents'>
+    <div class='heading'>
+        <div class='row'>
+            <div style="padding-left: 40px;">
+                <form class='search'>
+                    <div class='input-append' style="margin-right:-2px;" id="goDiv">
+
+                        <input class='input-xlarge' id='txtserach' placeholder='Search...' type='text' />
+                        <button class='btn btn-primary' type='button' id="btngo" onclick="SearchCompany()" style="height: 28px;">Go</button>
+                        
+                    </div>
+                    <div style="float: right; margin-top: -25px; ">
+                        <button class='btn btn-primary' type='button' id="btnviewallCompany" onclick="viewallCompany()" style="display: none; margin-top: -9px; height: 28px;">View All</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br />
+</div>
+
+<div style="float: right; margin-top: -33px; margin-right: 10px;">
+    <span style="margin-right: 5px;">
+        @if (TempData["isCurrent"].ToString() == "1")
+        {
+            <input type="radio" class="currentstaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" checked /><b>Current </b>                    
+        }
+        else
+        {
+            <input type="radio" class="currentstaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Current" title="Current" /><b>Current </b> 
+        }
+        @if (TempData["isCurrent"].ToString() == "0")
+        {
+            <input type="radio" class="paststaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" checked /><b>Past </b>    
+        }
+        else
+        {
+            <input type="radio" class="paststaffrdo" name="rdoCurrent" style="margin-top: -1px; margin-right: 3px;" value="Past" title="Past" /><b>Past </b>    
+        }
+    </span>
+</div>
+<div id="abc">
+
+<div id='vendor' style="padding-top: 20px;">
+    
+    @if (Model.CompanyList != null)
+    {
+        var gridColumns = new List<WebGridColumn>();
+        gridColumns.Add(grdvendor.Column(header: "", format: @<text>
+    <input type="hidden" id="UserId" value="@item.UserID" />
+     <input type="hidden" id="InvitationStatus" value="@item.InvitationStatus" />
+    <input type="hidden" id="UserType" value="@item.UserType" />
+    @if (item.UserID != 0)
+    {
+        if (!item.InvitationStatus)
+        {
+            <span style="color:red;">Pending</span>
+            if (item.InvitationDate != null)
+            {
+             <span>@string.Format("{0:MM/dd/yyyy}", item.InvitationDate)</span>
+            }
+        }
+    }
+   
+            
+            </text>, canSort: false));
+        gridColumns.Add(grdvendor.Column(columnName: "CompanyID", header: Sorter("CompanyID", "Company ID", grdvendor), format:@<text>
+    
+        <a class="@item.UserID"  onmousedown="jumptoprofilepage('@item.UserID','@item.BusinessName',event)" style="cursor: pointer" >@(item.CompanyID)</a>
+        </text>, style: "grid-width150"));
+        gridColumns.Add(grdvendor.Column("BusinessName", header: Sorter("BusinessName", "Business Name", grdvendor), format:@<text>
+    
+        <a class="@item.UserID"  onmousedown="jumptoprofilepage('@item.UserID','@item.BusinessName',event)" style="cursor: pointer" >@(item.BusinessName)</a>
+        </text>, style: "grid-width150"));
+        gridColumns.Add(grdvendor.Column(columnName: "ContactName", header: Sorter("ContactName", "Contact Name", grdvendor), style: "grid-width150"));
+
+        gridColumns.Add(grdvendor.Column(columnName: "Phone", header: Sorter("Phone", "Phone", grdvendor),
+         format:@<text>
+          
+            
+                @if (item.Phone != null && item.Phone.Trim() != string.Empty)
+                {
+                   
+               <span>  (@item.Phone.Substring(0, 3)) @item.Phone.Substring(3, 3)-@item.Phone.Substring(6, 4)</span>
+                
+                }
+            
+
+            </text>
+         
+, style: "grid-width150"));
+
+        gridColumns.Add(grdvendor.Column(columnName: "", format:  @<text>
+     
+        @if (item.UserID != 0)
+        {
+            if (!item.InvitationStatus)
+             {
+        <a title="Resend invitation mail" onclick="resendMail('@item.UserID')" class="btn btn-mini btn-info" style="cursor:pointer;margin-top:-2px;margin-left:5px;">Resend                
+            </a>
+             }
+             if (item.UserType == "Company")
+    {
+    <a  href="~/CompanyDashBoard/FeeCreation?userID=@item.UserID&companyID=@item.CompanyID" class="btn btn-mini btn-info" style="padding:0 10px 0 10px;margin-top:-2px;margin-left:5px;">Fee</a>
+   
+    <a  href="~/Communication/ConfigurationSetting?userID=@item.UserID&companyID=@item.CompanyID" target="_blank" class="btn btn-mini btn-info" style="padding:0 10px 0 10px;margin-top:-2px;margin-left:5px;">Config</a>
+    }
+             
+     <a title="Remove the partner" onclick="showremovepopup('@item.UserID')" class="delete-btn">
+            <img src="@Url.Content("~/Content/images/delete.png")" /></a>
+      
+        }
+     
+    
+        </text>, canSort: false));
+        
+               
+                @grdvendor.GetHtml(htmlAttributes: new { id = "messagegrid" },
+    tableStyle: "table table-hover",
+    headerStyle: "header",
+    alternatingRowStyle: "alt",
+    columns: grdvendor.Columns(gridColumns.ToArray())) 
+
+        
+       
+    }
+</div>
+
+
+<div id='Pastvendor' style="padding-top: 20px;">
+  
+    @if (TempData["isCurrent"].ToString() == "0")
+    {
+        if (Model.PastcompanyList != null)
+        {
+          
+        @grdvendorPost.GetHtml(htmlAttributes: new { id = "Pastvendorgrid" },
+
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+    columns: new[] {   
+        grdvendor.Column(header: "", format: @<text>
+    <input type="hidden" id="UserId" value="@item.UserID" />
+    <input type="hidden" id="InvitationStatus" value="@item.InvitationStatus" />
+    <input type="hidden" id="UserType" value="@item.UserType" />
+     @if (item.UserID != 0)
+    {
+        if (!item.InvitationStatus)
+        {
+             <span style="color:red;">Pending</span>
+            if (item.InvitationDate != null)
+            {
+             <span>@string.Format("{0:MM/dd/yyyy}", item.InvitationDate)</span>
+            }
+
+
+        }
+    }
+     
+            
+            </text>, canSort: false),    
+ grdvendor.Column(columnName:"CompanyID",header : Sorter("CompanyID", "Company ID", grdvendorPost),style:"grid-width250"),  
+         grdvendor.Column("BusinessName", "Business Name",format:@<text>
+        
+    <a class="@item.UserID" onmousedown="jumptoprofilepage('@item.UserID','@item.BusinessName',event)"   style="cursor: pointer" >@(item.BusinessName)</a>
+        </text>),
+        
+         grdvendor.Column(columnName:"ContactName",header: Sorter("ContactName", "Contact Name",grdvendorPost)),
+                
+                  
+          grdvendor.Column( columnName:"UserType" ,header:  Sorter("UserType", "Type", grdvendor),format:
+         @<text>
+
+        @if(item.UserType=="Company")
+                   {
+<label>Business</label>
+                 }
+                 else if (item.UserType == "IC")
+                 {
+<label>IC</label>
+                 }
+        </text>),
+        
+         grdvendor.Column(columnName:"Phone",header: Sorter("Phone", "Phone",grdvendorPost),
+          format:@<text>
+          
+            
+                @if (item.Phone != null && item.Phone.Trim() != string.Empty)
+                {
+                   
+               <span>  (@item.Phone.Substring(0, 3)) @item.Phone.Substring(3, 3)-@item.Phone.Substring(6, 4)</span>
+                
+                }
+            
+
+            </text>),
+  grdvendorPost.Column(header: "Reactive",format: @<text>
+     @if (item.UserID != 0)
+        {
+        <a id="reactivestaff" title="Reactive the partner" onclick="Reactivestaff('@item.UserID')"  style="cursor: pointer;">Reactive
+        </a>
+     }
+        </text>, canSort: false),
+
+    })
+        }
+
+
+    }
+</div>
+</div>
+<input type="hidden" id="reactivestaffid" />
+<input type="hidden" id="removestaffid" />
+
+<script src="~/Scripts/jquery-1.9.1.js"></script>
+<script src="~/Scripts/jquery-ui-1.10.3.js"></script>
+<script>
+    $(document).ready(function () {
+        ShowHideTabs('mypartner');
+       
+       
+        $('#txtserach').autocomplete({
+            source: '@Url.Content("~/CompanyDashBoard/SerachInCompany")' 
+        });
+        SetColSize();
+      
+    })
+    var currentpartnetlist = $('#messagegrid tbody tr').length;
+    var pastpartnetlist = $('#Pastvendorgrid tbody tr').length;
+
+    function jumptoprofilepage(id, businessname, e) {
+        if (e.which == 1 && !e.ctrlKey && !e.shiftKey) {
+            var userid = id;
+            var businessname = businessname;
+            $("." + id).attr("href", '@Url.Content("~/CompanyDashBoard/CompanyLogin?companyID=")' + userid + "&businessName=" + businessname + "");
+            var target = e.target;
+            e.preventDefault();
+            target.click();
+        }
+    }
+
+
+
+
+    $('.currentstaffrdo').change(function () {
+        $('#btnviewallCompany').css("display", "none");
+        $('#txtserach').val('');
+        if ($('.currentstaffrdo').is(':checked')) {
+            getcurrentcompany(1,1);
+
+
+        } else {
+            $('#Pastvendor').show();
+            $('#vendor').hide();
+        }
+    });
+    $('.paststaffrdo').change(function () {
+        $('#btnviewallCompany').css("display", "none");
+        $('#txtserach').val('');
+        if ($('.paststaffrdo').is(':checked')) {
+
+            getpastcompany(1,1);
+
+
+        } else {
+            $('#Pastvendor').hide();
+            $('#vendor').show();
+        }
+    });
+
+    function Reactivestaff(Id) {
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/ReactiveBusinessPartners/")",
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+
+                    getpastcompany(getpageid("Pastvendorgrid"),1);
+                }
+
+            }
+        });
+
+
+    }
+
+    function getpastcompany(pageid,type) {
+
+
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/GetCompanies/?page=")" + pageid,
+            data: { 'id': 0,'search':'','type':type },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+              //  alert(result);
+                $('#Pastvendor').html($(result).find('#Pastvendor').html().trim());
+
+                $('#Pastvendor').show();
+                $('#vendor').hide();
+                $("#Pastvendorgrid tbody tr").each(function (index) {
+                    // alert($(this).find('#doctitle').html());
+                    var userId = $(this).find('#UserId').val();
+                    var InvitationStatus = $(this).find('#InvitationStatus').val();
+                    var UserType = $(this).find('#UserType').val();
+                    if (userId == 0) {
+                        $(this).addClass("setwidth");
+                    }
+                    if (InvitationStatus == '') {
+                        if (UserType == "IC") {
+                            $(this).find('td').eq(5).addClass("grid-width19per");
+                        } else {
+                            $(this).find('td').eq(5).addClass("grid-width285 text-right");
+                        }
+                    }
+                    else {
+                        if (type == 2) {
+                            $(this).find('td').eq(5).addClass("grid-width12per");
+                        }
+                        else {
+                            $(this).find('td').eq(5).addClass("grid-width19per text-right");
+                        }
+                    }
+                });
+            }
+        });
+    }
+    function getcurrentcompany(pageid,type) {
+
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/GetCompanies/?page=")" + pageid,
+            data: { 'id': 1, 'search': '', 'type': type },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+               $('#vendor').html($(result).find('#vendor').html().trim());
+                $('#Pastvendor').hide();
+                $('#vendor').show();
+                SetColSize();
+                //$("#messagegrid tbody tr").each(function (index) {
+                //    // alert($(this).find('#doctitle').html());
+                //    var userId = $(this).find('#UserId').val();
+                //    var InvitationStatus = $(this).find('#InvitationStatus').val();
+                //    var UserType = $(this).find('#UserType').val();
+                //    if (userId == 0) {
+                //        $(this).addClass("setwidth");
+                //    }
+                //    if (InvitationStatus == '') {
+                //        if (UserType == "IC") {
+                //            $(this).find('td').eq(5).addClass("grid-width19per");
+                //        } else {
+                //            $(this).find('td').eq(5).addClass("grid-width285");
+                //        }
+                //    }
+                //    else {
+                //        if (type == 2) {
+                //            $(this).find('td').eq(5).addClass("grid-width12per");
+                //        }
+                //        else {
+                //            $(this).find('td').eq(5).addClass("grid-width19per");
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+    function showremovepopup(Id) {
+
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/RemoveBusinessPartners/")",
+            data: { 'id': parseInt(Id) },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+
+                    getcurrentcompany(getpageid("messagegrid"),1);
+
+                }
+
+            }
+        });
+    }
+
+
+    function SearchCompany() {
+        
+        var currentlength = 0;
+        var isChecked = $('.currentstaffrdo').is(':checked');
+        if (isChecked == true) {
+            isChecked = '1';
+            currentlength = $('#messagegrid tbody tr').length;
+            if (currentpartnetlist == currentlength) {
+                $('#btnviewallCompany').css("display", "none");
+            }
+        }
+        else {
+            isChecked = '0';
+            currentlength = $('#Pastvendorgrid tr').length;
+            if (pastpartnetlist == currentlength) {
+                $('#btnviewallCompany').css("display", "none");
+            }
+        }
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetCompanies/")',
+            data: { id: isChecked, search: $('#txtserach').val(),'type':3 },
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (result) {
+                if (isChecked == '1') {
+                    $('#vendor').html($(result).find('#vendor').html().trim());
+                    $('#btnviewallCompany').css("display", "block");
+                    currentlength = $('#messagegrid tbody tr').length;
+                 
+                    if (currentlength == 0) {
+                        $('#divmsg').html("No record found !");
+                        $('.confirmationdivinner').slideDown('fast');
+                        $('.confirmationdivmain').slideDown('fast');
+                        $('#btnok').hide();
+                        $('#btncancel').hide();
+                        $('#btncommalert').hide();
+                        $('.confirmationdivinner').css("width", "175px");
+                        setTimeout(function () {
+                            $('.confirmationdivinner').slideUp('fast');
+                            $('.confirmationdivmain').slideUp('fast');
+                          
+                        },1000)
+                    }
+
+                    if (currentpartnetlist == currentlength) {
+                        $('#btnviewallCompany').css("display", "none");
+                    }
+                }
+                else {
+                    $('#Pastvendor').html($(result).find('#Pastvendor').html().trim());
+                    $('#btnviewallCompany').css("display", "block");
+                    currentlength = $('#Pastvendorgrid tr tbody').length;
+
+                    if (pastpartnetlist == currentlength) {
+                        $('#btnviewallCompany').css("display", "none");
+                    }
+                }
+                if ($('#txtserach').val().trim() != '') {
+                    $('#goDiv').css("margin-right", "80px");
+                }
+                SetColSize();
+            }
+        });
+
+
+
+
+    }
+    function SetColSize()
+    {
+        $("#messagegrid tbody tr").each(function (index) {
+            // alert($(this).find('#doctitle').html());
+            var userId = $(this).find('#UserId').val();
+            var InvitationStatus = $(this).find('#InvitationStatus').val();
+            var UserType = $(this).find('#UserType').val();
+            // alert(UserType);
+            if (userId == 0) {
+                $(this).addClass("setwidth");
+            }
+            if (InvitationStatus == '') {
+                if (UserType == "IC") {
+                    $(this).find('td').eq(5).addClass("grid-width19per");
+                } else {
+                    $(this).find('td').eq(5).addClass("grid-width285 text-right");
+                }
+            }
+            else {
+                $(this).find('td').eq(5).addClass("grid-width19per text-right");
+            }
+        });
+    }
+    function viewallCompany() {
+
+        var isChecked = $('.currentstaffrdo').is(':checked');
+        if (isChecked == true) {
+            isChecked = '1';
+        }
+        else {
+            isChecked = '0';
+        }
+       
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetCompanies/")',
+            data: { id: isChecked, search: "", 'type':3},
+            cache: false,
+            type: "GET",
+            datatype: 'json',
+            success: function (result) {
+                if (isChecked == '1') {
+                    $('#vendor').html($(result).find('#vendor').html().trim());
+                    $('#btnviewallCompany').css("display", "none");
+                    $('#txtserach').val('');
+                }
+                else {
+                    $('#Pastvendor').html($(result).find('#Pastvendor').html().trim());
+                    $('#btnviewallCompany').css("display", "none");
+                }
+                SetColSize();
+                $('#goDiv').css("margin-right", "-2px");
+            }
+        });
+    }
+    $('#txtserach').keypress(function (e) {
+        if (e.keyCode == 13) {
+
+            $("#btngo").focus().click();
+            return false;
+        }
+    });
+
+    function filterpartners(btype) {
+        if (btype == 0) {
+            $('.ddtype').html('All');
+        } else if (btype == 1) {
+            $('.ddtype').html('Clients');
+           
+           
+        }
+        else if (btype == 2) {
+            $('.ddtype').html('IC Type');
+            
+        }
+
+        
+        if ($('.paststaffrdo').is(':checked')) {
+            
+            getpastcompany(1,btype);
+        }
+        else {
+           
+            getcurrentcompany(1, btype);
+           
+        }
+    }
+    function resendMail(Id) {
+        $('#dvSaveMsg').text('Please Wait..');
+        $('#divManualInviteOuter').show();
+        $('#divManualInviteInner').show();
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ResendMailToUser/")',
+            data: { 'userId': parseInt(Id), 'type': 'vendor' },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                if (result > 0) {
+                    $('#dvSaveMsg').text('Invitation Resend Success..!!');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                        window.location.reload();
+                    }, 1000);
+                } else {
+
+                    $('#dvSaveMsg').text('Something ent Wrong, Please try again.');
+                    $('#divManualInviteOuter').show();
+                    $('#divManualInviteInner').show();
+                    setTimeout(function () {
+                        $('#divManualInviteOuter').fadeOut('slow');
+                        $('#divManualInviteInner').fadeOut('slow');
+                    }, 1000);
+                }
+
+            }
+        });
+    }
+</script>

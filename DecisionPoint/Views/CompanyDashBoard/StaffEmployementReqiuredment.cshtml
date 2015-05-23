@@ -1,0 +1,55 @@
+﻿@model DecisionPoint.Models.EmpReq
+@{
+    ViewBag.Title = "StaffEmployementReqiuredment";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+}
+<div class='heading'>
+        <div class='row'>
+      <h3>Staff Employement Reqiuredment</h3>
+        </div>
+ </div>
+<div>
+            
+            <div class='control-group w100'>
+                 <div class='control-group w100'>
+                    <div class="halfwidth">Title<sup style="color: red; font-size: 10px;">*</sup> :</div>
+                    <div class='halfrest'>
+                       <input type="text"/>
+                        <input type="button" class="btn btn-primary" value="Upload" />
+                    <input type="file" style="opacity: 0; position: relative; left: -78px; width: 80px;"  />
+                    </div>
+                </div>
+                <div class="control-group w100">
+                    <div class="halfrest">
+                    <input type="checkbox" /> Allow recipient view and upload document 
+                    </div>
+                </div>
+                <div class='control-group w100'>
+                    @*<div class="halfwidth">Business Name :</div>*@
+                    <div class='halfrest'>
+                       <input type="checkbox" />Allow recipient to view 
+                    </div>
+                </div>
+               
+                <div class='control-group w100'>
+                    <div class="halfwidth">Company Name :</div>
+                    <div class='halfrest'>
+                        <input type="text" />
+                    </div>
+                </div>
+
+                <div class='control-group w100'>
+                    <div class="halfwidth">License Number  :</div>
+                    <div class='halfrest'>
+                        <input type="text" />                       
+                    </div>
+                </div>
+                 <div class='control-group w100'>
+                    <div class="halfwidth">State  :</div>
+                    <div class='halfrest'>
+                        @Html.DropDownList("ddState", new SelectList(Model.StateList, "StateId", "SateName"), "-- Select --",new { @style = "width:365px;" })                    
+                    </div>
+                </div>
+            </div>
+        </div>
+

@@ -1,0 +1,192 @@
+﻿@charset "utf-8";
+/* CSS Document */
+.w100{
+	width:100%;
+	float:left;
+	
+	}
+.w80{
+	width:100%;
+	float:left;
+	
+	}
+ .errorClass
+    {
+        border: 1px solid red !important;
+        
+    }
+
+.w360
+{
+    width: 280px;
+}
+.w200 {width:80px;float:left;margin-right:20px;margin-top:5px;}
+.w50 {width:100px;}
+.butmargin{margin:2px 0 5px 10px;}
+.butmargin-left1{margin:-2px 0px 1px 0px;}
+.grid-width100
+{
+    width:25px;
+}
+.grid-width181
+{
+    width:181px;
+}
+.iconcontainer{width:70%;overflow:hidden;margin:1% auto;}
+.individual{
+                width:202px;
+                height:202px;
+                float:left;
+                text-align:center;
+                cursor:pointer;
+                position:relative;
+                 box-shadow: 2px 2px 2px 2px #E1E1E1;
+     
+                  border:1px solid #e1e1e1;
+                }
+                
+.bulk{
+                width:202px;
+                height:202px;
+                float:right;
+                text-align:center;
+                box-shadow: 2px 2px 2px 2px #E1E1E1;
+               border:1px solid #e1e1e1;
+                }
+
+#download{
+	background:url(../../images/download.png) no-repeat;
+	width:28px;
+	height:32px;
+	float:right;
+	width:175px;
+	padding-left:32px;
+	line-height:30px;
+	text-decoration:underline;
+	}
+.autodetect{margin-left:10px;margin-top:10px;display:inline;background:red;}
+.forlabel{float:left;}
+.fl{float:left;}
+
+
+
+.manualinput{width:50px;margin-left:10px;}
+.considerfirstrow{margin-left:166px; float:left;display:block;float:left;}
+.mt20{margin-top:15px;}
+ .mr10 {margin-right:10px;float:left;}
+ .w250 {width:100px;float:left;margin-top:5px;}
+ .wcol1{width:14%; float:left;}
+ .wcol2{width:220px; float:left;}
+ .wcol3{width:30%; float:left;}
+ .mt5px{margin-top:5px;}
+ .wcol4{width:14%; float:left;}
+ .wcol5{width:220px; float:left;}
+ .wcol6{width:30%; float:left;}
+ .w206{width:206px;}
+ .selectheading{
+	 background:#eee;
+	 text-align:center;
+	 border:1px solid #ccc; 
+	 border-radius: 3px 3px 3px 3px;
+	 padding:5px 0px;}
+.clear{clear:both;}
+.multiselectable {display:block; overflow: hidden; width:60%;padding-right:20px;margin-bottom:10px; }
+.multiselectable select, .multiselectable div { width: 216px; float:left; }
+.multiselectable div * { display: block; margin: 0 auto; }
+.multiselectable div { display: inline; overflow:hidden; }
+.multiselectable .m-selectable-controls { margin-top: 4em; width: 70px; }
+.multiselectable .m-selectable-controls button { margin-top: 2em; margin-left:.5em;}
+
+.bulk-invitaion
+{
+    background:  url("../../images/bulk.jpg") repeat-x scroll left;
+     display: block;
+   height: 200px;
+     text-indent: -9999px; /* hides the link text */
+}
+.manual-invitaion
+{
+    background:  url("../../images/manual.jpg") repeat-x scroll left;
+     display: block;
+   height: 200px;
+     text-indent: -9999px; /* hides the link text */
+}
+.halfwidth
+{
+    width:30%;
+    float:left;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+.halfrest
+{width:70%;
+    float:left;
+    margin-bottom:-11px;
+}
+.mt10
+{
+    margin-top:10px;
+}
+
+.btnminired
+{
+    background:#dd3626;
+    color:white;
+}
+
+.btnminired:hover
+{
+    background:#bd2e21;
+    color:white;
+}
+
+
+
+
+.bold{font-weight:bold;}
+.iconcontainer{width:70%;overflow:hidden;margin:1% auto;}
+
+	
+	
+.leftcol1{width:35%; float:left;}
+.rightcol1{width:50%; float:left;}
+.w50{width:50%;margin-top:10px;}
+.fl{float:left;}
+.w20{width:20%;float:left;margin-bottom:10px;}
+.pdr5{padding-right:5px; float:left}
+.upleftcol{float:left; width:50%;}
+.uprightcol{float:left; width:50%;}
+.upleftcol2{float:left; width:40%;}
+.uprightcol2{float:left; width:60%;}
+.fr{float:right;}
+.w300{width:120px;float:right;}
+.ln30{line-height:25px;}
+
+.halfwidth1
+{
+    width:20%;
+    float:left;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.Stdwidth
+{
+    width:11%;
+    float:left;
+    font-weight:bold;
+    margin-bottom:3px;
+}
+.Inforest
+{width:89%;
+    float:left;
+    margin-bottom:-11px;
+}
+
+
+
+ .grid-width120
+    {
+        width: 120px;
+    }
+.td-align-textbox{ vertical-align:top; padding-top:4px;}

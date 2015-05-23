@@ -1,0 +1,2233 @@
+﻿@model DecisionPoint.Models.EmpReq
+@using System.Globalization;
+@{
+    ViewBag.Title = "ICEmployementReqiuredment";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grdcurentglobal = new WebGrid(ajaxUpdateContainerId: "cgloballisttbl", canPage: false);
+    WebGrid grdcurrentspecific = new WebGrid(ajaxUpdateContainerId: "cspecificlisttbl", canPage: false);
+    WebGrid grdpastglobal = new WebGrid(ajaxUpdateContainerId: "pgloballisttbl", canPage: false);
+    WebGrid grdpastspecific = new WebGrid(ajaxUpdateContainerId: "pspecificlisttbl", canPage: false);
+    int Gcount = 0;
+    int Scount = 0;
+    if (Model.CurrentGlobalReqDocList != null)
+    {
+        Gcount = Model.CurrentGlobalReqDocList.Count();
+        grdcurentglobal.Bind(Model.CurrentGlobalReqDocList, autoSortAndPage: true);
+    }
+    if (Model.PastGlobalReqDocList != null)
+    {
+        grdpastglobal.Bind(Model.PastGlobalReqDocList, autoSortAndPage: true);
+    }
+    if (Model.CurrentSpecificReqDocList != null)
+    {
+        Scount = Model.CurrentSpecificReqDocList.Count();
+        grdcurrentspecific.Bind(Model.CurrentSpecificReqDocList, autoSortAndPage: true);
+    }
+    if (Model.PastSpecificReqDocList != null)
+    {
+        grdpastspecific.Bind(Model.PastSpecificReqDocList, autoSortAndPage: true);
+    }
+    string colname = string.Empty;
+    if (Model.IsICApply)
+    {
+        colname = "/IC";
+    }
+}
+
+<style>
+    .control-group {
+        margin-bottom: 11px !important;
+    }
+
+    .halfwidth {
+        width: 20%;
+    }
+</style>
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui-noscript.css" rel="stylesheet" />
+<link href="~/Content/css/Dashboard/jquery.fileupload-ui.css" rel="stylesheet" />
+<script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+@*<script src="~/Scripts/Upload/jquery-1.8.3.js"></script>*@
+<script src="~/Scripts/Upload/jquery-ui-1.9.2.js"></script>
+<script src="~/Scripts/Upload/jquery.iframe-transport.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload.js"></script>
+<script src="~/Scripts/Upload/jquery.fileupload-ui.js"></script>
+
+@*<script src="~/Scripts/Upload/bootstrap.js"></script>*@
+<link href="~/Content/css/Dashboard/circle.css" rel="stylesheet" />
+<script src="~/Scripts/Upload/progress-circle.js"></script>
+
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string GSorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+@functions {
+    public static string SSorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+<div id='content'>
+    <div class='container'>
+        <div class='content-box'>
+            <br />
+            <div id='icemployeereq'>
+                <div class='heading'>
+                    <div class='row'>
+
+                        <h3>Job Compliance Requirements</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div class="control-group w100">
+                    <div class="halfrest MarginBottom3">
+                        <b>Applies To:</b>
+                        <input type="checkbox" id="chkstaff" class="MarginTop4 MarginLeft9" checked="checked" /><span class="MarginLeft9">Staff</span>
+                        @if (Model.IsICApply)
+                        {
+                            <input type="checkbox" id="chkIC" class="MarginTop4 MarginLeft9" />
+                            <span class="MarginLeft2">List of Profession</span>}
+                    </div>
+                </div>
+
+                <div class='control-group w100' id="VTypesection" style="display: none;">
+
+
+
+                    <div class='controls'>
+                        <label class='control-label' style="font-weight: bold !important; text-decoration: underline;">Profession Type</label><span style="color: red; font-size: 12px;" id="VTval"></span>
+
+                        <div id="VTypepopup" style="left: 25% !important; top: 45%!important; overflow-y: auto; width: 100%;">
+                            <div class="Reply-MessageBox" style="display: block; overflow: auto; height: auto !important; width: 98%; border: 1px solid #e1e1e1;">
+
+
+                                <div class="MessageSection-Box" id="VTypelist">
+
+                                    <div style="margin-left: -8px;">
+                                    </div>
+
+                                    @if (Model.CompanyVendorTypeDetails != null)
+                                    {
+                                        if (Model.CompanyVendorTypeDetails.Count() > 0)
+                                        {
+                                        <div style="width: 833px; overflow-x: auto;">
+                                            <table style="margin-left: 1px;" id="tblVType">
+                                                <tr>
+
+                                                    @{int count = 0; }
+                                                    @{float ii = Model.CompanyVendorTypeDetails.Count(); }
+                                                    @{
+                                                      int k = 0;
+                                                      float totle1 = ii / 5f;
+                                                      if (ii == 1)
+                                                      {
+                                                          totle1 = 1.0f;
+                                                      }
+                                                    }
+                                                    @{int tblindex = 0;}
+                                                    @while (count < totle1)
+                                                    {
+                                                        count++;
+                                                        <td style="vertical-align: top;">
+
+                                                            @{var j = 0; int jj = 0; int index = 0;}
+                                                            @foreach (var item in Model.CompanyVendorTypeDetails)
+                                                            {
+                                                                if (jj < k)
+                                                                {
+                                                                    jj++;
+                                                                    continue;
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    if (j != 5)
+                                                                    {
+                                                                <div style="width: 100%; display: table; padding: 5px 0;">
+                                                                    <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                        <input type="checkbox" id="chk_@tblindex@index" style="margin-top:-1px" class="chkVType" autocomplete="off" value="@item.VendorTypeId"   />
+                                                                    </div>
+                                                                    <div style="display: table-cell; text-align: left; font-size: 12px;">
+                                                                        <div class="dynamic-word-div">@item.VendorTypeName </div>
+                                                                    </div>
+                                                                </div>
+                                                               
+                                                                        j++;
+                                                                    }
+                                                                    else { k = k + 5; break; }
+                                                                }
+                                                                index++;
+                                                            }
+
+                                                        </td> 
+                                                            tblindex++;
+                                                    }
+
+
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        }
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <ul class='nav nav-tabs' id='my_tabs'>
+                    <li class='active' id="globalli">
+                        <a class="MarginLeft9">Global Requirements</a>
+
+                    </li>
+                    @if (Model.IsServiceApply)
+                    {
+                        <li id="specificli">
+                            <a class="MarginLeft2">Specific Requirements</a>
+
+                        </li>
+                    }
+                </ul>
+
+                <div class="control-group w100">
+                    <div class="halfrest MarginBottom3 Marginleftminus8">
+                        <span class="MarginLeft9" id="globalsection">Global Requirements</span>
+                        @if (Model.IsServiceApply)
+                        {
+                            <span class="MarginLeft2" id="specificsection" style="display: none;">Specific Requirements</span>
+                        }
+                    </div>
+                </div>
+
+                <div style="float: right; margin-top: -33px; margin-right: 9px;" id="gcurrentpassed">
+                    <span style="margin-right: 5px;">
+                        @if (Model.CurrentGlobalReqDocList != null)
+                        {
+                            <input type="radio" id="gcurrent" name="gg" style="margin-top: -1px; margin-right: 3px;" checked /><b>Current Req </b>
+                        }
+                        else
+                        {
+                            <input type="radio" id="gcurrent" name="gg" style="margin-top: -1px; margin-right: 3px;" /><b>Current Req </b>
+                        }
+                    </span>
+                    <span>
+                        @if (Model.PastGlobalReqDocList != null)
+                        {
+                            <input type="radio" id="gpast" name="gg" style="margin-top: -1px; margin-right: 3px;" checked /><b> Past Req</b>
+                        }
+                        else
+                        {
+                            <input type="radio" id="gpast" name="gg" style="margin-top: -1px; margin-right: 3px;" /><b> Past Req</b>
+                        }
+                    </span>
+                </div>
+                @if (Model.IsServiceApply)
+                {
+                    <div style="float: right; margin-top: -33px; margin-right: 9px; display: none;" id="scurrentpassed">
+                        <span style="margin-right: 5px;">
+                            @if (Model.CurrentSpecificReqDocList != null)
+                            {
+                                <input type="radio" id="scurrent" name="ss" style="margin-top: -1px; margin-right: 3px;" checked /><b>Current Req </b>
+                            }
+                            else
+                            {
+                                <input type="radio" id="scurrent" name="ss" style="margin-top: -1px; margin-right: 3px;" /><b>Current Req </b>
+                            }
+                        </span>
+                        <span>
+                            @if (Model.PastSpecificReqDocList != null)
+                            {
+                                <input type="radio" id="spast" name="ss" style="margin-top: -1px; margin-right: 3px;" checked /><b> Past Req</b>
+                            }
+                            else
+                            {
+                                <input type="radio" id="spast" name="ss" style="margin-top: -1px; margin-right: 3px;" /><b> Past Req</b>
+                            }
+                        </span>
+                    </div>
+                }
+                <div id="cgloballisttbl" style="clear: both;">
+                    @if (Model.CurrentGlobalReqDocList != null)
+                    {
+                   
+           
+                               
+                        @grdcurentglobal.GetHtml(htmlAttributes: new { id = "cglobaltable" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+
+
+    columns: new[] {
+        
+grdcurentglobal.Column(columnName:"title",header: GSorter("title", "Title", grdcurentglobal),style:"grdcol1"),
+grdcurentglobal.Column(columnName:"ReqDocFor",header: GSorter("ReqDocFor", "Staff"+colname+"", grdcurentglobal),format : @<text>
+
+                        @if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("both".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff/IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("ic".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("staff".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff</span>
+                                        }
+                       else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("none".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>&nbsp;</span>
+                                        }
+
+                        </text>,style:"grdcol1"),
+          grdcurentglobal.Column(header: "Remove",format: @<text>
+                        <a title="Remove the JCR" onclick="RemoveRactiveJCR('@item.ReqDocId',1,0)" style="cursor: pointer; margin-left:15px;">
+                            <img src="../../Content/images/delete.png" /></a>
+                        </text>, canSort: false),
+grdcurentglobal.Column(header: "Edit",format: @<text>
+
+                        <a title='Edit title' style='cursor: pointer;' onclick="ShowTitle('@item.ReqDocId','@item.title','@item.IsCompanyReq','@item.IsLicenseReq','@item.IsPolicyReq','@item.IsStateReq','@item.IsExpDateReq','@item.UserPer','@item.ReqDocFor','@item.DoNotShow','','0','@item.Retake')">
+                            <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;'  /></a>
+                        </text>, canSort: false),
+
+    })
+           
+                         
+                    
+                    
+                    }
+                </div>
+                <div id="pgloballisttbl" style="clear: both; display: none">
+                    @if (Model.PastGlobalReqDocList != null)
+                    {
+                   
+                       
+           
+                               
+                        @grdpastglobal.GetHtml(htmlAttributes: new { id = "pglobaltable" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+
+
+    columns: new[] {
+        
+grdpastglobal.Column(columnName:"title",header: GSorter("title", "Title", grdpastglobal),style:"grdcol2"),
+grdpastglobal.Column(columnName:"ReqDocFor",header: GSorter("ReqDocFor", "Staff"+colname+"", grdpastglobal),format : @<text>
+                        @if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("both".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff/IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("ic".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("staff".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff</span>
+                                        }
+                       else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("none".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>&nbsp;</span>
+                                        }
+
+                        </text>,style:"grdcol2"),
+           
+grdpastglobal.Column(header: "Reactive",format: @<text>
+                        <a title="Reactive the global JCR" onclick="RemoveRactiveJCR('@item.ReqDocId',1,1)" style="cursor: pointer;">Reactive
+                        </a>
+                        </text>, canSort: false),
+
+    })
+           
+                         
+                    
+                    
+                    }
+                </div>
+
+                @if (Model.IsServiceApply)
+                {
+                    <div id="cspecificlisttbl" style="display: none; clear: both;">
+                        @if (Model.CurrentSpecificReqDocList != null)
+                        {
+                   
+                       
+                                                       
+                            @grdcurrentspecific.GetHtml(htmlAttributes: new { id = "cspecifictable" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+
+
+    columns: new[] {
+        
+grdcurrentspecific.Column(columnName:"title",header: SSorter("title", "Title", grdcurrentspecific),style:"grdcol3"),
+grdcurrentspecific.Column(columnName:"ReqDocFor",header: SSorter("ReqDocFor", "Staff"+colname+"", grdcurrentspecific),format : @<text>
+                            @if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("both".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff/IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("ic".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("staff".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff</span>
+                                        }
+                     else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("none".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>&nbsp;</span>
+                                        }
+                            </text>,style:"grdcol3"),
+            grdcurrentspecific.Column(columnName:"Service",header: SSorter("Service", "Services", grdcurrentspecific),style:"grdcol3"),
+             grdcurentglobal.Column(header: "Remove",format: @<text>
+                            <a title="Remove the JCR" onclick="RemoveRactiveJCR('@item.ReqDocId',2,0)" style="cursor: pointer;margin-left:15px; ">
+                                <img src="../../Content/images/delete.png" /></a>
+                            </text>, canSort: false),
+grdcurrentspecific.Column(header: "Edit",format: @<text>
+
+                            <a title='Edit title' style='cursor: pointer;' onclick="ShowTitle('@item.ReqDocId','@item.title','@item.IsCompanyReq','@item.IsLicenseReq','@item.IsPolicyReq','@item.IsStateReq','@item.IsExpDateReq','@item.UserPer','@item.ReqDocFor','@item.DoNotShow','@item.ServiceId','1','@item.Retake')">
+                                <img src='@Url.Content("~/Content/images/edit.png")' style='margin-left:5px;height:14px;'  /></a>
+                            </text>, canSort: false),
+
+    })
+                    
+                    
+                        }
+                    </div>
+
+                    <div id="pspecificlisttbl" style="clear: both; display: none;">
+                        @if (Model.PastSpecificReqDocList != null)
+                        {
+                   
+                       
+                                                       
+                            @grdpastspecific.GetHtml(htmlAttributes: new { id = "cspecifictable" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+
+
+    columns: new[] {
+        
+grdpastspecific.Column(columnName:"title",header: SSorter("title", "Title", grdpastspecific),style:"grdcol3"),
+grdpastspecific.Column(columnName:"ReqDocFor",header: SSorter("ReqDocFor", "Staff"+colname+"", grdpastspecific),format : @<text>
+                            @if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("both".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff/IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("ic".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>IC</span>
+                                        }
+                                        else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("staff".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>Staff</span>
+                                        }
+                     else if (item.ReqDocFor.Trim().ToUpper(CultureInfo.InvariantCulture).Equals("none".Trim().ToUpper(CultureInfo.InvariantCulture)))
+                                        {
+<span>&nbsp;</span>
+                                        }
+                            </text>,style:"grdcol3"),
+            grdpastspecific.Column(header:"Services",style:"grdcol3",format: @<text><span><a>view services</a></span></text>),
+grdpastspecific.Column(header: "Reactive",format: @<text>
+                            <a title="Reactive the specific JCR" onclick="RemoveRactiveJCR('@item.ReqDocId',2,1)" style="cursor: pointer;">Reactive
+                            </a>
+                            </text>, canSort: false),
+
+    })
+                    
+                    
+                        }
+                    </div>
+                }
+                <div>
+                    @if (Model.IsServiceApply)
+                    {
+                        <div class='control-group w100' id="servicesection" style="display: none;">
+
+
+
+                            <div class='controls'>
+                                <label class='control-label' style="font-weight: bold !important; text-decoration: underline;">Services</label><span style="color: red; font-size: 12px;" id="Sval"></span>
+
+                                <div id="servicepopup" style="left: 25% !important; top: 45%!important; overflow-y: auto;">
+                                    <div class="Reply-MessageBox" style="display: block; overflow: auto; height: auto !important; width: 98%; border: 1px solid #e1e1e1;">
+
+
+                                        <div class="MessageSection-Box" id="servicelist">
+
+                                            <div style="margin-left: -8px;">
+                                            </div>
+
+                                            @if (Model.serviceDetails != null)
+                                            {
+                                                if (Model.serviceDetails.Count() > 0)
+                                                {
+                                                <div style="width: 833px; overflow-x: auto; height: 145px;">
+                                                    <table style="margin-left: 1px;" id="tblservice">
+                                                        <tr>
+
+                                                            @{int count = 0; }
+                                                            @{float ii = Model.serviceDetails.Count(); }
+                                                            @{
+                                                              int k = 0;
+                                                              float totle1 = ii / 5f;
+                                                              if (ii == 1)
+                                                              {
+                                                                  totle1 = 1.0f;
+                                                              }
+                                                            }
+                                                            @{int tblindex = 0;}
+                                                            @while (count < totle1)
+                                                            {
+                                                                count++;
+                                                                <td style="vertical-align: top;">
+
+                                                                    @{var j = 0; int jj = 0; int index = 0;}
+                                                                    @foreach (var item in Model.serviceDetails)
+                                                                    {
+                                                                        if (jj < k)
+                                                                        {
+                                                                            jj++;
+                                                                            continue;
+                                                                        }
+                                                                        else
+                                                                        {
+
+                                                                            if (j != 5)
+                                                                            {
+                                                                        <div style="width: 100%; display: table; padding: 5px 0;">
+                                                                            <div style="display: table-cell; width: 10px; padding-right: 5px;">
+                                                                                <input type="checkbox" id="chk_@tblindex@index" style="margin-top:-1px" class="chk" autocomplete="off" value="@item.id"   />
+                                                                            </div>
+                                                                            <div style="display: table-cell; text-align: left; font-size: 12px;">
+                                                                                <div class="dynamic-word-div">@item.serviceName </div>
+                                                                            </div>
+                                                                        </div>
+                                                                                j++;
+                                                                            }
+                                                                            else { k = k + 5; break; }
+                                                                        }
+                                                                        index++;
+                                                                    }
+
+                                                                </td> 
+                                                                    tblindex++;
+                                                            }
+
+
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                }
+
+                                            }
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                    <div class='control-group w100'>
+                        <br />
+                        <form action="../api/upload" enctype="multipart/form-data">
+                            <div>
+                                <div id="globaldoctitletbl">
+
+                                    <div id="globaltbl">
+
+                                        <div id="g_0" style="display: none;">
+                                            <div style="width: 20%; float: left;">
+
+                                                <div class='control-group w100'>
+                                                    <div><b>Title</b><sup style="color: red; font-size: 10px;">*</sup><span style="font-size: 10px; font-family: Verdana;" id="gvalmsg_0">(PDF or Power Point)</span></div>
+                                                    <div class="MarginBottom3">
+                                                        <div>
+                                                            <input type="text" placeholder="Title" id="glbltitle_0" onkeypress="ValidateTextBox(this.id,event)" maxlength="30" style="width: 90px;" />
+                                                            <input id="guploadbtn" type="button" class="btn btn-primary MarginTop5 guploadbtn_0" value="Upload" style="margin-top: -10px;" />
+                                                            <input id="guploadfilebtn" class="guploadfilebtn_0" type="file" style="opacity: 0; position: relative; left: 108px; margin-top: -67px; width: 68px;" onchange="readdocURL(this,this.id)" />
+                                                            <div id="gdocfiles_0" style="overflow: auto; width: 169px; max-height: 100px; margin-top: -22px;"></div>
+                                                            <label id="gdocfileName_0" style="color: red;"></label>
+
+                                                        </div>
+
+
+
+                                                    </div>
+
+
+                                                </div>
+
+                                            </div>
+                                            <div style="width: 15%; float: left; margin-top: 20px;">
+                                                <div class="control-group w100">
+                                                    <div></div>
+                                                    <div class="MarginBottom3">
+                                                        <input type="radio" id="gchkdonotshow_0" name="gview" class="MarginTop4" checked="checked" />
+                                                        <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                                            <span class="MarginLeftminus2">Do not show to recipient</span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="control-group w100">
+                                                    <div></div>
+                                                    <div class="MarginBottom3">
+                                                        <input type="radio" id="gchkaupload_0" name="gview" class="MarginTop4" />
+                                                        <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                                            <span class="MarginLeftminus2">Allow recipient to upload and view</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group w100">
+
+                                                    <div class="MarginBottom3">
+                                                        <input type="radio" name="gview" id="gchkaview_0" class="MarginTop4" />
+                                                        <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                                            <span class="MarginLeft2">Allow recipient to view</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="width: 35%; float: left;" class="MarginTopminus5">
+                                                <div class='control-group w100'>
+                                                    <div style="margin-top: 4px; margin-left: 19px;"><b>Acknowledgement</b></div>
+                                                    <div class='MarginBottom3'>
+                                                        <div class="row-fluid">
+                                                            <div class="span12">
+                                                                <table id="gtbreqaction_0" class="w100">
+                                                                    <tr>
+                                                                        <td style="padding-bottom: 8px;">
+                                                                            <input type="checkbox" id="gchk_0" style="margin-top: -7px;" checked="checked"></td>
+                                                                        <td>
+                                                                            <input id="greqcon_0" class="span12" type="text" placeholder="Add Reqiured Action..." value="I have read and understood this document" maxlength="250" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="hidden" id="greqconid_0" value="0" />&nbsp;
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                <a id="glnkreqaction_0" style="cursor: pointer; margin-left: 24px; font-size: 12px;" onclick="AddMoreAck(this.id)">Add more</a>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="width: 30%; float: left;">
+                                                <div style="width: 100%;">
+                                                    <div><b>Attributes</b></div>
+                                                    <div style="width: 50%; float: left;">
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="gchkexpdate_0" class="MarginTop4">
+                                                                Expiration Date
+                                                                @*<input type="text" placeholder="Expiration Date" class="width200px MarginLeft2" id="exprationdate" />
+                                                                <label style="color: red;" id="expdateval"></label>*@
+
+                                                            </div>
+
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="gchkcompany_0" class="MarginTop4">
+                                                                Company Name
+                                                                @*<input type="text" placeholder="Company Name" class="width200px" />*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="float: right; width: 50%;">
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="gchkpolicyno_0" class="MarginTop4">
+                                                                Policy Number
+                                                                @*<input type="text" placeholder="Policy Number" class="width200px" />*@
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="gchklicenseno_0" class="MarginTop4">
+                                                                License Number
+                                                                @*<input type="text" placeholder="License Number" class="width200px MarginTop5" />*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='control-group w100'>
+                                                    <div>
+                                                        <input type="checkbox" id="gchkstatename_0" class="MarginTop4">
+                                                        State
+                                                        @*@Html.DropDownList("ddState", new SelectList(Model.StateList, "StateId", "SateName"), "-- Select --", new { @style = "width:140px;" })*@
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <div>
+                                                        Retake
+                                                        <br>
+                                                        <select style="margin-top: 5px; width: 110px;" id="gretake">
+                                                            <option selected="selected" value="DNA">DNA</option>
+                                                            <option value="6">6 months</option>
+                                                            <option value="12">12 months</option>
+                                                            <option value="18">18 months</option>
+                                                            <option value="24">24 months</option>
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class='control-group w100'>
+                                                <div></div>
+                                                <div>
+                                                    <div class="btn btn-primary" id="gbtnsave_0" title="Save" style="float: right;" onclick="SavereqDoc(this.id)">Save</div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class='control-group w100'>
+                                        <div></div>
+                                        <div>
+
+                                            <a id="addotherglobaltitle" style="cursor: pointer;">Add another</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="specificdoctitletbl" style="display: none;">
+
+                                    <div id="spcifictbl">
+
+                                        <div id="s_0" style="display: none;">
+                                            <div style="width: 20%; float: left;">
+
+                                                <div class='control-group w100'>
+                                                    <div><b>Title</b><sup style="color: red; font-size: 10px;">*</sup> <span style="font-size: 10px; font-family: Verdana;" id="svalmsg_0">(PDF or Power Point)</span></div>
+                                                    <div class="MarginBottom3">
+                                                        <div>
+                                                            <input type="text" placeholder="Title" id="slbltitle_0" onkeypress="ValidateTextBox(this.id,event)" maxlength="30" style="width: 90px;" />
+                                                            <input id="suploadbtn" type="button" class="btn btn-primary MarginTop5 suploadbtn_0" value="Upload" style="margin-top: -10px;" />
+                                                            <input id="suploadfilebtn" class="suploadfilebtn_0" type="file" style="opacity: 0; position: relative; left: 108px; margin-top: -67px; width: 68px;" onchange="readdocURL(this,this.id)" />
+
+                                                            <div id="sdocfiles_0" style="overflow: auto; width: 169px; max-height: 100px; margin-top: -22px;"></div>
+
+                                                            <label id="sdocfileName_0" style="color: red;"></label>
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+                                                </div>
+
+                                            </div>
+                                            <div style="width: 15%; float: left; margin-top: 20px;">
+                                                <div class="control-group w100">
+                                                    <div></div>
+                                                    <div class="MarginBottom3">
+                                                        <input type="radio" id="schkdonotshow_0" name="sview" class="MarginTop4" checked="checked" />
+                                                        <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                                            <span class="MarginLeftminus2">Do not show to recipient</span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="control-group w100">
+                                                    <div></div>
+                                                    <div class="MarginBottom3">
+                                                        <input type="radio" id="schkaupload_0" name="sview" class="MarginTop4" />
+                                                        <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                                            <span class="MarginLeftminus2">Allow recipient to upload and view</span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="control-group w100">
+
+                                                    <div class="MarginBottom3">
+                                                        <input type="radio" name="sview" id="schkaview_0" class="MarginTop4" />
+                                                        <div style="text-align: left; margin-left: 20px; margin-top: -22px;"><span class="MarginLeft2">Allow recipient to view</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="width: 35%; float: left;" class="MarginTopminus5">
+                                                <div class='control-group w100'>
+                                                    <div style="margin-top: 4px; margin-left: 19px;"><b>Acknowledgement</b></div>
+                                                    <div class='MarginBottom3'>
+                                                        <div class="row-fluid">
+                                                            <div class="span12">
+                                                                <table id="stbreqaction_0" class="w100">
+                                                                    <tr>
+                                                                        <td style="padding-bottom: 8px;">
+                                                                            <input type="checkbox" id="schk_0" style="margin-top: -7px;" checked="checked"></td>
+                                                                        <td>
+                                                                            <input id="sreqcon_0" class="span12" type="text" placeholder="Add Reqiured Action..." value="I have read and understood this document" maxlength="250" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="hidden" id="sreqconid_0" value="0" />&nbsp;
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                <a id="slnkreqaction_0" style="cursor: pointer; margin-left: 24px; font-size: 12px;" onclick="AddMoreAck(this.id)">Add more</a>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="width: 30%; float: left;">
+                                                <div style="width: 100%;">
+                                                    <div><b>Attributes</b></div>
+                                                    <div style="width: 50%; float: left;">
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="schkexpdate_0" class="MarginTop4">
+                                                                Expiration Date
+                                                                @*<input type="text" placeholder="Expiration Date" class="width200px MarginLeft2" id="exprationdate" />
+                                                                <label style="color: red;" id="expdateval"></label>*@
+
+                                                            </div>
+
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="schkcompany_0" class="MarginTop4">
+                                                                Company Name
+                                                                @*<input type="text" placeholder="Company Name" class="width200px" />*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="float: right; width: 50%;">
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="schkpolicyno_0" class="MarginTop4">
+                                                                Policy Number
+                                                                @*<input type="text" placeholder="Policy Number" class="width200px" />*@
+                                                            </div>
+                                                        </div>
+                                                        <div class='control-group'>
+                                                            <div>
+                                                                <input type="checkbox" id="schklicenseno_0" class="MarginTop4">
+                                                                License Number
+                                                                @*<input type="text" placeholder="License Number" class="width200px MarginTop5" />*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='control-group w100'>
+                                                    <div>
+                                                        <input type="checkbox" id="schkstatename_0" class="MarginTop4">
+                                                        State
+                                                        @*@Html.DropDownList("ddState", new SelectList(Model.StateList, "StateId", "SateName"), "-- Select --", new { @style = "width:140px;" })*@
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <div>
+                                                        Retake
+                                                        <br>
+                                                        <select style="margin-top: 5px; width: 110px;" id="sretake">
+                                                            <option selected="selected" value="DNA">DNA</option>
+                                                            <option value="6">6 months</option>
+                                                            <option value="12">12 months</option>
+                                                            <option value="18">18 months</option>
+                                                            <option value="24">24 months</option>
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class='control-group w100'>
+                                                <div></div>
+                                                <div>
+                                                    <div class="btn btn-primary" id="sbtnsave_0" title="Save" style="float: right;" onclick="SavereqDoc(this.id)">Save</div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class='control-group w100'>
+                                        <div></div>
+                                        <div>
+
+                                            <a id="addotherspcifictitle" style="cursor: pointer;">Add another</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@* Saved Pop up start*@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 277px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvPopUpMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+
+    </div>
+
+</div>
+@* Saved Pop up End *@
+
+@*Edit Popup*@
+<div class="profiletrans" id="EditCsv"></div>
+<div class="popup" id="popupCSV" style="width: 83%; height: auto; top: 200px; left: 9%; z-index: 10;">
+    <div class="profile-popup" style="display: block; width: auto; height: auto;">
+        <div class="tittle-MessageBox">
+            <span>Edit Requirement</span>
+            <img id="btnClosePopup" src="~/Content/images/Close-Icon-mail.png" width="19" height="19" alt="" border="0" />
+        </div>
+        <div class="control-group" style="margin-left: 18px; margin-top: 12px;">
+            <div class="halfrest MarginBottom3">
+                <b>Applies To:</b>
+                <input type="checkbox" id="chkstaffedit" class="MarginTop4 MarginLeft9" checked="checked" /><span class="MarginLeft9">Staff</span>
+                @if (Model.IsICApply)
+                {
+                    <input type="checkbox" id="chkICedit" class="MarginTop4 MarginLeft9" />
+                    <span class="MarginLeft2">List of Profession</span><a id="lnkviewVType" style="display: none; margin-left: 10px;">Show Profession Type</a>}
+            </div>
+
+        </div>
+        <div class="VtypeEdit" style="display: none; margin-right: 3px; width: 98%; float: right;"></div>
+        <br />
+        <div class="MessageSection-Box" style="width: auto; height: auto;" id="edittitlepopup">
+            <div id="E_0">
+                <div style="width: 25%; float: left;">
+
+                    <div class='control-group w100'>
+                        <div><b>Title</b><sup style="color: red; font-size: 10px;">*</sup><span style="font-size: 10px; font-family: Verdana;" id="Evalmsg_0">(PDF or Power Point)</span></div>
+                        <div class="MarginBottom3">
+
+                            <div>
+                                <input type="text" placeholder="Title" class="width150px" id="Elbltitle_0" onkeypress="ValidateTextBox(this.id,event)" maxlength="30" style="width: 61%;" />
+                                <input id="Euploadbtn" type="button" class="btn btn-primary MarginTop5 Euploadbtn_0" value="Upload" style="margin-top: -10px;" />
+                                <input id="Euploadfilebtn" class="Euploadfilebtn_0" type="file" style="opacity: 0; position: relative; left: 180px; margin-top: -67px; width: 68px;" onchange="readdocURL(this,this.id)" />
+
+                                <div id="Edocfiles_0" style="overflow: auto; width: 169px; max-height: 100px; margin-top: -22px;"></div>
+                                <label id="EdocfileName_0" style="color: red;"></label>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div style="width: 15%; float: left; margin-top: 20px;">
+                    <div class="control-group w100">
+                        <div></div>
+                        <div class="MarginBottom3">
+                            <input type="radio" id="Echkdonotshow_0" name="eview" class="MarginTop4" checked="checked" />
+                            <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                <span class="MarginLeftminus2">Do not show to recipient</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="control-group w100">
+                        <div></div>
+                        <div class="MarginBottom3">
+                            <input type="radio" id="Echkaupload_0" name="eview" class="MarginTop4" />
+                            <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                <span class="MarginLeftminus2">Allow recipient to upload and view</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="control-group w100">
+
+                        <div class="MarginBottom3">
+                            <input type="radio" name="eview" id="Echkaview_0" class="MarginTop4" />
+                            <div style="text-align: left; margin-left: 20px; margin-top: -22px;">
+                                <span class="MarginLeft2">Allow recipient to view</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 30%; float: left;" class="MarginTopminus5">
+                    <div class='control-group w100'>
+                        <div style="margin-top: 4px; margin-left: 19px;"><b>Acknowledgement</b></div>
+                        <div class='MarginBottom3' style="margin-top: -8px;">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <table id="Etbreqaction_0" class="w100">
+                                        <tr>
+                                            <td style="padding-bottom: 8px;" colspan="3"></td>
+                                        </tr>
+                                    </table>
+                                    <a id="Elnkreqaction_0" style="cursor: pointer; margin-left: 24px; font-size: 12px;" onclick="AddMoreAck(this.id)">Add more</a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 30%; float: left;">
+                    <div style="width: 100%;">
+                        <div><b>Attributes</b></div>
+                        <div style="width: 50%; float: left;">
+                            <div class='control-group'>
+                                <div>
+                                    <input type="checkbox" id="Echkexpdate_0" class="MarginTop4">
+                                    Expiration Date
+                                                                
+
+                                </div>
+
+                            </div>
+                            <div class='control-group'>
+                                <div>
+                                    <input type="checkbox" id="Echkcompany_0" class="MarginTop4">
+                                    Company Name
+                                                                
+                                </div>
+                            </div>
+                        </div>
+                        <div style="float: right; width: 50%;">
+                            <div class='control-group'>
+                                <div>
+                                    <input type="checkbox" id="Echkpolicyno_0" class="MarginTop4">
+                                    Policy Number
+                                                              
+                                </div>
+                            </div>
+                            <div class='control-group'>
+                                <div>
+                                    <input type="checkbox" id="Echklicenseno_0" class="MarginTop4">
+                                    License Number
+                                                               
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='control-group w100'>
+                        <div>
+                            <input type="checkbox" id="Echkstatename_0" class="MarginTop4">
+                            State
+                                                        @*@Html.DropDownList("ddState", new SelectList(Model.StateList, "StateId", "SateName"), "-- Select --", new { @style = "width:140px;" })*@
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div>
+                            Retake
+                            <br>
+                            <select style="margin-top: 5px; width: 110px;" id="Eretake">
+                                <option selected="selected" value="DNA">DNA</option>
+                                <option value="6">6 months</option>
+                                <option value="12">12 months</option>
+                                <option value="18">18 months</option>
+                                <option value="24">24 months</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class='control-group w100'>
+                    <div></div>
+                    <div>
+                        <div class="btn btn-primary" id="Ebtnsave_0" title="Update" style="float: right;" onclick="SavereqDoc(this.id)">Save</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<input type="hidden" id="docfile" />
+<input type="hidden" id="lbltitleidid" />
+<input type="hidden" id="uploaddocs" />
+<input type="hidden" id="acks" />
+<input type="hidden" id="reqdoctype" value="1" />
+<input type="hidden" id="chkedservices" />
+<input type="hidden" id="chkedvtype" />
+<input type="hidden" id="JCRTYPE" />
+
+<script>
+    var ROOT = '@Url.Content("~/")';
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+
+        $('#step1content').removeClass("active2");
+        $('#step2recipient').addClass("active2");
+        
+        //add required action for global
+        AddAnotherglobalsection();
+        //add required action for specific
+        AddAnotherspcificsection();
+        var count = $('#tblservice td').length;
+        if (count == 1) {
+            $('#tblservice').css("width", "auto");
+        }
+        else {
+            var width = parseInt(count) * 154;
+            $('#tblservice').css("width", width);
+        }
+
+        if ('@Gcount' > 0) {
+            $('#g_0').hide();
+        }
+        if ('@Scount' > 0) {
+            $('#s_0').hide();
+        }
+
+        $('#cglobaltable').addClass('pull-left');
+        $('#cspecifictable').addClass('pull-left');
+
+    })
+    $('#btnClosePopup').click(function () {
+        $('#EditCsv').hide();
+        $('#popupCSV').hide();
+        Rsetdiv("E");
+    })
+    function AddAnotherglobalsection() {
+
+        $("#addotherglobaltitle").click(function () {
+            if ($('#g_0').hide()) {
+                $('#g_0').show();
+                $('#gchkdonotshow_0').prop("checked", true);
+                $('#glbltitle_0').removeAttr("disabled");
+                $('#addotherglobaltitle').hide();
+            }
+
+        })
+    }
+    function AddAnotherspcificsection() {
+        $("#addotherspcifictitle").click(function () {
+            if ($('#s_0').hide()) {
+                $('#s_0').show();
+                $("#addotherspcifictitle").hide();
+                $('#schkdonotshow_0').prop("checked", true);
+                $('#servicesection').show();
+                $('#slbltitle_0').removeAttr("disabled");
+            }
+
+
+        })
+    }
+
+    function ShowTitle(ReqDocId, title, IsCompanyReq, IsLicenseReq, IsPolicyReq, IsStateReq, IsExpDateReq, UserPer, reqdocfor, DoNotShow, service, JCRTYPE, Retake) {
+
+        $('#EditCsv').show();
+        $('#popupCSV').show();
+        $('#tblVType .chkVType').each(function () {
+            $(this).prop("checked", false);
+        })
+        $('#VTypesection').hide();
+        $('.VtypeEdit').html($('#VTypesection').clone().html());
+
+        $('#lnkviewVType').html("Show Profession Type");
+        var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        var poistion = scrollTop + 100;
+        $('#popupCSV').css("top", poistion);
+
+        if (reqdocfor == "staff") {
+            $('#chkstaffedit').prop("checked", true);
+        }
+
+        if (reqdocfor == "ic") {
+            $('#chkICedit').prop("checked", true);
+            $('#lnkviewVType').show();
+        }
+        if (reqdocfor == "both") {
+            $('#lnkviewVType').show();
+            $('#chkICedit').prop("checked", true);
+            $('#chkstaffedit').prop("checked", true);
+        }
+        $("#Eretake option").each(function () {
+
+            $(this).removeAttr('selected');
+
+        });
+
+        $("#Eretake option").each(function () {
+            if ($(this).val() == Retake) {
+                $(this).attr('selected', 'selected');
+            }
+        });
+        // $("#Eretake :selected").val(Retake);
+        //get vendor type details
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetReqDocVendorTypeByreqDocId/")',
+            data: { 'reqDocId': parseInt(ReqDocId) },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+                //code to bind table
+                result = $.parseJSON(result);
+                $.each(result, function (i, item) {
+                    $('.VtypeEdit .chkVType').each(function () {
+                        if ($(this).val() == item) {
+                            //alert('come');
+                            $(this).prop("checked", true);
+                        }
+                    })
+                });
+
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetAckByreqDocId/")',
+            data: { 'reqDocId': parseInt(ReqDocId) },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+
+                result = $.parseJSON(result);
+                //code to bind table
+                $.each(result, function (i, item) {
+                    var id = "";
+                    id = $('#Etbreqaction_0 tr').length;
+                    $('#Etbreqaction_0 tr:last').after('<tr><td><input id="Echk_' + id + '" type="checkbox" style="margin-top:-13px;" checked="checked" /> </td>' +
+              '<td><input id="Ereqcon_' + id + '" class="span12" placeholder="Add Reqiured Action..." type="text" value="' + item + '" maxlength="250" style="margin-top:-1px;" /></td>' +
+              '<td><img id="Edelaction_' + id + '"  src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;margin-top:-11px;" title="Remove Ack" onclick="RemoveAction(this.id)">' +
+                    '<input type="hidden" id="reqconid_' + id + '" value="0"/></td></tr>');
+
+                });
+            }
+        });
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/GetUploadDocByreqDocId/")',
+            data: { 'reqDocId': parseInt(ReqDocId) },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+
+                $('#Edocfiles_0').html("");
+                result = $.parseJSON(result);
+
+                var count = "";
+                var fileurl = "";
+                var url1 = "";
+                $.each(result, function (i, item) {
+
+                    count = $('#Edocfiles_0 div').length;
+                    url1 = item.DocLoc;
+
+                    $("#Edocfiles_0").append('<div id="div_' + count + '" style="border-radius: 5px 5px 5px 5px;  width:auto;height:auto;float:left;"><a id="docfile_' + count + '" href="' + url1 + '" target="_blank" title=' + title + '_' + item.DocSeq + '<style="cursor:pointer;margin-left:6px;" >' + title.replace(/\s/g, '') + '_' + item.DocSeq + '</a><img id="Eimg' + count + '" src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;" title="remove document" onclick="deletedoc(this.id)">' +
+                                   '<input type="hidden" id="doccontentid_' + count + '" value="' + item.DocTblId + '" /></div>');
+
+                })
+            }
+        });
+
+        $('#Elbltitle_0').val(title);
+        $('#Elbltitle_0').attr("title", title);
+        if (!DoNotShow) {
+            if (UserPer) {
+                $('#Echkaupload_0').prop('checked', true)
+                $('#Echkaview_0').prop('checked', false)
+            }
+            else {
+                $('#Echkaview_0').prop('checked', true)
+                $('#Echkaupload_0').prop('checked', false)
+            }
+        } else {
+            $('#Echkdonotshow_0').prop('checked', DoNotShow)
+        }
+        //JCR TYpe
+        $('#Elbltitle_0').removeAttr("disabled");
+        // alert(JCRTYPE);
+        $('#JCRTYPE').val(JCRTYPE);
+        //set service value
+        $('#chkedservices').val(service);
+        $('#Echkexpdate_0').prop('checked', IsExpDateReq);
+        $('#Echkcompany_0').prop('checked', IsCompanyReq);
+        $('#Echkstatename_0').prop('checked', IsStateReq);
+        $('#Echkpolicyno_0').prop('checked', IsPolicyReq);
+        $('#Echklicenseno_0').prop('checked', IsLicenseReq);
+        //  alert(ReqDocId);
+        if ($('#E_0').find('.reqdocid_0').length) {
+            $('#E_0').find('.reqdocid_0').remove();
+        }
+        $('#E_0').append("<input type='hidden' class='reqdocid_0' value=" + ReqDocId + "/>");
+
+    }
+    function deletedoc(id) {
+        // alert(id);
+        var idpre = id.substring(0, 1);
+        // alert(idpre)
+        var id = id.substring(4, 5);
+        // alert('after' + id);
+        var JCRType = $('#JCRTYPE').val();
+        var divId = idpre + "docfiles_0";
+        var imgId = idpre + "img" + id;
+        //   alert(JCRType);
+        DeleteDocumentFromDir(id, divId, JCRType, 0, imgId, ROOT);
+
+        if ($("#" + idpre + "docfiles_0 div").length <= 1) {
+
+            $('#' + idpre + 'lbltitle_0').removeAttr("disabled");
+        }
+    }
+
+
+    function AddMoreAck(ids) {
+        //add required action
+        var type = ids.substring(0, 1);
+        //  alert(type);
+        var id = $('#' + type + 'tbreqaction_0 tr').length;
+
+        if (validatereqaction(type)) {
+            $('#' + type + 'tbreqaction_0 tr:last').after('<tr><td><input id="' + type + 'chk_' + id + '" type="checkbox" style="margin-top:-13px;" checked="checked" /></td> ' +
+           '<td><input id="' + type + 'reqcon_' + id + '" class="span12" placeholder="Add Reqiured Action..." type="text" maxlength="250" style="margin-top:-1px;" /></td>' +
+           '<td><img id="' + type + 'delaction_' + id + '"  src="@Url.Content("~/Content/images/cross-button.png")" style="margin-left:6px;cursor:pointer;margin-top:-11px;" title="Remove Ack" onclick="RemoveAction(this.id)">' +
+                '<input type="hidden" id="' + type + 'reqconid_' + id + '" value="0"/></td></tr>');
+            $('#' + type + 'reqcon_' + id + '').focus();
+
+        }
+    }
+
+    //Actions
+    function validatereqaction(id) {
+        // alert(id);
+        var ret = true;
+        if ($('#' + id + 'tbreqaction_0 tbody tr').length > 0) {
+            //  alert('enter');
+            $('#' + id + 'tbreqaction_0 tbody tr').each(function (index) {
+                //alert('enter2');
+                //if (index != 0) {
+                var lnk = $(this).find('input[type="text"]');
+                if (lnk.length) {
+                    //alert(lnk.val().trim());
+                    if (lnk.val().trim() == null || lnk.val().trim() == "") {
+                        lnk.addClass('errorClass');
+                        ret = false;
+                    }
+                    else if (lnk.val().trim() != null || lnk.val().trim() != "") {
+                        lnk.removeClass('errorClass');
+                        ret = true;
+
+                    }
+                }
+                // }
+
+                // else {  }
+
+            });
+        }
+
+        // alert(ret);
+        return ret;
+    }
+    function RemoveAction(id) {
+        var idindex1 = id.split('_')[1];
+        var idindex2 = id.substring(0, 1);
+
+        if ($('#' + idindex2 + 'tbreqaction tbody tr').length == 1) {
+            $('#' + idindex2 + 'reqcon_' + idindex1 + '').val('');
+        }
+        else {
+
+            $('#' + idindex2 + 'reqcon_' + idindex1 + '').closest('tr').remove();
+
+        }
+
+    }
+    $('#chkserviceall').change(function () {
+
+        if ($("#chkserviceall").is(':checked')) {
+            $('#chkservicedna').prop('checked', false);
+            $(".chk").each(function () {
+                $(this).attr("disabled", true);
+                $(this).prop('checked', true);
+
+            });
+        }
+
+    });
+
+    $('#specificli').click(function () {
+        // $('#servicesection').show();
+        $('#scurrentpassed').show();
+        $('#gcurrentpassed').hide();
+        $('#specificsection').show();
+        $('#globalsection').hide();
+        $(this).addClass("active");
+        $('#globalli').removeClass("active");
+        $('#reqdoctype').val("2");
+        $('#cspecificlisttbl').show();
+        $('#globaldoctitletbl').hide();
+        $('#specificdoctitletbl').show();
+        $('#cgloballisttbl').hide();
+        $('#scurrent').prop("checked", true);
+        $('#spast').prop("checked", false);
+        $('#pgloballisttbl').hide();
+        $('#addotherspcifictitle').show();
+        Rsetdiv("s");
+    })
+
+    $('#globalli').click(function () {
+
+        $('#servicesection').hide();
+        $('#scurrentpassed').hide();
+        $('#gcurrentpassed').show();
+        $('#globalsection').show();
+        $('#specificsection').hide();
+        $('#reqdoctype').val("1");
+        $(this).addClass("active");
+        $('#specificli').removeClass("active");
+        $('#cgloballisttbl').show();
+        $('#globaldoctitletbl').show();
+        $('#specificdoctitletbl').hide();
+        $('#cspecificlisttbl').hide();
+        $('#gcurrent').prop("checked", true);
+        $('#gpast').prop("checked", false);
+        $('#pspecificlisttbl').hide();
+        $('#addotherglobaltitle').show();
+        Rsetdiv("g");
+    })
+
+
+    function createcookie(value) {
+
+        $.ajax({
+            url: "@Url.Content("~/CompanyDashBoard/CreateEraseTitleNameCookie/")",
+            data: { 'name': value, 'type': 0 },
+            cache: false,
+            type: "POST",
+            success: function (result) {
+                setTimeout(function () {
+
+                    // alert('call2' + fileName);
+                    $('#btnpublishdoc').click();
+
+
+
+                }, 1000);
+            }
+        });
+    }
+
+
+
+
+    //Start Uploade Document
+    function readdocURL(input, id) {
+        var titleid = id.substring(0, 1) + 'lbltitle_0';
+        var JCRtype = 0;
+        if (id.substring(0, 1) == 's') {
+            JCRtype = 1
+        }
+        else if (id.substring(0, 1) == 'E') {
+            JCRtype = $('#JCRTYPE').val();
+        }
+        $('#JCRTYPE').val(JCRtype);
+        var titleval = JCRtype + $('#' + id.substring(0, 1) + 'lbltitle_0').val()
+        var setFileUrl = "@Url.Content("~/CompanyDashBoard/SettheEmpDocName/")";
+        $('#lbltitleidid').val(id.substring(0, 1));
+        //  alert($('#JCRTYPE').val());
+        ReadUploadedFIle(input, id, ROOT, titleval, titleid, setFileUrl, 0);
+    }
+    //Global
+    $(function () {
+        //$('#'+$('#fileuploadid').val()).fileupload({
+        $('#guploadfilebtn').fileupload({
+            // $('#'+idd).fileupload({
+            url: '@Url.Content("~/CompanyDashBoard/UploadEmpReqDoc")',
+            //data:{'title':$('#'+ $('#lbltitleidid').val()).val()},
+            dataType: "json",
+            limitConcurrentUploads: 1,
+            sequentialUploads: true,
+            progressInterval: 100,
+            maxChunkSize: 10000,
+            add: function (e, data) {
+                $('#btnpublishdoc').click(function () {
+                    // alert(11);
+                    data.submit();
+
+                });
+            },
+            done: function (e, data) {
+                $('#doccircle').progressCircle({
+                    nPercent: 100,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+
+                setTimeout(function () {
+                    //added document name
+                    var fileurl = '@Model.hostURL@Model.globauploadedcontentpath/' + $('#docfile').val().replace(/\s/g, '') + '';
+
+                    var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+                    $('#pdfdiv').attr('src', url1);
+
+                    $('#loaddiv').hide();
+                    $('#btnpublish').show();
+                    $('#pdfdiv').show();
+
+                    $('#doccircle').progressCircle({
+                        nPercent: 0,
+                        showPercentText: true,
+                        circleSize: 300,
+                        thickness: 3
+                    });
+
+                }, 1000);
+
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#doccircle').progressCircle({
+                    nPercent: progress,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+                $('#progressfile').css('width', progress + '%');
+            },
+            progress: function (e, data) {
+
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#doccircle').progressCircle({
+                    nPercent: progress,
+                    showPercentText: true,
+                    circleSize: 300,
+                    thickness: 3
+                });
+
+            },
+
+        });
+    });
+        //Specific
+        $(function () {
+            //$('#'+$('#fileuploadid').val()).fileupload({
+            $('#suploadfilebtn').fileupload({
+                // $('#'+idd).fileupload({
+                url: '@Url.Content("~/CompanyDashBoard/UploadEmpReqDoc")',
+                //data:{'title':$('#'+ $('#lbltitleidid').val()).val()},
+                dataType: "json",
+                limitConcurrentUploads: 1,
+                sequentialUploads: true,
+                progressInterval: 100,
+                maxChunkSize: 10000,
+                add: function (e, data) {
+                    $('#btnpublishdoc').click(function () {
+                        // alert(11);
+                        data.submit();
+
+                    });
+                },
+                done: function (e, data) {
+                    $('#doccircle').progressCircle({
+                        nPercent: 100,
+                        showPercentText: true,
+                        circleSize: 300,
+                        thickness: 3
+                    });
+
+                    setTimeout(function () {
+                        //added document name
+                        var fileurl = '@Model.hostURL@Model.specificuploadedcontentpath/' + $('#docfile').val().replace(/\s/g, '') + '';
+
+                        var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+                        $('#pdfdiv').attr('src', url1);
+
+                        $('#loaddiv').hide();
+                        $('#btnpublish').show();
+                        $('#pdfdiv').show();
+
+                        $('#doccircle').progressCircle({
+                            nPercent: 0,
+                            showPercentText: true,
+                            circleSize: 300,
+                            thickness: 3
+                        });
+
+                    }, 1000);
+
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#doccircle').progressCircle({
+                        nPercent: progress,
+                        showPercentText: true,
+                        circleSize: 300,
+                        thickness: 3
+                    });
+                    $('#progressfile').css('width', progress + '%');
+                },
+                progress: function (e, data) {
+
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#doccircle').progressCircle({
+                        nPercent: progress,
+                        showPercentText: true,
+                        circleSize: 300,
+                        thickness: 3
+                    });
+
+                },
+
+            });
+        });
+            //Edit
+
+            $(function () {
+                //$('#'+$('#fileuploadid').val()).fileupload({
+                $('#Euploadfilebtn').fileupload({
+                    // $('#'+idd).fileupload({
+                    url: '@Url.Content("~/CompanyDashBoard/UploadEmpReqDoc")',
+                    //data:{'title':$('#'+ $('#lbltitleidid').val()).val()},
+                    dataType: "json",
+                    limitConcurrentUploads: 1,
+                    sequentialUploads: true,
+                    progressInterval: 100,
+                    maxChunkSize: 10000,
+                    add: function (e, data) {
+                        $('#btnpublishdoc').click(function () {
+                            // alert(11);
+                            data.submit();
+
+                        });
+                    },
+                    done: function (e, data) {
+                        $('#doccircle').progressCircle({
+                            nPercent: 100,
+                            showPercentText: true,
+                            circleSize: 300,
+                            thickness: 3
+                        });
+
+                        setTimeout(function () {
+                            // alert($('#JCRTYPE').val());
+                            //added document name
+                            var fileurl = '@Model.hostURL@Model.globauploadedcontentpath/' + $('#docfile').val().replace(/\s/g, '') + '';
+                            if ($('#JCRTYPE').val() == 1) {
+                                fileurl = '@Model.hostURL@Model.specificuploadedcontentpath/' + $('#docfile').val().replace(/\s/g, '') + '';
+                                }
+
+                            var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+                            $('#pdfdiv').attr('src', url1);
+
+                            $('#loaddiv').hide();
+                            $('#btnpublish').show();
+                            $('#pdfdiv').show();
+
+                            $('#doccircle').progressCircle({
+                                nPercent: 0,
+                                showPercentText: true,
+                                circleSize: 300,
+                                thickness: 3
+                            });
+
+                        }, 1000);
+
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('#doccircle').progressCircle({
+                            nPercent: progress,
+                            showPercentText: true,
+                            circleSize: 300,
+                            thickness: 3
+                        });
+                        $('#progressfile').css('width', progress + '%');
+                    },
+                    progress: function (e, data) {
+
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('#doccircle').progressCircle({
+                            nPercent: progress,
+                            showPercentText: true,
+                            circleSize: 300,
+                            thickness: 3
+                        });
+
+                    },
+
+                });
+            });
+
+
+
+
+
+
+
+                $('#btnpublish').click(function () {
+                    var id = $('#lbltitleidid').val();
+                    var divId = id + 'docfiles_0';
+                    var count = $('#' + divId + ' div').length;
+                    var imgId = divId.substring(0, 1) + "img" + count;
+                    // alert($('#docfile').val());
+                    PublishUploadedFile('@Model.hostURL@Model.globauploadedcontentpath/', '@Model.hostURL@Model.specificuploadedcontentpath/', '', '', '', ROOT, divId, $('#JCRTYPE').val(), imgId);
+
+                    $('#' + id + 'lbltitle_0').attr("disabled", "disabled");
+
+                });
+
+                //End Upload Document
+
+                //Start Save Doc
+                function setuploaddocvalues(id) {
+
+                    var docfiles = '';
+
+                    $("#" + id + "docfiles_0 div").each(function (index) {
+                        var divindex = $(this).attr('id').split('_')[1];
+                        if ($(this).find('#docfile_' + divindex).length) {
+                            var doc = $(this).find('#docfile_' + divindex).attr('href');//.split('?')[1].split('&')[0].split('=')[1];
+
+                            if (docfiles != '') {
+                                docfiles = docfiles + "$" + doc;
+                            }
+                            else {
+                                docfiles = doc;
+                            }
+                        }
+                    });
+
+                    $('#uploaddocs').val(docfiles);
+                }
+                function setacks(id) {
+                    //alert('ack' + id);
+                    var reqaction = '';
+                    if (id == "E") {
+                        $('#' + id + 'tbreqaction_0 tr').each(function (index) {
+                            if (index != 0) {
+                                if ($(this).find("#" + id + "chk_" + index).is(":checked")) {
+                                    var req = $(this).find("#" + id + "reqcon_" + index).val().trim();
+                                    if (reqaction != '') {
+                                        reqaction = reqaction + "$" + req;
+                                    }
+                                    else {
+                                        reqaction = req;
+                                    }
+                                }
+                            }
+                        })
+                    }
+                    else {
+                        $('#' + id + 'tbreqaction_0 tr').each(function (index) {
+
+                            if ($(this).find("#" + id + "chk_" + index).is(":checked")) {
+                                var req = $(this).find("#" + id + "reqcon_" + index).val().trim();
+                                if (reqaction != '') {
+                                    reqaction = reqaction + "$" + req;
+                                }
+                                else {
+                                    reqaction = req;
+                                }
+                            }
+                        })
+                    }
+                    // alert(reqaction);
+                    $('#acks').val(reqaction);
+                }
+                function setchkservices() {
+                    var chkservices = "";
+                    $('.chk').each(function () {
+                        if ($(this).is(":checked")) {
+                            var SID = $(this).val().trim();
+                            //  alert(SID);
+                            if (chkservices != '') {
+                                chkservices = chkservices + "$" + SID;
+                            }
+                            else {
+                                chkservices = SID;
+                            }
+                        }
+                    })
+
+                    $('#chkedservices').val(chkservices);
+                }
+                function setchkVType() {
+                    var chkVT = "";
+                    $('.chkVType').each(function () {
+                        if ($(this).is(":checked")) {
+                            var SID = $(this).val().trim();
+                            //  alert(SID);
+                            if (chkVT != '') {
+                                chkVT = chkVT + "$" + SID;
+                            }
+                            else {
+                                chkVT = SID;
+                            }
+                        }
+                    })
+
+                    $('#chkedvtype').val(chkVT);
+                }
+                function valdationsave(id, type) {
+
+                    var chstatus = true;
+                    if ($('#' + id + 'lbltitle_0').val().trim() == "") {
+                        $('#' + id + 'lbltitle_0').addClass('errorClass');
+                        chstatus = false;
+                    }
+                    if (type != "edit") {
+                        if ($('#reqdoctype').val() == "2") {
+                            var countchkS = 0;
+                            $('.chk').each(function () {
+                                if ($(this).is(":checked")) {
+                                    countchkS = countchkS + 1;
+
+                                }
+                            })
+
+
+                            if (countchkS == 0) {
+                                chstatus = false;
+                                if ($('#tblservice').length) {
+                                    $('#Sval').html("Please select any service");
+                                }
+                                else {
+                                    $('#Sval').html("Please create services");
+                                }
+                            }
+                            else {
+                                $('#Sval').html("");
+                            }
+
+
+                        }
+                    }
+                    if ($('#chkIC').is(":checked")) {
+                        var countchkVT = 0;
+                        $('.chkVType').each(function () {
+                            if ($(this).is(":checked")) {
+                                countchkVT = countchkVT + 1;
+
+                            }
+                        })
+
+
+                        if (countchkVT == 0) {
+                            chstatus = false;
+                            if ($('#tblVType').length) {
+                                $('#VTval').html("Please select any profession type or unselect the IC.");
+                            }
+                            else {
+                                $('#VTval').html("There no any profession type you can't create JCR for IC.");
+                            }
+                        }
+                        else {
+                            $('#VTval').html("");
+                        }
+                    }
+
+                    return chstatus;
+                }
+                function SavereqDoc(ids) {
+
+                    var id = ids.substring(0, 1);
+                    var type = "save";
+                    var reqdocid = "0";
+                    if ($('#' + ids).attr("title") == "Update") {
+                        //  alert("come");
+                        type = "edit";
+                        if ($('.reqdocid_0').length) {
+                            reqdocid = $('.reqdocid_0').val();
+                        }
+                    }
+                    //  alert(reqdocid);
+                    if (valdationsave(id, type)) {
+                        var title = $('#' + id + 'lbltitle_0').val();
+                        //set upload documents
+
+                        setuploaddocvalues(id);
+                        var uploadeddoc = $('#uploaddocs').val();
+                        var UserPer = $('#' + id + 'chkaupload_0').is(':checked');
+                        var donotshow = $('#' + id + 'chkdonotshow_0').is(':checked');
+                        //set ack
+                        setacks(id);
+                        var Ack = $('#acks').val();
+                        if (type == "save") {
+                            //set services
+                            setchkservices();
+                            //set vendro type
+
+                        }
+                        setchkVType();
+                        var isexpdatereq = $('#' + id + 'chkexpdate_0').is(":checked");
+                        var iscompanyreq = $('#' + id + 'chkcompany_0').is(":checked");
+                        var ispolicynoreq = $('#' + id + 'chkpolicyno_0').is(":checked");
+                        var islicensenoreq = $('#' + id + 'chklicenseno_0').is(":checked");
+                        var isstatereq = $('#' + id + 'chkstatename_0').is(":checked");
+                        var retakeid = id + 'retake';
+
+                        var retake = $('#' + retakeid + ' :selected').val();
+
+                        var Reqdocfor = "";
+                        if (type == "save") {
+                            if ($('#chkstaff').is(":checked")) {
+                                if ($('#chkIC').is(":checked")) {
+                                    Reqdocfor = "both";
+                                }
+                                else {
+                                    Reqdocfor = "staff";
+                                }
+                            }
+                            else if ($('#chkIC').is(":checked")) {
+                                Reqdocfor = "ic";
+                            }
+                            else {
+                                Reqdocfor = "none";
+                            }
+                        }
+                        else if (type == "edit") {
+                            if ($('#chkstaffedit').is(":checked")) {
+                                if ($('#chkICedit').is(":checked")) {
+                                    Reqdocfor = "both";
+                                }
+                                else {
+                                    Reqdocfor = "staff";
+                                }
+                            }
+                            else if ($('#chkICedit').is(":checked")) {
+                                Reqdocfor = "ic";
+                            }
+                            else {
+                                Reqdocfor = "none";
+                            }
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Content("~/CompanyDashBoard/SubmitReqDocuments")',
+                            cache: false,
+                            data: JSON.stringify({
+                                title: title,
+                                UploadedDoc: uploadeddoc,
+                                UserPer: UserPer,
+                                Ack: Ack,
+                                IsExpDateReq: isexpdatereq,
+                                IsCompanyReq: iscompanyreq,
+                                IsPolicyReq: ispolicynoreq,
+                                IsLicenseReq: islicensenoreq,
+                                IsStateReq: isstatereq,
+                                ReqDocFor: Reqdocfor,
+                                ReqDocType: $('#reqdoctype').val(),
+                                Type: type,
+                                ReqDocId: parseInt(reqdocid),
+                                ServicesId: $('#chkedservices').val(),
+                                DoNotShow: donotshow,
+                                VendorTypeId: $('#chkedvtype').val(),
+                                Retake: retake
+                            }),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                if (data > 0) {
+
+                                    $('#divManualInviteOuter').show();
+                                    $('#divManualInviteInner').show();
+                                    $('#dvPopUpMsg').text('Saved sucessfully');
+                                    // BindtitleafterSave(title, Reqdocfor, id);
+                                    setTimeout(function () {
+                                        $('#divManualInviteOuter').fadeOut('slow');
+                                        $('#divManualInviteInner').fadeOut('slow');
+                                        $('#addotherglobaltitle').show();
+                                        $('#addotherspcifictitle').show();
+                                        // window.location.reload();
+                                        if ($('#reqdoctype').val() == "1") {
+                                            getcurrentgjcr();
+                                        }
+                                        else if ($('#reqdoctype').val() == "2") {
+                                            getcurrentsjcr();
+                                            $('#servicesection').hide();
+                                        }
+                                        //gettitledetails();
+                                        Rsetdiv(id);
+                                        $('#btnClosePopup').click();
+                                    }, 1000);
+
+                                }
+                                else {
+                                    $('#divManualInviteOuter').hide();
+                                    $('#divManualInviteInner').hide();
+                                    if ($('#reqdoctype').val() == "1") {
+                                        getcurrentgjcr();
+                                    }
+                                    else if ($('#reqdoctype').val() == "2") {
+                                        getcurrentsjcr();
+                                        $('#servicesection').hide();
+                                    }
+                                    Rsetdiv(id);
+                                }
+                            },
+                            beforeSend: function (jqXHR, obj) {
+
+                                $('#divManualInviteOuter').show();
+                                $('#divManualInviteInner').show();
+                                var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                                var poistion = scrollTop + 100;
+                                $('#divManualInviteInner').css("top", poistion);
+                                $('#dvPopUpMsg').text('Please wait...');
+
+                            },
+                            error: function (data) {
+                                $('#divManualInviteOuter').show();
+                                $('#divManualInviteInner').show();
+                                $('#dvMsg').text('Error in input details : Not saved sucessfully');
+                                setTimeout(function () {
+                                    $('#divManualInviteOuter').fadeOut('slow');
+                                    $('#divManualInviteInner').fadeOut('slow');
+                                    window.location.reload();
+                                }, 1000);
+
+                            }
+
+                        });
+                    }
+                }
+
+                function Rsetdiv(id) {
+                    if (id != "E") {
+                        $('#' + id + '_0').hide();
+                    }
+
+                    $('#' + id + 'tbreqaction_0 tr').each(function (index) {
+                        if (index != 0) {
+
+                            var req = $(this).find("#" + id + "reqcon_" + index);
+                            req.closest('tr').remove();
+
+
+                        }
+                    })
+
+
+                    $('#' + id + '')
+                    $('.chk').each(function () {
+                        if ($(this).is(":checked")) {
+                            $(this).prop("checked", false);
+
+                        }
+                    })
+                    $("#" + id + "docfiles_0").html('');
+                    $('#' + id + 'lbltitle_0').val('');
+                    $('#' + id + 'chkexpdate_0').prop('checked', false);
+                    $('#' + id + 'chkcompany_0').prop('checked', false);
+                    $('#' + id + 'chkstatename_0').prop('checked', false);
+                    $('#' + id + 'chkpolicyno_0').prop('checked', false);
+                    $('#' + id + 'chklicenseno_0').prop('checked', false);
+                    $('#Sval').html("");
+                    $('#chkIC').prop("checked", false);
+                    $('#VTypesection').hide();
+                    $('.VtypeEdit').hide();
+
+                }
+                //End Save Doc
+
+                //start validations
+                //function BindtitleafterSave(title, docfor, id) {
+                //    alert("call");
+                //    alert(title + " " + docfor + " " + id);
+                //    $("#" + id).hide();
+                //    var ReqDocFor = "Staff";
+                //    if (docfor == "both") {
+                //        ReqDocFor = "Staff/IC";
+                //    }
+                //    else if (docfor == "ic") {
+                //        ReqDocFor = "IC";
+                //    }
+                //    $('#titlelisttbl tbody tr:last').after("<tr><td>" + title + "</td><td>" + ReqDocFor + "</td><td><a title='Edit title' style='cursor:pointer;'><img src='../../Content/images/edit.png' style='margin-left:5px;height:14px;' /></a></td></tr>");
+                //    $('#titlelisttbl').show();
+                //}
+
+
+                //End Validations
+
+                //current past
+                $('#gcurrent').change(function () {
+                    getcurrentgjcr();
+                })
+                $('#gpast').change(function () {
+                    getpastgjcr();
+                })
+                $('#scurrent').change(function () {
+                    getcurrentsjcr();
+                })
+                $('#spast').change(function () {
+                    getpastsjcr();
+                })
+                //global
+                function getpastgjcr() {
+                    $.ajax({
+                        url: '@Url.Content("~/CompanyDashBoard/ICEmployementReqiuredment/")',
+                        data: { 'id': 0 },
+                        cache: false,
+                        type: "GET",
+                        success: function (result) {
+                            $('#pgloballisttbl').html($(result).find('#pgloballisttbl').html().trim());
+
+                            $('#gpast').prop('checked', true);
+                            $('#pgloballisttbl').show();
+                            $('#cgloballisttbl').hide();
+                            $('#cspecificlisttbl').hide();
+                            $('#pspecificlisttbl').hide();
+                        }
+                    });
+                }
+                function getcurrentgjcr() {
+                    $.ajax({
+                        url: '@Url.Content("~/CompanyDashBoard/ICEmployementReqiuredment/")',
+            data: { 'id': 1 },
+            cache: false,
+            type: "GET",
+            success: function (result) {
+                $('#cgloballisttbl').html($(result).find('#cgloballisttbl').html().trim());
+
+                $('#gcurrent').prop('checked', true);
+                $('#pgloballisttbl').hide();
+                $('#cgloballisttbl').show();
+                $('#cspecificlisttbl').hide();
+                $('#pspecificlisttbl').hide();
+            }
+        });
+    }
+    //specific
+    function getcurrentsjcr() {
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/ICEmployementReqiuredment/")',
+                data: { 'id': 1 },
+                cache: false,
+                type: "GET",
+                success: function (result) {
+                    $('#cspecificlisttbl').html($(result).find('#cspecificlisttbl').html().trim());
+
+                    $('#scurrent').prop('checked', true);
+                    $('#pgloballisttbl').hide();
+                    $('#cgloballisttbl').hide();
+                    $('#cspecificlisttbl').show();
+                    $('#pspecificlisttbl').hide();
+                }
+            });
+        }
+        function getpastsjcr() {
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/ICEmployementReqiuredment/")',
+                data: { 'id': 0 },
+                cache: false,
+                type: "GET",
+                success: function (result) {
+                    $('#pspecificlisttbl').html($(result).find('#pspecificlisttbl').html().trim());
+
+                    $('#spast').prop('checked', true);
+                    $('#pgloballisttbl').hide();
+                    $('#cgloballisttbl').hide();
+                    $('#cspecificlisttbl').hide();
+                    $('#pspecificlisttbl').show();
+                }
+            });
+        }
+        function RemoveRactiveJCR(id, type, operationtype) {
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/JCROperation/")',
+                data: { 'id': id, 'operationtype': operationtype },
+                cache: false,
+                type: "POST",
+                success: function (result) {
+                    if (operationtype == 0) {
+                        if (type == 1) {
+                            getcurrentgjcr();
+
+                        }
+                        else if (type == 2) {
+                            getcurrentsjcr();
+
+                        }
+                    }
+                    if (operationtype == 1) {
+                        if (type == 1) {
+                            getpastgjcr();
+                        }
+                        else if (type == 2) {
+                            getpastsjcr();
+                        }
+                    }
+                }
+            });
+        }
+
+        $('#chkIC').change(function () {
+
+            if ($('#chkIC').is(":checked")) {
+                $('#tblVType .chkVType').each(function () {
+                    $(this).prop("checked", false);
+                })
+                $('#VTypesection').show();
+            }
+            else { $('#VTypesection').hide(); }
+        })
+        $('#chkICedit').change(function () {
+            if ($('#chkICedit').is(":checked")) {
+
+                $('#lnkviewVType').show();
+                $('.VtypeEdit').show();
+                $('#lnkviewVType').html("Hide profession Type");
+
+            }
+            else { $('#lnkviewVType').hide(); $('.VtypeEdit').hide(); }
+        })
+
+        $('#lnkviewVType').click(function () {
+            if ($('#lnkviewVType').html() == "Show profession Type") {
+
+                $('#lnkviewVType').html("Hide profession Type"); $('.VtypeEdit').show();
+
+            }
+            else {
+                $('#lnkviewVType').html("Show profession Type"); $('.VtypeEdit').hide();
+            }
+
+        })
+</script>

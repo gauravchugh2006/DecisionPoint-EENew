@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "SuperAdminDashBoard";
+}
+
+@Styles.Render("~/Content/css/UserDashboard")
+@Scripts.Render("~/bundles/dashboard")
+
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap.min.css" />
+<link rel="stylesheet" href="~/Content/css/UserDashBoard/bootstrap-datetimepicker.min.css" />
+<body>
+
+    <div id='content'>
+        <div class='container'>
+            <div class='content-box'>
+                <br />
+                <div class='row'>
+                    <div class='span7'>
+                        <img src="~/Content/images/logo.png" />
+                    </div>
+
+                </div>
+                <br />
+                <div id='user-dashboard'>
+
+                    <div class='tabbable'>
+                        <ul class='nav nav-tabs' id='my_tabs' style="cursor: pointer;">
+                            <li id="feeli">
+                                <a data-toggle='tab'>Fee Creation</a>
+                            </li>
+
+                        </ul>
+                        <div class='tab-content'>
+                            @*fee*@
+                            <div id="fee">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#feeli").click();
+
+        });
+
+        //Fee Creation
+        $("#feeli").click(function () {
+
+            $.ajax({
+                url: '../SuperAdminDashBoard/FeeCreation',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+            })
+          .success(function (result) {
+
+              $('#fee').show();
+              $('#fee').html(result);
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+            $('#feeli').addClass("active");
+
+        });
+
+
+    </script>
+
+</body>

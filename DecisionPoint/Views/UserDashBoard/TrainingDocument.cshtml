@@ -1,0 +1,286 @@
+﻿@model DecisionPoint.Models.UserDashBoard
+@using System.Globalization;
+@using DecisionPointBAL.Implementation
+@{
+    Layout = "~/Views/Shared/_CommonLayout.cshtml";
+    ViewBag.Title = "UserDashBoard : View Document";
+   
+}
+
+<style>
+    .grid-width400 {
+        width: 350px;
+    }
+
+    .grid-width100 {
+        width: 50px;
+    }
+
+    #documentgrid th {
+        padding-left: 0px;
+    }
+
+    .StudentInfo {
+        float: left;
+        font-weight: bold;
+        margin-bottom: 3px;
+        width: 14%;
+    }
+
+    .StudentDetail {
+        float: left;
+        margin-bottom: 3px;
+        width: 86%;
+    }
+
+    .Instructions {
+        margin-left: 20px;
+    }
+</style>
+<div id='content'>
+    <div class='container' style="margin-top: -30px;">
+
+        <div class='content-box'>
+            <input type="hidden" id="hidDocId" value="@ViewBag.DocId" />
+            <input type="hidden" id="hidStatus" value="@ViewBag.Status" />
+            <input type="hidden" id="hidFileType" value="@ViewBag.FileType" />
+            <input type="hidden" id="hidFileName" value="@ViewBag.FileName" />
+            <input type="hidden" id="hidFileLoc" value="@ViewBag.FileLocation" />
+
+           
+            <div  id="previewdocinner" class='content-box' style="display:block; ">
+ 
+                
+               <div  style="background-color:#FFF;">  <h3 id="headName" style="float:left;"></h3> <label id="lbltimer" style="font-weight:bold;float:right; margin-top:25px; display:none;"></label></div>
+
+    <div id="pdfDocDiv" style="margin-top:-10px;" >
+       
+        <iframe id="pdfdiv" src="@ViewBag.FileLocation" style="width: 100%; height: 760px;"></iframe>
+
+    </div>
+                @if (ViewBag.FileType == "video")
+                {
+    <div id="videoouterdiv" style="margin-top:-10px; ">
+        
+        <video id="video" width="100%" height="500px" style="background:#000;" controls>
+            <source id="videodiv" src="@ViewBag.FileLocation" type="video/mp4">
+        </video>
+
+    </div>
+                }
+ @if (ViewBag.FileType == "scorm")
+ {
+     <div id="scormDocDiv" style="margin-top:-10px;" >
+       
+        <iframe id="scormdiv" src="@ViewBag.FileLocation" style="width: 100%; height: 760px;"></iframe>
+
+    </div>
+ }
+    <div style="float: left; width: 100%;">
+        <input type="hidden" id="docID" />
+         @if (Request["type"] != "libview")
+         {
+             if (!string.IsNullOrEmpty(Convert.ToString(Session["UserType"], CultureInfo.InvariantCulture)))
+             {
+                 
+                     if (string.IsNullOrEmpty(Convert.ToString(Session["parentUserid"], CultureInfo.InvariantCulture)))
+                     {
+                                <a onclick="ChangeDocStatus()" id="btnCompleteTraining" class="btn btn-primary" style="float: right;margin:6px; ">Mark As Complete</a>
+                     }
+                 
+             }
+         }
+       
+       
+        
+        <a href="#" onclick="SaveTimeSpent()" id="btnCloseTraining" class="btn btn-primary" style="float: right; margin:6px;">Close</a> &nbsp;&nbsp;
+      <input type="hidden" id="hiid" value="@Session["DocumentID"]"/>
+         <input type="hidden" id="himinute"  value=""/>
+         <input type="hidden" id="hisecond" value="" />
+    </div>
+
+
+</div>
+             
+        </div>
+    </div>
+</div>
+<div class="trans" id="previewdocouter"></div>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        readdocURL($('#hidDocId').val(), $('#hidStatus').val(), $('#hidFileType').val(), $('#hidFileName').val());
+
+    });
+    $("#scormdiv").on("load", function () {
+        $('#scormdiv').contents().find('#tblscrom').hide();
+        var htmlstr = '<div style="float:left;font-style:italic;font-weight:bold; margin-top:40%;margin-left:45%;font-size:40px;">Finished...</div>';
+        $('#scormdiv').contents().find('.controls').append(htmlstr);
+
+
+    })
+    function get_elapsed_time_string(total_seconds) {
+        function pretty_time_string(num) {
+            return (num < 10 ? "0" : "") + num;
+        }
+
+        var hours = Math.floor(total_seconds / 3600);
+        total_seconds = total_seconds % 3600;
+
+        var minutes = Math.floor(total_seconds / 60);
+        total_seconds = total_seconds % 60;
+
+        var seconds = Math.floor(total_seconds);
+
+        // Pad the minutes and seconds with leading zeros, if required
+        hours = pretty_time_string(hours);
+        minutes = pretty_time_string(minutes);
+        seconds = pretty_time_string(seconds);
+
+        // Compose the string for display
+        var currentTimeString = minutes + ":" + seconds;
+
+        return currentTimeString;
+    }
+
+    var elapsed_seconds = 0;
+    var mode = getStoredValue('Timespan');
+    if (isNaN(mode)) mode = 0;
+    setInterval(function () {
+        elapsed_seconds = parseInt(mode) + 1;
+        mode = elapsed_seconds;
+        storeValue('Timespan', elapsed_seconds);
+
+        $('#lbltimer').text(elapsed_seconds);
+
+    }, 1000);
+
+    function pretty_time_string(num) {
+        return (num < 10 ? "0" : "") + num;
+    }
+
+
+    function storeValue(key, value) {
+        if (localStorage) {
+            localStorage.setItem(key, value);
+        } else {
+            $.cookies.set(key, value);
+        }
+    }
+
+    function getStoredValue(key) {
+        if (localStorage) {
+            return localStorage.getItem(key);
+        } else {
+            return $.cookies.get(key);
+        }
+    }
+
+    function refreshParent() {
+
+
+        var value = '../../UserDashboard/ViewDocument/' + parseInt($('#hiid').val());
+        window.opener.location.reload(true);
+        if (window.opener.progressWindow)
+            window.opener.progressWindow.close();
+        window.close();
+    }
+
+    function SaveTimeSpent() {
+
+        if ('@Session["superAdmin"]' == '@Session["UserId"]') {
+
+            $.ajax({
+                url: '@Url.Content("~/UserDashboard/SaveDocViewTime/")',
+                cache: false,
+                type: 'GET',
+                data: {
+                    documentID: $('#docID').val(),
+                    countTimer: parseInt(mode)
+                },
+                success: function (result) {
+                    CloseChildWindow();
+                    storeValue('Timespan', null);
+                }
+            });
+
+
+        } else {
+            CloseChildWindow();
+        }
+    }
+
+    function ChangeDocStatus() {
+       
+        $.ajax({
+            url: "@Url.Content("~/UserDashboard/ChangeDocumentStatus/")",
+            data: { documentID: $('#hidDocId').val(), countTimer: parseInt(mode) },
+            cache: false,
+            type: 'GET',
+            success: function (result) {
+                CloseChildWindow();
+                storeValue('Timespan', null);
+            }
+        });
+
+    }
+
+    function CloseChildWindow() {
+        window.opener.document.location.reload(true);
+        window.open("", "_top", "", "true ");
+        close();
+    }
+    function reloadPage() {
+        location.reload(true);
+    }
+
+    function readdocURL(DocID, status, fileType, fileName) {
+
+        if (fileType == 'document') {
+            $('#headName').text(fileName);
+            $('#TrainingFileName').html(fileName);
+            $('#previewdocinner').fadeIn('slow');
+            $('#document').fadeOut('slow');
+            $('#videoouterdiv').hide();
+            $('#pdfDocDiv').show();
+
+        }
+        else {
+            $('#headName').text(fileName);
+            $('#TrainingFileName').html(fileName);
+            $('#previewdocinner').fadeIn('slow');
+            $('#document').fadeOut('slow');
+            $('#pdfDocDiv').hide();
+            $('#videoouterdiv').show();
+
+        }
+
+
+        var fileurl = $('#hidFileLoc').val();
+        var url1 = "http://docs.google.com/viewer?url=" + fileurl + "&embedded=true&chrome=false";
+
+        $('#docID').val(DocID);
+        if (Boolean(status)) {
+            $('#btnCompleteTraining').hide();
+            $('#msgComplete').show();
+        }
+        else {
+            $('#btnCompleteTraining').show();
+            $('#msgComplete').hide();
+        }
+        $('#pdfdiv').attr('src', url1);
+    }
+
+    function closeDoc() {
+        $('#previewdocinner').fadeOut('slow');
+        $('#previewdocouter').fadeOut('slow');
+
+        location.reload(true);
+    }
+
+</script>
+

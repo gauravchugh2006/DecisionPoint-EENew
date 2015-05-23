@@ -1,0 +1,78 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+
+@{
+    ViewBag.Title = "ClientPerfromance";
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    WebGrid grdvendor = new WebGrid(ajaxUpdateContainerId: "messagegrid", rowsPerPage: Model.rowperpage);
+    if (Model.vendorPerformance != null)
+    {
+
+        grdvendor.Bind(Model.vendorPerformance, autoSortAndPage: true, rowCount: Model.pagesize);
+
+    }
+}
+
+<style>
+    .grid-width250
+    {
+        width: 250px;
+    }
+
+    .grid-width100
+    {
+        width: 200px;
+    }
+</style>
+<div id='companies'>
+    <div class='heading'>
+        <div class='row'>
+            <h3>Client Performance</h3>
+        </div>
+    </div>
+</div>
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+    }
+
+@* Vendor Performance *@
+<div id='vendorPerformance' style="padding-top: 20px;">
+
+    @if (Model.vendorPerformance != null)
+    {
+        
+        @grdvendor.GetHtml(htmlAttributes: new { id = "messagegrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+    columns: new[] {        
+  grdvendor.Column(columnName:"name",header : Sorter("name", "Name", grdvendor),style:"grid-width250"),  
+         grdvendor.Column("Received", "Received/Forwarded  ", format: (item) =>
+ {
+     return Html.Raw("<div> <div style='text-align:right;width:70px;float:left'>" + @item.Received + "</div><div style='text-align:center;width:10px;float:left'> / </div><div style='text-align:left;width:20;float:left'>" + @item.Forwarded + "</div></div>");     
+ }, style: "grid-width250"
+  ),
+    grdvendor.Column(columnName:"CompanyCompletion",header : Sorter("CompanyCompletion", "Staff Compliance", grdvendor),format:(item)=>
+        {
+            return Html.Raw("<span Style='text-align:right;float:right'>" + @item.CompanyCompletion + "<span style='width:10px;float:right;margin-right:175px'>%</span>" + "</span>");        
+        },style: "grid-width100"),          
+    })
+       
+    }
+</div>
+<style>
+    .block
+    {
+        border: 1px solid #000000;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ShowHideTabs('communication');
+    });
+</script>

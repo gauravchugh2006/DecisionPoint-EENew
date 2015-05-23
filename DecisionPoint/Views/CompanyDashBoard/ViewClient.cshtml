@@ -1,0 +1,250 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+    ViewBag.Title = "AddClient";
+    WebGrid grdclient = new WebGrid(ajaxUpdateContainerId: "clientgrid", rowsPerPage: Model.rowperpage);
+    if (Model.lstBind != null)
+    {
+        grdclient.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+<style>
+      .errorClass
+    {
+        border: 1px solid red !important;
+        border-style: inset;
+    }
+</style>
+<body>
+    
+   
+
+            <h3>Add Client</h3>
+            <br />
+         	<div class="w100"><span class="w200">Client Name</span><span><input type="text" id="txtclient" placeholder="Client Name">
+                   <input type="hidden" id="clientid" value="0" />
+            <input type="hidden" id="isactivestatus" value="disable" />
+         	                                                       </span>
+
+          <span><a role="button" id="btnsaveclient" href="#" style="margin-top:-9px;" class="btn btn-small btn-info butmargin-left1" title="Save Client">Create</a></span>
+            
+            
+            <span><a role="button" id="btndisableclient" href="#" class="btn btn-small btn-info butmargin-left1" style="visibility: hidden;margin-top:-9px;" 
+                title="Enale/Disable Client">Disable</a></span>
+            </div>
+            
+            <div class="w100">
+        <div id="divtitle">
+            @if (Model.lstBind.Count>0)
+            {
+   
+                               
+                @grdclient.GetHtml(htmlAttributes: new { id = "clientgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+        
+          grdclient.Column(columnName:"Col1",header: Sorter("Col1", "Client Name", grdclient), format:@<text>
+                @if(item.Col1Status)
+                        {
+<a id="client1B" onclick="EditClient('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="client1G" onclick="EditClient('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer; color:grey;font-style:italic;">@(item.Col1) </a>
+                        }
+                </text>,
+                            style:"grid-width181"),
+    grdclient.Column(columnName:"Col2",header: Sorter("Col2", "", grdclient), format:@<text>
+
+                @if(item.Col2Status)
+                        {
+<a id="client2B" onclick="EditClient('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="client2G" onclick="EditClient('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:grey;font-style:italic;">@(item.Col2) </a>
+                        }
+
+     
+                </text>,style:"grid-width181"),
+              grdclient.Column(columnName:"Col3",header: Sorter("Col3", "", grdclient), format:@<text>
+
+                @if(item.Col3Status)
+                        {
+<a id="client3B" onclick="EditClient('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+  
+                        }
+                        else
+                        {
+<a id="client3G" onclick="EditClient('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:grey;font-style:italic;">@(item.Col3) </a>
+                        }
+     
+                </text>,style:"grid-width181"),
+
+  
+    })
+            }
+            else
+            {
+                 <div style="border: 2px solid rgb(128, 128, 128); background: none repeat scroll 0% 0% rgb(225, 225, 225); color: red; padding-top: 4px;width:530px;">
+            <div style="margin-left:195px;">No Data Available</div>
+        </div>
+            }
+        </div>
+
+    </div>
+            
+          
+
+  <script type="text/javascript">
+      //reset function
+      $(document).ready(function () {
+          $('#historyli').removeClass("active2");
+          $('#messagedocli').removeClass("active2");
+          $('.inviteli').removeClass("active2");
+          $('#incommli').removeClass("active2");
+          $('#reportingli').removeClass("active2");
+          $('#accountprofile').removeClass("active2");
+          $('.commli').removeClass("active2");
+          $('.administrationli').addClass("active2");
+          $('.globallibraryli').removeClass("active2");
+          $('.partnersli').removeClass("active2");
+          $('.mydashboardli').removeClass("active2");
+      });
+    function reset() {
+          $('#txtclient').val('');
+          $('#btndisableclient').hide();
+      }
+      //Add new title name
+      $('#btnsaveclient').click(function () {
+          var client = $('#txtclient').val().trim();
+          var status = $('#btnsaveclient').html();
+          var clientid = $('#clientid').val();
+          if (client != '') {
+              var status = $('#btnsaveclient').html();
+              if (status == "Save") {
+                  status = "Edit";
+              }
+              else if (status == "Create") {
+                  status = "Save";
+              }
+          $.ajax({
+              url: '../CompanyDashBoard/AddClient',
+              contentType: 'application/html; charset=utf-8',
+              type: 'GET',
+              dataType: 'html',
+              data: { 'client': client, 'status': status, 'clientId': parseInt(clientid) },
+          })
+        .success(function (result) {
+            if (result > 0) {
+                    if (status == "Edit") {
+                        $('#divmsg').html("Client Update Sucessfully");
+                    }
+                    else if (status == "Save") {
+                        $('#divmsg').html("Client Saved Sucessfully");
+                    }
+                    $('.confirmationdivmain').show();
+                    $('.confirmationdivinner').show();
+                    $('#btncancel').hide();
+            }
+            else if (result == -1) {
+                    $('#divmsg').html("Client Name alreay exist.");
+                    $('.confirmationdivmain').show();
+                    $('.confirmationdivinner').show();
+                    $('#btncancel').hide();
+            }
+            })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+          }
+          else {
+              $('#txtclient').addClass("errorClass");
+              
+          }
+      });
+     
+      $('#btnok').click(function () {
+          reset();
+          window.location.reload();
+          $('.confirmationdivmain').hide();
+          $('.confirmationdivinner').hide();
+      });
+      //disable any Client
+      $('#btndisableclient').click(function () {
+          var clientid = $('#clientid').val();
+          var isActive = $('#isactivestatus').val();
+          $.ajax({
+              url: '../CompanyDashBoard/DisaEnaClient',
+              contentType: 'application/html; charset=utf-8',
+              type: 'GET',
+              dataType: 'html',
+              data: { 'clientid': parseInt(clientid), 'isActive': isActive },
+          })
+        .success(function (result) {
+            reset();
+            window.location.reload();
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+      });
+      //Edit title any title
+      function EditClient(client, isActive, clientId) {
+          if (isActive) {
+              $('#btndisableclient').html("Disable");
+              $('#isactivestatus').val("disable");
+
+          }
+          else {
+              $('#btndisableclient').html("Enable");
+              $('#isactivestatus').val("enable");
+          }
+
+          $('#clientid').val(clientId);
+          $('#txtclient').val(client);
+          $('#btndisableclient').css("visibility", "visible")
+          $('#btnsaveclient').html("Save");
+
+      }
+
+   
+      //disbale and enalble on check box click
+      function DisEnable(titleId, isActive) {
+          $.ajax({
+              url: '../CompanyDashBoard/DisaEnaTitle',
+              contentType: 'application/html; charset=utf-8',
+              type: 'GET',
+              dataType: 'html',
+              data: { 'clientid': parseInt(titleId), 'isActive': isActive },
+          })
+          .success(function (result) {
+              reset();
+              window.location.reload();
+              
+          })
+          .error(function (xhr, status) {
+              alert(status);
+          })
+
+      }
+
+</script>
+  </body>
+

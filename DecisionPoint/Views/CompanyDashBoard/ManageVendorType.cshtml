@@ -1,0 +1,326 @@
+﻿@model DecisionPoint.Models.CompanyDashBoard
+@{
+    ViewBag.Title = "ManageVendorType";
+
+    Layout = "~/Views/Shared/_CompanyDashBoardLayout.cshtml";
+
+
+    WebGrid grdService = new WebGrid(ajaxUpdateContainerId: "VTgrid", rowsPerPage: Model.rowperpage);
+    if (Model.lstBind != null)
+    {
+        grdService.Bind(Model.lstBind, autoSortAndPage: true, rowCount: Model.pagesize);
+    }
+}
+
+@*funtion used for sorting in webgrid*@
+@functions {
+    public static string Sorter(string columnName, string columnHeader, WebGrid grid)
+    {
+        return string.Format("{0} {1}", columnHeader, grid.SortColumn == columnName ?
+            grid.SortDirection == SortDirection.Ascending ? "↑" :
+            "↓" : string.Empty);
+    }
+}
+
+
+
+<div class='heading'>
+    <div class='row'>
+        <h3>Manage IC Type</h3>
+    </div>
+</div>
+
+
+<div style="line-height: 2px !important;">
+
+    <div>
+        <span style="margin-top: 12px; margin-right: 20px; float: left;">IC Type</span><span>
+            <input type="text" id="txtvtype" placeholder="IC Type" maxlength="50" onkeypress="ValidateTextBox(this.id,event)">
+            <input type="hidden" id="vtid" value="0" />
+            <input type="hidden" id="isactivestatus" value="disable" />
+        </span>
+
+        <span><a id="btnsaveVType" class="btn btn-small btn-info butmargin" style="margin-top: -9px;" title="Save Profession">Create</a>
+            </span>
+        <span><a id="btndisable" class="btn btn-small btn-info butmargin-left1" style="visibility: hidden; margin-top: -13px;" title="Enable/Disable Profession">Disable
+        </a></span>
+       
+    </div>
+    <div class="w100">
+        <div id="divvtmsg" style="font-size: 12px; padding-bottom: 10px; color: green; padding-left: 68px;"></div>
+    </div>
+
+    <div id="VTdiv">
+
+
+        <br />
+        @if (Model.lstBind != null)
+        {   
+                               
+            @grdService.GetHtml(htmlAttributes: new { id = "VTgrid" },
+    tableStyle: "table table-hover",
+        headerStyle: "header",
+        footerStyle: "gridFooter",
+        alternatingRowStyle: "alt",
+         mode: WebGridPagerModes.All,
+
+
+    columns: new[] {
+       
+    grdService.Column(columnName:"Col1",header: Sorter("Col1", "IC Type", grdService), format:@<text>
+            @if(item.Col1Status)
+                        {
+<a id="service1B" onclick="EditService('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer;color:black;">@(item.Col1) </a>
+                        }
+                        else
+                        {
+<a id="service1G" onclick="EditService('@item.Col1','@item.Col1Status','@item.Col1ID')" style="cursor:pointer; color:#B6B6B4;font-style:italic;">@(item.Col1) </a>
+                        }
+            </text>,
+                            style:"grid-width181"),
+    grdService.Column(columnName:"Col2",header: Sorter("Col2", "", grdService), format:@<text>
+
+            @if(item.Col2Status)
+                        {
+<a id="service2B" onclick="EditService('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:black;">@(item.Col2) </a>
+                         
+                        }
+                        else
+                        {
+<a id="service2G" onclick="EditService('@item.Col2','@item.Col2Status','@item.Col2ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col2) </a>
+                        }
+
+
+            </text>,style:"grid-width181"),
+              grdService.Column(columnName:"Col3",header: Sorter("Col3", "", grdService), format:@<text>
+
+            @if(item.Col3Status)
+                        {
+<a id="service3B" onclick="EditService('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:black;">@(item.Col3) </a>
+                         
+                        }
+                        else
+                        {
+<a id="service3G" onclick="EditService('@item.Col3','@item.Col3Status','@item.Col3ID')" style="cursor:pointer;color:#B6B6B4;font-style:italic;">@(item.Col3) </a>
+                        }
+
+            </text>,style:"grid-width181"),
+          
+  
+    })
+        }
+
+
+    </div>
+
+
+</div>
+
+
+
+@* Saved Pop up *@
+<div class="confirmationdivmain" id="divManualInviteOuter" style="display: none;"></div>
+<div class="confirmationdivinner" id="divManualInviteInner" style="display: none; width: 277px;">
+    <div style="background-clip: padding-box; background-color: #FFFFFF; height: 60px; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 6px 6px 6px 6px; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); outline: 0 none;">
+        <div style="font-size: 16px; color: green; padding-bottom: 10px;" id="dvPopUpMsg"></div>
+
+        <div style="float: left; width: 50px;">
+        </div>
+
+    </div>
+
+</div>
+
+
+
+@* Saved Pop up End *@
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        ShowHideTabs('administration');
+        $('#divmsg').html('');
+
+
+    });
+
+
+
+    //Add new title name
+    $('#btnsaveVType').click(function () {
+        var chkstatus = false;
+        var reference = $('#txtvtype').val().trim();
+
+        if (reference != "") {
+            var status = $('#btnsaveVType').html();
+            if (status == "Save") {
+                status = "Edit";
+            }
+            else if (status == "Create") {
+                status = "Save";
+            }
+            var referenceId = $('#vtid').val();
+
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/AddVendorType/")',
+                cache: false,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'vType': reference, 'status': status, 'vTypeId': parseInt(referenceId) },
+            })
+                  .success(function (result) {
+                      if (result >= 0) {
+                          if (status == "Edit") {
+                              $('#divvtmsg').html("IC Type Update Sucessfully");
+                          }
+                          else if (status == "Save") {
+                              $('#divvtmsg').html("IC Type Saved Sucessfully");
+                          }
+                          setTimeout(function () {
+                              // window.location.reload();
+                              FetchDetail(1);
+                              Reset();
+
+
+                          }, 1000);
+
+
+                      }
+                      else if (result == -1) {
+                          $('#divvtmsg').html("IC Type alreay exist");
+                          setTimeout(function () {
+                              // window.location.reload();
+                              FetchDetail(getpageid("VTgrid"));
+                              Reset();
+
+
+                          }, 1000);
+
+                      }
+                  })
+                  .error(function (xhr, status) {
+
+                  })
+
+        }
+        else {
+            $('#txtvtype').addClass("errorClass");
+
+        }
+
+    });
+
+
+    $('#txtvtype').on("paste", function (e) {
+        e.preventDefault();
+    });
+
+
+
+    //disable any title
+    $('#btndisable').click(function () {
+        var reference = $('#txtvtype').val().trim();
+        if (reference != "") {
+            $('#txtvtype').removeClass("errorClass");
+            var referenceid = $('#vtid').val();
+            var isActive = $('#isactivestatus').val();
+            $.ajax({
+                url: '@Url.Content("~/CompanyDashBoard/DisaEnaVendorType")',
+                cache: false,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                data: { 'vTypeId': parseInt(referenceid), 'isActive': isActive },
+            })
+          .success(function (result) {
+              $('#divvtmsg').html("Status change sucessfully");
+              setTimeout(function () {
+
+                  FetchDetail(getpageid("VTgrid"));
+                  Reset();
+
+              }, 1000);
+
+          })
+          .error(function (xhr, status) {
+              //  alert(status);
+          })
+        } else {
+            $('#txtvtype').addClass("errorClass");
+        }
+    });
+    //Edit title any title
+    function EditService(title, isActive, titleId) {
+        //  alert(Source);
+        if (isActive != '') {
+            $('#btndisable').show();
+            $('#isactivestatus').val("disable");
+            $('#btndisable').html('Disable');
+
+
+        }
+        else {
+            $('#btndisable').show();
+            $('#btndisable').html('Enable');
+            $('#isactivestatus').val("enable");
+        }
+
+        $('#vtid').val(titleId);
+        $('#txtvtype').val(title);
+        $('#btndisable').css("visibility", "visible")
+        $('#btnsaveVType').html("Save");
+
+    }
+    //reset function
+    function Reset() {
+        $('#txtvtype').val('');
+        $('#btndisable').hide();
+
+        $('#divvtmsg').html('');
+
+        $('#btnsaveVType').html('Create');
+        $('#vtid').val('0');
+        $('#txtvtype').removeClass("errorClass");
+        $('#isactivestatus').val('disable');
+
+    }
+
+    //disbale and enalble on check box click
+    function DisEnable(referenceId, isActive) {
+        $.ajax({
+            url: '@Url.Content("~/CompanyDashBoard/DisaEnaVendorType")',
+                   cache: false,
+                   contentType: 'application/html; charset=utf-8',
+                   type: 'GET',
+                   dataType: 'html',
+                   data: { 'vTypeId': parseInt(referenceId), 'isActive': isActive },
+               })
+        .success(function (result) {
+            FetchDetail(getpageid("VTgrid"));
+            Reset();
+
+        })
+        .error(function (xhr, status) {
+            alert(status);
+        })
+
+      }
+
+      function FetchDetail(pageid) {
+          $.ajax({
+              url: '@Url.Content("~/CompanyDashBoard/ViewVendorType/?page=")' + pageid,
+              cache: false,
+              type: "GET",
+              success: function (result) {
+
+                  $('#VTdiv').html($(result).find('#VTdiv').html().trim());
+
+              }
+          });
+    }
+
+ 
+</script>
+
+

@@ -1,0 +1,14 @@
+﻿@model DecisionPoint.Models.Reports
+
+@{
+    ViewBag.Title = "ReportIFrame";
+}
+    <script src="~/Scripts/jquery-2.0.3.min.js"></script>
+<input type="hidden" id="datefrom" value="@Model.DateFrom" />
+<input type="hidden" id="dateto" value="@Model.DateTo" />
+<input type="hidden" id="statusval" value="@Model.Status" />
+<script>
+    $(window).load(function () {
+        window.location.href = "@Url.Content("~/Reports/GenrateUsersViewReport?dateFrom=")" + $('#datefrom').val() + "&dateTo=" + $('#dateto').val() + "&status=" + $('#statusval').val();
+    })
+</script>
